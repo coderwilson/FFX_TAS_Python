@@ -1,0 +1,218 @@
+{
+	"mi'ihen_fang": {
+		"num": 9,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 5,
+		"need": 3
+	},
+	"thunder_flan": {
+		"num": 16,
+		"zone1": "old_road",
+		"zone2": "clasko_skip_screen",
+		"zone3": "none",
+		"prio": 50,
+		"need": 3
+	},
+	"vouivre": {
+		"num": 50,
+		"zone1": "old_road",
+		"zone2": "clasko_skip_screen",
+		"zone3": "none",
+		"prio": 50,
+		"need": 5
+	},
+	"gandarewa": {
+		"num": 5,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 5
+	},
+	"lamashtu": {
+		"num": 51,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 5
+	},
+	"garm": {
+		"num": 10,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 5,
+		"need": 3
+	},
+	"bite_bug": {
+		"num": 31,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 20,
+		"need": 5
+	},
+	"snow_flan": {
+		"num": 17,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 5,
+		"need": 3
+	},
+	"snow_wolf": {
+		"num": 11,
+		"zone1": "lake_macalania",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 5,
+		"need": 3
+	},
+	"ice_flan": {
+		"num": 18,
+		"zone1": "lake_macalania",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 5,
+		"need": 3
+	},
+	"wasp": {
+		"num": 32,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 20,
+		"need": 5
+	},
+	"killer_bee": {
+		"num": 30,
+		"zone1": "kilika_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 5
+	},
+	"aerouge": {
+		"num": 6,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 40,
+		"need": 5
+	},
+	"kusariqqu": {
+		"num": 52,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 10,
+		"need": 5
+	},
+	"mushussu": {
+		"num": 53,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 5
+	},
+	"sand_wolf": {
+		"num": 12,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 3
+	},
+	"alcyone": {
+		"num": 29,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 1
+	},
+	"zu": {
+		"num": 41,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 1
+	},
+	"sand_worm": {
+		"num": 42,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 1
+	},
+	"mushussu": {
+		"num": 53,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 1
+	},
+	"cactuar": {
+		"num": 88,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 15,
+		"need": 1
+	},
+	"skoll": {
+		"num": 13,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 5,
+		"need": 3
+	},
+	"nebiros": {
+		"num": 33,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 2,
+		"need": 5
+	},
+	"flame_flan": {
+		"num": 19,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 4,
+		"need": 3
+	},
+	"bandersnatch": {
+		"num": 14,
+		"zone1": "gagazet_(mountain)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 70,
+		"need": 3
+	},
+	"imp": {
+		"num": 7,
+		"zone1": "cave_(white_zone)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 60,
+		"need": 5
+	},
+	"nidhogg": {
+		"num": 7,
+		"zone1": "cave_(white_zone)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 60,
+		"need": 5
+	}
+}

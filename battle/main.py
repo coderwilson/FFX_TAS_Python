@@ -191,17 +191,18 @@ def use_special(position, target: int = 20, direction: int = "u"):
         xbox.tap_b()
 
     if memory.main.battle_target_id() != target:
-        while memory.main.battle_target_id() != target:
-            if direction == "r":
-                xbox.tap_right()
-                if memory.main.battle_target_id() < 20:
-                    xbox.tap_left()
-                    direction = "u"
-            else:
-                xbox.tap_up()
-                if memory.main.battle_target_id() < 20:
-                    xbox.tap_down()
-                    direction = "r"
+        if memory.main.get_enemy_current_hp()[target-20] >= 1:
+            while memory.main.battle_target_id() != target:
+                if direction == "r":
+                    xbox.tap_right()
+                    if memory.main.battle_target_id() < 20:
+                        xbox.tap_left()
+                        direction = "u"
+                else:
+                    xbox.tap_up()
+                    if memory.main.battle_target_id() < 20:
+                        xbox.tap_down()
+                        direction = "r"
     tap_targeting()
 
 
@@ -771,17 +772,20 @@ def after_blitz_3(early_haste):
             else:
                 CurrentPlayer().defend()
     logger.info("Battle complete (Garuda)")
-    if not game_vars.csr():
-        xbox.await_save(index=1)
     # Get to control
-    while not memory.main.battle_complete():  # story before battle summary screen
-        if memory.main.cutscene_skip_possible():
+    while not memory.main.user_control():
+        if memory.main.battle_wrap_up_active():
+            xbox.tap_b()
+        elif memory.main.cutscene_skip_possible():
             memory.main.wait_frames(3)
             xbox.skip_scene()
             memory.main.wait_frames(15)
-        elif memory.main.diag_skip_possible() or memory.main.menu_open():
+            xbox.await_save(index=1)
+        elif memory.main.diag_skip_possible():
             xbox.tap_b()
-    wrap_up()
+    #if not game_vars.csr():
+    #    xbox.await_save(index=1)
+    #wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -4022,8 +4026,8 @@ def yojimbo():
             xbox.tap_b()
 
 
-@battle.utils.speedup_decorator
 def bfa_nem():
+    logger.debug("Start of BFA/Nemesis")
     FFXC.set_movement(1, 0)
     memory.main.wait_frames(30 * 0.4)
     FFXC.set_movement(1, 1)
@@ -4043,12 +4047,14 @@ def bfa_nem():
                     CurrentPlayer().attack()
             else:
                 CurrentPlayer().defend()
+    logger.debug("BFA down")
 
     while memory.main.get_story_progress() < 3400:  # End of game
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
                     CurrentPlayer().attack(record_results=True)
+                    logger.debug(f"Battle Num: {memory.main.get_encounter_id()}")
                 elif Yuna.is_turn():
                     buddy_swap(Wakka)
                 elif Auron.is_turn():
@@ -4061,6 +4067,9 @@ def bfa_nem():
                 xbox.skip_scene()
         else:
             xbox.tap_b()
+    logger.debug("GG Nemesis%")
+    logger.debug("Returning to main")
+    return
 
 
 def yu_yevon_item():

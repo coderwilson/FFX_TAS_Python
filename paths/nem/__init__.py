@@ -7,14 +7,19 @@ from paths.nem.farming import (
     KilikaFarm,
     MacFarm,
     MiihenFarm,
-    MRRFarm,
     OmegaFarm,
+    SinFarm,
+    ThunderPlainsFarm,
     YojimboFarm,
+    ZanarkandFarm2,
 )
-from paths.nem.gagazet import GagazetFarm
+from paths.nem.gagazet import (
+    GagazetFarm,
+    GagazetMtPathFarm,
+    GagazetCaveFarm,
+    ZanarkandFarm
+)
 from paths.nem.races import LeaveRemiem, Race1, Race2, Race3, ToRemiem
-from paths.nem.sin import SinFarm
-from paths.nem.tp import ThunderPlainsFarm
 
 __all__ = [
     "ToRemiem",
@@ -29,7 +34,6 @@ __all__ = [
     "BesaidFarm",
     "KilikaFarm",
     "MiihenFarm",
-    "MRRFarm",
     "ArenaReturn",
     "YojimboFarm",
     "DjoseFarm",
@@ -38,4 +42,6 @@ __all__ = [
     "GagazetFarm",
     "SinFarm",
     "OmegaFarm",
+    "ZanarkandFarm",
+    "ZanarkandFarm2",
 ]

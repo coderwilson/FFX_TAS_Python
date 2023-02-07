@@ -136,65 +136,96 @@ def perform_next_grid(limit: int = 255):
 
     # If the above checks are passed, check Tidus level and do sphere grid.
     if memory.main.get_tidus_slvl() >= next_ap_needed(game_vars.nem_checkpoint_ap()):
+        performed = False
         logger.debug(f"Attemping Nemesis Grid #{game_vars.nem_checkpoint_ap()}")
         if game_vars.nem_checkpoint_ap() == 1:
-            nem_gridding_1()
+            if nem_gridding_1():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 2:
-            nem_gridding_2()
+            if nem_gridding_2():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 3:
-            nem_gridding_3()
+            if nem_gridding_3():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 4:
-            nem_gridding_4()
+            if nem_gridding_4():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 5:
-            nem_gridding_5()
+            if nem_gridding_5():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 6:
-            nem_gridding_6()
+            if nem_gridding_6():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 7:
-            nem_gridding_7()
+            if nem_gridding_7():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 8:
-            nem_gridding_8()
+            if nem_gridding_8():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 9:
-            nem_gridding_9()
+            if nem_gridding_9():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 10:
-            nem_gridding_10()
+            if nem_gridding_10():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 11:
-            nem_gridding_11()
+            if nem_gridding_11():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 12:
-            nem_gridding_12()
+            if nem_gridding_12():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 13:
-            nem_gridding_13()
+            if nem_gridding_13():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 14:
-            nem_gridding_14()
+            if nem_gridding_14():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 15:
-            nem_gridding_15()
+            if nem_gridding_15():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 16:
-            nem_gridding_16()
+            if nem_gridding_16():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 17:
-            nem_gridding_17()
+            if nem_gridding_17():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 18:
-            nem_gridding_18()
+            if nem_gridding_18():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 19:
-            nem_gridding_19()
+            if nem_gridding_19():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 20:
-            nem_gridding_20()
+            if nem_gridding_20():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 21:
-            nem_gridding_21()
+            if nem_gridding_21():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 22:
-            nem_gridding_22()
+            if nem_gridding_22():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 23:
-            nem_gridding_23()
+            if nem_gridding_23():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 24:
-            nem_gridding_24()
+            if nem_gridding_24():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 25:
-            nem_gridding_25()
+            if nem_gridding_25():
+                performed = True
         elif game_vars.nem_checkpoint_ap() == 26:
-            nem_gridding_26()
+            if nem_gridding_26():
+                performed = True
         else:
+            performed = False
             logger.debug("End of sphere grid, no further grid logic programmed.")
             game_vars.set_nem_checkpoint_ap(
                 game_vars.nem_checkpoint_ap() - 1
             )  # Decrement
-        game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)  # Increment
+        if performed:
+            # Increment
+            game_vars.set_nem_checkpoint_ap(game_vars.nem_checkpoint_ap() + 1)
+        return performed
 
 
 def next_ap_needed(checkpoint):
@@ -295,6 +326,7 @@ def nem_gridding_1():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_2():
@@ -308,6 +340,7 @@ def nem_gridding_2():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_3():
@@ -321,8 +354,6 @@ def nem_gridding_3():
     grid_down()
     grid_down()
     menu_grid.move_and_use()
-    # menu_grid.sel_sphere('power','none')
-    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
     grid_left()
@@ -330,15 +361,10 @@ def nem_gridding_3():
     grid_down()
     grid_left()
     menu_grid.move_and_use()
-    # menu_grid.sel_sphere('hp','none')
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
-    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_4():
@@ -349,8 +375,6 @@ def nem_gridding_4():
     grid_left()
     grid_left()
     menu_grid.move_and_use()
-    # menu_grid.sel_sphere('power','none')
-    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
     grid_left()
@@ -360,10 +384,9 @@ def nem_gridding_4():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "right")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_5():
@@ -381,8 +404,6 @@ def nem_gridding_5():
     grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "left")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_move()
     grid_up()
     grid_right()
@@ -391,6 +412,7 @@ def nem_gridding_5():
     menu_grid.sel_sphere("power", "down")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_6():
@@ -415,24 +437,17 @@ def nem_gridding_6():
     grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "left")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_move()
     grid_down()
     grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "right")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     if game_vars.end_game_version() == 3:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("lv1", "none")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('hp','none')
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_7():
@@ -455,20 +470,17 @@ def nem_gridding_7():
     menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_move()
     grid_right()
     grid_down()
     grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
-    # menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere('power','none')
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_8():
@@ -512,6 +524,7 @@ def nem_gridding_8():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_9():  # Ends near Wakka
@@ -544,6 +557,7 @@ def nem_gridding_9():  # Ends near Wakka
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_10():  # Starts near Wakka
@@ -581,7 +595,7 @@ def nem_gridding_10():  # Starts near Wakka
     menu_grid.sel_sphere("lv4", "none")
     menu_grid.use_and_move()
     FFXC.set_movement(1, -1)
-    memory.main.wait_frames(30)
+    memory.main.wait_frames(10)
     FFXC.set_movement(0, 0)
     FFXC.set_neutral()
     memory.main.wait_frames(6)
@@ -593,6 +607,7 @@ def nem_gridding_10():  # Starts near Wakka
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_11():  # Back from Ultima to Wakka's grid
@@ -624,6 +639,7 @@ def nem_gridding_11():  # Back from Ultima to Wakka's grid
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_12():  # Through Kimahri's grid to Rikku's.
@@ -660,20 +676,23 @@ def nem_gridding_12():  # Through Kimahri's grid to Rikku's.
     menu_grid.sel_sphere("ability", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_13():  # Start on the Steal command
     open_grid(0)
     menu_grid.move_first()
+    grid_up()
+    grid_down()
+    grid_down()
     grid_right()
-    grid_down()
-    grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "right")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_14():
@@ -711,6 +730,7 @@ def nem_gridding_14():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_15():  # Weird off-shoot with the three +1 strength nodes
@@ -746,6 +766,7 @@ def nem_gridding_15():  # Weird off-shoot with the three +1 strength nodes
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_16():
@@ -757,14 +778,16 @@ def nem_gridding_16():
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_right()
+    FFXC.set_movement(1, -1)
+    memory.main.wait_frames(9)
+    FFXC.set_movement(0, 0)
+    FFXC.set_neutral()
+    memory.main.wait_frames(6)
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_17():  # Ends near Lulu
@@ -816,6 +839,7 @@ def nem_gridding_17():  # Ends near Lulu
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_18():  # All the way back to Kimahri grid
@@ -850,6 +874,7 @@ def nem_gridding_18():  # All the way back to Kimahri grid
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_19():
@@ -892,6 +917,7 @@ def nem_gridding_19():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_20():  # Starts next to Haste node
@@ -912,6 +938,7 @@ def nem_gridding_20():  # Starts next to Haste node
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_21():  # Auron's grid back to Tidus
@@ -944,6 +971,7 @@ def nem_gridding_21():  # Auron's grid back to Tidus
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_22():
@@ -985,6 +1013,7 @@ def nem_gridding_22():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_23():
@@ -1012,6 +1041,7 @@ def nem_gridding_23():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_24():
@@ -1053,6 +1083,7 @@ def nem_gridding_24():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def nem_gridding_25():  # End Tidus grid, Quick Hit
@@ -1093,10 +1124,16 @@ def nem_gridding_25():  # End Tidus grid, Quick Hit
     menu_grid.sel_sphere("lv3", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 # Backtrack to Auto-life, or can go through Yuna's grid on refactor.
 def nem_gridding_26():
+    if (
+        memory.main.get_item_slot(84) == 255
+        or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+    ):
+        return False
     open_grid(0)
     menu_grid.move_first()
     grid_right()
@@ -1136,6 +1173,7 @@ def nem_gridding_26():
     menu_grid.sel_sphere("ability", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
+    return True
 
 
 def lulu_bribe():
@@ -1275,19 +1313,4 @@ def arena_purchase_1():
 
 
 def remove_all_nea():
-    for i in range(7):
-        if memory.main.equipped_armor_has_ability(char_num=i):  # Defaults to NEA
-            if i == 0:
-                if memory.main.check_ability_armor(ability=0x8056)[i]:
-                    equip_armor(character=i, ability=0x8056)  # Auto-Haste
-                else:
-                    equip_armor(character=i, ability=99)  # Remove equipment
-            elif i in [4, 6]:
-                if memory.main.check_ability_armor(ability=0x801D)[i]:
-                    equip_armor(character=i, ability=0x801D)  # Auto-Phoenix
-                elif memory.main.check_ability_armor(ability=0x8072, slot_count=4)[i]:
-                    equip_armor(character=i, ability=0x8072, slot_count=4)
-                else:
-                    equip_armor(character=i, ability=99)  # Remove equipment
-            else:
-                equip_armor(character=i, ability=99)  # Unequip
+    menu.remove_all_nea()

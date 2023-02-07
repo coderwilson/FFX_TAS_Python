@@ -31,6 +31,7 @@ import area.rescue_yuna
 import area.sin
 import area.thunder_plains
 import area.zanarkand
+import area.chocobos
 import battle.boss
 import battle.main
 import blitz
@@ -40,6 +41,7 @@ import logs
 import memory.main
 import nemesis.arena_battles
 import nemesis.arena_prep
+import nemesis.advanced_farm
 import nemesis.changes
 import pathing
 import reset
@@ -120,6 +122,7 @@ def load_game_state():
 
 
 def maybe_create_save(save_num: int):
+    memory.main.wait_frames(6)
     game_vars = vars.vars_handle()
     if game_vars.create_saves():
         save_sphere.touch_and_save(
@@ -638,6 +641,8 @@ def perform_TAS():
                         battle.boss.bfa()
                         battle.boss.yu_yevon()
                     game.state = "End"
+                    logger.debug(f"State: {game.state}")
+                    logger.debug(f"Step: {game.step}")
 
             # Nemesis logic only:
             if game.state == "Gagazet":
@@ -662,141 +667,92 @@ def perform_TAS():
                     else:
                         logger.info(f"B&Y battle before NEA: {advance_post_x}")
                         game.step = 3
-
+            
             # Nemesis farming section
             if game.state == "Nem_Farm":
                 if game.step == 1:
                     nemesis.arena_prep.transition()
+                    nemesis.arena_prep.unlock_omega()
                     while not nemesis.arena_prep.t_plains(cap_num=1):
                         pass
-                    game.step = 2
-                    maybe_create_save(save_num=51)
-
-                if game.step == 2:
                     while not nemesis.arena_prep.calm(cap_num=1, airship_return=False):
                         pass
-                    game.step = 3
+                    #maybe_create_save(save_num=51)
+                    game.step = 2
 
-                if game.step == 3:
+                if game.step == 2:
                     nemesis.arena_prep.kilika_shop()
-                    game.step = 4
+                    logger.debug("===Kilika shop to farm")
+                    nemesis.arena_prep.kilika_farm(cap_num=1, checkpoint=3)
+                    nemesis.arena_prep.besaid_farm(cap_num=1)
+                    game.step = 3
                     maybe_create_save(save_num=52)
 
-                if game.step == 4:
-                    nemesis.arena_prep.besaid_farm(cap_num=1)
-                    game.step = 5
-
-                if game.step == 5:
-                    nemesis.arena_prep.kilika_farm(cap_num=1)
-                    game.step = 6
+                if game.step == 3:
+                    nemesis.arena_prep.mac_woods(cap_num=1)
+                    nemesis.arena_prep.stolen_fayth_cave(cap_num=1)
+                    game.step = 4
                     maybe_create_save(save_num=53)
 
-                if game.step == 6:
-                    nemesis.arena_prep.miihen_farm(cap_num=1)
-                    game.step = 7
+                if game.step == 4:
+                    nemesis.arena_prep.od_to_ap()
+                    game.step = 5
                     maybe_create_save(save_num=54)
 
-                if game.step == 7:
-                    # report_gamestate()
-                    # nemesis.arena_prep.mrr_farm(cap_num=1)
-                    game.step = 8
-
-                if game.step == 8:
-                    nemesis.arena_prep.od_to_ap()
-                    game.step = 9
-
-                if game.step == 9:
+                if game.step == 5:
                     nemesis.arena_prep.besaid_farm(cap_num=10)
-                    game.step = 10
-
-                if game.step == 10:
                     nemesis.arena_prep.kilika_farm(cap_num=10)
-                    game.step = 11
+                    game.step = 6
                     maybe_create_save(save_num=55)
 
-                if game.step == 11:
-                    nemesis.arena_prep.miihen_farm(cap_num=10)
-                    game.step = 12
+                if game.step == 6:
+                    nemesis.advanced_farm.full_farm(phase=3)
+                    game.step = 7
                     maybe_create_save(save_num=56)
 
-                if game.step == 12:
-                    # report_gamestate()
-                    # nemesis.arena_prep.mrr_farm(cap_num=10)
-                    game.step = 13
-
-                if game.step == 13:
-                    nemesis.arena_prep.djose_farm(cap_num=10)
-                    game.step = 14
+                if game.step == 7:
+                    nemesis.arena_prep.auto_phoenix()
+                    logger.debug("Auto_phoenix done.")
+                    game.step = 8
                     maybe_create_save(save_num=57)
 
-                if game.step == 14:
-                    nemesis.arena_prep.t_plains(cap_num=10)
-                    game.step = 15
+                if game.step == 8:
+                    nemesis.advanced_farm.full_farm(phase=4)
+                    game.step = 9
                     maybe_create_save(save_num=58)
 
-                if game.step == 15:
-                    nemesis.arena_prep.bikanel(cap_num=10)
-                    game.step = 16
+                if game.step == 9:
+                    nemesis.arena_prep.kilika_money()
+                    nemesis.arena_prep.arena_return()
+                    nemesis.arena_prep.quick_levels(force_levels=27, mon="don_tonberry")
+                    nemesis.arena_prep.one_mp_weapon()
+                    # Phase 5 farm
+                    game.step = 10
                     maybe_create_save(save_num=59)
 
-                if game.step == 16:
-                    nemesis.arena_prep.arena_return()
-                    nemesis.arena_prep.auto_phoenix()
-                    game.step = 17
+                if game.step == 10:
+                    nemesis.advanced_farm.full_farm(phase=5)
+                    # Back to arena for auto-life and auto-haste
+                    game.step = 11
                     maybe_create_save(save_num=60)
 
-                if game.step == 17:
-                    nemesis.arena_prep.mac_woods(cap_num=10)
-                    game.step = 18
+                if game.step == 11:
+                    nemesis.arena_prep.gagazet()
+                    game.step = 12
                     maybe_create_save(save_num=61)
 
-                if game.step == 18:
-                    nemesis.arena_prep.stolen_fayth_cave()
-                    game.step = 19
+                if game.step == 12:
+                    nemesis.advanced_farm.full_farm(phase=6)
+                    game.step = 13
                     maybe_create_save(save_num=62)
 
-                if game.step == 19:
-                    nemesis.arena_prep.gagazet()
-                    # nemesis.arena_prep.gagazet_1()
-                    # nemesis.arena_prep.gagazet_2()
-                    # nemesis.arena_prep.gagazet_3()
-                    # game.state = "End"  # Testing only
-                    game.step = 20
-                    maybe_create_save(save_num=63)
-
-                if game.step == 20:
-                    nemesis.arena_prep.calm(
-                        cap_num=10, airship_return=False, force_levels=19
-                    )  # Formerly 26, confirmed good upwards from 20.
-                    game.step = 21
-
-                if game.step == 21:
-                    nemesis.arena_prep.one_mp_weapon()
-                    game.step = 22
-                    maybe_create_save(save_num=64)
-
-                if game.step == 22:
-                    nemesis.arena_prep.inside_sin(cap_num=10)
-                    game.step = 23
-                    maybe_create_save(save_num=65)
-
-                if game.step == 23:
-                    nemesis.arena_prep.unlock_omega()
-                    nemesis.arena_prep.omega_ruins()
-                    game.step = 24
-                    maybe_create_save(save_num=66)
-
-                if game.step == 24:
+                if game.step == 13:
                     nemesis.arena_prep.kilika_final_shop()
-                    game.step = 25
-                    maybe_create_save(save_num=67)
-
-                if game.step == 25:
                     nemesis.arena_prep.arena_return()
                     nemesis.arena_prep.final_weapon()
                     game.state = "Nem_Arena"
                     game.step = 1
-
+            
             # Nemesis Arena section
             if game.state == "Nem_Arena":
                 if game.step == 1:
@@ -827,12 +783,13 @@ def perform_TAS():
                 if game.step == 6:
                     nemesis.arena_battles.nemesis_battle()
                     game.step = 7
+                    maybe_create_save(save_num=63)
 
                 if game.step == 7:
                     nemesis.arena_battles.return_to_sin()
                     game.state = "Sin"
                     game.step = 3
-
+            
             # End of game section
             if (
                 game.state == "End"
@@ -843,7 +800,7 @@ def perform_TAS():
                 game.state, game.step = reset.mid_run_reset(
                     land_run=True, start_time=game.start_time
                 )
-
+            logger.debug("Mark 4")
             logger.debug("Looping")
             logger.debug(f"{game.state} | {game.step}")
 
@@ -880,9 +837,24 @@ def write_final_logs():
         memory.main.wait_frames(180)
         while not memory.main.save_menu_open():
             xbox.tap_b()
+    
+    logger.info("That's the end of the run, but we have one more thing to do.")
+    memory.main.wait_frames(90)
+    xbox.tap_a()
+    memory.main.wait_frames(90)
+    
+    load_game.load_into_game(gamestate="Nem_Farm", step_counter=1)
+    nemesis.arena_prep.return_to_airship()
+    nemesis.arena_prep.air_ship_destination(dest_num=12)
+    area.chocobos.all_races()
+    # Use the following to go straight into remiem races.
+    #while not pathing.set_movement([-637, -246]):
+    #    pass
+    area.chocobos.to_remiem()
+    area.chocobos.remiem_races()
+
 
     memory.main.end()
-
     logger.info("Automation complete. Shutting down. Have a great day!")
 
 

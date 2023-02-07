@@ -3,8 +3,10 @@ from paths.base import AreaMovementBase
 
 class ToRemiem(AreaMovementBase):
     checkpoint_coordiantes = {
-        0: [-1442, 123],
-        1: [-1429, -218],
+        #0: [-1442, 123],  # From the northwest corner
+        #1: [-1429, -218],  # From the northwest corner
+        0: [-584, -325],  # From the agency
+        1: [-703, -584],  # From the agency
         2: [-927, -1415],
         3: [-820, -1547],
         4: [-576, -1654],
@@ -99,14 +101,14 @@ class Race2(AreaMovementBase):
         10: [1131, 731],
         11: [0, 0],  # First chest
         12: [955, 736],  # Right of green thing
-        13: [811, 826],  # Up ramp, avoiding pole
-        14: [800, 856],
+        13: [913, 795],  # Up ramp, avoiding pole
+        14: [816, 824],
         15: [830, 881],  # Around blue pole, back towards chest
         16: [964, 824],
         17: [0, 0],  # Second chest
         18: [955, 736],  # Right of green thing
-        19: [811, 826],  # Up ramp, avoiding pole
-        20: [735, 882],  # Towards third chest
+        19: [913, 795],  # Up ramp, avoiding pole
+        20: [816, 824],  # Towards third chest
         21: [604, 860],
         22: [0, 0],  # Third chest
         23: [569, 580],
@@ -142,14 +144,14 @@ class Race3(AreaMovementBase):
         10: [1131, 731],
         11: [0, 0],  # First chest
         12: [955, 736],  # Right of green thing
-        13: [811, 826],  # Up ramp, avoiding pole
-        14: [800, 856],
+        13: [913, 795],  # Up ramp, avoiding pole
+        14: [816, 824],
         15: [830, 881],  # Around blue pole, back towards chest
         16: [964, 824],
         17: [0, 0],  # Second chest
         18: [955, 736],  # Right of green thing
-        19: [811, 826],  # Up ramp, avoiding pole
-        20: [735, 882],  # Towards third chest
+        19: [913, 795],  # Up ramp, avoiding pole
+        20: [816, 824],  # Towards third chest
         21: [604, 860],
         22: [0, 0],  # Third chest
         23: [431, 394],

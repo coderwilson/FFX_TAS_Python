@@ -1,0 +1,181 @@
+{
+	"mi'ihen_(newroad)": {
+		"old_road": {
+			"direction": "f",
+			"checkpoint": 30,
+			"nea": "False"
+		},
+		"clasko_skip_screen": {
+			"direction": "f",
+			"checkpoint": 30,
+			"nea": "False"
+		},
+		"mrr_-_valley": {
+			"direction": "f",
+			"checkpoint": 30,
+			"nea": "True"
+		}
+	},
+	"old_road": {
+		"mi'ihen_(newroad)": {
+			"direction": "b",
+			"checkpoint": 39,
+			"nea": "False"
+		},
+		"clasko_skip_screen": {
+			"direction": "f",
+			"checkpoint": 41,
+			"nea": "False"
+		},
+		"mrr_-_valley": {
+			"direction": "f",
+			"checkpoint": 42,
+			"nea": "True"
+		}
+	},
+	"clasko_skip_screen": {
+		"mi'ihen_(newroad)": {
+			"direction": "b",
+			"checkpoint": 52,
+			"nea": "False"
+		},
+		"old_road": {
+			"direction": "b",
+			"checkpoint": 52,
+			"nea": "False"
+		},
+		"mrr_-_valley": {
+			"direction": "f",
+			"checkpoint": 53,
+			"nea": "True"
+		}
+	},
+	"mi'ihen_screen_2-3": {
+		"mrr_-_valley": {
+			"direction": "b",
+			"checkpoint": 205,
+			"nea": "True"
+		},
+		"mi'ihen_(newroad)": {
+			"direction": "b",
+			"checkpoint": 205,
+			"nea": "True"
+		},
+		"clasko_skip_screen": {
+			"direction": "b",
+			"checkpoint": 205,
+			"nea": "True"
+		},
+		"old_road": {
+			"direction": "b",
+			"checkpoint": 205,
+			"nea": "True"
+		}
+	},
+	"thunder_plains_(north)_(2_stones)": {
+		"thunder_plains_(south)_(2_stones)": {
+			"direction": "f",
+			"checkpoint": 11,
+			"nea": "False"
+		}
+	},
+	"thunder_plains_(south)_(2_stones)": {
+		"thunder_plains_(north)_(2_stones)": {
+			"direction": "b",
+			"checkpoint": 16,
+			"nea": "False"
+		}
+	},
+	"calm_lands_(south)": {
+		"calm_lands_(central-north-east)": {
+			"direction": "f",
+			"checkpoint": 3,
+			"nea": "False"
+		},
+		"calm_lands_(north-west)": {
+			"direction": "f",
+			"checkpoint": 3,
+			"nea": "False"
+		}
+	},
+	"calm_lands_(central-north-east)": {
+		"calm_lands_(south)": {
+			"direction": "b",
+			"checkpoint": 4,
+			"nea": "False"
+		},
+		"calm_lands_(north-west)": {
+			"direction": "f",
+			"checkpoint": 5,
+			"nea": "False"
+		}
+	},
+	"calm_lands_(north-west)": {
+		"calm_lands_(south)": {
+			"direction": "b",
+			"checkpoint": 6,
+			"nea": "False"
+		},
+		"calm_lands_(central-north-east)": {
+			"direction": "b",
+			"checkpoint": 6,
+			"nea": "False"
+		}
+	},
+	"inside_sin_(front)": {
+		"inside_sin_(back)": {
+			"direction": "f",
+			"checkpoint": 42,
+			"nea": "False"
+		}
+	},
+	"inside_sin_(back)": {
+		"inside_sin_(front)": {
+			"direction": "b",
+			"checkpoint": 44,
+			"nea": "False"
+		}
+	},
+	"djose_highroad_(back_half)": {
+		"moonflow_(south)": {
+			"direction": "f",
+			"checkpoint": 23,
+			"nea": "True"
+		}
+	},
+	"moonflow_(south)": {
+		"djose_highroad_(back_half)": {
+			"direction": "b",
+			"checkpoint": 25,
+			"nea": "False"
+		}
+	},
+	"cave_(white_zone)": {
+		"cave_(green_zone)": {
+			"direction": "f",
+			"checkpoint": 27,
+			"nea": "True"
+		}
+	},
+	"cave_(green_zone)": {
+		"cave_(white_zone)": {
+			"direction": "b",
+			"checkpoint": 26,
+			"nea": "False"
+		}
+	},
+	"lake_macalania": {
+		"macalania_woods": {
+			"direction": "f",
+			"checkpoint": 5,
+			"nea": "False"
+		}
+	},
+	"macalania_woods": {
+		"lake_macalania": {
+			"direction": "b",
+			"checkpoint": 13,
+			"nea": "False"
+		}
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"Simurgh": {
+		"num": 28,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 20,
+		"need": 5
+	},
+	"Alcyone": {
+		"num": 29,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 5
+	},
+	"cactuar": {
+		"num": 88,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "sanubia_desert_(central)",
+		"zone3": "none",
+		"prio": 100,
+		"need": 1
+	},
+	"sand_wolf": {
+		"num": 12,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 1
+	}
+}

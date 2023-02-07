@@ -1,7 +1,7 @@
 from paths.base import AreaMovementBase
 
 
-class ThunderPlainsFarm(AreaMovementBase):
+class ThunderPlainsFarm_old(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [6, -54],
         1: [10, -200],

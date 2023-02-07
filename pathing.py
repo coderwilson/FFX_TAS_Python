@@ -38,8 +38,12 @@ def set_movement(target) -> bool:
         Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
+    if memory.main.get_actor_id(0) == 20531:
+        d = 8
+    else:
+        d = 3
 
-    if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
+    if abs(player[1] - target[1]) < d and abs(player[0] - target[0]) < d:
         return True  # Checkpoint reached
     else:
         return False
@@ -78,6 +82,7 @@ def _approach_actor(actor_index: int = 999, talk: bool = True):
 
     actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
     target_coords = [actor_coords[0], actor_coords[1]]
+    logger.debug(f"Actor's coordinates: {target_coords}")
 
     while memory.main.user_control():
         set_movement(target_coords)

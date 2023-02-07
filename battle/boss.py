@@ -146,7 +146,7 @@ def klikk():
                 battle.main.revive()
                 klikk_revives += 1
             elif Tidus.is_turn():
-                if Rikku.is_dead() and memory.main.get_enemy_current_hp()[0] > 125:
+                if Rikku.is_dead() and memory.main.get_enemy_current_hp()[0] > 125 and Tidus.in_danger(120):
                     battle.main.use_potion_character(Tidus, "l")
                 else:
                     CurrentPlayer().attack()
@@ -1670,6 +1670,7 @@ def omnis():
     CurrentPlayer().defend()  # Yuna defends
     rikku_in = False
     backup_cure = False
+    summoned = False
 
     while memory.main.get_enemy_max_hp()[0] == memory.main.get_enemy_current_hp()[0]:
         if memory.main.turn_ready():
@@ -1693,7 +1694,11 @@ def omnis():
         if memory.main.turn_ready():
             logger.debug(f"Character turn: {memory.main.get_battle_char_turn()}")
             if Yuna.is_turn():
-                battle.main.aeon_summon(4)
+                if not summoned:
+                    battle.main.aeon_summon(4)
+                    summoned = True
+                else:
+                    battle.main.attack()
             elif screen.turn_aeon():
                 CurrentPlayer().attack()
             elif Tidus.is_turn():

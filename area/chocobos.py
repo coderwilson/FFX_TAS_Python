@@ -10,154 +10,57 @@ import vars
 import xbox
 from paths.nem import CalmLands1, CalmLands2, LeaveRemiem, Race1, Race2, Race3, ToRemiem
 from players import Auron, Kimahri, Rikku, Tidus, Yuna
-
-logger = logging.getLogger(__name__)
-game_vars = vars.vars_handle()
+import nemesis.arena_prep
 
 FFXC = xbox.controller_handle()
+logger = logging.getLogger(__name__)
 
-
-# The following functions replace the default ones from the regular Bahamut run.
-
-
-def arena_npc():
-    memory.main.await_control()
-    if memory.main.get_map() != 307:
-        return
-    while not (
-        memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
-    ):
-        if memory.main.user_control():
-            if memory.main.get_coords()[1] > -12:
-                FFXC.set_movement(0, -1)
-                memory.main.wait_frames(1)
-            else:
-                pathing.set_movement([2, -15])
-                xbox.tap_b()
-        else:
-            FFXC.set_neutral()
-            if memory.main.diag_progress_flag() == 59:
-                xbox.menu_a()
-                xbox.menu_a()
-                xbox.menu_a()
-                xbox.menu_a()
-                xbox.tap_b()
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
-    memory.main.wait_frames(3)
-
-
-def next_race():
+def all_races():
+    #equip
+    
+    #counter = 0
+    while not pathing.set_movement([-637, -246]):
+        pass
+    pathing.approach_actor_by_id(actor_id=20531)
     FFXC.set_neutral()
-    memory.main.click_to_diag_progress(28)
-    memory.main.wait_frames(9)
+    memory.main.click_to_diag_progress(302)
+    memory.main.wait_frames(30)
+    xbox.menu_down()
+    xbox.menu_down()
     xbox.tap_b()
-
-
-def gagazet_lv_4_chest():
-    steps = [
-        [-547,215],
-        [-510,212],
-        [-512,233],
-        [-543,245],
-        [-570,261],
-        [0,0],  # Open chest
-        [-543,245],
-        [-512,233],
-        [-510,212],
-        [-547,215],
-        [-569,223],
-    ]
-    i = 0
-    while i < len(steps):
-        if i == 5:
-            memory.main.click_to_event_temple(1)
-            i+= 1
-        elif pathing.set_movement(steps[i]):
-            i+= 1
-
-
-def calm_lands():
-    # Start chocobo races
-    calm_lands_1()
-
-    FFXC.set_neutral()
-    memory.main.click_to_diag_progress(28)
-    memory.main.wait_frames(9)
-    xbox.tap_b()
+    
+    
     wobbly_complete = False
     while not wobbly_complete:
         wobbly_complete = choco_tame_1()
 
     logger.debug("Wobbly Chocobo complete")
-    # Shenef don't remove these please.
-    # next_race()
-    # dodger_complete = False
-    # while not dodger_complete:
-    #     dodger_complete = choco_tame_2()
+    next_race()
+    dodger_complete = False
+    while not dodger_complete:
+        dodger_complete = choco_tame_2()
 
-    # logger.debug("Dodger Chocobo complete")
-    # next_race()
+    logger.debug("Dodger Chocobo complete")
+    next_race()
 
-    # hyper_complete = False
-    # while not hyper_complete:
-    #     hyper_complete = choco_tame_3()
+    hyper_complete = False
+    while not hyper_complete:
+        hyper_complete = choco_tame_3()
 
-    # logger.debug("Hyper Chocobo complete")
+    logger.debug("Hyper Chocobo complete")
 
     # catcher_complete = False
     # while not catcher_complete:
     #     catcher_complete = choco_tame_4()
 
     # logger.debug("Catcher Chocobo complete")
-
-    to_remiem()
-
-
-def calm_lands_1():
-    # Enter the cutscene that starts Calm Lands
-    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=True)
-    while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
-        if memory.main.user_control():
-            FFXC.set_movement(0, 1)
-        else:
-            FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
-
-    # Now head to the chocobo lady.
-    # memory.set_encounter_rate(0) #Testing only
-    checkpoint = 0
-    while memory.main.get_map() != 307:
-        if memory.main.user_control():
-            # if checkpoint == 10:
-            #     if area.gagazet.check_gems() < 2:
-            #         checkpoint -= 2
-            if pathing.set_movement(CalmLands1.execute(checkpoint)) is True:
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                if area.gagazet.check_gems() < 2:
-                    battle.main.calm_lands_gems()
-                else:
-                    battle.main.calm_lands_manip()
-                memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
-                battle.main.heal_up(full_menu_close=True)
-                rng_track.print_manip_info()
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-
-    logger.debug("Now talk to NPC")
-    # arena_npc()
-    # arena_purchase()
-    # memory.wait_frames(6)
-    # xbox.tap_b() #I want to ride a chocobo.
-
+    
+    
+    
 
 def choco_tame_1():
     memory.main.click_to_diag_progress(43)
+    logger.info("Race start!")
     while not memory.main.diag_progress_flag() in [44, 74]:
         angle = memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
@@ -183,16 +86,21 @@ def choco_tame_1():
             else:
                 FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
-
-    while not memory.main.diag_progress_flag() in [51, 69, 74]:
+    logger.info("Race end!")
+    
+    last_flag = 0
+    while not memory.main.diag_progress_flag() in [51,52,53,69,74]:
         # 51 is success
         xbox.tap_b()
-    if memory.main.diag_progress_flag() == 51:  # Success
+        if last_flag != memory.main.diag_progress_flag():
+            logger.debug(f"Update: {memory.main.diag_progress_flag()}")
+            last_flag = memory.main.diag_progress_flag()
+    if memory.main.diag_progress_flag() in [51,52,53]:  # Success
         memory.main.click_to_diag_progress(77)
         memory.main.wait_frames(12)
-        xbox.tap_down()  # Up for next race, down for quit
+        xbox.tap_up()  # Up for next race, down for quit
         xbox.tap_b()
-        # memory.wait_frames(20)
+        memory.main.wait_frames(20)
         xbox.tap_up()
         xbox.tap_b()
         return True
@@ -426,13 +334,16 @@ def choco_tame_4():
 
 
 def to_remiem():
-    memory.main.click_to_control()
+    memory.main.await_control()
+    memory.main.wait_frames(6)
+    logger.info("Talking to chocobo lady")
     while memory.main.user_control():
         pathing.set_movement([-1565, 434])
         xbox.tap_b()
-        logger.debug("Near chocobo lady")
     FFXC.set_neutral()
-    memory.main.click_to_control_3()
+    logger.info("Let me ride one!")
+    memory.main.click_to_control()
+    logger.info("Heading to Remiem")
 
     checkpoint = 0
     while checkpoint < 35:
@@ -459,13 +370,12 @@ def to_remiem():
 def remiem_races():
     logger.debug("Ready to start races")
     choco_race_1()
-    logger.debug("Cloudy Mirror obtained.")
+    logger.info("Cloudy Mirror obtained.")
     # Shenef, don't remove these please. I want to play with them later.
     choco_race_2()
-    logger.debug("Obtained")
+    logger.info("Obtained Wings to Discovery")
     choco_race_3()
-    logger.debug("Something obtained")
-    logger.debug("Now heading back to the monster arena.")
+    logger.info("Obtained Three Stars!")
 
 
 def choco_race_1():
@@ -534,7 +444,7 @@ def choco_race_3():
         xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0
-    while checkpoint != 44:
+    while checkpoint != 43:
         if memory.main.user_control():
             if checkpoint == 11:
                 memory.main.click_to_event_temple(0)
@@ -569,99 +479,11 @@ def choco_race_3():
     memory.main.wait_frames(60)
     FFXC.set_neutral()
     memory.main.click_to_control_3()
+    logger.debug("End of third race")
 
 
-def temple_to_arena():
-    memory.main.click_to_control_3()
-    checkpoint = 0
-    while memory.main.get_map() != 307:
-        if memory.main.user_control():
-            if memory.main.get_map() == 223 and checkpoint < 18:
-                checkpoint = 18
-
-            elif checkpoint == 20:
-                while memory.main.user_control():
-                    pathing.set_movement([1261, -1238])
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.click_to_control()
-                checkpoint += 1
-
-            elif checkpoint == 24:
-                logger.debug("Feather")
-                while memory.main.user_control():
-                    pathing.set_movement([1101, -940])
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.await_control()
-                checkpoint += 1
-            elif pathing.set_movement(LeaveRemiem.execute(checkpoint)) is True:
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-
-
-def arena_purchase():
-    memory.main.click_to_control()
-
-    logger.debug("Straight forward to the guy")
-    FFXC.set_movement(0, 1)
-    memory.main.click_to_event()
+def next_race():
     FFXC.set_neutral()
-    logger.debug("Now for dialog")
-    memory.main.click_to_diag_progress(65)
-    logger.debug("Select Sure")
-    memory.main.wait_frames(15)
-    xbox.tap_down()
+    memory.main.click_to_diag_progress(28)
+    memory.main.wait_frames(9)
     xbox.tap_b()
-    memory.main.click_to_diag_progress(73)
-    memory.main.wait_frames(15)
-    # xbox.tap_up()
-    xbox.tap_b()  # Let's see your weapons
-    # memory.wait_frames(9000)
-    nemesis.menu.arena_purchase_1()
-    # Sell all undesirable equipment
-    # Purchase the following weapons:
-    # -Tidus x4
-    # -Yuna x1
-
-    # ---Done buying.
-    memory.main.await_control()
-    memory.main.wait_frames(2)
-    FFXC.set_movement(0, -1)
-    memory.main.await_event()  # Exit the arena map
-    FFXC.set_neutral()
-    memory.main.await_control()
-
-    checkpoint = 0
-    while memory.main.get_map() != 279:
-        if memory.main.user_control():
-            if checkpoint == 7 and area.gagazet.check_gems() < 2:
-                checkpoint -= 2
-            elif pathing.set_movement(CalmLands2.execute(checkpoint)) is True:
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                if area.gagazet.check_gems() < 2:
-                    battle.main.calm_lands_gems()
-                else:
-                    battle.main.calm_lands_manip()
-                memory.main.update_formation(Tidus, Yuna, Auron)
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-
-
-def arena_purchase_with_chocobo():
-    while memory.main.user_control():  # Back onto chocobo
-        pathing.set_movement([1347, -69])
-        xbox.tap_b()
-
-    while not pathing.set_movement([1488, 778]):
-        pass
-    while not pathing.set_movement([1545, 1088]):
-        pass
-    while not memory.main.get_map() == 279:
-        pathing.set_movement([1700, 1200])
-
-    memory.main.update_formation(Tidus, Kimahri, Auron)

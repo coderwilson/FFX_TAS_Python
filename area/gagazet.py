@@ -26,6 +26,8 @@ from players import Auron, CurrentPlayer, Kimahri, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
+if game_vars.nemesis():
+    import nemesis.changes
 
 FFXC = xbox.controller_handle()
 
@@ -164,7 +166,10 @@ def gagazet_gates():
     checkpoint = 0
     while memory.main.get_map() != 285:
         if memory.main.user_control():
-            if pathing.set_movement(GagazetSnow.execute(checkpoint)):
+            if checkpoint == 22 and game_vars.nemesis():
+                nemesis.changes.gagazet_lv_4_chest()
+                checkpoint += 1
+            elif pathing.set_movement(GagazetSnow.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:

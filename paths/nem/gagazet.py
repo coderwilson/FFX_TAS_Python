@@ -85,3 +85,37 @@ class GagazetFarm(AreaMovementBase):
         79: [0, 0],
         80: [0, 0],
     }
+
+class GagazetMtPathFarm(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [-39, 108],
+        1: [-5, 140],
+        2: [24, 217],
+        3: [67, 352],
+        4: [90, 550],  # Map to map
+        5: [-2, -300],  # Return towards save sphere
+        6: [16, -160],
+        7: [-4, -127],
+    }
+
+class GagazetCaveFarm(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [24, 92],
+        1: [53, 107],
+        2: [70, 129],  # Step onto platform (Ronso side)
+        3: [107, -1038],  # Step onto platform (cave side)
+        4: [116, -1017],
+        5: [113, -970],  # End of section, no path to fish.
+    }
+
+class ZanarkandFarm(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [-39, 108],
+        1: [-5, 140],
+        2: [24, 217],
+        3: [67, 352],
+        4: [90, 550],  # Map to map
+        5: [-2, -300],  # Return towards save sphere
+        6: [16, -160],
+        7: [-4, -127],
+    }

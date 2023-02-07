@@ -1,0 +1,226 @@
+{
+	"Example - area name from the 'formations' file": {
+		"first_battle": "This value is the checkpoint that transitions from travel to battle.",
+		"last_battle": "This is the last checkpoint before starting to return",
+		"return_direction": "either 'f' for forward or 'b' for back",
+		"return_start": "Start of the return trip. May not be incremented from last_battle",
+		"sphere": "This is your checkpoint to trigger returning to the airship",
+		"sticky": "Prefer staying in this zone, or not."
+	},
+	"kilika_woods": {
+		"first_battle": 12,
+		"last_battle": 13,
+		"return_direction": "f",
+		"return_start": 13,
+		"sphere": 13,
+		"sticky": "False"
+	},
+	"mi'ihen_screen_2-3": {
+		"first_battle": 205,
+		"last_battle": 206,
+		"return_direction": "b",
+		"return_start": 205,
+		"sphere": 47,
+		"sticky": "True"
+	},
+	"mi'ihen_(newroad)": {
+		"first_battle": 29,
+		"last_battle": 30,
+		"return_direction": "f",
+		"return_start": 30,
+		"sphere": 47,
+		"sticky": "True"
+	},
+	"old_road": {
+		"first_battle": 40,
+		"last_battle": 41,
+		"return_direction": "f",
+		"return_start": 42,
+		"sphere": 47,
+		"sticky": "True"
+	},
+	"clasko_skip_screen": {
+		"first_battle": 52,
+		"last_battle": 53,
+		"return_direction": "b",
+		"return_start": 52,
+		"sphere": 48,
+		"sticky": "True"
+	},
+	"mrr_-_valley": {
+		"first_battle": 61,
+		"last_battle": 62,
+		"return_direction": "f",
+		"return_start": 62,
+		"sphere": 62,
+		"sticky": "True"
+	},
+	"djose_highroad_(front_half)": {
+		"first_battle": 8,
+		"last_battle": 9,
+		"return_direction": "b",
+		"return_start": 8,
+		"sphere": -1,
+		"sticky": "True"
+	},
+	"djose_highroad_(back_half)": {
+		"first_battle": 18,
+		"last_battle": 20,
+		"return_direction": "f",
+		"return_start": 29,
+		"sphere": 39,
+		"sticky": "True"
+	},
+	"moonflow_(south)": {
+		"first_battle": 26,
+		"last_battle": 27,
+		"return_direction": "f",
+		"return_start": 27,
+		"sphere": 39,
+		"sticky": "True"
+	},
+	"thunder_plains_(south)_(2_stones)": {
+		"first_battle": 17,
+		"last_battle": 18,
+		"return_direction": "b",
+		"return_start": 16,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"thunder_plains_(north)_(2_stones)": {
+		"first_battle": 9,
+		"last_battle": 10,
+		"return_direction": "b",
+		"return_start": 8,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"macalania_woods": {
+		"first_battle": 13,
+		"last_battle": 14,
+		"return_direction": "f",
+		"return_start": 15,
+		"sphere": 17,
+		"sticky": "False"
+	},
+	"lake_macalania": {
+		"first_battle": 4,
+		"last_battle": 5,
+		"return_direction": "f",
+		"return_start": 5,
+		"sphere": 10,
+		"sticky": "False"
+	},
+	"sanubia_desert_(east)": {
+		"first_battle": 7,
+		"last_battle": 8,
+		"return_direction": "b",
+		"return_start": 7,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"sanubia_desert_(central)": {
+		"first_battle": 26,
+		"last_battle": 27,
+		"return_direction": "f",
+		"return_start": 43,
+		"sphere": 44,
+		"sticky": "True"
+	},
+	"sanubia_desert_(ruins)": {
+		"first_battle": 30,
+		"last_battle": 31,
+		"return_direction": "f",
+		"return_start": 40,
+		"sphere": 44,
+		"sticky": "True"
+	},
+	"calm_lands_(south)": {
+		"first_battle": 2,
+		"last_battle": 3,
+		"return_direction": "b",
+		"return_start": 2,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"calm_lands_(central-north-east)": {
+		"first_battle": 4,
+		"last_battle": 5,
+		"return_direction": "b",
+		"return_start": 4,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"calm_lands_(north-west)": {
+		"first_battle": 6,
+		"last_battle": 7,
+		"return_direction": "b",
+		"return_start": 6,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"gagazet_(mountain)": {
+		"first_battle": 6,
+		"last_battle": 7,
+		"return_direction": "b",
+		"return_start": 6,
+		"sphere": -1,
+		"sticky": "False"
+	},
+	"gagazet_(cave)": {
+		"first_battle": 4,
+		"last_battle": 5,
+		"return_direction": "b",
+		"return_start": 4,
+		"sphere": -1,
+		"sticky": "True"
+	},
+	"cave_(white_zone)": {
+		"first_battle": 26,
+		"last_battle": 27,
+		"return_direction": "b",
+		"return_start": 26,
+		"sphere": 17,
+		"sticky": "True"
+	},
+	"cave_(green_zone)": {
+		"first_battle": 28,
+		"last_battle": 29,
+		"return_direction": "b",
+		"return_start": 28,
+		"sphere": 17,
+		"sticky": "True"
+	},
+	"inside_sin_(front)": {
+		"first_battle": 41,
+		"last_battle": 42,
+		"return_direction": "f",
+		"return_start": 42,
+		"sphere": 42,
+		"sticky": "True"
+	},
+	"inside_sin_(back)": {
+		"first_battle": 45,
+		"last_battle": 46,
+		"return_direction": "b",
+		"return_start": 45,
+		"sphere": 41,
+		"sticky": "True"
+	},
+	"omega_ruins_(lower)": {
+		"first_battle": 1,
+		"last_battle": 2,
+		"return_direction": "b",
+		"return_start": 1,
+		"sphere": 1,
+		"sticky": "False"
+	},
+	"zanarkand_(overpass)": {
+		"first_battle": 6,
+		"last_battle": 7,
+		"return_direction": "b",
+		"return_start": 6,
+		"sphere": -1,
+		"sticky": "False"
+	}
+}

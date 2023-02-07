@@ -916,7 +916,7 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     else:
         armor_num = 0
 
-    logger.debug(f"Armor is in slot {armor_num}")
+    #logger.debug(f"Armor is in slot {armor_num}")
     if memory.main.menu_number() != 26:
         if not memory.main.menu_open():
             memory.main.open_menu()
@@ -1935,5 +1935,7 @@ def remove_all_nea():
                     equip_armor(character=i, ability=0x8072, slot_count=4)
                 else:
                     equip_armor(character=i, ability=99)  # Remove equipment
+            elif i == 1 and memory.main.check_ability_armor(ability=0x800A)[i]:
+                equip_armor(character=i, ability=0x800A)  # Auto-Phoenix
             else:
                 equip_armor(character=i, ability=99)  # Unequip

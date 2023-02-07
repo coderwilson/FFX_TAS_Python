@@ -183,10 +183,15 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
     if fayth_cave and memory.main.battle_type() == 2:
         screen.await_turn()
         battle.main.flee_all()
+    elif memory.main.get_encounter_id() in [321,329]:
+        screen.await_turn()
+        battle.main.flee_all()
     else:
         while not memory.main.battle_complete():
             if memory.main.turn_ready():
-                if Tidus.is_turn():
+                if fayth_cave and screen.faint_check() in [1,2]:
+                    battle.main.revive()
+                elif Tidus.is_turn():
                     if memory.main.get_encounter_id() in [154, 156, 164]:
                         # Confusion is a dumb mechanic in this game.
                         CurrentPlayer().attack(target_id=22, direction_hint="l")
@@ -213,7 +218,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
                             CurrentPlayer().attack()
                     else:
                         battle.main.escape_one()
-                elif Rikku.is_turn() or Wakka.is_turn():
+                elif Rikku.is_turn():
                     if memory.main.battle_type() == 2:
                         battle.main.escape_one()
                     elif not battle.main.check_tidus_ok():
@@ -234,11 +239,6 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
         load_game.load_save_num(0)
         return False
     else:
-        battle.main.wrap_up()
-        if memory.main.get_hp()[0] < 1100 and memory.main.get_map() != 310:
-            # Low health, but not swimming
-            battle.main.heal_up(3)
-        nemesis.menu.perform_next_grid(limit=ap_cp_limit)
         return True
 
 
@@ -366,7 +366,12 @@ def advanced_battle_logic() -> bool:
         Tidus.flee()
     elif advanced_complete_check():
         logger.debug("Complete collecting this monster.")
-        Tidus.flee()
+        while memory.main.battle_active():
+            if memory.main.turn_ready():
+                if Tidus.is_turn() or Rikku.is_turn():
+                    Tidus.flee()
+                else:
+                    CurrentPlayer().defend()
     else:
         if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
@@ -541,11 +546,6 @@ def advanced_battle_logic() -> bool:
         load_game.load_save_num(0)
         return False
     else:
-        battle.main.wrap_up()
-        memory.main.update_formation(Tidus, Wakka, Rikku)
-        nemesis.menu.perform_next_grid()
-        if memory.main.get_hp()[0] < 1100:
-            battle.main.heal_up(3)
         return True
 
 
@@ -604,9 +604,7 @@ def arena_npc():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-    logger.debug("Mark 1")
     memory.main.wait_frames(3)  # This buffer can be improved later.
-    logger.debug("Mark 2")
 
 
 def arena_return(checkpoint: int = 0):
@@ -701,6 +699,7 @@ def kilika_shop():
     get_equipment(equip=True)  # Armor for Wakka
     xbox.tap_down()
     get_equipment(equip=True)  # Armor for Rikku
+    
     memory.main.close_menu()
     menu.add_ability(
         owner=6,
@@ -725,12 +724,52 @@ def kilika_shop():
         pass
     while not pathing.set_movement([-47, -209]):
         pass
+
+def kilika_money():
+    rin_equip_dump()
+    air_ship_destination(dest_num=2)
     while not pathing.set_movement([-25, -246]):
         pass
-    while not pathing.set_movement([29, -252]):
+    while not pathing.set_movement([-47, -209]):
+        pass
+    while not pathing.set_movement([-91, -199]):
+        pass
+    while not pathing.set_movement([-108, -169]):
+        pass
+    while memory.main.user_control():
+        FFXC.set_movement(-1, 0)
+        xbox.tap_b()
+    FFXC.set_neutral()  # Now talking to vendor
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Intro dialog
+    memory.main.wait_frames(60)
+    xbox.tap_b()  # Buy equipment
+    memory.main.wait_frames(10)
+    
+    # Now to mass farm gil
+    gil_needed = 3500000 - memory.main.get_gil_value()
+    # Get minimum needed, plus one for safety. Max 99 total.
+    armor_buys = min(int(gil_needed / 26150), 98) + 1
+    can_afford = int(memory.main.get_gil_value() / 2250)
+
+    while armor_buys >= 1:
+        kilika_gil_farm(min(armor_buys, can_afford))
+        armor_buys = int(max(armor_buys - can_afford, 0))
+        can_afford = int(memory.main.get_gil_value() / 2250)
+        if armor_buys >= 1:
+            memory.main.wait_frames(10)
+            xbox.menu_left()
+            xbox.menu_b()
+    memory.main.close_menu()
+    while not pathing.set_movement([-108, -169]):
+        pass
+    while not pathing.set_movement([-91, -199]):
+        pass
+    while not pathing.set_movement([-47, -209]):
+        pass
+    while not pathing.set_movement([-25, -246]):
         pass
     return_to_airship()
-
 
 def od_to_ap():  # Calm Lands purchases
     arena_return()
@@ -801,7 +840,6 @@ def od_to_ap():  # Calm Lands purchases
 
 
 def farm_feathers():
-    arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=7, monster_index=5)
     memory.main.wait_frames(1)
@@ -809,17 +847,11 @@ def farm_feathers():
     while not memory.main.battle_complete():
         if memory.main.turn_ready():
             if Rikku.is_turn():
-                logger.debug("Qactar steal command")
                 battle.main.steal()
-                logger.debug("Qactar steal command done")
             elif Tidus.is_turn():
-                logger.debug("Qactar flee command")
                 Tidus.flee()
-                logger.debug("Qactar flee command done")
             else:
-                logger.debug("Qactar defend command")
                 CurrentPlayer().defend()
-                logger.debug("Qactar defend command done")
         wait_counter += 1
         if wait_counter % 10 == 0:
             logger.debug(f"Waiting for next turn: {wait_counter}")
@@ -836,27 +868,27 @@ def farm_feathers():
 
 
 def auto_phoenix():  # Calm Lands items
+    nemesis.arena_prep.arena_return()
     menu.auto_sort_equipment()
     nemesis.menu.lulu_bribe()
     memory.main.update_formation(Tidus, Wakka, Rikku)
-    arena_npc()
-    nemesis.arena_select.arena_menu_select(1)
-    nemesis.arena_select.start_fight(area_index=7, monster_index=0)
-    bribe_battle()
-    nemesis.arena_select.arena_menu_select(4)
-    memory.main.update_formation(Tidus, Wakka, Rikku)
-    arena_npc()
-    nemesis.arena_select.arena_menu_select(1)
-    nemesis.arena_select.start_fight(area_index=7, monster_index=0)
-    bribe_battle()
-    nemesis.arena_select.arena_menu_select(4)
-    memory.main.update_formation(Tidus, Wakka, Rikku)
-    arena_npc()
-    nemesis.arena_select.arena_menu_select(1)
-    nemesis.arena_select.start_fight(area_index=7, monster_index=0)
-    bribe_battle()
-    nemesis.arena_select.arena_menu_select(4)
-    memory.main.update_formation(Tidus, Wakka, Rikku)
+    logger.debug(
+        f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+    )
+    while (
+        memory.main.get_item_slot(37) > 200
+        or memory.main.get_item_count_slot(memory.main.get_item_slot(37)) < 41
+    ):
+        arena_npc()
+        nemesis.arena_select.arena_menu_select(1)
+        nemesis.arena_select.start_fight(area_index=7, monster_index=0)
+        bribe_battle()
+        nemesis.arena_select.arena_menu_select(4)
+        memory.main.update_formation(Tidus, Wakka, Rikku)
+        logger.debug(
+            f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+        )
+
     arena_npc()
     while memory.main.get_item_count_slot(memory.main.get_item_slot(7)) != 99:
         logger.debug("Trying to obtain mega-phoenix downs")
@@ -922,8 +954,15 @@ def auto_phoenix():  # Calm Lands items
             while (
                 feather_slot == 255 or memory.main.get_item_count_slot(feather_slot) < 6
             ):
+                if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 90:
+                    restock_downs()
+                else:
+                    arena_npc()
+                    
                 farm_feathers()
                 feather_slot = memory.main.get_item_slot(item_num=54)
+                nemesis.arena_select.arena_menu_select(4)
+                nemesis.menu.perform_next_grid()
         menu.add_ability(
             owner=6,
             equipment_type=0,
@@ -939,7 +978,7 @@ def auto_phoenix():  # Calm Lands items
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)
-    memory.main.wait_frames(15)
+    memory.main.wait_frames(9)
     FFXC.set_neutral()
     memory.main.update_formation(Tidus, Wakka, Rikku)
     return_to_airship()
@@ -1002,14 +1041,15 @@ def one_mp_ready():
 
 def tonberry_levels_battle():
     screen.await_turn()
-    tidus_AP_gained = False
-    while not memory.main.battle_complete():
+    tidus_turns = 0
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
-                if tidus_AP_gained is True:
+                tidus_turns += 1
+                if tidus_turns == 5:
                     Tidus.flee()
-                elif memory.main.get_overdrive_battle(character=0) == 100:
-                    Tidus.overdrive()
+                #elif memory.main.get_overdrive_battle(character=0) == 100:
+                #    Tidus.overdrive()
                 else:
                     battle.main.attack()
                 tidus_AP_gained = True
@@ -1024,89 +1064,81 @@ def tonberry_levels_battle():
     FFXC.set_value("btn_b", 0)
     logger.debug("Now back in control.")
 
+def cactuar_levels_battle():
+    screen.await_turn()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 40:
+                    Tidus.flee()
+                #elif memory.main.get_overdrive_battle(character=0) == 100:
+                #    Tidus.overdrive()
+                else:
+                    battle.main.attack()
+                tidus_AP_gained = True
+            elif Rikku.is_turn():
+                battle.main.steal()
+            else:
+                CurrentPlayer().defend()
 
-def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
-    menu.auto_sort_equipment()
-    memory.main.update_formation(Tidus, Wakka, Rikku)
+    logger.debug("Battle is complete.")
+    while not memory.main.menu_open():
+        pass
+    FFXC.set_value("btn_b", 1)
+    memory.main.wait_frames(150)
+    FFXC.set_value("btn_b", 0)
+    logger.debug("Now back in control.")
+
+def quick_levels(force_levels:int=26, mon="cactuar"):
+    # 10 for first farm, 27 for full farm
+    # cactuar first, tonberry later
+    #arena_return()
+    #menu.auto_sort_equipment()
     restock_downs()
     nemesis.arena_select.arena_menu_select(4)
     # Set up for levelling if we are low
     if force_levels > game_vars.nem_checkpoint_ap():
         # Set overdrive mode
         menu.tidus_slayer(od_pos=0)
-    logger.debug(
-        f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
-    )
-    while (
-        memory.main.get_item_slot(37) > 200
-        or memory.main.get_item_count_slot(memory.main.get_item_slot(37)) < 41
-    ):
-        arena_npc()
-        nemesis.arena_select.arena_menu_select(1)
-        nemesis.arena_select.start_fight(area_index=7, monster_index=0)
-        bribe_battle()
-        nemesis.arena_select.arena_menu_select(4)
-        memory.main.update_formation(Tidus, Wakka, Rikku)
-        logger.debug(
-            f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
-        )
-    while not one_mp_ready():
-        logger.debug("Trying to obtain Gambler's Soul and Purifying Salt items")
-        arena_npc()
-        nemesis.arena_select.arena_menu_select(4)
 
-    # Lv.4 key sphere recovery logic
-    if (
-        memory.main.get_item_slot(84) == 255
-        or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
-    ):
-        while (
-            memory.main.get_item_slot(84) == 255
-            or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
-        ):
+    # Finish leveling before we make a 1mp weapon
+    if force_levels > game_vars.nem_checkpoint_ap():
+        while force_levels > game_vars.nem_checkpoint_ap():
+            if game_vars.nem_checkpoint_ap() == 26:
+                if (
+                    memory.main.get_item_slot(84) == 255
+                    or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
+                ):
+                    memory.main.update_formation(Tidus, Rikku, Wakka)
+                    lv4_bribe()
+            memory.main.update_formation(Tidus, Rikku, Wakka)
             arena_npc()
-            logger.debug("Need Lv.4 key sphere for sphere grid")
+            logger.debug("Generating levels quickly.")
             nemesis.arena_select.arena_menu_select(1)
-            nemesis.arena_select.start_fight(area_index=8, monster_index=7)
-            bribe_battle(spare_change_value=245000)
+            if mon == "cactuar":
+                nemesis.arena_select.start_fight(area_index=13, monster_index=5)
+                cactuar_levels_battle()
+            else:
+                nemesis.arena_select.start_fight(area_index=13, monster_index=9)
+                tonberry_levels_battle()
             nemesis.arena_select.arena_menu_select(4)
-            memory.main.update_formation(Tidus, Wakka, Rikku)
-    else:
-        logger.debug("Good on Lv.4 key spheres for sphere grid")
-    if (
-        memory.main.get_item_slot(84) == 255
-        or memory.main.get_item_count_slot(memory.main.get_item_slot(84)) == 1
-    ):
+            while nemesis.menu.perform_next_grid():
+                pass
+        menu.tidus_slayer(od_pos=0)
+
+def lv4_bribe():
+    # Lv.4 key sphere recovery logic
+        memory.main.update_formation(Tidus, Wakka, Rikku)
         arena_npc()
         logger.debug("Need Lv.4 key sphere for sphere grid")
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=8, monster_index=7)
-        bribe_battle(spare_change_value=196000)
+        bribe_battle(spare_change_value=245000)
         nemesis.arena_select.arena_menu_select(4)
-        memory.main.update_formation(Tidus, Wakka, Rikku)
-    else:
-        logger.debug("Good on Lv.4 key spheres for sphere grid")
 
-    # Finish leveling before we make a 1mp weapon
-    if force_levels > game_vars.nem_checkpoint_ap():
-        while (
-            memory.main.get_item_slot(46) == 255
-            or memory.main.get_item_count_slot(memory.main.get_item_slot(46)) < 40
-        ):
-            arena_npc()
-            nemesis.arena_select.arena_menu_select(4)
-        while force_levels > game_vars.nem_checkpoint_ap():
-            arena_npc()
-            nemesis.arena_select.arena_menu_select(1)
-            nemesis.arena_select.start_fight(area_index=13, monster_index=9)
-            tonberry_levels_battle()
-            nemesis.arena_select.arena_menu_select(4)
-            nemesis.menu.perform_next_grid()
-        menu.tidus_slayer(od_pos=0)
-
+def one_mp_weapon(force_levels: int = 27):  # One MP cost
     arena_npc()
     nemesis.arena_select.arena_menu_select(2)
-
     # Now ready to make item
     memory.main.wait_frames(60)
     xbox.menu_b()  # Buy
@@ -1139,6 +1171,19 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
         close_menu=True,
         full_menu_close=True,
     )
+    menu.add_ability(
+        owner=1,
+        equipment_type=1,
+        ability_array=[0x8072, 255, 255, 255],
+        ability_index=0x800A,
+        slot_count=4,
+        navigate_to_equip_menu=True,
+        exit_out_of_current_weapon=True,
+        close_menu=True,
+        full_menu_close=True,
+    )
+    memory.main.close_menu()
+    menu.equip_armor(character=game_vars.ne_armor(), ability=0x800A)
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     FFXC.set_movement(0, 1)
@@ -1146,6 +1191,7 @@ def one_mp_weapon(force_levels: int = 27):  # Break Damage Limit, or One MP cost
     FFXC.set_neutral()
     return_to_airship()
     nemesis.menu.rikku_haste()
+    nemesis.menu.rikku_provoke()
 
 
 def kilika_gil_farm(armor_buys: int):
@@ -1218,7 +1264,7 @@ def kilika_gil_farm(armor_buys: int):
     xbox.tap_b()  # Sell equipment
     menu.sell_all()
     memory.main.wait_frames(10)
-    xbox.tap_a()
+    memory.main.close_menu()
 
 
 def kilika_final_shop():
@@ -1246,20 +1292,6 @@ def kilika_final_shop():
     memory.main.wait_frames(60)
     get_equipment(equip=True)  # Weapon for Tidus
     memory.main.wait_frames(6)
-
-    gil_needed = 3500000 - memory.main.get_gil_value()
-    # Get minimum needed, plus one for safety. Max 99 total.
-    armor_buys = min(int(gil_needed / 26150), 98) + 1
-    can_afford = int(memory.main.get_gil_value() / 2250)
-
-    while armor_buys >= 1:
-        kilika_gil_farm(min(armor_buys, can_afford))
-        armor_buys = int(max(armor_buys - can_afford, 0))
-        can_afford = int(memory.main.get_gil_value() / 2250)
-        if armor_buys >= 1:
-            memory.main.wait_frames(10)
-            xbox.menu_left()
-            xbox.menu_b()
     memory.main.close_menu()
 
     while not pathing.set_movement([-91, -199]):
@@ -1301,18 +1333,6 @@ def final_weapon():
         slot_count=4,
         navigate_to_equip_menu=False,
         exit_out_of_current_weapon=True,
-        close_menu=False,
-        full_menu_close=False,
-    )
-
-    menu.add_ability(
-        owner=1,
-        equipment_type=1,
-        ability_array=[0x8072, 255, 255, 255],
-        ability_index=0x800A,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=False,
         close_menu=False,
         full_menu_close=False,
     )
@@ -1537,11 +1557,11 @@ def besaid_farm(cap_num: int = 1):
                 xbox.tap_b()
 
 
-def kilika_farm(cap_num: int = 1):
-    air_ship_destination(dest_num=2)
+def kilika_farm(cap_num:int=1, checkpoint:int=0):
+    if memory.main.get_map() == 374:
+        air_ship_destination(dest_num=2)
     menu.remove_all_nea()
 
-    checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
             if (
@@ -1842,90 +1862,6 @@ def miihen_farm(cap_num: int = 1):
                 xbox.tap_b()
 
 
-def miihen_farm_old(cap_num: int = 1):
-    air_ship_destination(dest_num=4)
-    if game_vars.ne_armor() == 0:
-        menu.equip_armor(character=game_vars.ne_armor(), ability=0x8056)  # Auto-Haste
-    else:
-        menu.equip_armor(character=game_vars.ne_armor(), ability=99)  # Unequip
-
-    checkpoint = 0
-    while memory.main.get_map() != 79:
-        if memory.main.user_control():
-            if memory.main.arena_farm_check(
-                zone="miihen1", end_goal=cap_num, report=False
-            ) and checkpoint in [28, 29]:
-                checkpoint = 30
-            elif checkpoint == 31 and not memory.main.arena_farm_check(
-                zone="miihen1", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-                logger.debug(f"Checkpoint {checkpoint}")
-
-            elif checkpoint == 2:
-                memory.main.click_to_event_temple(4)
-                checkpoint += 1
-            elif checkpoint == 8:
-                memory.main.click_to_event_temple(0)
-                checkpoint += 1
-                memory.main.arena_farm_check(
-                    zone="miihen1", end_goal=cap_num, report=True
-                )
-            elif checkpoint == 18 and memory.main.get_map() == 116:
-                checkpoint += 1
-            elif checkpoint in [31, 42] and memory.main.get_map() == 59:
-                checkpoint += 1
-            elif checkpoint in [34, 47]:
-                save_sphere.touch_and_go()
-                checkpoint += 1
-            elif checkpoint == 39:
-                memory.main.click_to_event_temple(4)
-                checkpoint += 1
-            elif (
-                memory.main.arena_farm_check(
-                    zone="miihen2", end_goal=cap_num, report=False
-                )
-                and checkpoint < 41
-            ):
-                checkpoint = 41
-            elif checkpoint == 42 and not memory.main.arena_farm_check(
-                zone="miihen2", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-                logger.debug(f"Checkpoint {checkpoint}")
-            elif checkpoint == 50:
-                memory.main.click_to_event_temple(0)
-                checkpoint += 1
-
-            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                if (
-                    memory.main.get_encounter_id() == 78
-                    and memory.main.arena_array()[34] == 10
-                ):
-                    battle.main.flee_all()
-                else:
-                    if cap_num == 10:
-                        battle_farm_all(yuna_attack=False)
-                    else:
-                        battle_farm_all()
-
-                if checkpoint < 32:
-                    memory.main.arena_farm_check(
-                        zone="miihen1", end_goal=cap_num, report=True
-                    )
-                else:
-                    memory.main.arena_farm_check(
-                        zone="miihen2", end_goal=cap_num, report=True
-                    )
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-
-
 def djose_next(end_goal: int):
     next1 = rng_track.coming_battles(area="djose_highroad_(back_half)", battle_count=2)[
         0
@@ -2111,69 +2047,57 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
     memory.main.close_menu()
     pref_area = plains_next(end_goal=cap_num)
     logger.debug(f"Next area: {pref_area}")
-    ne_equip = False
-
+    
+    direction = 'f'
+    if pref_area == 1:
+        target = [9,10]
+    else:
+        target = [17,18]
+    last_map = memory.main.get_map()
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
             if memory.main.dodge_lightning(game_vars.get_l_strike()):
                 logger.debug("Strike!")
                 game_vars.set_l_strike(memory.main.l_strike_count())
-            if pref_area in [3, 4] and not ne_equip:
-                logger.debug(f"No Encounters armor on char: {game_vars.ne_armor()}")
-                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                ne_equip = True
-                if checkpoint in [4, 5]:
-                    checkpoint = 6
-                if checkpoint in [9, 10]:
-                    checkpoint = 11
-            elif checkpoint in [8, 12] and pref_area in [3, 4]:
-                checkpoint = 20
-                logger.debug(f"Back to agency {checkpoint}")
-            elif checkpoint in [6, 14, 15, 16] and pref_area == 1:
-                checkpoint = 4
-                logger.debug(f"Backtrack: {checkpoint}")
-            elif checkpoint == 11 and pref_area == 2:
-                checkpoint -= 2
-                logger.debug(f"Backtrack: {checkpoint}")
-            elif checkpoint in [4, 5] and pref_area == 2:
-                checkpoint = 6
-                logger.debug(f"Forward: {checkpoint}")
-            elif checkpoint in [9, 10] and pref_area == 1:
-                checkpoint = 11
-                logger.debug(f"Forward: {checkpoint}")
-            # From start, can go straight to south.
-            elif checkpoint == 2 and pref_area == 2:
-                checkpoint = 7
-                logger.debug(f"Direct to South: {checkpoint}")
-
-            # Map changes:
-            if checkpoint in [1, 6, 11] and memory.main.get_map() == 256:
+            if memory.main.get_map() != last_map:
+                if direction == 'f':
+                    checkpoint += 2
+                else:
+                    checkpoint -= 2
+                last_map = memory.main.get_map()
+            elif direction == 'f' and checkpoint > target[1]:
+                direction = 'b'
+                checkpoint -= 1
+            elif direction == 'b' and checkpoint < target[0]:
+                direction = 'f'
                 checkpoint += 1
-                logger.debug(f"Map change: {checkpoint}")
-            if checkpoint in [3, 13] and memory.main.get_map() == 162:
-                checkpoint += 1
-                logger.debug(f"Map change: {checkpoint}")
-            if checkpoint == 8 and memory.main.get_map() == 140:
-                checkpoint += 1
-                logger.debug(f"Map change: {checkpoint}")
-            if checkpoint == 21 and memory.main.get_map() == 263:
-                checkpoint += 1
-                logger.debug(f"Map change: {checkpoint}")
-            if checkpoint == 23:
+            elif direction == 'b' and checkpoint in [0,1]:
                 if pref_area == 3:
                     save_sphere.touch_and_go()
-                    menu.remove_all_nea()
-                    ne_equip = False
+                    direction = 'f'
                     pref_area = plains_next(end_goal=cap_num)
-                    logger.debug(f"Next area: {pref_area}")
-                    checkpoint = 0
+                    if pref_area == 1:
+                        target = [9,10]
+                    elif pref_area == 2:
+                        target = [17,18]
+                    else:
+                        target = [0,0]
                 else:
                     return_to_airship()
-
-            # General pathing
+            elif checkpoint > 18:  # Safety, catchall
+                direction = 'b'
+                checkpoint = 18
+            
+            elif checkpoint in [5,6] and pref_area == 2:
+                checkpoint = 14
+            elif checkpoint == 14 and pref_area in [3,4]:
+                checkpoint = 5
             elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
-                checkpoint += 1
+                if direction == 'f':
+                    checkpoint += 1
+                else:
+                    checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
@@ -2185,70 +2109,13 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                 battle.main.heal_up(3)
                 memory.main.update_formation(Tidus, Yuna, Auron)
                 pref_area = plains_next(end_goal=cap_num)
-                logger.debug(f"Next area:{pref_area}")
-                memory.main.arena_farm_check(
-                    zone="tPlains", end_goal=cap_num, report=True
-                )
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-    logger.debug("End of Thunder Plains section")
-    return memory.main.arena_farm_check(zone="tPlains", end_goal=cap_num, report=False)
-
-
-def t_plains_old(cap_num: int = 1, auto_haste: bool = False):
-
-    air_ship_destination(dest_num=8)
-    menu.remove_all_nea()
-
-    checkpoint = 0
-    while not memory.main.get_map() in [194, 374]:
-        if memory.main.user_control():
-            if memory.main.dodge_lightning(game_vars.get_l_strike()):
-                logger.debug("Strike!")
-                game_vars.set_l_strike(memory.main.l_strike_count())
-            elif (
-                memory.main.arena_farm_check(
-                    zone="tPlains", end_goal=cap_num, report=False
-                )
-                and checkpoint < 8
-            ):
-                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                checkpoint = 8
-            elif memory.main.get_yuna_mp() < 30 and checkpoint < 8:
-                checkpoint = 8
-            elif (
-                checkpoint == 9
-                and not memory.main.arena_farm_check(
-                    zone="tPlains", end_goal=cap_num, report=False
-                )
-                and memory.main.get_yuna_mp() >= 30
-            ):
-                checkpoint -= 2
-
-            # Map changes:
-            elif checkpoint == 1 and memory.main.get_map() == 256:
-                checkpoint += 1
-            elif checkpoint == 3 and memory.main.get_map() == 162:
-                checkpoint += 1
-            elif checkpoint == 11 and memory.main.get_map() == 256:
-                checkpoint += 1
-            elif checkpoint == 14:
-                memory.main.click_to_event_temple(6)
-                checkpoint += 1
-            elif checkpoint == 16:
-                return_to_airship()
-
-            # General pathing
-            elif pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            if memory.main.battle_active():
-                if cap_num == 10:
-                    battle_farm_all(yuna_attack=False)
+                if pref_area == 1:
+                    target = [9,10]
+                elif pref_area == 2:
+                    target = [17,18]
                 else:
-                    battle_farm_all()
+                    target = [0,0]
+                logger.debug(f"Next area:{pref_area}")
                 memory.main.arena_farm_check(
                     zone="tPlains", end_goal=cap_num, report=True
                 )
@@ -2300,49 +2167,52 @@ def mac_woods(cap_num: int = 10):
     pref_area = woods_next(end_goal=cap_num)
     logger.debug(f"Next area: {pref_area}")
 
+    direction = 'f'
+    if pref_area == 1:
+        target = [4,5]
+    elif pref_area == 2:
+        target = [13,14]
+    else:
+        target = [10,10]
+    last_map = memory.main.get_map()
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
-            if pref_area in [3, 4]:
-                if checkpoint in [4, 5]:
-                    checkpoint = 6
-                elif checkpoint in [12, 13]:
-                    checkpoint = 14
-            elif checkpoint in [4, 5] and pref_area != 1:
-                checkpoint = 6
-            elif checkpoint in [6, 20] and pref_area == 1:
-                checkpoint = 4
-            elif checkpoint in [14] and pref_area == 2:
-                checkpoint = 12
-
-            # Map changes:
-            if checkpoint in [2, 19] and memory.main.get_map() == 164:
-                checkpoint += 1
-            elif checkpoint in [6, 14] and memory.main.get_map() == 221:
-                checkpoint += 1
-            elif checkpoint == 11 and memory.main.get_map() == 242:
-                checkpoint += 1
-            elif checkpoint in [10, 15] and pref_area in [3, 4]:
-                if pref_area == 3:
-                    save_sphere.touch_and_go()
-                    pref_area = woods_next(end_goal=cap_num)
-                    logger.debug(f"Next area: {pref_area}")
-                    if pref_area == 1:
-                        checkpoint = 15
-                    else:
-                        checkpoint = 10
+            if memory.main.get_map() != last_map:
+                if direction == 'f':
+                    checkpoint += 2
                 else:
-                    return_to_airship()
-
-            # General pathing
-            elif pathing.set_movement(MacFarm.execute(checkpoint)) is True:
+                    checkpoint -= 2
+                last_map = memory.main.get_map()
+            elif direction == 'f' and checkpoint > target[1]:
+                direction = 'b'
+                checkpoint -= 1
+            elif direction == 'b' and checkpoint < target[0]:
+                direction = 'f'
                 checkpoint += 1
+            elif pref_area in [3,4] and checkpoint in target:
+                return_to_airship()
+            elif checkpoint > 18:  # Safety, catchall
+                direction = 'b'
+                checkpoint = 18
+            
+            elif pathing.set_movement(MacFarm.execute(checkpoint)) is True:
+                if direction == 'f':
+                    checkpoint += 1
+                else:
+                    checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle_farm_all(yuna_attack=False)
                 pref_area = woods_next(end_goal=cap_num)
+                if pref_area == 1:
+                    target = [4,5]
+                elif pref_area == 2:
+                    target = [13,14]
+                else:
+                    target = [10,10]
                 logger.debug(f"Next area: {pref_area}")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
@@ -2601,7 +2471,6 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 ):
                     if min(allCounts[13], allCounts[19]) >= cap_num:
                         battle.main.flee_all()
-                        battle.main.wrap_up()
                     else:
                         battle_farm_all()
                 elif (
@@ -2610,7 +2479,6 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                 ):
                     if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
                         battle.main.flee_all()
-                        battle.main.wrap_up()
                     else:
                         battle_farm_all()
                 elif (
@@ -2619,7 +2487,6 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                     and game_vars.nem_checkpoint_ap() < 8
                 ):
                     battle.main.flee_all()
-                    battle.main.wrap_up()
                 else:
                     if cap_num == 10:
                         battle_farm_all(yuna_attack=False)
@@ -2638,90 +2505,6 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
     if force_levels > game_vars.nem_checkpoint_ap():
         return False
     return memory.main.arena_farm_check(zone="calm", end_goal=cap_num, report=False)
-
-
-def calm_old(cap_num: int = 1, auto_haste=False, airship_return=True):
-    air_ship_destination(dest_num=12)
-    menu.remove_all_nea()
-
-    ne_armor = False
-
-    checkpoint = 0
-    while not memory.main.get_map() == 307:
-        if memory.main.user_control():
-            if not ne_armor and memory.main.get_yuna_mp() < 30:
-                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                ne_armor = True
-            if (
-                memory.main.arena_farm_check(
-                    zone="calm", end_goal=cap_num, report=False
-                )
-                and checkpoint < 5
-            ):
-                checkpoint = 5
-            elif checkpoint == 5 and not memory.main.arena_farm_check(
-                zone="calm", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-            elif memory.main.arena_farm_check(
-                zone="calm2", end_goal=cap_num, report=False
-            ) and checkpoint in [8, 9]:
-                checkpoint = 10
-            elif checkpoint == 10 and not memory.main.arena_farm_check(
-                zone="calm2", end_goal=cap_num, report=False
-            ):
-                checkpoint -= 2
-            elif pathing.set_movement(CalmFarm.execute(checkpoint)) is True:
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            allCounts = memory.main.arena_array()
-            if memory.main.battle_active():
-                if (
-                    memory.main.get_encounter_id() == 281
-                    and game_vars.nem_checkpoint_ap() < 8
-                ):
-                    if min(allCounts[13], allCounts[19]) >= cap_num:
-                        battle.main.flee_all()
-                    else:
-                        battle_farm_all()
-                elif (
-                    memory.main.get_encounter_id() == 283
-                    and game_vars.nem_checkpoint_ap() < 8
-                ):
-                    if min(allCounts[4], allCounts[19], allCounts[33]) >= cap_num:
-                        battle.main.flee_all()
-                    else:
-                        battle_farm_all()
-                elif (
-                    memory.main.get_encounter_id() == 284
-                    and allCounts[33] >= cap_num
-                    and game_vars.nem_checkpoint_ap() < 8
-                ):
-                    battle.main.flee_all()
-                else:
-                    if cap_num == 10:
-                        battle_farm_all(yuna_attack=False)
-                    else:
-                        battle_farm_all()
-                battle.main.heal_up(3)
-                if checkpoint < 6:
-                    memory.main.arena_farm_check(
-                        zone="calm", end_goal=cap_num, report=True
-                    )
-                else:
-                    memory.main.arena_farm_check(
-                        zone="calm2", end_goal=cap_num, report=True
-                    )
-
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
-    if not memory.main.arena_farm_check(zone="calm3", end_goal=cap_num, report=False):
-        return_to_airship()
-    elif airship_return:
-        return_to_airship()
-    return memory.main.arena_farm_check(zone="calm3", end_goal=cap_num, report=False)
 
 
 def gagazet_next(end_goal: int):
@@ -2796,8 +2579,7 @@ def gagazet_next(end_goal: int):
 
 
 def gagazet(cap_num: int = 10):
-    rin_equip_dump()
-    air_ship_destination(dest_num=13)
+    air_ship_destination(dest_num=14)
     pref_area = gagazet_next(end_goal=cap_num)
 
     # Check if we need the extra Lv.4 key sphere. False == needed.
@@ -3022,7 +2804,8 @@ def fayth_next(endGoal: int):
 def stolen_fayth_cave(cap_num: int = 10):
     fayth_grid_start = game_vars.nem_checkpoint_ap()
     rin_equip_dump(stock_downs=True)
-    air_ship_destination(dest_num=13)
+    air_ship_destination(dest_num=14)
+    memory.main.update_formation(Tidus, Yuna, Wakka)
     if not memory.main.equipped_weapon_has_ability(
         char_num=game_vars.ne_armor(), ability_num=0x801D
     ):
@@ -3036,7 +2819,7 @@ def stolen_fayth_cave(cap_num: int = 10):
         if memory.main.user_control():
             if pref_area == 4 and checkpoint in [25, 26, 27, 28, 29]:
                 checkpoint = 30
-                memory.main.update_formation(Tidus, Wakka, Rikku)
+                memory.main.update_formation(Tidus, Yuna, Wakka)
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 ne_armor = True
             elif pref_area in [1, 2, 3] and checkpoint in [25, 27] and ne_armor:
@@ -3045,15 +2828,16 @@ def stolen_fayth_cave(cap_num: int = 10):
             elif checkpoint in [5, 14, 59]:
                 memory.main.click_to_event_temple(4)
                 checkpoint += 1
-            elif checkpoint == 19:
-                memory.main.click_to_event_temple(7)
-                checkpoint += 1
+            elif checkpoint == 19 and memory.main.get_map() == 56:
+                checkpoint = 21
             elif pref_area == 1 and checkpoint in [27, 28, 29]:
                 checkpoint = 25
             elif pref_area == 2 and checkpoint == 25:
                 checkpoint = 26
             elif pref_area == 2 and checkpoint == 30:
                 checkpoint = 27
+            elif checkpoint == 48 and cap_num != 10:
+                return_to_airship()
             elif checkpoint in [52, 53]:  # Glyph and Yojimbo
                 FFXC.set_neutral()
                 memory.main.wait_frames(5)
@@ -3105,11 +2889,12 @@ def stolen_fayth_cave(cap_num: int = 10):
                 hp_check = memory.main.get_hp()
                 if hp_check[0] < 795:
                     battle.main.heal_up(3)
-                memory.main.update_formation(Tidus, Wakka, Rikku)
+                memory.main.update_formation(Tidus, Yuna, Wakka)
                 pref_area = fayth_next(endGoal=cap_num)
                 logger.debug(f"Next area: {pref_area}")
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+    memory.main.update_formation(Tidus, Wakka, Rikku)
 
 
 def inside_sin(cap_num: int = 10):
@@ -3203,7 +2988,6 @@ def inside_sin(cap_num: int = 10):
 
 def omega_ruins(cap_num: int = 10):
     rin_equip_dump(stock_downs=True)
-    nemesis.menu.rikku_provoke()
     menu.remove_all_nea()
 
     air_ship_destination(dest_num=13, force_omega=True)

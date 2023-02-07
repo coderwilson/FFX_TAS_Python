@@ -97,6 +97,7 @@ def arrival(rikku_charged):
             if screen.battle_screen():
                 battle.main.m_woods()
                 rikku_charged = memory.main.overdrive_state()[6] == 100
+                memory.main.click_to_control()
                 logger.info(
                     "Rikku charged" if rikku_charged else "Rikku is not charged."
                 )

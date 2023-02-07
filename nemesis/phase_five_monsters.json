@@ -1,0 +1,594 @@
+{
+	"garm": {
+		"num": 10,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 30,
+		"need": 10
+	},
+	"snow_flan": {
+		"num": 17,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 30,
+		"need": 10
+	},
+	"bite_bug": {
+		"num": 31,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 30,
+		"need": 10
+	},
+	"basilisk": {
+		"num": 79,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 31,
+		"need": 10
+	},
+	"ochu": {
+		"num": 83,
+		"zone1": "moonflow_(south)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 32,
+		"need": 10
+	},
+	"iron_giant": {
+		"num": 76,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 5,
+		"need": 10
+	},
+	"melusine": {
+		"num": 24,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"buer": {
+		"num": 35,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"kusariqqu": {
+		"num": 52,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"gold_element": {
+		"num": 64,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"iron_giant": {
+		"num": 87,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"larva": {
+		"num": 89,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"murussu": {
+		"num": 2,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"mafdet": {
+		"num": 3,
+		"zone1": "lake_macalania",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"snow_wolf": {
+		"num": 11,
+		"zone1": "lake_macalania",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"ice_flan": {
+		"num": 18,
+		"zone1": "lake_macalania",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"iguion": {
+		"num": 25,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"wasp": {
+		"num": 32,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"evil_eye": {
+		"num": 36,
+		"zone1": "lake_macalania",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"blue_element": {
+		"num": 65,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"chimera": {
+		"num": 71,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"xiphos": {
+		"num": 94,
+		"zone1": "macalania_woods",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"sand_wolf": {
+		"num": 12,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"alcyone": {
+		"num": 29,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"mushussu": {
+		"num": 53,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"skoll": {
+		"num": 13,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 1,
+		"need": 10
+	},
+	"flame_flan": {
+		"num": 19,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 1,
+		"need": 10
+	},
+	"nebiros": {
+		"num": 33,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 1,
+		"need": 10
+	},
+	"behemoth": {
+		"num": 69,
+		"zone1": "zanarkand_(overpass)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"dark_flan": {
+		"num": 20,
+		"zone1": "zanarkand_(overpass)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"bashura": {
+		"num": 58,
+		"zone1": "zanarkand_(overpass)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"mandragora": {
+		"num": 84,
+		"zone1": "zanarkand_(overpass)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"grendel": {
+		"num": 49,
+		"zone1": "zanarkand_(overpass)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"ahriman": {
+		"num": 37,
+		"zone1": "zanarkand_(overpass)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"bandersnatch": {
+		"num": 14,
+		"zone1": "gagazet_(mountain)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"nidhogg": {
+		"num": 54,
+		"zone1": "gagazet_(mountain)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 10
+	},
+	"imp": {
+		"num": 7,
+		"zone1": "gagazet_(mountain)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"grenade": {
+		"num": 86,
+		"zone1": "gagazet_(mountain)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"grat": {
+		"num": 39,
+		"zone1": "gagazet_(mountain)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 1,
+		"need": 10
+	},
+	"black_element": {
+		"num": 67,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"spirit": {
+		"num": 96,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"halma": {
+		"num": 101,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"master_coeurl": {
+		"num": 74,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"floating_death": {
+		"num": 102,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"demonolith": {
+		"num": 75,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"wraith": {
+		"num": 97,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"puroboros": {
+		"num": 95,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"machea": {
+		"num": 103,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"zaurus": {
+		"num": 100,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 9,
+		"need": 10
+	},
+	"dark_element": {
+		"num": 66,
+		"zone1": "cave_(white_zone)",
+		"zone2": "cave_(green_zone)",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"thorn": {
+		"num": 92,
+		"zone1": "cave_(white_zone)",
+		"zone2": "cave_(green_zone)",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
+	},
+	"ghost": {
+		"num": 44,
+		"zone1": "cave_(white_zone)",
+		"zone2": "cave_(green_zone)",
+		"zone3": "none",
+		"prio": 100,
+		"need": 10
+	},
+	"tonberry": {
+		"num": 98,
+		"zone1": "cave_(green_zone)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 190,
+		"need": 10
+	},
+	"valaha": {
+		"num": 48,
+		"zone1": "cave_(white_zone)",
+		"zone2": "cave_(green_zone)",
+		"zone3": "none",
+		"prio": 100,
+		"need": 10
+	},
+	"ogre": {
+		"num": 57,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 80,
+		"need": 10
+	},
+	"chimera_brain": {
+		"num": 72,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 80,
+		"need": 10
+	},
+	"coeurl": {
+		"num": 57,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 80,
+		"need": 10
+	},
+	"shred": {
+		"num": 4,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 80,
+		"need": 10
+	},
+	"anacondaur": {
+		"num": 80,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 80,
+		"need": 10
+	},
+	"malboro": {
+		"num": 55,
+		"zone1": "calm_lands_(south)",
+		"zone2": "calm_lands_(central-north-east)",
+		"zone3": "calm_lands_(north-west)",
+		"prio": 80,
+		"need": 10
+	},
+	"cactuar": {
+		"num": 88,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 160,
+		"need": 10
+	},
+	"sand_worm": {
+		"num": 42,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 160,
+		"need": 10
+	},
+	"zu": {
+		"num": 41,
+		"zone1": "sanubia_desert_(east)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 160,
+		"need": 10
+	},
+	"master_tonberry": {
+		"num": 99,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 400,
+		"need": 10
+	},
+	"varuna": {
+		"num": 82,
+		"zone1": "omega_ruins_(lower)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 400,
+		"need": 10
+	},
+	"simurgh": {
+		"num": 28,
+		"zone1": "djose_highroad_(back_half)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 160,
+		"need": 10
+	},
+	"barbatos": {
+		"num": 90,
+		"zone1": "inside_sin_(back)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 250,
+		"need": 10
+	},
+	"great_malboro": {
+		"num": 56,
+		"zone1": "inside_sin_(back)",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 250,
+		"need": 10
+	},
+	"behemoth_king": {
+		"num": 70,
+		"zone1": "inside_sin_(back)",
+		"zone2": "inside_sin_(front)",
+		"zone3": "none",
+		"prio": 200,
+		"need": 10
+	},
+	"adamantoise": {
+		"num": 81,
+		"zone1": "inside_sin_(back)",
+		"zone2": "inside_sin_(front)",
+		"zone3": "none",
+		"prio": 200,
+		"need": 10
+	},
+	"gemini": {
+		"num": 77,
+		"zone1": "inside_sin_(back)",
+		"zone2": "inside_sin_(front)",
+		"zone3": "none",
+		"prio": 200,
+		"need": 10
+	},
+	"gemini_3": {
+		"num": 78,
+		"zone1": "inside_sin_(back)",
+		"zone2": "inside_sin_(front)",
+		"zone3": "none",
+		"prio": 200,
+		"need": 10
+	},
+	"exoray": {
+		"num": 93,
+		"zone1": "inside_sin_(back)",
+		"zone2": "inside_sin_(front)",
+		"zone3": "none",
+		"prio": 200,
+		"need": 10
+	},
+	"ahriman": {
+		"num": 37,
+		"zone1": "inside_sin_(back)",
+		"zone2": "inside_sin_(front)",
+		"zone3": "none",
+		"prio": 200,
+		"need": 10
+	}
+}

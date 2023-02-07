@@ -1028,9 +1028,6 @@ def nemesis_battle():
     save_game(first_save=False)
     while not battles_5(completion_version=99):
         quick_reset_logic()
-
-
-def return_to_sin():
     FFXC = xbox.controller_handle()
     while not pathing.set_movement([-6, -27]):
         pass
@@ -1038,8 +1035,10 @@ def return_to_sin():
         pass
     return_to_airship()
 
-    menu.equip_weapon(character=0, ability=0x8001, full_menu_close=True)
+
+def return_to_sin():
     airship_destination(dest_num=0)
     memory.main.await_control()
+    menu.equip_weapon(character=0, ability=0x8001, full_menu_close=True)
     FFXC.set_movement(0, -1)
     memory.main.wait_frames(2)
