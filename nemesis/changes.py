@@ -615,14 +615,12 @@ def arena_purchase():
     xbox.tap_b()
     memory.main.click_to_diag_progress(73)
     memory.main.wait_frames(15)
-    # xbox.tap_up()
     xbox.tap_b()  # Let's see your weapons
-    # memory.wait_frames(9000)
     nemesis.menu.arena_purchase_1()
-    # Sell all undesirable equipment
-    # Purchase the following weapons:
-    # -Tidus x4
-    # -Yuna x1
+    while not memory.main.user_control():
+        xbox.menu_a()
+        xbox.tap_b()
+        memory.main.wait_frames(15)
 
     # ---Done buying.
     memory.main.await_control()

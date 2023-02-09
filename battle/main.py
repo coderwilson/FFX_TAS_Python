@@ -950,7 +950,7 @@ def mrr_battle(status):
             if (
                 encounter_id == 100 or encounter_id == 101
             ):  # The two battles with Funguar
-                while not memory.main.battle_complete():  # end of battle screen
+                while memory.main.battle_active():  # end of battle screen
                     if memory.main.turn_ready():
                         if check_petrify():
                             logger.warning(
@@ -976,7 +976,7 @@ def mrr_battle(status):
             else:
                 flee_all()
         else:  # Starting with fourth battle, overdrive on any battle that isn't Garuda.
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
@@ -1007,7 +1007,7 @@ def mrr_battle(status):
                 CurrentPlayer().defend()
         if encounter_id == 96:  # Gandarewa, Red Element, Raptor (camera front)
             wakka_turns = 0
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.info("Someone is pretrified. Escaping battle.")
@@ -1042,7 +1042,7 @@ def mrr_battle(status):
                             else:
                                 CurrentPlayer().cast_black_magic_spell(3)
         elif encounter_id == 97:  # Lamashtu, Gandarewa, Red Element (camera front)
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
@@ -1072,7 +1072,7 @@ def mrr_battle(status):
                         else:
                             CurrentPlayer().cast_black_magic_spell(3)
         elif encounter_id == 98:  # Raptor, Red Element, Gandarewa (camera side)
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.info("Someone is pretrified. Escaping battle.")
@@ -1106,7 +1106,7 @@ def mrr_battle(status):
                                 )
         # battle 99 is never used.
         elif encounter_id == 100:  # Raptor, Funguar, Red Element (camera front)
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.info("Someone is pretrified. Escaping battle.")
@@ -1143,7 +1143,7 @@ def mrr_battle(status):
                                 CurrentPlayer().cast_black_magic_spell(3)
         # Funguar, Red Element, Gandarewa (camera reverse angle)
         elif encounter_id == 101:
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(
@@ -1180,13 +1180,13 @@ def mrr_battle(status):
         # Both Yuna and Kimahri have levels, good to go.
         if status[0] == 1 and status[1] == 1:
             status[5] = 3
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     flee_all()
         else:
             # Wakka attack Raptors and Gandarewas for Yuna AP.
             yuna_turn_count = 0
-            while not memory.main.battle_complete():  # end of battle screen
+            while memory.main.battle_active():  # end of battle screen
                 if memory.main.turn_ready():
                     if check_petrify():
                         logger.warning(

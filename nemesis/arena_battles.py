@@ -199,7 +199,7 @@ def aeon_start():
                 CurrentPlayer().attack()
             else:
                 CurrentPlayer().defend()
-        elif memory.main.battle_complete():
+        elif not memory.main.battle_active():
             return False
 
 
@@ -211,7 +211,7 @@ def yojimbo_battle():
     if not Yuna.active():
         battle.main.buddy_swap(Yuna)
     elif not Yuna.is_turn():
-        while not memory.main.battle_complete() and not Yuna.is_turn():
+        while memory.main.battle_active() and not Yuna.is_turn():
             if memory.main.turn_ready():
                 CurrentPlayer().defend()
                 memory.main.wait_frames(15)
@@ -225,7 +225,7 @@ def yojimbo_battle():
         battle.overdrive.yojimbo()  # Backup plan
         memory.main.wait_frames(90)
 
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 Tidus.flee()
@@ -284,7 +284,7 @@ def auto_life():
 def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False):
     logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if mega_phoenix and screen.faint_check() >= 2:
@@ -314,7 +314,7 @@ def basic_attack(
 ):
     logger.debug(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if mega_phoenix and screen.faint_check() >= 2:
@@ -845,7 +845,7 @@ def shinryu_battle():
     rikku_first_turn = False
     rikku_drive_complete = False
     screen.await_turn()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Rikku.is_turn():
                 if not rikku_first_turn:
@@ -978,7 +978,7 @@ def recharge_yuna():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=9)
     screen.await_turn()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Yuna.is_turn():
                 CurrentPlayer().attack()

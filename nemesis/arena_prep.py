@@ -187,7 +187,7 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
         screen.await_turn()
         battle.main.flee_all()
     else:
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 if fayth_cave and screen.faint_check() in [1,2]:
                     battle.main.revive()
@@ -376,7 +376,7 @@ def advanced_battle_logic() -> bool:
         if memory.main.get_encounter_id() == 449:
             # Omega himself, not yet working.
             aeon_complete = False
-            while not memory.main.battle_complete():
+            while memory.main.battle_active():
                 if memory.main.turn_ready():
                     if Rikku.is_turn():
                         if not aeon_complete:
@@ -393,7 +393,7 @@ def advanced_battle_logic() -> bool:
         else:
             logger.debug(f"Regular battle:{memory.main.get_encounter_id()}")
             sleep_powder = False
-            while not memory.main.battle_complete():
+            while memory.main.battle_active():
                 encounter_id = memory.main.get_encounter_id()
                 if memory.main.turn_ready():
                     if encounter_id in [442]:
@@ -551,7 +551,7 @@ def advanced_battle_logic() -> bool:
 
 def bribe_battle(spare_change_value: int = 12000):
     logger.debug(f"value (2): {spare_change_value}")
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Lulu.is_turn():
                 while memory.main.battle_menu_cursor() != 20:
@@ -844,7 +844,7 @@ def farm_feathers():
     nemesis.arena_select.start_fight(area_index=7, monster_index=5)
     memory.main.wait_frames(1)
     wait_counter = 0
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Rikku.is_turn():
                 battle.main.steal()
@@ -1970,6 +1970,7 @@ def djose_farm(cap_num: int = 10):
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle_farm_all(yuna_attack=False)
+                battle.main.wrap_up()
                 if memory.main.get_hp()[0] < 1100:
                     battle.main.heal_up(3)
                 pref_area = djose_next(end_goal=cap_num)
@@ -2106,6 +2107,7 @@ def t_plains(cap_num: int = 1, auto_haste: bool = False):
                     battle_farm_all(yuna_attack=False)
                 else:
                     battle_farm_all()
+                battle.main.wrap_up()
                 battle.main.heal_up(3)
                 memory.main.update_formation(Tidus, Yuna, Auron)
                 pref_area = plains_next(end_goal=cap_num)
@@ -2344,6 +2346,7 @@ def bikanel(cap_num: int = 10):
                 memory.main.arena_farm_check(
                     zone="bikanel", end_goal=cap_num, report=True
                 )
+                battle.main.wrap_up()
                 hp_check = memory.main.get_hp()
                 if hp_check[0] < 800:
                     battle.main.heal_up(3)
@@ -2492,6 +2495,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
                         battle_farm_all(yuna_attack=False)
                     else:
                         battle_farm_all()
+                battle.main.wrap_up()
                 memory.main.update_formation(Tidus, Yuna, Auron)
                 battle.main.heal_up(3)
                 pref_area = calm_next(end_goal=cap_num, force_levels=force_levels)
@@ -2817,8 +2821,8 @@ def stolen_fayth_cave(cap_num: int = 10):
     checkpoint = 0
     while not memory.main.get_map() in [194, 374]:
         if memory.main.user_control():
-            if pref_area == 4 and checkpoint in [25, 26, 27, 28, 29]:
-                checkpoint = 30
+            if pref_area == 4 and checkpoint in [25, 26, 27, 28]:
+                checkpoint = 29
                 memory.main.update_formation(Tidus, Yuna, Wakka)
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 ne_armor = True
@@ -2835,7 +2839,7 @@ def stolen_fayth_cave(cap_num: int = 10):
             elif pref_area == 2 and checkpoint == 25:
                 checkpoint = 26
             elif pref_area == 2 and checkpoint == 30:
-                checkpoint = 27
+                checkpoint = 28
             elif checkpoint == 48 and cap_num != 10:
                 return_to_airship()
             elif checkpoint in [52, 53]:  # Glyph and Yojimbo
@@ -2885,7 +2889,7 @@ def stolen_fayth_cave(cap_num: int = 10):
                         checkpoint = 0
                         game_vars.set_nem_checkpoint_ap(fayth_grid_start)
 
-                memory.main.click_to_control()
+                battle.main.wrap_up()
                 hp_check = memory.main.get_hp()
                 if hp_check[0] < 795:
                     battle.main.heal_up(3)
