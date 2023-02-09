@@ -79,7 +79,7 @@
 		"sphere": 39,
 		"sticky": "True"
 	},
-	"thunder_plains_(south)_(2_stones)": {
+	"thunder_plains_(north)_(2_stones)": {
 		"first_battle": 17,
 		"last_battle": 18,
 		"return_direction": "b",
@@ -87,7 +87,7 @@
 		"sphere": -1,
 		"sticky": "False"
 	},
-	"thunder_plains_(north)_(2_stones)": {
+	"thunder_plains_(south)_(2_stones)": {
 		"first_battle": 9,
 		"last_battle": 10,
 		"return_direction": "b",

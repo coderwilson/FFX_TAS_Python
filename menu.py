@@ -1449,7 +1449,7 @@ def add_ability(
         xbox.tap_b()
     if exit_out_of_current_weapon:
         while memory.main.cure_menu_open():
-            xbox.tap_a()
+            xbox.menu_a()
     if close_menu:
         if full_menu_close:
             memory.main.close_menu()

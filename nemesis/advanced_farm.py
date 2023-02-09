@@ -64,6 +64,8 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
         f = open("nemesis\\phase_five_monsters.json")
     elif phase == 6:
         f = open("nemesis\\phase_six_monsters.json")
+    elif phase == 7:
+        f = open("nemesis\\phase_seven_monsters.json")
     else:
         return best_zone
     mon_list = json.load(f)
@@ -77,14 +79,14 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                 v1 = "varuna"
                 v2 = "omega_ruins_(lower)"
                 v3 = 999
-                best_zone = [v1, v2, v3]
+                best_zone = [v1, v2, v3, advances]
                 return best_zone
         if "master_tonberry" in check_zone:
             if memory.main.arena_array()[99] < 10:
                 v1 = "master_tonberry"
                 v2 = "omega_ruins_(lower)"
                 v3 = 999
-                best_zone = [v1, v2, v3]
+                best_zone = [v1, v2, v3, advances]
                 return best_zone
     elif phase == 6:
         check_zone = rng_track.singles_battles(area="mrr_-_valley")[advances]
@@ -93,7 +95,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                 v1 = "garuda"
                 v2 = "mrr_-_valley"
                 v3 = 999
-                best_zone = [v1, v2, v3]
+                best_zone = [v1, v2, v3, advances]
                 return best_zone
 
     for key in mon_array:
@@ -118,7 +120,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                     v1 = key
                     v2 = mon_list[key]["zone1"]
                     v3 = mon_list[key]["prio"]
-                    best_zone = [v1, v2, v3]
+                    best_zone = [v1, v2, v3, advances]
             elif (
                 mon_list[key]["prio"] == best_zone[2] and
                 mon_list[key]["zone1"] == current_zone
@@ -128,7 +130,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                     v1 = key
                     v2 = mon_list[key]["zone1"]
                     v3 = mon_list[key]["prio"]
-                    best_zone = [v1, v2, v3]
+                    best_zone = [v1, v2, v3, advances]
         elif check_zone_2 == "none":
             pass
         elif key.lower() in check_zone_2:
@@ -138,7 +140,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                     v1 = key
                     v2 = mon_list[key]["zone2"]
                     v3 = mon_list[key]["prio"]
-                    best_zone = [v1, v2, v3]
+                    best_zone = [v1, v2, v3, advances]
             elif (
                 mon_list[key]["prio"] == best_zone[2] and
                 mon_list[key]["zone1"] == current_zone
@@ -148,7 +150,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                     v1 = key
                     v2 = mon_list[key]["zone2"]
                     v3 = mon_list[key]["prio"]
-                    best_zone = [v1, v2, v3]
+                    best_zone = [v1, v2, v3, advances]
         elif check_zone_3 == "none":
             pass
         elif key.lower() in check_zone_3:
@@ -158,7 +160,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                     v1 = key
                     v2 = mon_list[key]["zone3"]
                     v3 = mon_list[key]["prio"]
-                    best_zone = [v1, v2, v3]
+                    best_zone = [v1, v2, v3, advances]
             elif (
                 mon_list[key]["prio"] == best_zone[2] and
                 mon_list[key]["zone1"] == current_zone
@@ -168,7 +170,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                     v1 = key
                     v2 = mon_list[key]["zone3"]
                     v3 = mon_list[key]["prio"]
-                    best_zone = [v1, v2, v3]
+                    best_zone = [v1, v2, v3, advances]
             # If record does not surpass on the precedence list, do nothing.
     return best_zone
 
@@ -201,6 +203,8 @@ def complete_check(phase:int = 3):
         f = open("nemesis\\phase_five_monsters.json")
     elif phase == 6:
         f = open("nemesis\\phase_six_monsters.json")
+    elif phase == 7:
+        f = open("nemesis\\phase_seven_monsters.json")
     else:
         return best_zone
     
@@ -224,6 +228,8 @@ def report_remaining(phase:int = 3):
         f = open("nemesis\\phase_five_monsters.json")
     elif phase == 6:
         f = open("nemesis\\phase_six_monsters.json")
+    elif phase == 7:
+        f = open("nemesis\\phase_seven_monsters.json")
     else:
         return
     mon_list = json.load(f)
@@ -244,7 +250,7 @@ def report_remaining(phase:int = 3):
             logger.debug(f"{key}: {current_count} / {check_count} | {area}")
     
     complete_percent = int(complete_count / total_need * 100)
-    logger.debug(f"== Total: {complete_count} / {total_need} | {complete_percent}%")
+    logger.info(f"== Total: {complete_count} / {total_need} | {complete_percent}%")
     logger.debug("==============================")
 
 def report_need_single(phase:int, mon_name:str):
@@ -256,6 +262,8 @@ def report_need_single(phase:int, mon_name:str):
         f = open("nemesis\\phase_five_monsters.json")
     elif phase == 6:
         f = open("nemesis\\phase_six_monsters.json")
+    elif phase == 7:
+        f = open("nemesis\\phase_seven_monsters.json")
     else:
         return 99
     try:
@@ -343,7 +351,7 @@ def full_farm(phase:int):
             air_ship_destination(dest_num=zone_int)
             report_remaining(phase=phase)
             counts = report_need_single(phase=phase, mon_name=check_zone[0])
-            logger.debug(f"Target (B): {check_zone[0]}: {counts[0]}/{counts[1]}")
+            logger.info(f"Target (B): {check_zone[0]}: {counts[0]}/{counts[1]}")
             path_to_battle(zone=check_zone[1])
             menu.remove_all_nea()
         elif adjacent[0] and last_zone != check_zone[1]:
@@ -356,7 +364,7 @@ def full_farm(phase:int):
         last_zone = check_zone[1]
         report_remaining(phase=phase)
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
-        logger.debug(f"Target (C): {check_zone[0]}: {counts[0]}/{counts[1]}")
+        logger.info(f"Target (C): {check_zone[0]}: {counts[0]}/{counts[1]} | {check_zone[3]")
         battle_start(zone=check_zone[1])
         check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
         battle.main.wrap_up()
@@ -369,7 +377,7 @@ def full_farm(phase:int):
             battle.main.heal_up(3)
         memory.main.close_menu()
         if phase < 5:
-            nemesis.menu.perform_next_grid(limit=ap_cp_limit)
+            nemesis.menu.perform_next_grid()
         
         logger.debug(f"Zone name (D): {check_zone[1]}")
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
@@ -391,8 +399,8 @@ def full_farm(phase:int):
         elif check_zone[1] != last_zone and check_zone[1] != "any":
             move_adjacent = False
             menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            logger.debug(f"== Moving to zone: {check_zone[1]}")
-            logger.debug(f"Mon (A): {check_zone[0]}")
+            logger.info(f"== Moving to zone: {check_zone[1]}")
+            logger.info(f"Mon (A): {check_zone[0]}")
             if last_zone == "cave_(green_zone)" and yoj_unlock:
                 path_to_yojimbo()
                 yoj_unlock = False

@@ -151,6 +151,14 @@
         "953993642": {
             "duration": 480,
             "victory": true
+        },
+        "974205287": {
+            "duration": 494,
+            "victory": true
+        },
+        "1218943860": {
+            "duration": 514,
+            "victory": true
         }
     },
     "35": {
@@ -247,6 +255,10 @@
         "1144518566": {
             "duration": 595,
             "victory": false
+        },
+        "308376356": {
+            "duration": 484,
+            "victory": true
         }
     },
     "187": {
@@ -272,6 +284,10 @@
     "216": {
         "465592808": {
             "duration": 482,
+            "victory": true
+        },
+        "1283746993": {
+            "duration": 587,
             "victory": true
         }
     },
@@ -394,6 +410,24 @@
     "211": {
         "2025355697": {
             "duration": 801,
+            "victory": true
+        }
+    },
+    "87": {
+        "585865248": {
+            "duration": 513,
+            "victory": true
+        }
+    },
+    "18": {
+        "635100674": {
+            "duration": 530,
+            "victory": false
+        }
+    },
+    "15": {
+        "152862875": {
+            "duration": 421,
             "victory": true
         }
     }
