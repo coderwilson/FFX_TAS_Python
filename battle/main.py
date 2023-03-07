@@ -191,7 +191,7 @@ def use_special(position, target: int = 20, direction: int = "u"):
         xbox.tap_b()
 
     if memory.main.battle_target_id() != target:
-        if memory.main.get_enemy_current_hp()[target-20] >= 1:
+        if memory.main.get_enemy_current_hp()[target - 20] >= 1:
             while memory.main.battle_target_id() != target:
                 if direction == "r":
                     xbox.tap_right()
@@ -452,7 +452,6 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                 elif enc_id == 33:
                     logger.debug("Logic for battle number 33")
                     if Yuna.is_turn():
-
                         aeon_summon(0)
                         screen.await_turn()
                         if not aeon_turn:
@@ -783,9 +782,9 @@ def after_blitz_3(early_haste):
             xbox.await_save(index=1)
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-    #if not game_vars.csr():
+    # if not game_vars.csr():
     #    xbox.await_save(index=1)
-    #wrap_up()
+    # wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -2517,7 +2516,6 @@ def home_2():
     logger.debug("Kimahri vs dual horns")
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
-
             if Kimahri.is_turn():
                 Kimahri.overdrive(3)
             elif memory.main.get_battle_char_slot(3) >= 3:
@@ -2876,7 +2874,7 @@ def calm_lands_gems():
     while not memory.main.turn_ready():
         pass
     steal_complete = False
-    if not memory.main.get_encounter_id() in [273, 275, 281, 283]:
+    if memory.main.get_encounter_id() not in [273, 275, 281, 283]:
         flee_all()
     else:
         while not memory.main.battle_complete():
@@ -3345,7 +3343,7 @@ def attack_oblitz_end():
         while not memory.main.turn_ready():
             pass
     while memory.main.main_battle_menu():
-        if not memory.main.battle_menu_cursor() in [0, 203, 210, 216]:
+        if memory.main.battle_menu_cursor() not in [0, 203, 210, 216]:
             logger.debug(f"Battle Menu Cursor: {memory.main.battle_menu_cursor()}")
             xbox.tap_up()
         elif screen.battle_complete():
@@ -3367,7 +3365,7 @@ def attack(direction="none"):
         while not memory.main.turn_ready():
             pass
     while memory.main.main_battle_menu():
-        if not memory.main.battle_menu_cursor() in [0, 203, 210, 216]:
+        if memory.main.battle_menu_cursor() not in [0, 203, 210, 216]:
             logger.debug(f"Battle Menu Cursor: {memory.main.battle_menu_cursor()}")
             xbox.tap_up()
         elif screen.battle_complete():

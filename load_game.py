@@ -262,7 +262,7 @@ def load_into_game_old(gamestate: str, step_counter: str):
         # load_game.load_save_num(49)
         # Nemesis logic, double friend sphere drops from B&Y
         load_save_num(70)
-        while not memory.main.oaka_gil_cursor() in [8, 20]:
+        while memory.main.oaka_gil_cursor() not in [8, 20]:
             if memory.main.user_control():
                 import pathing
 

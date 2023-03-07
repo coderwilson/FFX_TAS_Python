@@ -228,7 +228,6 @@ def arrival_2(self_destruct, battle_count, sd_encounter_id):
     checkpoint = 15
     while memory.main.get_map() != 171:
         if memory.main.user_control():
-
             # Map changes
             if checkpoint == 27:
                 if memory.main.get_coords()[1] > 2810:

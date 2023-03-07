@@ -146,7 +146,11 @@ def klikk():
                 battle.main.revive()
                 klikk_revives += 1
             elif Tidus.is_turn():
-                if Rikku.is_dead() and memory.main.get_enemy_current_hp()[0] > 125 and Tidus.in_danger(120):
+                if (
+                    Rikku.is_dead()
+                    and memory.main.get_enemy_current_hp()[0] > 125
+                    and Tidus.in_danger(120)
+                ):
                     battle.main.use_potion_character(Tidus, "l")
                 else:
                     CurrentPlayer().attack()

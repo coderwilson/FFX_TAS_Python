@@ -32,7 +32,6 @@ def air_ship_path(version):
                 and checkpoint == 5
                 and (memory.main.get_speed() < 9 or memory.main.get_power() < 23)
             ):
-
                 # Tyton to update this with the actual purchase.
                 while memory.main.diag_progress_flag() != 44:
                     if memory.main.user_control():

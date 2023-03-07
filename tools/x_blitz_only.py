@@ -51,7 +51,7 @@ while attempts < 20:
     rolled_array = memory.main.rng_02_array()
 
     area.luca.blitz_start()
-    while not memory.main.blitz_clock() in [1, 2]:
+    while memory.main.blitz_clock() not in [1, 2]:
         FFXC.set_neutral()
     while not (blitz.select_formation() or blitz.select_movement()):
         xbox.tap_y()
