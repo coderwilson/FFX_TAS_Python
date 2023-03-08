@@ -916,7 +916,7 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     else:
         armor_num = 0
 
-    #logger.debug(f"Armor is in slot {armor_num}")
+    # logger.debug(f"Armor is in slot {armor_num}")
     if memory.main.menu_number() != 26:
         if not memory.main.menu_open():
             memory.main.open_menu()

@@ -9,7 +9,6 @@ FFXC = xbox.controller_handle()
 
 
 def set_movement(target) -> bool:
-
     player = memory.main.get_coords()
     (forward, right) = memory.main.get_movement_vectors()
 

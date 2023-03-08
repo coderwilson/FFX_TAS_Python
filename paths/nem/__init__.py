@@ -13,12 +13,7 @@ from paths.nem.farming import (
     YojimboFarm,
     ZanarkandFarm2,
 )
-from paths.nem.gagazet import (
-    GagazetFarm,
-    GagazetMtPathFarm,
-    GagazetCaveFarm,
-    ZanarkandFarm
-)
+from paths.nem.gagazet import GagazetFarm, ZanarkandFarm
 from paths.nem.races import LeaveRemiem, Race1, Race2, Race3, ToRemiem
 
 __all__ = [

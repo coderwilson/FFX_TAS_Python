@@ -61,7 +61,7 @@ def coming_battle_type(extra_advances: int = 0, initiative=False):
 def singles_battles(
     area: str = "kilika_woods", battle_count: int = 10, extra_advances: int = 0
 ):
-    #logger.debug(f"Area: {area}")
+    # logger.debug(f"Area: {area}")
     formations = area_formations(area=area)
     advances = memory.main.rng_01_advances(battle_count + extra_advances)
     if extra_advances != 0:
@@ -72,7 +72,7 @@ def singles_battles(
     for i in range(battle_count):
         next_value = formations[(advances[i + 1] & 0x7FFFFFFF) % len(formations)]
         battles.append(next_value)
-    #logger.debug(f"Battles: {battles}")
+    # logger.debug(f"Battles: {battles}")
     return battles
 
 
