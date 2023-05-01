@@ -1495,6 +1495,7 @@ def decide_skip_zan_luck() -> bool:
         logger.debug("Expecting crit on Arm 1")
         attack_count += 1
     else:
+        logger.debug("Expecting no crit on Arm 1")
         attack_count += 2
     arm2Crit = memory.main.future_attack_will_crit(
         character=7, char_luck=bahamut_luck, enemy_luck=15, attack_index=attack_count
@@ -1503,28 +1504,37 @@ def decide_skip_zan_luck() -> bool:
         logger.debug("Expecting crit on Arm 2")
         attack_count += 1
     else:
+        logger.debug("Expecting no crit on Arm 2")
         attack_count += 2
     attack_count += 1  # Core is always one attack
     face_crit = memory.main.future_attack_will_crit(
         character=7, char_luck=bahamut_luck, enemy_luck=15, attack_index=attack_count
     )
-    if not face_crit:
+    if face_crit:
+        logger.debug("Expecting crit on Face/impulse")
+    else:
         face_crit = memory.main.future_attack_will_crit(
             character=7,
             char_luck=bahamut_luck,
             enemy_luck=15,
             attack_index=attack_count + 1,
         )
+        if face_crit:
+            logger.debug("Expecting crit on Face/attack (first)")
     if face_crit:
-        logger.debug("Expecting crit on Face")
+        attack_count += 2
+    elif game_vars.rng_seed_num() == 31:
         attack_count += 2
     else:
-        attack_count += 3
+        logger.debug("Expecting no crit on Face")
+        attack_count += 3  # Should be 3, but we're over-damaging.
     if not future_attack_hit(
         character=7, enemy="seymour_flux", attack_index=attack_count
     ):
         logger.debug("Miss on Omnis")
         return False
+    else:
+        logger.debug("No miss on Omnis")
     attack_count += 1  # One attack on Seymour
     for i in range(3):
         logger.debug(f"BFA attack num {i} | {attack_count}")

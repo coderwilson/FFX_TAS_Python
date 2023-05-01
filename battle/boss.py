@@ -106,7 +106,6 @@ def dark_attack_tutorial():
     battle.main.escape_all()
 
 
-@battle.utils.speedup_decorator
 def tanker():
     logger.info("Fight start: Tanker")
     count_attacks = 0
@@ -1378,10 +1377,10 @@ def evrae_altana():
         battle.main.flee_all()
     else:
         logger.info("Evrae Altana fight start")
-        if memory.main.next_steal_rare():
-            battle.main.evrae_altana_steal()
-        else:
-            logger.debug("Next steal will crit, do not steal.")
+        #if not memory.main.next_steal_rare():
+        #    evrae_altana_steal()
+        #else:
+        #    logger.debug("Next steal will crit, do not steal.")
         thrown_item = False
         while not memory.main.battle_complete():  # AKA end of battle screen
             if memory.main.turn_ready():
@@ -1395,6 +1394,23 @@ def evrae_altana():
                     battle.main.altana_heal()
 
     memory.main.click_to_control()
+
+def evrae_altana_steal():
+    logger.debug("Steal logic, we will get two gems")
+    haste_count = False
+    steal_count = False
+    while memory.main.get_item_slot(34) == 255:
+        if memory.main.turn_ready():
+            if Tidus.is_turn() and not haste_count:
+                battle.main.tidus_haste(direction="l", character=Rikku)
+                haste_count = True
+            elif Rikku.is_turn() and not steal_count:
+                memory.main.next_steal_rare()
+                battle.main._steal()
+                steal_count = True
+            else:
+                CurrentPlayer().defend()
+    logger.debug("End of steal logic. Back to regular.")
 
 
 @battle.utils.speedup_decorator

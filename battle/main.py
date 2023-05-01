@@ -777,7 +777,7 @@ def after_blitz_3(early_haste):
         if memory.main.battle_wrap_up_active():
             xbox.tap_b()
         elif memory.main.cutscene_skip_possible():
-            memory.main.wait_frames(3)
+            memory.main.wait_frames(15)
             xbox.skip_scene()
             memory.main.wait_frames(15)
             xbox.await_save(index=1)
@@ -2846,22 +2846,6 @@ def altana_heal():
         return 0
 
 
-def evrae_altana_steal():
-    logger.debug("Steal logic, we will get two gems")
-    haste_count = False
-    steal_count = False
-    while memory.main.get_item_slot(34) == 255:
-        if memory.main.turn_ready():
-            if Tidus.is_turn() and not haste_count:
-                tidus_haste(direction="l", character=Rikku)
-                haste_count = True
-            elif Rikku.is_turn() and not steal_count:
-                _steal()
-                steal_count = True
-            else:
-                CurrentPlayer().defend()
-    logger.debug("End of steal logic. Back to regular.")
-
 
 def attack_highbridge():
     if memory.main.get_encounter_id() == 270:
@@ -3911,13 +3895,15 @@ def wrap_up():
         while memory.main.battle_value() != 0:
             if memory.main.turn_ready():
                 return False
-
+    
     logger.debug("Wrapping up battle.")
     while not memory.main.battle_wrap_up_active():
         if memory.main.user_control():
             return False
         elif memory.main.menu_open():
-            return False
+            memory.main.wait_frames(3)
+            if not memory.main.battle_wrap_up_active():
+                return False
         elif memory.main.diag_skip_possible():
             return False
     memory.main.wait_frames(1)
@@ -3935,7 +3921,7 @@ def sin_arms():
     # Area for improvement later. Multiple skippable FMVs
     xbox.click_to_battle()
     aeon_summon(4)
-    while not memory.main.battle_complete():  # Arm1
+    while memory.main.battle_active():  # Arm1
         if memory.main.turn_ready():
             Bahamut.unique()
             xbox.tap_b()
@@ -3952,7 +3938,7 @@ def sin_arms():
 
     aeon_summon(4)
 
-    while not memory.main.battle_complete():  # Arm2
+    while memory.main.battle_active():  # Arm2
         if memory.main.turn_ready():
             Bahamut.unique()
             xbox.tap_b()
@@ -3994,7 +3980,7 @@ def sin_face():
     FFXC.set_neutral()
 
     aeon_first_turn = True
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Yuna.is_turn():
                 aeon_summon(4)
@@ -4008,6 +3994,13 @@ def sin_face():
                 CurrentPlayer().defend()
         else:
             xbox.tap_b()
+    logger.info("Fight end: Sin's Face")
+    if not game_vars.csr():
+        while not (memory.main.user_control() or memory.main.cutscene_skip_possible()):
+            xbox.tap_b()
+    if memory.main.cutscene_skip_possible():
+        memory.main.wait_frames(2)
+        xbox.skip_scene(fast_mode=True)
 
 
 @battle.utils.speedup_decorator

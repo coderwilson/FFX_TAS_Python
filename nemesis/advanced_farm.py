@@ -55,7 +55,7 @@ test_mode = False
 
 def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
     # best_zone made up of [monster, zone, priority]
-    best_zone = ["none", "any", -1]
+    best_zone = ["none", "any", -1, 0]
     if phase == 3:
         f = open("nemesis\\phase_three_monsters.json")
     elif phase == 4:
@@ -88,10 +88,10 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                 v3 = 999
                 best_zone = [v1, v2, v3, advances]
                 return best_zone
-    elif phase == 6:
+    elif phase in [4,6]:
         check_zone = rng_track.singles_battles(area="mrr_-_valley")[advances]
         if "garuda" in check_zone:
-            if memory.main.arena_array()[82] < 10:
+            if memory.main.arena_array()[40] < 10:
                 v1 = "garuda"
                 v2 = "mrr_-_valley"
                 v3 = 999
@@ -99,13 +99,13 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
                 return best_zone
 
     for key in mon_array:
-        check_zone = rng_track.singles_battles(area=mon_list[key]["zone1"])[advances]
+        check_zone = rng_track.singles_battles(area=mon_list[key]["zone1"])[advances*2]
         if mon_list[key]["zone2"] != "none":
-            check_zone_2 = rng_track.singles_battles(area=mon_list[key]["zone2"])[advances]
+            check_zone_2 = rng_track.singles_battles(area=mon_list[key]["zone2"])[advances*2]
         else:
             check_zone_2 = "none"
         if mon_list[key]["zone3"] != "none":
-            check_zone_3 = rng_track.singles_battles(area=mon_list[key]["zone3"])[advances]
+            check_zone_3 = rng_track.singles_battles(area=mon_list[key]["zone3"])[advances*2]
         else:
             check_zone_3 = "none"
         check_mon = mon_list[key]["num"]
@@ -114,18 +114,18 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
             # Do not need to continue farming if enough are captured.
             pass
         elif key.lower() in check_zone:
-            if mon_list[key]["prio"] > best_zone[2]:
-                # Higher prio areas take precedent
+            if (
+                mon_list[key]["prio"] == best_zone[2] and
+                mon_list[key]["zone1"] == current_zone
+            ):
+                # Current area has first precedence. Sticky zones.
                 if memory.main.arena_array()[check_mon] < check_count:
                     v1 = key
                     v2 = mon_list[key]["zone1"]
                     v3 = mon_list[key]["prio"]
                     best_zone = [v1, v2, v3, advances]
-            elif (
-                mon_list[key]["prio"] == best_zone[2] and
-                mon_list[key]["zone1"] == current_zone
-            ):
-                # Current area has second precedence.
+            elif mon_list[key]["prio"] > best_zone[2]:
+                # Higher prio areas take second precedent
                 if memory.main.arena_array()[check_mon] < check_count:
                     v1 = key
                     v2 = mon_list[key]["zone1"]
@@ -134,18 +134,18 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
         elif check_zone_2 == "none":
             pass
         elif key.lower() in check_zone_2:
-            if mon_list[key]["prio"] > best_zone[2]:
-                # Higher prio areas take precedent
+            if (
+                mon_list[key]["prio"] == best_zone[2] and
+                mon_list[key]["zone1"] == current_zone
+            ):
+                # Current area has second precedence.
                 if memory.main.arena_array()[check_mon] < check_count:
                     v1 = key
                     v2 = mon_list[key]["zone2"]
                     v3 = mon_list[key]["prio"]
                     best_zone = [v1, v2, v3, advances]
-            elif (
-                mon_list[key]["prio"] == best_zone[2] and
-                mon_list[key]["zone1"] == current_zone
-            ):
-                # Current area has second precedence.
+            elif mon_list[key]["prio"] > best_zone[2]:
+                # Higher prio areas take precedent
                 if memory.main.arena_array()[check_mon] < check_count:
                     v1 = key
                     v2 = mon_list[key]["zone2"]
@@ -154,18 +154,18 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
         elif check_zone_3 == "none":
             pass
         elif key.lower() in check_zone_3:
-            if mon_list[key]["prio"] > best_zone[2]:
-                # Higher prio areas take precedent
+            if (
+                mon_list[key]["prio"] == best_zone[2] and
+                mon_list[key]["zone1"] == current_zone
+            ):
+                # Current area has second precedence.
                 if memory.main.arena_array()[check_mon] < check_count:
                     v1 = key
                     v2 = mon_list[key]["zone3"]
                     v3 = mon_list[key]["prio"]
                     best_zone = [v1, v2, v3, advances]
-            elif (
-                mon_list[key]["prio"] == best_zone[2] and
-                mon_list[key]["zone1"] == current_zone
-            ):
-                # Current area has second precedence.
+            elif mon_list[key]["prio"] > best_zone[2]:
+                # Higher prio areas take precedent
                 if memory.main.arena_array()[check_mon] < check_count:
                     v1 = key
                     v2 = mon_list[key]["zone3"]
@@ -175,23 +175,29 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
     return best_zone
 
 def choose_next_zone(last_zone:str, phase:int):
-    temp = next_zone_check(phase=phase, current_zone=last_zone)
+    temp = next_zone_check(phase=phase, current_zone=last_zone, advances=0)
     check_zone = temp
     sticky = path_get_info(zone=str(last_zone))["sticky"]
-    if sticky and check_zone[1] != last_zone:
+    if check_zone[1] != last_zone:
         # Logic to prefer staying in the same area over constant bouncing.
-        temp = next_zone_check(phase=phase, current_zone=last_zone, advances=1)
-        if temp[1] == last_zone or zone_to_zone(last_zone, temp[1])[0]:
-            check_zone = temp
-        elif get_map() in [203,204,137]:
-            # Sin and Bikanel have long run-backs.
-            temp = next_zone_check(phase=phase, current_zone=last_zone, advances=2)
-            if temp[1] == last_zone or zone_to_zone(last_zone, temp[1])[0]:
-                check_zone = temp
-            else:
-                temp[1] = next_zone_check(phase=phase, current_zone=last_zone, advances=3)
-                if temp[1] == last_zone or zone_to_zone(last_zone, temp[1])[0]:
-                    check_zone = temp
+        temp1 = next_zone_check(phase=phase, current_zone=last_zone, advances=1)
+        temp2 = next_zone_check(phase=phase, current_zone=last_zone, advances=2)
+        temp3 = next_zone_check(phase=phase, current_zone=last_zone, advances=3)
+        if zone_to_zone(last_zone, check_zone[1])[0]:
+            pass
+        elif temp1[1] == last_zone:
+            check_zone = temp1
+        elif zone_to_zone(last_zone, temp1[1])[0]:
+            check_zone = temp1
+        elif sticky == "True":
+            if temp2[1] == last_zone:
+                check_zone = temp2
+            elif zone_to_zone(last_zone, temp2[1])[0]:
+                check_zone = temp2
+            elif temp3[1] == last_zone:
+                check_zone = temp3
+            elif zone_to_zone(last_zone, temp3[1])[0]:
+                check_zone = temp3
     return check_zone
 
 def complete_check(phase:int = 3):
@@ -327,16 +333,13 @@ def full_farm(phase:int):
     check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
     
     while not complete_check(phase=phase):
-        
-                
         logger.debug(f"Zone name (A): {check_zone[1]}")
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
         logger.debug(f"Mon (A): {check_zone[0]}: {counts[0]}/{counts[1]}")
         if check_zone[1] == "any":
             if get_map() == 374:
                 # If no other choice, default to Djose. Most farms have something there.
-                check_zone[1] = "djose_highroad_(back_half)"
-                check_zone[1] = "cave_(green_zone)"
+                check_zone[1] = "lake_macalania"
                 last_zone = check_zone[1]
             else:
                 check_zone[1] = last_zone
@@ -364,7 +367,7 @@ def full_farm(phase:int):
         last_zone = check_zone[1]
         report_remaining(phase=phase)
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
-        logger.info(f"Target (C): {check_zone[0]}: {counts[0]}/{counts[1]} | {check_zone[3]")
+        logger.info(f"Target (C): {check_zone[0]}: {counts[0]}/{counts[1]} | {check_zone[3]}")
         battle_start(zone=check_zone[1])
         check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
         battle.main.wrap_up()
@@ -490,19 +493,42 @@ def path_to_battle(zone:str, checkpoint:int=0, direction:str='f'):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 4:  # Miihen/MRR
-            if pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
+            #logger.warning(memory.main.controlled_actor_id())
+            if checkpoint == 39:# and memory.main.controlled_actor_id() == 20531:
+                xbox.tap_a()
+            if checkpoint == 38 and direction == 'b':
+                checkpoint -= 1
+            if checkpoint == 5:  # Chocobo lady
+                pathing.approach_actor_by_id(actor_id=8279)
+                FFXC.set_neutral()
+                memory.main.click_to_diag_progress(48)
+                memory.main.click_to_control()
+                checkpoint += 1
+            elif checkpoint == 29:
+                #logger.warning(memory.main.get_actors_loaded())
+                if 20531 in memory.main.get_actors_loaded():# and zone == "mi'ihen_(newroad)":
+                    logger.warning("Dismounting (A)")
+                    FFXC.set_neutral()
+                    xbox.tap_a()
+                    xbox.tap_a()
+                    xbox.tap_a()
+                    xbox.tap_a()
+                    xbox.tap_a()
+                    memory.main.await_control()
+                checkpoint += 1
+            elif pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
                 if direction == 'f':
                     checkpoint += 1
-                    if checkpoint == 34 and zone in ["clasko_skip_screen","mrr_-_valley"]:
-                        checkpoint = 48
+                    if checkpoint == 35 and zone in ["clasko_skip_screen","mrr_-_valley"]:
+                        checkpoint = 49
                     if checkpoint in [4,5] and zone == "mi'ihen_screen_2-3":
                         checkpoint = 201
                 else:
                     checkpoint -= 1
-                    if checkpoint == 48 and zone == "mi'ihen_(newroad)":
-                        checkpoint = 34
-                    if checkpoint == 43 and zone == "old_road":
-                        checkpoint = 36
+                    if checkpoint == 49 and zone == "mi'ihen_(newroad)":
+                        checkpoint = 35
+                    if checkpoint == 44 and zone == "old_road":
+                        checkpoint = 37
                         direction = 'f'
                     if checkpoint > 190 and get_map() == 171:
                         checkpoint = 2
@@ -681,6 +707,11 @@ def battle_start(zone:str):
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 8:
+            # Dodge logic
+            if memory.main.dodge_lightning(game_vars.get_l_strike()):
+                logger.debug("Strike!")
+                game_vars.set_l_strike(memory.main.l_strike_count())
+            # Regular stuff
             if pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
                 if direction == 'f':
                     if checkpoint == path_info["last_battle"]:
@@ -923,8 +954,8 @@ def path_to_save(zone:str) -> bool:
                     checkpoint -= 1
                 else:
                     checkpoint += 1
-                    if checkpoint in [33,34]:
-                        checkpoint = 46
+                    if checkpoint in [33,34,35,36]:
+                        checkpoint = 47
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 5:
             if pathing.set_movement(DjoseFarm.execute(checkpoint)) is True:
@@ -935,7 +966,7 @@ def path_to_save(zone:str) -> bool:
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 8:
             if checkpoint in [13,14] and path_info["return_direction"] == 'b':
-                checkpoint = 4
+                checkpoint = 5
             if pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
                 if path_info["return_direction"] == 'b':
                     checkpoint -= 1

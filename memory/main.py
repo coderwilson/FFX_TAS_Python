@@ -400,6 +400,12 @@ def user_control():
     else:
         return True
 
+def controlled_actor_id():
+    global base_value
+    # Auto updating via reference to the base_value above
+    control_struct = base_value + 0xEA23A4
+    return process.read(control_struct)
+
 
 def await_control():
     logger.debug("Awaiting control (no clicking)")
@@ -1875,6 +1881,7 @@ def menu_direction(current_menu_position, target_menu_position, menu_size):
             xbox.tap_down()
         else:
             xbox.tap_up()
+    wait_frames(1)
 
 
 def side_to_side_direction(current_menu_position, target_menu_position, menu_size):
@@ -1937,6 +1944,15 @@ def name_from_number(char_num):
 def get_actor_array_size():
     global base_value
     return process.read(base_value + 0x01FC44E0)
+
+def get_actors_loaded():
+    global base_value
+    base_pointer = base_value + 0x01FC44E4
+    base_pointer_address = process.read(base_pointer)
+    array = []
+    for i in range(get_actor_array_size()):
+        array.append(process.read_bytes((0x880 * i) + base_pointer_address, 2))
+    return array
 
 
 def get_actor_id(actor_num):
@@ -2165,8 +2181,8 @@ def click_to_diag_progress(num):
         if user_control():
             return False
         else:
-            if not auditory_dialog_playing():
-                xbox.tap_b()
+            # if not auditory_dialog_playing():
+            xbox.tap_b()
             if diag_progress_flag() != last_num:
                 last_num = diag_progress_flag()
                 logger.debug(
@@ -4460,9 +4476,12 @@ def rng_array_from_index(index: int = 20, array_len: int = 20):
     ret_val = [rng_from_index(index)]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
         ret_val.append(roll_next_rng(ret_val[x], index))
+    #logger.debug(ret_val)
     ret_val = [
         x & 0x7FFFFFFF for x in ret_val
     ]  # Anding it because that's the value that's actually used
+    #logger.warning(ret_val)
+    #wait_frames(90)
     return ret_val
 
 
@@ -4487,4 +4506,5 @@ def next_steal(steal_count: int = 0, pre_advance: int = 0):
 def next_steal_rare(pre_advance: int = 0):
     use_array = rng_array_from_index(index=11, array_len=1 + pre_advance)
     steal_crit_rng = use_array[1 + pre_advance] % 255
+    logger.warning(f" RNG%255: {steal_crit_rng} | Returning {steal_crit_rng < 32}")
     return steal_crit_rng < 32

@@ -718,7 +718,7 @@ def perform_TAS():
 
                 if game.step == 8:
                     nemesis.advanced_farm.full_farm(phase=4)
-                    nemesis.advanced_farm.full_farm(phase=7)
+                    #nemesis.advanced_farm.full_farm(phase=7)
                     game.step = 9
                     maybe_create_save(save_num=58)
 

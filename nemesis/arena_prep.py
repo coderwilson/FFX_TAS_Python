@@ -2166,6 +2166,7 @@ def woods_next(end_goal: int):
 def mac_woods(cap_num: int = 10):
     air_ship_destination(dest_num=9)
     menu.remove_all_nea()
+    memory.main.update_formation(Tidus, Yuna, Wakka)
     pref_area = woods_next(end_goal=cap_num)
     logger.debug(f"Next area: {pref_area}")
 
@@ -2215,6 +2216,9 @@ def mac_woods(cap_num: int = 10):
                     target = [13,14]
                 else:
                     target = [10,10]
+                battle.main.wrap_up()
+                memory.main.await_control()
+                memory.main.update_formation(Tidus, Yuna, Wakka)
                 logger.debug(f"Next area: {pref_area}")
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
