@@ -65,8 +65,6 @@ class Bot(commands.Bot):
         
         if force_seed == True and (int(seed_num) > 255 or int(seed_num) <= -1):
             await ctx.send(f"{seed_num} is an invalid seed number. Try again.")
-        elif not ctx.author.name in self.allowed_users:
-            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute commands.")
         elif self.process is None:
             if force_seed:
                 self.process = subprocess.Popen(["python", SCRIPT_PATH, "-seed", seed_num])
