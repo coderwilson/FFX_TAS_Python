@@ -1,11 +1,123 @@
 {
+	"raldo": {
+		"num": 0,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
 	"mi'ihen_fang": {
 		"num": 9,
 		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"thunder_flan": {
+		"num": 16,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"ipiria": {
+		"num": 22,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"floating_eye": {
+		"num": 34,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"dual_horn": {
+		"num": 47,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"vouivre": {
+		"num": 50,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"white_element": {
+		"num": 62,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"bomb": {
+		"num": 85,
+		"zone1": "mi'ihen_(newroad)",
+		"zone2": "old_road",
+		"zone3": "clasko_skip_screen",
+		"prio": 50,
+		"need": 10
+	},
+	"gandarewa": {
+		"num": 5,
+		"zone1": "mrr_-_valley",
 		"zone2": "none",
 		"zone3": "none",
-		"prio": 5,
-		"need": 3
+		"prio": 50,
+		"need": 10
+	},
+	"raptor": {
+		"num": 23,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 10
+	},
+	"garuda": {
+		"num": 40,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 500,
+		"need": 10
+	},
+	"lamashtu": {
+		"num": 51,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 10
+	},
+	"red_element": {
+		"num": 63,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 10
+	},
+	"funguar": {
+		"num": 91,
+		"zone1": "mrr_-_valley",
+		"zone2": "none",
+		"zone3": "none",
+		"prio": 50,
+		"need": 10
 	},
 	"thunder_flan": {
 		"num": 16,
@@ -214,5 +326,13 @@
 		"zone3": "none",
 		"prio": 60,
 		"need": 5
+	},
+	"iron_giant": {
+		"num": 76,
+		"zone1": "thunder_plains_(north)_(2_stones)",
+		"zone2": "thunder_plains_(south)_(2_stones)",
+		"zone3": "none",
+		"prio": 10,
+		"need": 10
 	}
 }

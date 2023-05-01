@@ -16,7 +16,7 @@ def speedup_decorator(func):
             pass
         fast = False
         old_game_speed = memory.main.get_game_speed()
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if fast and memory.main.auditory_dialog_playing():
                 memory.main.set_game_speed(0)
                 fast = False

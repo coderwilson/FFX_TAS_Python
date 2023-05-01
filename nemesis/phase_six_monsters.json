@@ -1,10 +1,10 @@
 {
-	"iron_giant": {
-		"num": 76,
-		"zone1": "thunder_plains_(north)_(2_stones)",
-		"zone2": "thunder_plains_(south)_(2_stones)",
+	"yowie": {
+		"num": 26,
+		"zone1": "cave_(white_zone)",
+		"zone2": "none",
 		"zone3": "none",
-		"prio": 100,
+		"prio": 10,
 		"need": 10
 	},
 	"raldo": {
