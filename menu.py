@@ -1450,6 +1450,7 @@ def add_ability(
     if exit_out_of_current_weapon:
         while memory.main.cure_menu_open():
             xbox.menu_a()
+            memory.main.wait_frames(1)
     if close_menu:
         if full_menu_close:
             memory.main.close_menu()

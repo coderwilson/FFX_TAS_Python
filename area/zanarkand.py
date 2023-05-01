@@ -494,12 +494,10 @@ def post_yunalesca(checkpoint=0):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
-                battle.main.flee_all()
-            elif memory.main.diag_skip_possible() and not memory.main.battle_active():
-                xbox.tap_b()
-            elif memory.main.cutscene_skip_possible():
+            if memory.main.cutscene_skip_possible():
                 logger.debug(f"Cutscene ID: {memory.get.cutscene_id()}")
-                if memory.get.cutscene_id() == (5673, 2850, 3):
-                    memory.main.wait_frames(10)
-                    xbox.skip_scene()
+                if memory.get.cutscene_id() == (0, 2850, 3):
+                    memory.main.wait_frames(2)
+                    xbox.skip_scene(fast_mode=True)
+            else:
+                xbox.tap_b()

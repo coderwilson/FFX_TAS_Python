@@ -8,3 +8,4 @@ tqdm==4.64.1
 jsonmerge==1.9.0
 Pillow==9.3
 pythonnet==3.0.1
+argparse>=1.4.0

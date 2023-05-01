@@ -24,35 +24,35 @@
 		"sticky": "True"
 	},
 	"mi'ihen_(newroad)": {
-		"first_battle": 29,
-		"last_battle": 30,
+		"first_battle": 30,
+		"last_battle": 31,
 		"return_direction": "f",
-		"return_start": 30,
-		"sphere": 47,
-		"sticky": "True"
-	},
-	"old_road": {
-		"first_battle": 40,
-		"last_battle": 41,
-		"return_direction": "f",
-		"return_start": 42,
-		"sphere": 47,
-		"sticky": "True"
-	},
-	"clasko_skip_screen": {
-		"first_battle": 52,
-		"last_battle": 53,
-		"return_direction": "b",
-		"return_start": 52,
+		"return_start": 31,
 		"sphere": 48,
 		"sticky": "True"
 	},
-	"mrr_-_valley": {
-		"first_battle": 61,
-		"last_battle": 62,
+	"old_road": {
+		"first_battle": 41,
+		"last_battle": 42,
 		"return_direction": "f",
-		"return_start": 62,
-		"sphere": 62,
+		"return_start": 43,
+		"sphere": 48,
+		"sticky": "True"
+	},
+	"clasko_skip_screen": {
+		"first_battle": 53,
+		"last_battle": 54,
+		"return_direction": "b",
+		"return_start": 52,
+		"sphere": 49,
+		"sticky": "True"
+	},
+	"mrr_-_valley": {
+		"first_battle": 62,
+		"last_battle": 63,
+		"return_direction": "f",
+		"return_start": 63,
+		"sphere": 63,
 		"sticky": "True"
 	},
 	"djose_highroad_(front_half)": {
@@ -79,7 +79,7 @@
 		"sphere": 39,
 		"sticky": "True"
 	},
-	"thunder_plains_(north)_(2_stones)": {
+	"thunder_plains_(south)_(2_stones)": {
 		"first_battle": 17,
 		"last_battle": 18,
 		"return_direction": "b",
@@ -87,7 +87,7 @@
 		"sphere": -1,
 		"sticky": "False"
 	},
-	"thunder_plains_(south)_(2_stones)": {
+	"thunder_plains_(north)_(2_stones)": {
 		"first_battle": 9,
 		"last_battle": 10,
 		"return_direction": "b",
