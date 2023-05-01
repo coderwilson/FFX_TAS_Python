@@ -1,10 +1,10 @@
 absl-py==1.2.0
-numpy==1.22.3
+numpy>=1.22.3
 ReadWriteMemory==0.1.5
-vgamepad==0.0.8
+vgamepad>=0.0.8
 pyttsx3==2.90
 pyyaml==6.0
 tqdm==4.64.1
-jsonmerge==1.9.0
+jsonmerge>=1.9.0
 Pillow==9.3
 pythonnet==3.0.1
