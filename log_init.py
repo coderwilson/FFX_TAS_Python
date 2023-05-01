@@ -18,6 +18,7 @@ _MANIP_LEVEL = logging.DEBUG + 5
 # Basic documentation here:     https://docs.python.org/3/howto/logging.html
 # Advanced documentation here:  https://docs.python.org/3/howto/logging-cookbook.html
 
+
 # Create a custom formatter for the timestamp, adding the delta property to the record
 # This will hold the time from the start of the program
 class DeltaTimeFormatter(logging.Formatter):

@@ -440,7 +440,7 @@ class BikanelFarm(AreaMovementBase):
         3: [93, -399],
         4: [197, -394],
         5: [300, -390],  # Second map
-        6: [200, -900], # Back to first map
+        6: [200, -900],  # Back to first map
         7: [-49, -584],
         8: [-222, -459],
         9: [-170, -313],

@@ -300,7 +300,6 @@ def record_save_sphere(x_val: int, y_val: int, diag_prog: int, actor: int):
                     records[map_num][diag_num][actor_num]["diag"]
                     != new_val[map_num][diag_num][actor_num]["diag"]
                 ):
-
                     records[map_num][diag_num][actor_num]["x"] = new_val[map_num][
                         diag_num
                     ][actor_num]["x"]

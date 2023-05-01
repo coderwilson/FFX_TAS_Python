@@ -131,7 +131,7 @@ def main_path():
                 checkpoint += 1
                 logger.debug(f"Lift Checkpoint {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
-                if not memory.main.rng_seed() in [31]:
+                if memory.main.rng_seed() not in [31]:
                     memory.main.click_to_event_temple(7)
                     logger.info("Got X-potion")
                 checkpoint += 1

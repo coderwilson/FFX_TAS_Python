@@ -163,7 +163,7 @@ def return_to_airship():
             memory.main.wait_frames(1)
     FFXC.set_neutral()
 
-    while not memory.main.get_map() in [194, 374]:
+    while memory.main.get_map() not in [194, 374]:
         if memory.main.get_map() == 307 and memory.main.get_coords()[1] < -5:
             while not pathing.set_movement([-4, -21]):
                 pass
@@ -1031,7 +1031,7 @@ def nemesis_battle():
     save_game(first_save=False)
     while not battles_5(completion_version=99):
         quick_reset_logic()
-    FFXC = xbox.controller_handle()
+    xbox.controller_handle()
     while not pathing.set_movement([-6, -27]):
         pass
     while not pathing.set_movement([-2, -2]):

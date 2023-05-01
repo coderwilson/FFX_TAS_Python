@@ -86,6 +86,7 @@ class GagazetFarm(AreaMovementBase):
         80: [0, 0],
     }
 
+
 class GagazetMtPathFarm(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [-39, 108],
@@ -98,6 +99,7 @@ class GagazetMtPathFarm(AreaMovementBase):
         7: [-4, -127],
     }
 
+
 class GagazetCaveFarm(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [24, 92],
@@ -107,6 +109,7 @@ class GagazetCaveFarm(AreaMovementBase):
         4: [116, -1017],
         5: [113, -970],  # End of section, no path to fish.
     }
+
 
 class ZanarkandFarm(AreaMovementBase):
     checkpoint_coordiantes = {

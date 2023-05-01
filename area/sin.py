@@ -42,7 +42,7 @@ def shedinja():  # shelinda
     while memory.main.get_map() != 382:
         logger.debug("Mark 1")
         xbox.tap_b()
-    while not memory.main.diag_progress_flag() in [4, 255]:
+    while memory.main.diag_progress_flag() not in [4, 255]:
         logger.debug("Mark 2")
         xbox.tap_b()
     while memory.main.map_cursor() != 10:
