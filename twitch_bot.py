@@ -1,6 +1,5 @@
 from twitchio.ext import commands
 import subprocess
-import signal
 
 import yaml
 import logging
@@ -51,18 +50,23 @@ class Bot(commands.Bot):
     # Define the start command
     @commands.command()
     async def start(self, ctx: commands.Context):
-        if ctx.author.name in self.allowed_users:
-            subprocess.Popen(["python", SCRIPT_PATH])
-            await ctx.send(f"{ctx.author.name}, the script has started!")
+        if self.process is None and ctx.author.name in self.allowed_users:
+            self.process = subprocess.Popen(["python", SCRIPT_PATH])
+            await ctx.send("FFX TAS started.")
+        else:
+            await ctx.send("FFX TAS is already running.")
+        return self.process
 
-    # Define the restart command
+    # Define the exit command
     @commands.command()
-    async def restart(self, ctx: commands.Context):
-        if ctx.author.name in self.allowed_users:
-            if self.process is not None:
-                # Send a SIGINT signal to the previous process
-                self.process.send_signal(signal.SIGINT)
-                self.process.wait()  # Wait for the previous process to terminate
+    async def exit(self, ctx: commands.Context):
+        if self.process is not None and ctx.author.name in self.allowed_users:
+            self.process.terminate()
+            self.process.wait()
+            self.process = None
+            await ctx.send("FFX TAS stopped.")
+        else:
+            await ctx.send("FFX TAS is not running.")
 
             # Start a new process
             self.process = subprocess.Popen(["python", SCRIPT_PATH])
