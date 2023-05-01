@@ -62,16 +62,28 @@ def configuration_setup():
     # Open the config file and parse game configuration
     # This may overwrite configuration above
     config_data = config.open_config()
-    # gamestate
-    game.state = config_data.get("gamestate", "none")
-    game.step = config_data.get("step_counter", 1)
     
+    # Argument parsing
     parser = argparse.ArgumentParser()
     parser.add_argument("-seed")
+    parser.add_argument("-state")
+    parser.add_argument("-step")
     args = parser.parse_args()
-    logger.warning(args.seed)
+    
+    # gamestate
+    try:
+        if len(args.state) == 0 or len(args.step) == 0:
+            game.state = args.state
+            game.step = int(args.step)
+        else:
+            game.state = config_data.get("gamestate", "none")
+            game.step = config_data.get("step_counter", 1)
+    except:
+        game.state = config_data.get("gamestate", "none")
+        game.step = config_data.get("step_counter", 1)
     
     if args.seed != None:
+        logger.debug(f"Seed passed from Twitch: {args.seed}")
         twitch_seed = int(args.seed)
         game_vars.rng_seed_num_set(twitch_seed)
         game_length = "Seed set via Twitch chat"
@@ -810,7 +822,6 @@ def perform_TAS():
                 game.state, game.step = reset.mid_run_reset(
                     land_run=True, start_time=game.start_time
                 )
-            logger.debug("Mark 4")
             logger.debug("Looping")
             logger.debug(f"{game.state} | {game.step}")
 
