@@ -28,6 +28,7 @@ class BotConfig:
                 except Exception as E:
                     logger.error(f"Error: Failed to parse config file {config_path}")
                     logger.exception(E)
+                    hello.start()
         except Exception:
             logger.info(f"Didn't find config file {config_path}, using default values.")
 
@@ -47,50 +48,46 @@ class Bot(commands.Bot):
         print(f"Logged in as {self.nick}")
         print(f"User id is {self.user_id}")
         print("Ready for commands")
-
+    
     # Define the start command
     @commands.command()
     async def start(self, ctx: commands.Context):
+        arg_array = []
         print(ctx.message.content)
         args = ctx.message.content.split()
         print(args)
-        force_seed = ""
+        force_seed = False
         for i in range(len(args)):
             try:
                 if args[i].lower() == "seed":
-                    force_seed = True
-                    seed_num = str(args[i+1])
+                    if int(args[i+1]) < -1 or int(args[i+1]) > 255:
+                        force_seed = False
+                        await ctx.send(f"{seed_num} is an invalid seed number. Try again.")
+                    else:
+                        force_seed = True
+                        arg_array.append("-seed")
+                        seed_num = str(args[i+1])
+                        arg_array.append(seed_num)
+                if args[i].lower() == "state":
+                    arg_array.append("-state")
+                    arg_array.append(args[i+1])
+                if args[i].lower() == "step":
+                    arg_array.append("-step")
+                    arg_array.append(args[i+1])
             except:
-                force_seed = ""
+                await ctx.send(f"There was an error with your command: {ctx.message.content}")
         
-        if force_seed == True and (int(seed_num) > 255 or int(seed_num) <= -1):
-            await ctx.send(f"{seed_num} is an invalid seed number. Try again.")
-        elif self.process is None:
-            if force_seed:
-                self.process = subprocess.Popen(["python", SCRIPT_PATH, "-seed", seed_num])
-            else:
-                self.process = subprocess.Popen(["python", SCRIPT_PATH])
+        if self.process is None:
+            print(["python", SCRIPT_PATH] + arg_array)
+            self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
             await ctx.send("FFX TAS started.")
         else:
             await ctx.send("FFX TAS is already running.")
         return self.process
 
     # Define the exit command
-    @commands.command()
+    @commands.command(aliases = ("stop", "quit", "terminate"))
     async def exit(self, ctx: commands.Context):
-        if not ctx.author.name in self.allowed_users:
-            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute commands.")
-        elif self.process is not None:
-            self.process.terminate()
-            self.process.wait()
-            self.process = None
-            await ctx.send("FFX TAS stopped.")
-        else:
-            await ctx.send("FFX TAS is not running.")
-
-    # Define the stop command
-    @commands.command()
-    async def stop(self, ctx: commands.Context):
         if not ctx.author.name in self.allowed_users:
             await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute commands.")
         elif self.process is not None:
@@ -104,7 +101,7 @@ class Bot(commands.Bot):
     # Define the help command
     @commands.command()
     async def help(self, ctx: commands.Context):
-        await ctx.send("Available commands: !start, !stop, !exit, !help")
+        await ctx.send("Available commands: !start, !stop, !exit, !help || With !start, you can add the following arguments: 'seed x', where x is any value from 0 to 255 (for new game) - 'state y', where y is a section of the TAS, like Luca or Zanarkand. - 'step z', where z is a progress value for the y state. - For y and z, if the value is invalid, the TAS will terminate, but tell you what valid values are available, aka where you went wrong.")
 
 
 # Main entry point of script
