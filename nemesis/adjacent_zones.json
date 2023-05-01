@@ -19,12 +19,12 @@
 	"old_road": {
 		"mi'ihen_(newroad)": {
 			"direction": "b",
-			"checkpoint": 39,
+			"checkpoint": 40,
 			"nea": "False"
 		},
 		"clasko_skip_screen": {
 			"direction": "f",
-			"checkpoint": 41,
+			"checkpoint": 42,
 			"nea": "False"
 		},
 		"mrr_-_valley": {
@@ -46,7 +46,7 @@
 		},
 		"mrr_-_valley": {
 			"direction": "f",
-			"checkpoint": 53,
+			"checkpoint": 54,
 			"nea": "True"
 		}
 	},

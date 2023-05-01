@@ -10,3 +10,7 @@ ReadWriteMemory==0.1.5
 tqdm==4.64.1
 twitchio>=2.6.0
 vgamepad>=0.0.8
+jsonmerge==1.9.0
+Pillow==9.3
+pythonnet==3.0.1
+argparse>=1.4.0

@@ -372,7 +372,7 @@ def remiem_races():
 
 def choco_race_1():
     while memory.main.user_control():
-        pathing.set_movement([790, 60])
+        pathing.set_movement([780, 60])
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_control()
@@ -398,7 +398,7 @@ def choco_race_2():
     FFXC.set_neutral()
     memory.main.click_to_control()
     while memory.main.user_control():
-        pathing.set_movement([790, 60])
+        pathing.set_movement([780, 60])
         xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0
@@ -432,7 +432,7 @@ def choco_race_3():
     FFXC.set_neutral()
     memory.main.click_to_control()
     while memory.main.user_control():
-        pathing.set_movement([790, 60])
+        pathing.set_movement([780, 60])
         xbox.tap_b()
     FFXC.set_neutral()
     checkpoint = 0

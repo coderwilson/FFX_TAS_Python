@@ -235,9 +235,12 @@ def yojimbo_battle():
                 battle.overdrive.yojimbo(gil_value=1)
             else:
                 CurrentPlayer().defend()
-
-    # After battle stuff
+    
     logger.debug("Yojimbo Battle is complete.")
+    while not memory.main.battle_wrap_up_active():
+        # Waiting for the summary screen to come up
+        pass
+    # After battle stuff
     battle.main.wrap_up()
     logger.debug("Yojimbo wrap-up is complete.")
     memory.main.wait_frames(2)

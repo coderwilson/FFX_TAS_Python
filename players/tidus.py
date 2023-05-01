@@ -41,11 +41,11 @@ class TidusImpl(Player):
         logger.info("Hit Overdrive")
 
         # Backup attempts, used with low-quality computers only. No impact normally.
-        memory.main.wait_frames(8)
-        xbox.tap_b()  # Extra attempt in case of miss
-        memory.main.wait_frames(9)
+        memory.main.wait_frames(10)
         xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(10)
+        xbox.tap_b()  # Extra attempt in case of miss
+        memory.main.wait_frames(11)
         xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(11)
         xbox.tap_b()  # Extra attempt in case of miss

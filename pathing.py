@@ -38,7 +38,7 @@ def set_movement(target) -> bool:
 
     FFXC.set_movement(Lx, Ly)
     if memory.main.get_actor_id(0) == 20531:
-        d = 8
+        d = 10
     else:
         d = 3
 
