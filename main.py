@@ -2,6 +2,7 @@
 import logging
 import random
 import sys
+import argparse
 
 # This needs to be before the other imports in case they decide to log things when imported
 import log_init
@@ -64,8 +65,17 @@ def configuration_setup():
     # gamestate
     game.state = config_data.get("gamestate", "none")
     game.step = config_data.get("step_counter", 1)
-
-    if game.state == "Luca" and game.step == 3:
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-seed")
+    args = parser.parse_args()
+    logger.warning(args.seed)
+    
+    if args.seed != None:
+        twitch_seed = int(args.seed)
+        game_vars.rng_seed_num_set(twitch_seed)
+        game_length = "Seed set via Twitch chat"
+    elif game.state == "Luca" and game.step == 3:
         game_length = "Testing Blitzball only"
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game_vars.rng_seed_num_set(255)
