@@ -3,8 +3,8 @@ from paths.base import AreaMovementBase
 
 class ToRemiem(AreaMovementBase):
     checkpoint_coordiantes = {
-        #0: [-1442, 123],  # From the northwest corner
-        #1: [-1429, -218],  # From the northwest corner
+        # 0: [-1442, 123],  # From the northwest corner
+        # 1: [-1429, -218],  # From the northwest corner
         0: [-584, -325],  # From the agency
         1: [-703, -584],  # From the agency
         2: [-927, -1415],

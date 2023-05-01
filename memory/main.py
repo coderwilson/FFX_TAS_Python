@@ -1142,9 +1142,9 @@ def get_menu_display_characters():
     characters = []
     for cur in range(7):
         char = read_val(base + cur)
-        #logger.debug(f"get_menu_display_characters(), Cur: {cur}, Char: {char}")
+        # logger.debug(f"get_menu_display_characters(), Cur: {cur}, Char: {char}")
         characters.append(char)
-    #logger.debug(f"get_menu_display_characters(), characters: {characters}")
+    # logger.debug(f"get_menu_display_characters(), characters: {characters}")
     return characters
 
 
@@ -2832,9 +2832,9 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.is_equipped() == char_num:
-            #logger.debug(f"Owner: {current_handle.owner()}")
-            #logger.debug(f"Equipped: {current_handle.is_equipped()}")
-            #logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
+            # logger.debug(f"Owner: {current_handle.owner()}")
+            # logger.debug(f"Equipped: {current_handle.is_equipped()}")
+            # logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
             if current_handle.has_ability(ability_num):
                 return True
             else:

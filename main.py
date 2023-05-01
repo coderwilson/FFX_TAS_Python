@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 import area.baaj
 import area.besaid
 import area.boats
+import area.chocobos
 import area.djose
 import area.dream_zan
 import area.gagazet
@@ -31,7 +32,6 @@ import area.rescue_yuna
 import area.sin
 import area.thunder_plains
 import area.zanarkand
-import area.chocobos
 import battle.boss
 import battle.main
 import blitz
@@ -39,9 +39,9 @@ import config
 import load_game
 import logs
 import memory.main
+import nemesis.advanced_farm
 import nemesis.arena_battles
 import nemesis.arena_prep
-import nemesis.advanced_farm
 import nemesis.changes
 import pathing
 import reset
@@ -139,7 +139,6 @@ def perform_TAS():
     max_loops = 12  # TODO: Move into config.yaml?
 
     while game.state != "End":
-
         try:
             if game_vars.rng_seed_num() >= 256:
                 game.state = "End"
@@ -667,7 +666,7 @@ def perform_TAS():
                     else:
                         logger.info(f"B&Y battle before NEA: {advance_post_x}")
                         game.step = 3
-            
+
             # Nemesis farming section
             if game.state == "Nem_Farm":
                 if game.step == 1:
@@ -677,7 +676,7 @@ def perform_TAS():
                         pass
                     while not nemesis.arena_prep.calm(cap_num=1, airship_return=False):
                         pass
-                    #maybe_create_save(save_num=51)
+                    # maybe_create_save(save_num=51)
                     game.step = 2
 
                 if game.step == 2:
@@ -753,7 +752,7 @@ def perform_TAS():
                     nemesis.arena_prep.final_weapon()
                     game.state = "Nem_Arena"
                     game.step = 1
-            
+
             # Nemesis Arena section
             if game.state == "Nem_Arena":
                 if game.step == 1:
@@ -790,7 +789,7 @@ def perform_TAS():
                     nemesis.arena_battles.return_to_sin()
                     game.state = "Sin"
                     game.step = 3
-            
+
             # End of game section
             if (
                 game.state == "End"
@@ -838,22 +837,21 @@ def write_final_logs():
         memory.main.wait_frames(180)
         while not memory.main.save_menu_open():
             xbox.tap_b()
-    
+
     logger.info("That's the end of the run, but we have one more thing to do.")
     memory.main.wait_frames(90)
     xbox.tap_a()
     memory.main.wait_frames(90)
-    
+
     load_game.load_into_game(gamestate="Nem_Farm", step_counter=1)
     nemesis.arena_prep.return_to_airship()
     nemesis.arena_prep.air_ship_destination(dest_num=12)
     area.chocobos.all_races()
     # Use the following to go straight into remiem races.
-    #while not pathing.set_movement([-637, -246]):
+    # while not pathing.set_movement([-637, -246]):
     #    pass
     area.chocobos.to_remiem()
     area.chocobos.remiem_races()
-
 
     memory.main.end()
     logger.info("Automation complete. Shutting down. Have a great day!")

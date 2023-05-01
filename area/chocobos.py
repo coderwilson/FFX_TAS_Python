@@ -1,24 +1,19 @@
 import logging
 
-import area.gagazet
 import battle.main
 import memory.main
-import nemesis.menu
 import pathing
-import rng_track
-import vars
 import xbox
-from paths.nem import CalmLands1, CalmLands2, LeaveRemiem, Race1, Race2, Race3, ToRemiem
-from players import Auron, Kimahri, Rikku, Tidus, Yuna
-import nemesis.arena_prep
+from paths.nem import Race1, Race2, Race3, ToRemiem
 
 FFXC = xbox.controller_handle()
 logger = logging.getLogger(__name__)
 
+
 def all_races():
-    #equip
-    
-    #counter = 0
+    # equip
+
+    # counter = 0
     while not pathing.set_movement([-637, -246]):
         pass
     pathing.approach_actor_by_id(actor_id=20531)
@@ -28,8 +23,7 @@ def all_races():
     xbox.menu_down()
     xbox.menu_down()
     xbox.tap_b()
-    
-    
+
     wobbly_complete = False
     while not wobbly_complete:
         wobbly_complete = choco_tame_1()
@@ -54,14 +48,12 @@ def all_races():
     #     catcher_complete = choco_tame_4()
 
     # logger.debug("Catcher Chocobo complete")
-    
-    
-    
+
 
 def choco_tame_1():
     memory.main.click_to_diag_progress(43)
     logger.info("Race start!")
-    while not memory.main.diag_progress_flag() in [44, 74]:
+    while memory.main.diag_progress_flag() not in [44, 74]:
         angle = memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
         if position[0] < -110:  # Need to move right
@@ -87,15 +79,15 @@ def choco_tame_1():
                 FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
     logger.info("Race end!")
-    
+
     last_flag = 0
-    while not memory.main.diag_progress_flag() in [51,52,53,69,74]:
+    while memory.main.diag_progress_flag() not in [51, 52, 53, 69, 74]:
         # 51 is success
         xbox.tap_b()
         if last_flag != memory.main.diag_progress_flag():
             logger.debug(f"Update: {memory.main.diag_progress_flag()}")
             last_flag = memory.main.diag_progress_flag()
-    if memory.main.diag_progress_flag() in [51,52,53]:  # Success
+    if memory.main.diag_progress_flag() in [51, 52, 53]:  # Success
         memory.main.click_to_diag_progress(77)
         memory.main.wait_frames(12)
         xbox.tap_up()  # Up for next race, down for quit
@@ -114,7 +106,7 @@ def choco_tame_1():
 def choco_tame_2():
     memory.main.click_to_diag_progress(43)
     checkpoint = 0
-    while not memory.main.diag_progress_flag() in [44, 74]:
+    while memory.main.diag_progress_flag() not in [44, 74]:
         memory.main.get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
 
@@ -167,7 +159,7 @@ def choco_tame_2():
             FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
 
-    while not memory.main.diag_progress_flag() in [54, 69, 77]:
+    while memory.main.diag_progress_flag() not in [54, 69, 77]:
         # 54 is success
         xbox.tap_b()
     if memory.main.diag_progress_flag() == 54:  # Success
@@ -189,7 +181,7 @@ def choco_tame_2():
 def choco_tame_3():
     memory.main.click_to_diag_progress(43)
     checkpoint = 0
-    while not memory.main.diag_progress_flag() in [44, 74]:
+    while memory.main.diag_progress_flag() not in [44, 74]:
         position = memory.main.get_actor_coords(0)
         if position[1] > -1370 and checkpoint == 0:
             checkpoint += 1
@@ -254,7 +246,7 @@ def choco_tame_3():
             FFXC.set_value("d_pad", 0)
     FFXC.set_neutral()
 
-    while not memory.main.diag_progress_flag() in [56, 69, 77]:
+    while memory.main.diag_progress_flag() not in [56, 69, 77]:
         # 56 is success
         xbox.tap_b()
     if memory.main.diag_progress_flag() == 56:  # Success
@@ -276,7 +268,7 @@ def choco_tame_3():
 def choco_tame_4():
     logger.debug("START - CATCHER CHOCOBO")
     memory.main.click_to_diag_progress(43)
-    while not memory.main.diag_progress_flag() in [44, 67]:
+    while memory.main.diag_progress_flag() not in [44, 67]:
         memory.main.get_actor_angle(0)
         memory.main.get_actor_coords(0)
         logger.debug("User control")
@@ -316,7 +308,7 @@ def choco_tame_4():
     logger.debug("Race complete.")
     FFXC.set_neutral()
 
-    while not memory.main.diag_progress_flag() in [67, 77]:
+    while memory.main.diag_progress_flag() not in [67, 77]:
         # 67 is 0:00.0 run
         xbox.tap_b()
     if memory.main.diag_progress_flag() == 67:  # Success

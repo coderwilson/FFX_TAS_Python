@@ -1,42 +1,33 @@
+import json
 import logging
-
-from tqdm import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm
 
 import battle.boss
 import battle.main
 import battle.utils
-import load_game
 import memory.main
-from memory.main import get_map
 import menu
 import nemesis.arena_select
 import nemesis.menu
-from nemesis.arena_prep import (
-    air_ship_destination,
-    return_to_airship,
-    rin_equip_dump,
-    battle_farm_all,
-    advanced_battle_logic,
-    yojimbo_dialog
-)
 import pathing
 import rng_track
 import save_sphere
-import screen
 import vars
 import xbox
-from area.dream_zan import new_game
+from memory.main import get_map
+from nemesis.arena_prep import (
+    advanced_battle_logic,
+    air_ship_destination,
+    battle_farm_all,
+    return_to_airship,
+    rin_equip_dump,
+    yojimbo_dialog,
+)
 from paths.nem import (
-    ArenaReturn,
-    BesaidFarm,
     BikanelFarm,
     CalmFarm,
     DjoseFarm,
-    GagazetFarm,
-    GagazetMtPathFarm,
     GagazetCaveFarm,
-    ZanarkandFarm2,
+    GagazetMtPathFarm,
     KilikaFarm,
     MacFarm,
     MiihenFarm,
@@ -44,16 +35,17 @@ from paths.nem import (
     SinFarm,
     ThunderPlainsFarm,
     YojimboFarm,
+    ZanarkandFarm2,
 )
-from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna
-import json
+from players import Lulu, Rikku, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 test_mode = False
 
-def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
+
+def next_zone_check(phase: int = 3, current_zone: str = "none", advances: int = 0):
     # best_zone made up of [monster, zone, priority]
     best_zone = ["none", "any", -1, 0]
     if phase == 3:
@@ -70,7 +62,7 @@ def next_zone_check(phase:int = 3, current_zone:str = "none", advances:int=0):
         return best_zone
     mon_list = json.load(f)
     mon_array = mon_list.keys()
-    
+
     # Override all else with the most rare monsters
     if phase == 5:
         check_zone = rng_track.singles_battles(area="omega_ruins_(lower)")[advances]
@@ -200,7 +192,8 @@ def choose_next_zone(last_zone:str, phase:int):
                 check_zone = temp3
     return check_zone
 
-def complete_check(phase:int = 3):
+
+def complete_check(phase: int = 3):
     if phase == 3:
         f = open("nemesis\\phase_three_monsters.json")
     elif phase == 4:
@@ -212,11 +205,12 @@ def complete_check(phase:int = 3):
     elif phase == 7:
         f = open("nemesis\\phase_seven_monsters.json")
     else:
-        return best_zone
-    
+        logger.error(f"Something went wrong, {phase}\nOpening phase 7 instead.")
+        f = open("nemesis\\phase_seven_monsters.json")
+
     mon_list = json.load(f)
     mon_array = mon_list.keys()
-    
+
     for key in mon_array:
         check_mon = mon_list[key]["num"]
         check_count = mon_list[key]["need"]
@@ -224,7 +218,8 @@ def complete_check(phase:int = 3):
             return False
     return True
 
-def report_remaining(phase:int = 3):
+
+def report_remaining(phase: int = 3):
     # Prep phase
     if phase == 3:
         f = open("nemesis\\phase_three_monsters.json")
@@ -243,7 +238,7 @@ def report_remaining(phase:int = 3):
     total_need = 0
     complete_count = 0
     logger.debug("==== Advanced Farm status ====")
-    
+
     # Report each monster we haven't completed, and keep summary tallies.
     for key in mon_array:
         check_mon = mon_list[key]["num"]
@@ -254,12 +249,13 @@ def report_remaining(phase:int = 3):
         complete_count += min(check_count, current_count)
         if current_count < check_count:
             logger.debug(f"{key}: {current_count} / {check_count} | {area}")
-    
+
     complete_percent = int(complete_count / total_need * 100)
     logger.info(f"== Total: {complete_count} / {total_need} | {complete_percent}%")
     logger.debug("==============================")
 
-def report_need_single(phase:int, mon_name:str):
+
+def report_need_single(phase: int, mon_name: str):
     if phase == 3:
         f = open("nemesis\\phase_three_monsters.json")
     elif phase == 4:
@@ -277,10 +273,11 @@ def report_need_single(phase:int, mon_name:str):
         key = mon_list[mon_name]["num"]
         completed = memory.main.arena_array()[key]
         return [completed, mon_list[mon_name]["need"]]
-    except:
-        return [0,0]
+    except Exception:
+        return [0, 0]
 
-def get_zone_int(zone:str) -> int:
+
+def get_zone_int(zone: str) -> int:
     if "_sin_" in zone:
         print("Returning Sin")
         return 0
@@ -316,12 +313,12 @@ def get_zone_int(zone:str) -> int:
         return 15
     return 99
 
-def full_farm(phase:int):
+
+def full_farm(phase: int):
     last_zone = "none"
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     adjacent = [False, "none", "none"]
-    move_adjacent = False
-    
+
     if phase == 5:
         yoj_unlock = True
     else:
@@ -331,7 +328,7 @@ def full_farm(phase:int):
     else:
         memory.main.update_formation(Tidus, Wakka, Rikku)
     check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
-    
+
     while not complete_check(phase=phase):
         logger.debug(f"Zone name (A): {check_zone[1]}")
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
@@ -343,10 +340,12 @@ def full_farm(phase:int):
                 last_zone = check_zone[1]
             else:
                 check_zone[1] = last_zone
-        
+
         if get_map() == 374:
             logger.debug(f"P.down Slot: {memory.main.get_item_slot(6)}")
-            logger.debug(f"P.down Count: {memory.main.get_item_count_slot(memory.main.get_item_slot(6))}")
+            logger.debug(
+                f"P.down Count: {memory.main.get_item_count_slot(memory.main.get_item_slot(6))}"
+            )
             if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 30:
                 rin_equip_dump(stock_downs=True)
             zone_int = get_zone_int(zone=check_zone[1])
@@ -359,11 +358,13 @@ def full_farm(phase:int):
             menu.remove_all_nea()
         elif adjacent[0] and last_zone != check_zone[1]:
             logger.debug("=== Moving adjacent")
-            path_to_battle(zone=check_zone[1], checkpoint=adjacent[1], direction=adjacent[2])
+            path_to_battle(
+                zone=check_zone[1], checkpoint=adjacent[1], direction=adjacent[2]
+            )
             menu.remove_all_nea()
         else:
             logger.debug("=== Staying in same zone")
-        
+
         last_zone = check_zone[1]
         report_remaining(phase=phase)
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
@@ -381,26 +382,22 @@ def full_farm(phase:int):
         memory.main.close_menu()
         if phase < 5:
             nemesis.menu.perform_next_grid()
-        
+
         logger.debug(f"Zone name (D): {check_zone[1]}")
         counts = report_need_single(phase=phase, mon_name=check_zone[0])
         logger.debug(f"Mon (D): {check_zone[0]}: {counts[0]}/{counts[1]}")
         adjacent = zone_to_zone(last_zone, check_zone[1])
         if memory.main.get_tidus_mp() < 20 or memory.main.get_yuna_mp() < 50:
-            move_adjacent = False
             menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            logger.debug(f"== Out of mana, returning to save sphere.")
+            logger.debug("== Out of mana, returning to save sphere.")
             path_to_save(zone=last_zone)
             return_to_airship()
             if len(memory.main.all_equipment()) > 150:
                 rin_equip_dump()
-            move_adjacent = False
         elif adjacent[0]:
-            move_adjacent = True
             if adjacent[3] == "True":
                 menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
         elif check_zone[1] != last_zone and check_zone[1] != "any":
-            move_adjacent = False
             menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             logger.info(f"== Moving to zone: {check_zone[1]}")
             logger.info(f"Mon (A): {check_zone[0]}")
@@ -413,19 +410,19 @@ def full_farm(phase:int):
             if len(memory.main.all_equipment()) > 150:
                 rin_equip_dump()
         elif complete_check(phase=phase):
-            move_adjacent = False
             menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            logger.debug(f"== Farming complete, returning to airship.")
+            logger.debug("== Farming complete, returning to airship.")
         else:
-            move_adjacent = False
-    
+            pass
+
     if get_map() != 374:
         path_to_save(zone=last_zone)
         return_to_airship()
     if len(memory.main.all_equipment()) > 150:
         rin_equip_dump()
 
-def zone_to_zone(last_zone:str, next_zone:str):
+
+def zone_to_zone(last_zone: str, next_zone: str):
     f = open("nemesis\\adjacent_zones.json")
     # Convert the zone into path_info
     array = json.load(f)
@@ -437,35 +434,31 @@ def zone_to_zone(last_zone:str, next_zone:str):
                 nea = array[last_zone][next_zone]["nea"]
                 return [True, c, d, nea]
         return [False, "none", "none", "True"]
-    except:
+    except Exception:
         return [False, "none", "none", "True"]
 
-def path_get_info(zone:str):
-    f = open("nemesis\\zone_to_path.json")
-    # Convert the zone into path_info
-    path_info = json.load(f)
-    return path_info[zone]
 
-def path_get_info(zone:str):
+def path_get_info(zone: str):
     f = open("nemesis\\zone_to_path.json")
     # Convert the zone into path_info
     path_info = json.load(f)
     try:
         return path_info[zone]
-    except:
+    except Exception:
         return path_info["zanarkand_(overpass)"]
 
-def path_to_battle(zone:str, checkpoint:int=0, direction:str='f'):
+
+def path_to_battle(zone: str, checkpoint: int = 0, direction: str = "f"):
     path_info = path_get_info(zone=zone)
     zone_num = get_zone_int(zone=zone)
     last_map = get_map()
     logger.debug(f"Zone/Path: {zone}")
-    
-    while not checkpoint in [path_info["first_battle"], path_info["last_battle"]]:
+
+    while checkpoint not in [path_info["first_battle"], path_info["last_battle"]]:
         if memory.main.battle_active():
             return
         if get_map() != last_map:
-            if direction == 'f':
+            if direction == "f":
                 checkpoint += 2
             else:
                 checkpoint -= 2
@@ -536,53 +529,59 @@ def path_to_battle(zone:str, checkpoint:int=0, direction:str='f'):
                         "mi'ihen_(newroad)",
                         "old_road",
                         "clasko_skip_screen",
-                        "mrr_-_valley"
+                        "mrr_-_valley",
                     ):
                         checkpoint = 6
-                        direction = 'f'
+                        direction = "f"
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 5:  # Djose
             if pathing.set_movement(DjoseFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
                 else:
                     checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 8:  # Thunder Plains
             if pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
-                    if checkpoint in [5,6] and zone == "thunder_plains_(south)_(2_stones)":
+                    if (
+                        checkpoint in [5, 6]
+                        and zone == "thunder_plains_(south)_(2_stones)"
+                    ):
                         checkpoint = 14
                 else:
                     checkpoint -= 1
-                    if checkpoint in [13,14] and zone != "thunder_plains_(north)_(2_stones)":
+                    if (
+                        checkpoint in [13, 14]
+                        and zone != "thunder_plains_(north)_(2_stones)"
+                    ):
                         checkpoint = 5
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 9:  # Macalania
             if pathing.set_movement(MacFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
                 else:
                     checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 10:  # Bikanel
             if pathing.set_movement(BikanelFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
                 else:
                     checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 12:  # Calm Lands
             if pathing.set_movement(CalmFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
                 else:
                     checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 13:  # Omega
             if pathing.set_movement(OmegaFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
                 else:
                     checkpoint -= 1
@@ -590,28 +589,28 @@ def path_to_battle(zone:str, checkpoint:int=0, direction:str='f'):
         elif zone_num == 14:  # Gagazet
             if zone == "gagazet_(mountain)":
                 if pathing.set_movement(GagazetMtPathFarm.execute(checkpoint)) is True:
-                    if direction == 'f':
+                    if direction == "f":
                         checkpoint += 1
                     else:
                         checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif zone == "gagazet_(cave)":
                 if pathing.set_movement(GagazetCaveFarm.execute(checkpoint)) is True:
-                    if direction == 'f':
+                    if direction == "f":
                         checkpoint += 1
                     else:
                         checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif "_zone" in zone:
                 if pathing.set_movement(YojimboFarm.execute(checkpoint)) is True:
-                    if direction == 'f':
+                    if direction == "f":
                         checkpoint += 1
                     else:
                         checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 15:  # Zanarkand
             if pathing.set_movement(ZanarkandFarm2.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     checkpoint += 1
                 else:
                     checkpoint -= 1
@@ -620,11 +619,12 @@ def path_to_battle(zone:str, checkpoint:int=0, direction:str='f'):
             logger.warning("Path not determined.")
             return
 
-def battle_start(zone:str):
+
+def battle_start(zone: str):
     path_info = path_get_info(zone=zone)
     zone_num = get_zone_int(zone=zone)
     checkpoint = path_info["first_battle"]
-    direction = 'f'
+    direction = "f"
     while not memory.main.battle_active():
         if checkpoint == path_info["sphere"] and memory.main.get_tidus_mp() < 30:
             save_sphere.touch_and_go()
@@ -640,69 +640,69 @@ def battle_start(zone:str):
                 memory.main.click_to_control()
                 memory.main.update_formation(Tidus, Wakka, Rikku)
             if pathing.set_movement(SinFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 2:
             if pathing.set_movement(KilikaFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 4:
             if pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 5:
             if pathing.set_movement(DjoseFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
@@ -713,171 +713,171 @@ def battle_start(zone:str):
                 game_vars.set_l_strike(memory.main.l_strike_count())
             # Regular stuff
             if pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 9:
             if pathing.set_movement(MacFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 10:
             if pathing.set_movement(BikanelFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 12:
             if pathing.set_movement(CalmFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 13:
             if pathing.set_movement(OmegaFarm.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 15:
             if pathing.set_movement(ZanarkandFarm2.execute(checkpoint)) is True:
-                if direction == 'f':
+                if direction == "f":
                     if checkpoint == path_info["last_battle"]:
                         logger.debug("Looping back")
                         checkpoint -= 1
-                        direction = 'b'
+                        direction = "b"
                     else:
                         checkpoint += 1
                 else:
                     if checkpoint == path_info["first_battle"]:
                         logger.debug("Looping forward")
                         checkpoint += 1
-                        direction = 'f'
+                        direction = "f"
                     else:
                         checkpoint -= 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 14:
             if zone == "gagazet_(mountain)":
                 if pathing.set_movement(GagazetMtPathFarm.execute(checkpoint)) is True:
-                    if direction == 'f':
+                    if direction == "f":
                         if checkpoint == path_info["last_battle"]:
                             logger.debug("Looping back")
                             checkpoint -= 1
-                            direction = 'b'
+                            direction = "b"
                         else:
                             checkpoint += 1
                     else:
                         if checkpoint == path_info["first_battle"]:
                             logger.debug("Looping forward")
                             checkpoint += 1
-                            direction = 'f'
+                            direction = "f"
                         else:
                             checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif zone == "gagazet_(cave)":
                 if pathing.set_movement(GagazetCaveFarm.execute(checkpoint)) is True:
-                    if direction == 'f':
+                    if direction == "f":
                         if checkpoint == path_info["last_battle"]:
                             logger.debug("Looping back")
                             checkpoint -= 1
-                            direction = 'b'
+                            direction = "b"
                         else:
                             checkpoint += 1
                     else:
                         if checkpoint == path_info["first_battle"]:
                             logger.debug("Looping forward")
                             checkpoint += 1
-                            direction = 'f'
+                            direction = "f"
                         else:
                             checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif "_zone" in zone:
                 if pathing.set_movement(YojimboFarm.execute(checkpoint)) is True:
-                    if direction == 'f':
+                    if direction == "f":
                         if checkpoint == path_info["last_battle"]:
                             logger.debug("Looping back")
                             checkpoint -= 1
-                            direction = 'b'
+                            direction = "b"
                         else:
                             checkpoint += 1
                     else:
                         if checkpoint == path_info["first_battle"]:
                             logger.debug("Looping forward")
                             checkpoint += 1
-                            direction = 'f'
+                            direction = "f"
                         else:
                             checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
-    
-    if get_map() in [203,204,258]:
+
+    if get_map() in [203, 204, 258]:
         advanced_battle_logic()
-    else:    
+    else:
         battle_farm_all()
     battle.main.wrap_up()
-    
+
 
 def path_to_yojimbo():
     checkpoint = 30
     last_map = get_map()
-    #menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-    
+    # menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+
     while checkpoint != 62:
         if memory.main.user_control():
             if get_map() != last_map:
@@ -888,7 +888,7 @@ def path_to_yojimbo():
                 logger.debug("Teleporter to Fayth room")
                 FFXC.set_neutral()
                 memory.main.wait_frames(9)
-                FFXC.set_movement(0,1)
+                FFXC.set_movement(0, 1)
                 memory.main.wait_frames(2)
                 FFXC.set_neutral()
                 memory.main.wait_frames(6)
@@ -900,7 +900,7 @@ def path_to_yojimbo():
                 logger.debug("Teleporter to entrance")
                 FFXC.set_neutral()
                 memory.main.wait_frames(9)
-                FFXC.set_movement(0,-1)
+                FFXC.set_movement(0, -1)
                 memory.main.wait_frames(2)
                 FFXC.set_neutral()
                 xbox.tap_b()
@@ -917,15 +917,16 @@ def path_to_yojimbo():
             if memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
 
-def path_to_save(zone:str) -> bool:
+
+def path_to_save(zone: str) -> bool:
     path_info = path_get_info(zone=zone)
     zone_num = get_zone_int(zone=zone)
     last_map = get_map()
-    
+
     checkpoint = path_info["return_start"]
     while checkpoint != path_info["sphere"]:
         if get_map() != last_map:
-            if path_info["return_direction"] == 'b':
+            if path_info["return_direction"] == "b":
                 checkpoint -= 2
             else:
                 checkpoint += 2
@@ -933,14 +934,14 @@ def path_to_save(zone:str) -> bool:
             last_map = get_map()
         elif zone_num == 0:  # Sin
             if pathing.set_movement(SinFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 2:
             if pathing.set_movement(KilikaFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
@@ -948,9 +949,8 @@ def path_to_save(zone:str) -> bool:
         elif zone_num == 4:
             if checkpoint == 199:
                 checkpoint = 5
-                direction = 'f'
             elif pathing.set_movement(MiihenFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
@@ -959,7 +959,7 @@ def path_to_save(zone:str) -> bool:
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 5:
             if pathing.set_movement(DjoseFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
@@ -968,35 +968,35 @@ def path_to_save(zone:str) -> bool:
             if checkpoint in [13,14] and path_info["return_direction"] == 'b':
                 checkpoint = 5
             if pathing.set_movement(ThunderPlainsFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 9:
             if pathing.set_movement(MacFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 10:  # Bikanel
             if pathing.set_movement(BikanelFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 12:  # Calm Lands
             if pathing.set_movement(CalmFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         elif zone_num == 12:  # Omega
             if pathing.set_movement(OmegaFarm.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
@@ -1004,29 +1004,29 @@ def path_to_save(zone:str) -> bool:
         elif zone_num == 14:  # Gagazet/Yojimbo
             if zone == "gagazet_(mountain)":
                 if pathing.set_movement(GagazetMtPathFarm.execute(checkpoint)) is True:
-                    if path_info["return_direction"] == 'b':
+                    if path_info["return_direction"] == "b":
                         checkpoint -= 1
                     else:
                         checkpoint += 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif zone == "gagazet_(cave)":
                 if pathing.set_movement(GagazetCaveFarm.execute(checkpoint)) is True:
-                    if path_info["return_direction"] == 'b':
+                    if path_info["return_direction"] == "b":
                         checkpoint -= 1
                     else:
                         checkpoint += 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif "_zone" in zone:
                 if pathing.set_movement(YojimboFarm.execute(checkpoint)) is True:
-                    if path_info["return_direction"] == 'b':
+                    if path_info["return_direction"] == "b":
                         checkpoint -= 1
                     else:
                         checkpoint += 1
                     logger.debug(f"Checkpoint {checkpoint}")
-                    
+
         elif zone_num == 15:  # Zanarkand
             if pathing.set_movement(ZanarkandFarm2.execute(checkpoint)) is True:
-                if path_info["return_direction"] == 'b':
+                if path_info["return_direction"] == "b":
                     checkpoint -= 1
                 else:
                     checkpoint += 1
@@ -1034,4 +1034,3 @@ def path_to_save(zone:str) -> bool:
         else:
             logger.warning("Path not determined.")
             return
-    
