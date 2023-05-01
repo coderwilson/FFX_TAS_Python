@@ -1,2 +1,0 @@
-autoflake==1.7.7
--r requirements.txt

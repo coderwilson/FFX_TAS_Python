@@ -3,6 +3,7 @@ logs/
 *.py[cod]
 none
 config.yaml
+bot-config.yaml
 Save Backups/
 FFXCutsceneRemover.exe
 tas_saves/ffx_000
