@@ -68,9 +68,10 @@ class Bot(commands.Bot):
         else:
             await ctx.send("FFX TAS is not running.")
 
-            # Start a new process
-            self.process = subprocess.Popen(["python", SCRIPT_PATH])
-            await ctx.send(f"{ctx.author.name}, the script has been restarted!")
+    # Define the help command
+    @commands.command()
+    async def help(self, ctx: commands.Context):
+        await ctx.send("Available commands: !start, !exit, !help")
 
 
 # Main entry point of script
