@@ -72,23 +72,25 @@ def configuration_setup():
     
     # gamestate
     try:
-        if len(args.state) == 0 or len(args.step) == 0:
+        logger.warning(args)
+        logger.info(f"Twitch states passed forward: {args.state}, {args.step}")
+        if args.state != None or args.step != None:
+            logger.warning(f"Loading in variables from Twitch, {args.state}, {args.step}")
             game.state = args.state
             game.step = int(args.step)
         else:
             game.state = config_data.get("gamestate", "none")
             game.step = config_data.get("step_counter", 1)
     except:
-        game.state = config_data.get("gamestate", "none")
-        game.step = config_data.get("step_counter", 1)
+        logger.warning("Failure, could not load variables from Twitch")
+        game.state = "VAR_ERROR"
+        game.step = 999
     
     if args.seed != None:
         logger.debug(f"Seed passed from Twitch: {args.seed}")
         twitch_seed = int(args.seed)
         game_vars.rng_seed_num_set(twitch_seed)
         game_length = "Seed set via Twitch chat"
-    elif game.state == "Luca" and game.step == 3:
-        game_length = "Testing Blitzball only"
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game_vars.rng_seed_num_set(255)
         game_length = "Loading mid point for testing."

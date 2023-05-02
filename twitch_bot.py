@@ -29,6 +29,7 @@ class BotConfig:
                     logger.error(f"Error: Failed to parse config file {config_path}")
                     logger.exception(E)
                     hello.start()
+                    start()
         except Exception:
             logger.info(f"Didn't find config file {config_path}, using default values.")
 
@@ -56,18 +57,13 @@ class Bot(commands.Bot):
         print(ctx.message.content)
         args = ctx.message.content.split()
         print(args)
-        force_seed = False
         for i in range(len(args)):
             try:
                 if args[i].lower() == "seed":
-                    if int(args[i+1]) < -1 or int(args[i+1]) > 255:
-                        force_seed = False
-                        await ctx.send(f"{seed_num} is an invalid seed number. Try again.")
-                    else:
-                        force_seed = True
-                        arg_array.append("-seed")
-                        seed_num = str(args[i+1])
-                        arg_array.append(seed_num)
+                    arg_array.append("-seed")
+                    seed_num = str(args[i+1])
+                    print(f"Specified Seed: {seed_num}")
+                    arg_array.append(seed_num)
                 if args[i].lower() == "state":
                     arg_array.append("-state")
                     arg_array.append(args[i+1])

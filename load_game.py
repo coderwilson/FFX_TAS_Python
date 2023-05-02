@@ -130,13 +130,15 @@ def load_into_game_old(gamestate: str, step_counter: str):
         results = json.load(fp)
     try:
         if len(results[gamestate]) >= 1:
-            logger.debug(f"For game state {gamestate}, the valid values are (in non-sorted order): ")
+            logger.warning(f"For game state {gamestate}, the valid values are (in non-sorted order): ")
             list_keys = results[gamestate].keys()
+            for key in list_keys:
+                logger.warning(key)
     except:
-        logger.debug(f"For game states, the valid values are (in non-sorted order): ")
+        logger.warning(f"For game states, the valid values are (in non-sorted order): ")
         list_keys = results.keys()
-    for key in list_keys:
-        logger.debug(key)
+        for key in list_keys:
+            logger.warning(key + list_keys[key])
     
     logger.error("TAS terminating")
     exit(1)
