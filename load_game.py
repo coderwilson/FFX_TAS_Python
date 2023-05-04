@@ -36,6 +36,8 @@ def move_after_load(spec_move: str):
         load_mrr()
     elif spec_move == "Kilika_rng_manip":
         kilika_rng_manip()
+    elif spec_move == "MRR_crit_manip":
+        mrr_crit()
 
 
 def load_into_game(gamestate: str, step_counter: str):
@@ -130,13 +132,16 @@ def load_into_game_old(gamestate: str, step_counter: str):
         results = json.load(fp)
     try:
         if len(results[gamestate]) >= 1:
-            logger.debug(f"For game state {gamestate}, the valid values are (in non-sorted order): ")
+            logger.warning(f"For game state {gamestate}, valid step values: ")
             list_keys = results[gamestate].keys()
+            for key in list_keys:
+                logger.warning(key)
     except:
-        logger.debug(f"For game states, the valid values are (in non-sorted order): ")
-        list_keys = results.keys()
-    for key in list_keys:
-        logger.debug(key)
+        logger.warning(f"For game states, the valid values are (in non-sorted order): ")
+        for key in results:
+            logger.warning(key)
+            #for x in results[key]:
+            #    logger.warning(str(results[key][x]) + " | ")
     
     logger.error("TAS terminating")
     exit(1)
@@ -346,6 +351,20 @@ def kilika_rng_manip():
         )
     logger.warning(f"==== Chosen Value: {rng_value}")
 
+
+def mrr_crit():
+    from memory.main import next_crit
+    from memory.main import advance_rng_index
+
+    escape_count = 0
+    while next_crit(character=3, char_luck=18, enemy_luck=15) != 1:
+        advance_rng_index(index=23)
+        escape_count += 1
+        if escape_count > 1000:
+            print("Could not find RNG value.")
+            return
+    print("RNG value found.")
+    return
 
 def besaid_trials():
     # Exit Tent

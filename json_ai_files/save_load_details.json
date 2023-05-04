@@ -109,26 +109,6 @@
             }
         }
     },
-    "MRR": {
-        "2": {
-            "True": {
-                "save_num": "107",
-                "blitz_win_value": "True",
-                "end_game_version_val": "0",
-                "nea_zone": "0",
-                "nem_ap_val": "1",
-                "special_movement": "none"
-            },
-            "False": {
-                "save_num": "27",
-                "blitz_win_value": "True",
-                "end_game_version_val": "0",
-                "nea_zone": "0",
-                "nem_ap_val": "1",
-                "special_movement": "none"
-            }
-        }
-    },
     "Djose": {
         "1": {
             "True": {
@@ -734,6 +714,28 @@
                 "nea_zone": "3",
                 "nem_ap_val": "27",
                 "special_movement": "none"
+            }
+        }
+    },
+    "MRR": {
+        "2": {
+            "False": {
+                "save_num": "27",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none"
+            }
+        },
+        "3": {
+            "False": {
+                "save_num": "88",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "MRR_crit_manip"
             }
         }
     }

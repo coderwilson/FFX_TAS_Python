@@ -72,23 +72,25 @@ def configuration_setup():
     
     # gamestate
     try:
-        if len(args.state) == 0 or len(args.step) == 0:
+        logger.warning(args)
+        logger.info(f"Twitch states passed forward: {args.state}, {args.step}")
+        if args.state != None or args.step != None:
+            logger.warning(f"Loading in variables from Twitch, {args.state}, {args.step}")
             game.state = args.state
             game.step = int(args.step)
         else:
             game.state = config_data.get("gamestate", "none")
             game.step = config_data.get("step_counter", 1)
     except:
-        game.state = config_data.get("gamestate", "none")
-        game.step = config_data.get("step_counter", 1)
+        logger.warning("Failure, could not load variables from Twitch")
+        game.state = "VAR_ERROR"
+        game.step = 999
     
     if args.seed != None:
         logger.debug(f"Seed passed from Twitch: {args.seed}")
         twitch_seed = int(args.seed)
         game_vars.rng_seed_num_set(twitch_seed)
         game_length = "Seed set via Twitch chat"
-    elif game.state == "Luca" and game.step == 3:
-        game_length = "Testing Blitzball only"
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game_vars.rng_seed_num_set(255)
         game_length = "Loading mid point for testing."
@@ -151,6 +153,12 @@ def maybe_create_save(save_num: int):
             save_num=save_num, game_state=game.state, step_count=game.step
         )
 
+# Temporarily needed
+def log_mrr_kimahri_crit_chance():
+    crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
+    logger.warning(f"Next Kimahri crit: {crit_chance}")
+# end
+
 
 def perform_TAS():
     game_vars = vars.vars_handle()
@@ -188,6 +196,7 @@ def perform_TAS():
                     logs.write_stats(str(game.start_time))
                     # reset reference timestamp so that log output is synced to run time
                     log_init.reset_logging_time_reference()
+                    log_mrr_kimahri_crit_chance()  # Temp needed
                     logger.info("Timer starts now.")
                     area.dream_zan.listen_story()
                     # game.state, game.step = reset.mid_run_reset()
@@ -344,11 +353,12 @@ def perform_TAS():
                     area.miihen.arrival_2(
                         return_array[0], return_array[1], return_array[2]
                     )
-                    game.step = 2
-
-                if game.step == 2:
                     area.miihen.mid_point()
                     logger.info("End of Mi'ihen mid point section.")
+                    game.step = 2
+                    maybe_create_save(save_num=26)
+
+                if game.step == 2:
                     area.miihen.low_road(
                         return_array[0], return_array[1], return_array[2]
                     )
@@ -365,13 +375,17 @@ def perform_TAS():
             if game.state == "MRR":
                 if game.step == 1:
                     area.mrr.arrival()
+                    game.step = 2
+                    maybe_create_save(save_num=27)
+                
+                if game.step == 2:
                     area.mrr.main_path()
                     if memory.main.game_over():
                         game.state = "game_over_error"
-                    game.step = 2
-                    maybe_create_save(save_num=27)
+                    game.step = 3
+                    maybe_create_save(save_num=88)
 
-                if game.step == 2:
+                if game.step == 3:
                     area.mrr.battle_site()
                     area.mrr.gui_and_aftermath()
                     end_time = logs.time_stamp()
