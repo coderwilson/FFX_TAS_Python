@@ -829,7 +829,7 @@ def jassu_move():
                 move_forward = True
             elif distance(3, 10) > 340:
                 move_radius = min(int(get_char_radius() + 150), 570)
-                target_coords = radius_movement(radius=move_radius, direction="forward")
+                target_coords = [p10C[0] - 180, p10C[1] - 180]
                 move_forward = True
             else:
                 move_radius = min(int(get_char_radius() + 150), 570)

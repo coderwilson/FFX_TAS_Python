@@ -663,6 +663,9 @@ def luca_workers_2(early_haste):
     logger.info("Fight start: Workers in Luca")
     hasted = False
     xbox.click_to_battle()
+    tidus_attacks = 0
+    kimahri_attacks = 0
+    force_lulu = False
 
     while not memory.main.turn_ready():
         pass
@@ -678,18 +681,39 @@ def luca_workers_2(early_haste):
                     CurrentPlayer().cast_black_magic_spell(1)
                 else:
                     CurrentPlayer().defend()
-            elif memory.main.luca_workers_battle_id() in [44, 35]:
-                if Tidus.is_turn():
+            elif memory.main.luca_workers_battle_id() in [44, 35] and not force_lulu:
+                # First, decide if we want attacks or not.
+                if (
+                    tidus_attacks == 2 and 
+                    kimahri_attacks == 2 and 
+                    not Kimahri.has_overdrive() and
+                    not future_attack_will_crit(character=0, char_luck=18, enemy_luck=15) and
+                    not future_attack_will_crit(character=0, char_luck=18, enemy_luck=15) and
+                    not future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1) and
+                    not future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1)
+                ):
+                    logger.warning("No crits coming up. Lulu only.")
+                    force_lulu = True
+                else:
+                    logger.warning("Crits coming up. Proceed to PWN!")
+                if force_lulu:
+                    pass
+                elif Tidus.is_turn():
                     CurrentPlayer().attack()
+                    tidus_attacks += 1
                 elif Kimahri.is_turn():
                     if (
                         memory.main.get_enemy_current_hp().count(0) == 1
                         and Kimahri.has_overdrive()
                         and memory.main.get_enemy_current_hp()[0] > 80
                     ):
-                        Kimahri.overdrive(1)
+                        if memory.main.next_crit(character=3, char_luck=18, enemy_luck=15):
+                            CurrentPlayer().attack()
+                        else:
+                            Kimahri.overdrive(1)
                     else:
                         CurrentPlayer().attack()
+                    kimahri_attacks += 1
                 elif Lulu.is_turn():
                     CurrentPlayer().cast_black_magic_spell(spell_id=1, target_id=21)
             else:
@@ -1293,7 +1317,7 @@ def mrr_manip(kim_max_advance: int = 6):
             )
             if next_chance >= 3 and next_chance <= 12:
                 if not 255 in memory.main.get_active_battle_formation():
-                    escape_one(exclude=0)
+                    escape_one(exclude=3)
                 elif not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif Kimahri.is_turn():
@@ -1307,7 +1331,7 @@ def mrr_manip(kim_max_advance: int = 6):
             elif next_chance == 2:
                 if not Kimahri.active():
                     buddy_swap(Kimahri)
-                elif Kimahri.turn():
+                elif Kimahri.is_turn():
                     escape_one()
                 else:
                     escape_one()

@@ -125,6 +125,10 @@
         "1506278471": {
             "duration": 616,
             "victory": true
+        },
+        "419040010": {
+            "duration": 554,
+            "victory": true
         }
     },
     "115": {
@@ -160,6 +164,18 @@
     "4": {
         "1509173718": {
             "duration": 654,
+            "victory": true
+        }
+    },
+    "212": {
+        "747888991": {
+            "duration": 542,
+            "victory": true
+        }
+    },
+    "35": {
+        "1213653564": {
+            "duration": 527,
             "victory": true
         }
     }

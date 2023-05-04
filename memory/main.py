@@ -4096,9 +4096,7 @@ def future_attack_will_crit(
         return False
     crit_roll = rng_array[attack_index * 2] % 101
     crit_chance = char_luck - enemy_luck
-    if crit_roll < crit_chance:
-        return True
-    return False
+    return crit_roll < crit_chance
 
 
 def rng_01():

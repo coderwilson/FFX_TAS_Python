@@ -124,6 +124,14 @@ def load_into_game(gamestate: str, step_counter: str):
 
 def load_into_game_old(gamestate: str, step_counter: str):
     xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
     logger.warning(f"No game state found for vars {gamestate} | {step_counter}")
     
     # Now to tell the user where they went wrong:
