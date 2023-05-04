@@ -927,6 +927,7 @@ def mrr_battle(status):
     screen.await_turn()
 
     aeon_turn = 0
+    valefor_charge_complete = False
 
     # If we're ambushed and take too much damage, this will trigger first.
     hp_array = memory.main.get_battle_hp()
@@ -1224,6 +1225,14 @@ def mrr_battle(status):
                         buddy_swap(Tidus)
     else:  # Everything is done.
         flee_all()
+    
+    if status[2] == 1 and status[5] == 1:
+        # Check if we can skip recharge state
+        if Yuna.overdrive_percent() == 100 and memory.main.get_slvl_wakka() >= 7:
+            pass
+            status[5] = 2  # Phase 2, final phase to level up Kimahri and Yuna
+            status[2] = 2  # Valefor is charged flag.
+    
     logger.debug(f"Wakka late menu: {game_vars.wakka_late_menu()}")
     # OK the battle should be complete now. Let's do some wrap-up stuff.
     wrap_up()
@@ -1274,6 +1283,51 @@ def _mrr_manip_kimahri_crit():
 
 @battle.utils.speedup_decorator
 def mrr_manip(kim_max_advance: int = 6):
+    screen.await_turn()
+    attempt_manip = False
+
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            next_chance = memory.main.next_crit(
+                character=3, char_luck=18, enemy_luck=15
+            )
+            if next_chance >= 3 and next_chance <= 12:
+                if not 255 in memory.main.get_active_battle_formation():
+                    escape_one(exclude=0)
+                elif not Kimahri.active():
+                    buddy_swap(Kimahri)
+                elif Kimahri.is_turn():
+                    if 255 in memory.main.get_active_battle_formation():
+                        lancet("none")
+                        attempt_manip = True
+                    else:
+                        defend()
+                else:
+                    CurrentPlayer().defend()
+            elif next_chance == 2:
+                if not Kimahri.active():
+                    buddy_swap(Kimahri)
+                elif Kimahri.turn():
+                    escape_one()
+                else:
+                    escape_one()
+            else:
+                flee_all(exclude=3)
+    wrap_up()
+    # Now checking health values
+    hp_check = memory.main.get_hp()
+    logger.debug(f"HP values: {hp_check}")
+    if hp_check != [520, 475, 1030, 644, 818, 380]:
+        heal_up(full_menu_close=False)
+    memory.main.update_formation(Tidus, Wakka, Auron)
+    _mrr_manip_kimahri_crit()
+    return attempt_manip
+            
+                
+
+
+@battle.utils.speedup_decorator
+def mrr_manip_old(kim_max_advance: int = 6):
     screen.await_turn()
     next_crit_kim = Kimahri.next_crit(15)
     logger.debug(f"Next Kimahri crit: {next_crit_kim}")
@@ -3728,7 +3782,7 @@ def lancet_home(direction):
     tap_targeting()
 
 
-def flee_all():
+def flee_all(exclude:int = 99):
     logger.debug("Attempting escape (all party members and end screen)")
     if memory.main.battle_active():
         while not memory.main.battle_complete():
@@ -3746,7 +3800,7 @@ def flee_all():
                     or tidus_position == 255
                     or memory.main.tidus_escaped_state()
                 ):
-                    escape_one()
+                    escape_one(exclude=exclude)
                 else:
                     CurrentPlayer().defend()
     logger.info("Flee complete")
@@ -3782,12 +3836,16 @@ def escape_action():
         tap_targeting()
 
 
-def escape_one():
+def escape_one(exclude:int=99):
+    if exclude == memory.main.get_current_turn():
+        not_turn = True
+    else:
+        not_turn = False
     next_action_escape = rng_track.next_action_escape(
         character=memory.main.get_current_turn()
     )
     logger.debug(f"The next character will escape: {next_action_escape}")
-    if not next_action_escape and not memory.main.get_encounter_id() == 26:
+    if (not next_action_escape or not_turn) and not memory.main.get_encounter_id() == 26:
         if memory.main.get_story_progress() < 154:
             logger.debug("Character cannot escape (Lagoon). Attacking instead.")
             CurrentPlayer().attack()
@@ -3797,6 +3855,8 @@ def escape_one():
             replace_array = memory.main.get_battle_formation()
             for i in range(len(replace_array)):
                 if replacement != 255:
+                    pass
+                elif replacement == exclude:
                     pass
                 elif (
                     i == 3

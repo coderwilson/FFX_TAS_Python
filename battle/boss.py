@@ -1381,10 +1381,10 @@ def evrae_altana():
         battle.main.flee_all()
     else:
         logger.info("Evrae Altana fight start")
-        #if not memory.main.next_steal_rare():
-        #    evrae_altana_steal()
-        #else:
-        #    logger.debug("Next steal will crit, do not steal.")
+        if not memory.main.next_steal_rare():
+            evrae_altana_steal()
+        else:
+            logger.debug("Next steal will crit, do not steal.")
         thrown_item = False
         while not memory.main.battle_complete():  # AKA end of battle screen
             if memory.main.turn_ready():

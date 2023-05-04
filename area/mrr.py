@@ -12,7 +12,7 @@ import screen
 import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
-from players import Auron, Tidus, Wakka
+from players import Auron, Tidus, Wakka, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -89,11 +89,13 @@ def arrival():
 
 def log_mrr_kimahri_crit_chance():
     crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    logger.debug(f"Next Kimahri crit: {crit_chance}")
+    logger.warning(f"Next Kimahri crit: {crit_chance}")
 
 
 def main_path():
     memory.main.await_control()
+    logger.warning(f"TEST {memory.main.get_map()}")
+    log_mrr_kimahri_crit_chance()
     crit_manip = False
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
@@ -104,6 +106,8 @@ def main_path():
     while memory.main.get_map() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
             status[2] = 2  # No need to do Valefor's overdrive and recharge.
+        if status[2] == 1 and Yuna.overdrive_percent() == 100:
+            status[2] = 2
         if status[0] == 1 and status[1] == 1 and status[2] == 2:
             # All pieces are complete. Move phase to final phase.
             status[5] = 3
@@ -111,6 +115,7 @@ def main_path():
             if checkpoint == 1:
                 save_sphere.touch_and_go()
                 memory.main.update_formation(Tidus, Wakka, Auron)
+                log_mrr_kimahri_crit_chance()
                 checkpoint += 1
             elif checkpoint == 4:
                 logger.info("Up the first lift")
@@ -127,6 +132,7 @@ def main_path():
             elif checkpoint == 46:
                 logger.info("Up the second lift.")
                 FFXC.set_neutral()
+                memory.main.update_formation(Tidus, Wakka, Auron)
                 xbox.skip_dialog(1)
                 checkpoint += 1
                 logger.debug(f"Lift Checkpoint {checkpoint}")
@@ -171,7 +177,7 @@ def main_path():
                 if checkpoint == 61:
                     if memory.main.next_crit(
                         character=3, char_luck=18, enemy_luck=15
-                    ) in [2, 3, 4, 5, 6, 7, 9]:
+                    ) in range(2,12):
                         crit_manip = True
                         # Try to end on 1.
                         logger.debug(
@@ -217,8 +223,8 @@ def main_path():
             elif checkpoint < 47 and memory.main.get_map() == 128:
                 checkpoint = 47
 
-        if memory.main.game_over():
-            return
+        #if memory.main.game_over():
+        #    return
     # logs.write_stats("MRR Battles:")
     # logs.write_stats(battle_count)
     logs.write_stats("MRR crit manip:")
@@ -283,6 +289,8 @@ def battle_site():
 
 
 def gui_and_aftermath():
+    screen.await_turn()
+    log_mrr_kimahri_crit_chance()
     battle.boss.gui()
 
     checkpoint = 0

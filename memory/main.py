@@ -4054,24 +4054,28 @@ def build_rng_array(index: int, array_size: int = 255):
 def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
     # Returns the next time the character will critically strike, counting number of advances from present.
     # If 255 is returned, there will not be a next crit in the foreseeable future.
+    results = []
     rng_index = min(20 + character, 27)
     rng_array = rng_array_from_index(index=rng_index, array_len=200)
+    crit_chance = char_luck - enemy_luck
     del rng_array[0]
     del rng_array[0]
     for x in range(len(rng_array)):
-        crit_roll = s32(rng_array[x]) % 101
-        crit_chance = char_luck - enemy_luck
+        crit_roll = rng_array[x] % 101
         if crit_roll < crit_chance:
             if x == 0:
                 pass
             else:
-                return x
-    return 255
+                results.append(x)
+    logger.warning(f"Upcoming crits (advances): {results}")
+    if len(results) == 0:
+        return 255
+    return results[0]
 
 
 def rikku_mix_damage() -> List[int]:
     initial_rng_vals = rng_array_from_index(index=26, array_len=9)
-    dmg_rng = [(s32(x) & 31) + 0xF0 for x in initial_rng_vals[1:]]
+    dmg_rng = [(x & 31) + 0xF0 for x in initial_rng_vals[1:]]
     base_dmg = 18 * 50
     initial_damage = [(x * base_dmg) // 256 for x in dmg_rng]
     weakness_damage = [int(x * 1.5) for x in initial_damage]
@@ -4090,7 +4094,7 @@ def future_attack_will_crit(
     del rng_array[0]
     if attack_index > 90:
         return False
-    crit_roll = s32(rng_array[attack_index * 2]) % 101
+    crit_roll = rng_array[attack_index * 2] % 101
     crit_chance = char_luck - enemy_luck
     if crit_roll < crit_chance:
         return True
@@ -4504,7 +4508,11 @@ def next_steal(steal_count: int = 0, pre_advance: int = 0):
 
 
 def next_steal_rare(pre_advance: int = 0):
-    use_array = rng_array_from_index(index=11, array_len=1 + pre_advance)
-    steal_crit_rng = use_array[1 + pre_advance] % 255
-    logger.warning(f" RNG%255: {steal_crit_rng} | Returning {steal_crit_rng < 32}")
+    indeces = 1+pre_advance
+    use_array = rng_array_from_index(index=11, array_len=indeces)
+    #logger.debug(use_array)
+    #for i in range(len(use_array)):
+    #    logger.warning(f"{i} - {use_array[i] & 255}")
+    steal_crit_rng = use_array[indeces] & 255
+    logger.warning(f" RNG&255: {steal_crit_rng} | Returning {steal_crit_rng < 32}")
     return steal_crit_rng < 32
