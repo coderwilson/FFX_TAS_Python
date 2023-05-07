@@ -1,0 +1,63 @@
+[ConfigFile] invalid line at [m²‹r0].
+SteamAPI_Init() failed
+SKS: initApplication begin
+[PWindowWin32Base] has focus 0
+[PWindowWin32Base] has focus 1
+[PWindowWin32Base] has focus 0
+SKS: fiosInitialize finished
+SKS: graphicInitialize finished
+SKS: graphicInitialize begin!
+data pool: 6a24830 vfxdg pool: 6abcdc4 segment pool: 6b733f0 name pool: 6bdcb80
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreColorCorrection.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreMLAA.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreDepthOfField.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreGlow.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/CopyBuffer.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/ScreenFade.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreFXAA.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreFocusEffect.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/HDAO.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/UnSharpMask.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/SMAA.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/tex/D3D11/AreaTexDX10.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/tex/D3D11/SearchTex.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/BrightnessShader.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/PhyreText.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/CutBuffer.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld00.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/fonts/D3D11/tuffy.fgen.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld01.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld02.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld03.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld04.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld05.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld06.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld07.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld08.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld09.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld10.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld11.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld12.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld13.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld14.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld15.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld16.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld17.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld18.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/ld19.dds.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/menu/loading/D3D11/loadingbg.dds.phyre
+SKS: graphicInitialize end!
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/AbmapShaderWave.fx.phyre
+Iggy: Error: Iggy Error: Unable to load mp3 DLL
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/AbmapShaderCone.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/MenuDefaultShaderNTZTest.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/MenuDefaultShader.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/MenuDefaultShaderNA.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/MenuDefaultShaderNB.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/ChrY0Shadow.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/MenuDefaultShaderNT.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/MenuDefaultShaderNTNB.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/Shaders/D3D11/OptimizedFontShader.fx.phyre
+[FFX_section_data_win32] ../../../FFX_Data/GameData/PS3Data/flash/OpeningScreen.swf
+Iggy: Error: Iggy Error: creating from .swf: incorrect header (corrupt or wrong type of file)
+[Fmod Log]FMOD maxAllocated: 59419

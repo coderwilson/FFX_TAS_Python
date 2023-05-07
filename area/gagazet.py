@@ -404,9 +404,8 @@ def cave():
                     logger.info("Second trial start")
                     memory.main.wait_frames(90)
                     xbox.menu_b()
-                    memory.main.wait_frames(45)
                     FFXC.set_value("d_pad", 8)
-                    memory.main.wait_frames(45)
+                    memory.main.wait_frames(20)
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()
                     checkpoint += 1

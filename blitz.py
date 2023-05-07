@@ -185,29 +185,27 @@ def cursor_1():
 
 def jassu_pass_timing() -> int:
     shot_distance = distance(0, 11)
-    shot_mod = int(shot_distance / 160)
+    shot_mod = int(shot_distance / 160) + 9
+    pass_distance = distance(0,3)
+    pass_mod = int(pass_distance / 160) + 6
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = 156
-        #base_timing = int(154 - shot_mod)
+        base_timing = int(180 - shot_mod - pass_mod)
     else:
-        base_timing = int(265 - shot_mod)
-
-    #for x in range(5):
-    #    if distance(0, x + 6) < 180:
-    #        base_timing = int(base_timing - 4)
+        base_timing = int(295 - shot_mod - pass_mod)
+    
     return base_timing
 
 
 def tidus_shot_timing() -> int:
     shot_distance = distance(0, 11)
-    shot_mod = int(shot_distance / 160)
+    shot_mod = int(shot_distance / 160) + 9
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = int(170 - shot_mod)
+        base_timing = int(180 - shot_mod)
     else:
-        base_timing = int(288 - shot_mod)
+        base_timing = int(295 - shot_mod)
 
     for x in range(5):
-        if distance(0, x + 6) < 180:
+        if distance(0, x + 6) < 160:
             base_timing = int(base_timing - 4)
     return base_timing
 
@@ -231,7 +229,7 @@ def game_stage():
             # Requires special timing before Wakka comes in
             stages = [
                 0,
-                30,
+                37,
                 70,
                 jassu_pass_timing() - 14,
                 jassu_pass_timing(),
@@ -811,13 +809,13 @@ def jassu_move():
         move_forward = True
     elif current_stage == 3:
         if (
-            distance(0,7) < 200 and
-            distance(0,8) < 200 and
-            distance(0,10) < 200 and
+            distance(0,7) < 300 and
+            distance(0,8) < 300 and
+            distance(0,10) < 300 and
             
-            distance(1,7) < 200 and
-            distance(1,8) < 200 and
-            distance(1,10) < 200
+            distance(1,7) > 360 and
+            distance(1,8) > 360 and
+            distance(1,10) > 360
         ):
             logger.debug("Tidus guarded, passing to Datto. (tap X)")
             xbox.tap_x()
@@ -828,11 +826,13 @@ def jassu_move():
                 xbox.tap_x()
                 move_forward = True
             elif distance(3, 10) > 340:
-                move_radius = min(int(get_char_radius() + 150), 570)
+                #move_radius = min(int(get_char_radius() + 150), 570)
                 target_coords = [p10C[0] - 180, p10C[1] - 180]
+                #logger.warning(target_coords)
+                blitz_pathing.set_movement(target_coords)
                 move_forward = True
             else:
-                move_radius = min(int(get_char_radius() + 150), 570)
+                move_radius = min(int(get_char_radius() + 40), 520)
                 target_coords = radius_movement(radius=move_radius, direction="back")
                 move_forward = True
     else:  # Pass to Tidus
@@ -898,13 +898,13 @@ def jassu_act():
         dribble_ball()
     elif current_stage == 3:
         if (
-            distance(0,7) < 200 and
-            distance(0,8) < 200 and
-            distance(0,10) < 200 and
+            distance(0,7) < 300 and
+            distance(0,8) < 300 and
+            distance(0,10) < 300 and
             
-            distance(1,7) < 200 and
-            distance(1,8) < 200 and
-            distance(1,10) < 200
+            distance(1,7) > 360 and
+            distance(1,8) > 360 and
+            distance(1,10) > 360
         ):
             logger.debug("Tidus guarded, passing to Datto. (pass command)")
             pass_ball(target=1)

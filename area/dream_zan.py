@@ -112,7 +112,7 @@ def listen_story():
         if memory.main.user_control():
             # Events
             if checkpoint == 5:
-                FFXC.set_movement(0, -1)
+                FFXC.set_movement(-1, -1)
                 while not memory.main.name_aeon_ready():
                     xbox.tap_b()
                 logger.info("Ready to name Tidus")

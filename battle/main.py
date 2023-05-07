@@ -11,6 +11,7 @@ import screen
 import vars
 import xbox
 from memory.main import s32
+from memory.main import future_attack_will_crit
 from players import (
     Auron,
     Bahamut,
@@ -683,19 +684,32 @@ def luca_workers_2(early_haste):
                     CurrentPlayer().defend()
             elif memory.main.luca_workers_battle_id() in [44, 35] and not force_lulu:
                 # First, decide if we want attacks or not.
+                if tidus_attacks == 2 and kimahri_attacks == 2:
+                    logger.debug("========================")
+                    logger.debug(f"Tidus attacks: {tidus_attacks}")
+                    logger.debug(f"Kimahri attacks: {kimahri_attacks}")
+                    logger.debug(f"Tidus crit 1: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15)}")
+                    logger.debug(f"Tidus crit 2: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, attack_index=1)}")
+                    logger.debug(f"Kimahri crit 1: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15)}")
+                    logger.debug(f"Kimahri crit 2: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1)}")
+                    logger.debug(f"Kimahri overdrive: {Kimahri.has_overdrive()}")
+                    logger.debug("========================")
                 if (
                     tidus_attacks == 2 and 
                     kimahri_attacks == 2 and 
                     not Kimahri.has_overdrive() and
                     not future_attack_will_crit(character=0, char_luck=18, enemy_luck=15) and
-                    not future_attack_will_crit(character=0, char_luck=18, enemy_luck=15) and
-                    not future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1) and
+                    not future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, attack_index=1) and
+                    not future_attack_will_crit(character=3, char_luck=18, enemy_luck=15) and
                     not future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1)
                 ):
                     logger.warning("No crits coming up. Lulu only.")
                     force_lulu = True
+                elif tidus_attacks != 2 or kimahri_attacks != 2:
+                    pass
                 else:
-                    logger.warning("Crits coming up. Proceed to PWN!")
+                    logger.warning("Crits coming up (or has overdrive). Proceed to PWN!")
+                
                 if force_lulu:
                     pass
                 elif Tidus.is_turn():
@@ -703,11 +717,15 @@ def luca_workers_2(early_haste):
                     tidus_attacks += 1
                 elif Kimahri.is_turn():
                     if (
-                        memory.main.get_enemy_current_hp().count(0) == 1
+                        kimahri_attacks % 2 == 1
                         and Kimahri.has_overdrive()
                         and memory.main.get_enemy_current_hp()[0] > 80
                     ):
-                        if memory.main.next_crit(character=3, char_luck=18, enemy_luck=15):
+                        logger.debug(f"=== Kimahri attacks: {kimahri_attacks}")
+                        logger.debug(f"=== Kimahri has OD: {Kimahri.has_overdrive()}")
+                        logger.debug(f"=== Target HP: {memory.main.get_enemy_current_hp()[0]}")
+                        logger.debug(f"=== Target Next Crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}")
+                        if memory.main.next_crit(character=3, char_luck=18, enemy_luck=15) == 0:
                             CurrentPlayer().attack()
                         else:
                             Kimahri.overdrive(1)
@@ -715,7 +733,10 @@ def luca_workers_2(early_haste):
                         CurrentPlayer().attack()
                     kimahri_attacks += 1
                 elif Lulu.is_turn():
-                    CurrentPlayer().cast_black_magic_spell(spell_id=1, target_id=21)
+                    if tidus_attacks + kimahri_attacks in [3,7,8]:
+                        xbox.weap_swap(0)
+                    else:
+                        CurrentPlayer().cast_black_magic_spell(spell_id=1, target_id=21)
             else:
                 if Lulu.is_turn():
                     CurrentPlayer().cast_black_magic_spell(1)
@@ -969,7 +990,7 @@ def mrr_battle(status):
     elif encounter_id == 102:  # Garuda, flee no matter what.
         flee_all()
     elif status[5] == 0:  # Phase zero - use Valefor overdrive to overkill for levels
-        if status[3] < 3 and memory.main.rng_seed() != 160:
+        if status[3] < 3:
             # Encounter id (zero-index)
             if (
                 encounter_id == 100 or encounter_id == 101
@@ -984,9 +1005,6 @@ def mrr_battle(status):
                         elif Tidus.is_turn():
                             buddy_swap(Kimahri)
                         elif Kimahri.is_turn():
-                            # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
-                            #    next_crit_kim = mrr_target()
-                            # else:
                             CurrentPlayer().defend()
                         elif Wakka.is_turn():
                             CurrentPlayer().defend()
@@ -1249,13 +1267,6 @@ def mrr_battle(status):
                         buddy_swap(Tidus)
     else:  # Everything is done.
         flee_all()
-    
-    if status[2] == 1 and status[5] == 1:
-        # Check if we can skip recharge state
-        if Yuna.overdrive_percent() == 100 and memory.main.get_slvl_wakka() >= 7:
-            pass
-            status[5] = 2  # Phase 2, final phase to level up Kimahri and Yuna
-            status[2] = 2  # Valefor is charged flag.
     
     logger.debug(f"Wakka late menu: {game_vars.wakka_late_menu()}")
     # OK the battle should be complete now. Let's do some wrap-up stuff.
@@ -4077,12 +4088,13 @@ def sin_face():
         else:
             xbox.tap_b()
     logger.info("Fight end: Sin's Face")
-    if not game_vars.csr():
-        while not (memory.main.user_control() or memory.main.cutscene_skip_possible()):
-            xbox.tap_b()
+    while not (memory.main.user_control() or memory.main.cutscene_skip_possible()):
+        xbox.tap_b()
     if memory.main.cutscene_skip_possible():
         memory.main.wait_frames(2)
         xbox.skip_scene(fast_mode=True)
+        while not memory.main.user_control():
+            xbox.tap_b()
 
 
 @battle.utils.speedup_decorator

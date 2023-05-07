@@ -322,6 +322,7 @@ def escape():
     logger.info("Done pathing. Now for the Wendigo fight.")
     battle.boss.wendigo()
     logger.info("Wendigo fight over")
+    memory.main.click_to_control_dumb()
 
 
 def under_lake():

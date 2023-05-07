@@ -43,11 +43,11 @@ def all_races():
 
     logger.debug("Hyper Chocobo complete")
 
-    # catcher_complete = False
-    # while not catcher_complete:
-    #     catcher_complete = choco_tame_4()
+    catcher_complete = False
+    while not catcher_complete:
+        catcher_complete = choco_tame_4()
 
-    # logger.debug("Catcher Chocobo complete")
+    logger.debug("Catcher Chocobo complete")
 
 
 def choco_tame_1():
@@ -252,11 +252,12 @@ def choco_tame_3():
     if memory.main.diag_progress_flag() == 56:  # Success
         memory.main.click_to_diag_progress(77)
         memory.main.wait_frames(12)
-        xbox.tap_down()  # Up for something else, down for done.
+        xbox.tap_up()  # Up for something else, down for done.
+        #xbox.tap_down()  # Up for something else, down for done.
         xbox.tap_b()
         memory.main.wait_frames(30)
-        # xbox.tap_up()
-        # xbox.tap_b()
+        xbox.tap_up()
+        xbox.tap_b()
         return True
     else:
         memory.main.click_to_diag_progress(77)

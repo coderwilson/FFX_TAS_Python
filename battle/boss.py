@@ -136,6 +136,7 @@ def tanker():
 @battle.utils.speedup_decorator
 def klikk():
     logger.info("Fight start: Klikk")
+    heal_used = False
     klikk_attacks = 0
     klikk_revives = 0
     steal_count = 0
@@ -151,6 +152,7 @@ def klikk():
                     and Tidus.in_danger(120)
                 ):
                     battle.main.use_potion_character(Tidus, "l")
+                    heal_used = True
                 else:
                     CurrentPlayer().attack()
                 klikk_attacks += 1
@@ -158,12 +160,19 @@ def klikk():
                 grenade_count = memory.main.get_item_count_slot(
                     memory.main.get_item_slot(35)
                 )
-                if Tidus.in_danger(120) and not (
+                logger.debug("==== Tidus HP check:")
+                logger.debug(f"==== In danger (120): {Tidus.in_danger(120)}")
+                logger.debug(f"==== Heal Used: {heal_used}")
+                logger.debug(f"==== Next Turn: {memory.main.get_next_turn()}")
+                logger.debug(f"==== Enemy HP: {memory.main.get_enemy_current_hp()[0]}")
+
+                if Tidus.in_danger(120) and not heal_used and not (
                     memory.main.get_next_turn() == 0
                     and memory.main.get_enemy_current_hp()[0] <= 181
                 ):
                     battle.main.use_potion_character(Tidus, "l")
                     klikk_revives += 1
+                    heal_used = True
                 elif memory.main.get_enemy_current_hp()[0] < 58:
                     CurrentPlayer().attack()
                     klikk_attacks += 1
@@ -1024,7 +1033,7 @@ def wendigo():
 
     while not memory.main.turn_ready():
         pass
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             party_hp = memory.main.get_battle_hp()
             tidus_slot = memory.main.get_battle_char_slot(0)

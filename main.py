@@ -146,6 +146,7 @@ def load_game_state():
 
 
 def maybe_create_save(save_num: int):
+    memory.main.await_control()
     memory.main.wait_frames(6)
     game_vars = vars.vars_handle()
     if game_vars.create_saves():
@@ -292,6 +293,7 @@ def perform_TAS():
             if game.state == "Boat3":
                 area.boats.ss_winno_2()
                 game.state = "Luca"
+                maybe_create_save(save_num=81)
 
             if game.state == "Luca":
                 if game.step == 1:
