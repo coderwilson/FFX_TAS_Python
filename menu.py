@@ -1098,6 +1098,7 @@ def seymour_natus_blitz_win():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_quit()
+    memory.main.close_menu()
 
 
 def seymour_natus_blitz_loss():
@@ -1154,6 +1155,7 @@ def seymour_natus_blitz_loss():
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "left")
     menu_grid.use_and_quit()
+    memory.main.close_menu()
 
 
 def prep_calm_lands():

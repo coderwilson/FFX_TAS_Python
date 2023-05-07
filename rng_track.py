@@ -1529,7 +1529,7 @@ def decide_skip_zan_luck() -> bool:
         logger.debug("Expecting no crit on Face")
         attack_count += 3  # Should be 3, but we're over-damaging.
     if not future_attack_hit(
-        character=7, enemy="seymour_flux", attack_index=attack_count
+        character=7, enemy="seymour_omnis", attack_index=attack_count
     ):
         logger.debug("Miss on Omnis")
         return False

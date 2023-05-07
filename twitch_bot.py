@@ -11,9 +11,13 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
+import os
 
 # Define the path to the Python script to run
 SCRIPT_PATH = "main.py"
+CHOCO_PATH = "z_choco_races_test.py"
+CSR_PATH = ""
+GAME_PATH = ""
 CONFIG_FILE_PATH = "bot-config.yaml"
 
 
@@ -43,6 +47,9 @@ class Bot(commands.Bot):
         self.allowed_users = config.get("allowed_users", ["YOUR_CHANNEL_NAME"])
         super().__init__(token=token, prefix="!", initial_channels=channels)
         self.process = None
+        self.csr = None
+        self.game = None
+        self.timer = None
 
     async def event_ready(self):
         # Notify when we are logged in and ready to use commands
@@ -51,7 +58,7 @@ class Bot(commands.Bot):
         print("Ready for commands")
     
     # Define the start command
-    @commands.command()
+    @commands.command(aliases = ("begin", "launch"))
     async def start(self, ctx: commands.Context):
         arg_array = []
         print(ctx.message.content)
@@ -77,32 +84,179 @@ class Bot(commands.Bot):
             print(["python", SCRIPT_PATH] + arg_array)
             self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
             await ctx.send("FFX TAS started.")
+            print("aVIna FFX TAS started.")
         else:
             await ctx.send("FFX TAS is already running.")
+            print("aVIna FFX TAS is already running.")
+        return self.process
+    
+    #Alternate start command, Chocobo races
+    @commands.command(aliases = ("choco", "race", "races", "showcase"))
+    async def chocobo(self, ctx: commands.Context):
+        if self.process is None:
+            print(["python", CHOCO_PATH])
+            self.process = subprocess.Popen(["python", CHOCO_PATH])
+            await ctx.send("FFX Chocobo Racing started.")
+            print("Chocobo Racing started.")
+        else:
+            await ctx.send("FFX TAS is already running.")
+            print("TAS is already running.")
         return self.process
 
     # Define the exit command
     @commands.command(aliases = ("stop", "quit", "terminate"))
     async def exit(self, ctx: commands.Context):
         if not ctx.author.name in self.allowed_users:
-            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute commands.")
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
         elif self.process is not None:
             self.process.terminate()
             self.process.wait()
             self.process = None
             await ctx.send("FFX TAS stopped.")
+            print("aVIna FFX TAS stopped.")
         else:
             await ctx.send("FFX TAS is not running.")
+            print("aVIna FFX TAS is not running.")
+    
+    # Define the start-CSR command
+    @commands.command(aliases = ("csr_start","csr_launch"))
+    async def start_csr(self, ctx: commands.Context):
+        if not ctx.author.name in self.allowed_users:
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        elif self.csr is None:
+            print(CSR_PATH)
+            self.csr = subprocess.Popen([CSR_PATH])
+            await ctx.send("CSR started.")
+            print("CSR started.")
+        else:
+            await ctx.send("CSR is already running.")
 
+    #Define the stop-CSR command
+    @commands.command(aliases = ("csr_stop", "csr_halt"))
+    async def stop_csr(self, ctx: commands.Context):
+        if not ctx.author.name in self.allowed_users:
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        elif self.csr is not None:
+            self.csr.terminate()
+            self.csr.wait()
+            self.csr = None
+            await ctx.send("CSR stopped.")
+            print("CSR stopped.")
+        else:
+            await ctx.send("CSR is not running.")
+    
+    # Launch FFX
+    @commands.command(aliases = ("game_start", "launch_game"))
+    async def start_game(self, ctx: commands.Context):
+        if not ctx.author.name in self.allowed_users:
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        elif self.game is None:
+            cwd = os.getcwd()
+            print(cwd)
+            os.chdir(GAME_PATH)
+            print(os.getcwd())
+            launch_path = GAME_PATH + "\FFX.exe"
+            print(launch_path)
+            self.game = subprocess.Popen([launch_path])
+            os.chdir(cwd)
+            await ctx.send("FFX started.")
+            print("FFX started.")
+        else:
+            await ctx.send("FFX is already running.")
+            print("FFX is already running.")
+    
+    # Kill FFX
+    @commands.command(aliases = ("game_stop", "halt_game"))
+    async def stop_game(self, ctx: commands.Context):
+        if not ctx.author.name in self.allowed_users:
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        elif self.game is not None:
+            self.game.terminate()
+            self.game.wait()
+            self.game = None
+            await ctx.send("FFX stopped.")
+            print("FFX stopped.")
+        else:
+            await ctx.send("FFX is not running.")
+            print("FFX is not running.")
+    
+    # Launch timer
+    @commands.command(aliases = ("timer_start", "launch_timer"))
+    async def start_timer(self, ctx: commands.Context):
+        print(ctx.message.content)
+        args = ctx.message.content.split()
+        csr_val = None
+        for i in range(len(args)):
+            try:
+                if args[i].lower() == "csr":
+                    csr_val = str(args[i+1])
+                    print(f"CSR value: {csr_val}")
+                    if not csr_val in ["False", "True"]:
+                        csr_val = None
+                        raise Exception("Value must be True or False")
+            except:
+                await ctx.send(f"You must provide a csr value of True or False: {ctx.message.content}")
+
+
+        if csr_val == None:
+            pass
+        elif not ctx.author.name in self.allowed_users:
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        elif self.timer is None:
+            if csr_val == "False":
+                TIMER_PATH = TIMER_PATH_NORM
+            else:
+                TIMER_PATH = TIMER_PATH_CSR
+            cwd = os.getcwd()
+            print(cwd)
+            os.chdir(TIMER_PATH)
+            print(os.getcwd())
+            launch_path = TIMER_PATH + "\LiveSplit.exe"
+            print(launch_path)
+            self.timer = subprocess.Popen([launch_path])
+            os.chdir(cwd)
+            await ctx.send("Timer started.")
+            print("Timer started.")
+        else:
+            await ctx.send("Timer is already running.")
+            print("Timer is already running.")
+    
+    # Kill timer
+    @commands.command(aliases = ("timer_stop", "halt_timer"))
+    async def stop_timer(self, ctx: commands.Context):
+        if not ctx.author.name in self.allowed_users:
+            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        elif self.timer is not None:
+            self.timer.terminate()
+            self.timer.wait()
+            self.timer = None
+            await ctx.send("Timer stopped.")
+            print("Timer stopped.")
+        else:
+            await ctx.send("Timer is not running.")
+            print("Timer is not running.")
+    
+    
     # Define the help command
     @commands.command()
     async def help(self, ctx: commands.Context):
         await ctx.send("Available commands: !start, !stop, !exit, !help || With !start, you can add the following arguments: 'seed x', where x is any value from 0 to 255 (for new game) - 'state y', where y is a section of the TAS, like Luca or Zanarkand. - 'step z', where z is a progress value for the y state. - For y and z, if the value is invalid, the TAS will terminate, but tell you what valid values are available, aka where you went wrong.")
+        await ctx.send("Other commands: !game_start, !game_stop, !csr_start, !csr_stop, !timer_start (csr True/False), !timer_stop, !race")
 
 
 # Main entry point of script
 if __name__ == "__main__":
     conf = BotConfig(CONFIG_FILE_PATH)
+    print("================================")
+    print("================================")
+    print(conf.data['csr_path'])
+    CSR_PATH = conf.data['csr_path']
+    print(conf.data['game_path'])
+    GAME_PATH = conf.data['game_path']
+    TIMER_PATH_NORM = conf.data['timer_any_normal']
+    TIMER_PATH_CSR = conf.data['timer_any_csr']
+    print("================================")
+    print("================================")
 
     bot = Bot(conf.data)
     bot.run()
