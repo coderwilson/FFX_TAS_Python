@@ -89,12 +89,11 @@ def arrival():
 
 def log_mrr_kimahri_crit_chance():
     crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    logger.warning(f"Next Kimahri crit: {crit_chance}")
+    logger.debug(f"=== Next Kimahri crit: {crit_chance} ===")
 
 
 def main_path():
     memory.main.await_control()
-    logger.warning(f"TEST {memory.main.get_map()}")
     log_mrr_kimahri_crit_chance()
     crit_manip = False
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase

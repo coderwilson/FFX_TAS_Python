@@ -33,7 +33,7 @@ class AllVars:
             self.skip_cutscene_flag = False
         elif config_vars.get("game_mode") == "swag":
             self.perfect_aeon_kills = True
-        elif config_vars.get("game_mode") == "blitz_only":
+        elif config_vars.get("game_mode") == "blitz_loop":
             self.blitz_loop = True
 
         # === RNG settings ===
