@@ -4064,7 +4064,7 @@ def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
         crit_roll = rng_array[x] % 101
         if crit_roll < crit_chance:
             results.append(x)
-    logger.warning(f"Upcoming crits (advances): {results}")
+    logger.debug(f"Upcoming crits (advances): {results}")
     if len(results) == 0:
         return 255
     return results[0]

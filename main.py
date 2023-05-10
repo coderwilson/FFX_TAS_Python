@@ -72,7 +72,7 @@ def configuration_setup():
     
     # gamestate
     try:
-        logger.warning(args)
+        #logger.warning(args)
         logger.info(f"Twitch states passed forward: {args.state}, {args.step}")
         if args.state != None or args.step != None:
             logger.warning(f"Loading in variables from Twitch, {args.state}, {args.step}")
@@ -154,14 +154,14 @@ def maybe_create_save(save_num: int):
             save_num=save_num, game_state=game.state, step_count=game.step
         )
 
-# Temporarily needed
-def log_mrr_kimahri_crit_chance():
-    crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    logger.warning(f"Next Kimahri crit: {crit_chance}")
-# end
-
-
 def perform_TAS():
+    # Force looping on Blitzball only.
+    if game.state == "Luca" and game.step == 3:
+        only_play_blitz = True
+        logger.warning("Who's ready to play some Blitzball?")
+    else:
+        only_play_blitz = False
+
     game_vars = vars.vars_handle()
 
     # Original seed for when looping
@@ -197,7 +197,6 @@ def perform_TAS():
                     logs.write_stats(str(game.start_time))
                     # reset reference timestamp so that log output is synced to run time
                     log_init.reset_logging_time_reference()
-                    log_mrr_kimahri_crit_chance()  # Temp needed
                     logger.info("Timer starts now.")
                     area.dream_zan.listen_story()
                     # game.state, game.step = reset.mid_run_reset()
@@ -316,12 +315,26 @@ def perform_TAS():
                 if game.step == 4:
                     logger.info("----- Blitz Start")
                     force_blitz_win = game_vars.get_force_blitz_win()
-                    blitz.blitz_main(force_blitz_win)
+                    blitz_duration = blitz.blitz_main(force_blitz_win)
                     logger.info("----- Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
 
-                    if game_vars.loop_blitz() and blitz_loops < max_loops:
+                    if only_play_blitz:
+                        logger.info("------------------------")
+                        logger.info("- Need more Blitzball! -")
+                        logger.info("------------------------")
+                        game.state, game.step = reset.mid_run_reset()
+                        load_game.load_into_game(gamestate="Luca", step_counter=3)
+                        game.step = 3
+                        game.state = "Luca"
+
+                    elif game_vars.loop_blitz() and blitz_duration < 440:
+                        logger.info("--------------")
+                        logger.info(f"Good Blitz, worth completing the run. Blitz time: {blitz_duration} seconds.")
+                        logger.info("--------------")
+                        game.step = 5
+                    elif game_vars.loop_blitz() and blitz_loops < max_loops:
                         FFXC.set_neutral()
                         logger.info("-------------")
                         logger.info("- Resetting -")

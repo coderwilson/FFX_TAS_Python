@@ -367,6 +367,9 @@ class Player:
         return memory.main.get_battle_char_turn() == self.id
 
     def in_danger(self, danger_threshold) -> bool:
+        logger.debug(f"Danger check: {self.id}")
+        logger.debug(self.in_combat())
+        logger.debug(self.hp(self.in_combat()))
         return self.hp(self.in_combat()) <= danger_threshold
 
     def is_dead(self) -> bool:
@@ -402,9 +405,10 @@ class Player:
         if not combat:
             return self._read_char_offset_address(PlayerMagicNumbers.CUR_HP)
         else:
-            return self._read_char_battle_offset_address(
-                PlayerMagicNumbers.BATTLE_CUR_HP, self.battle_slot()
-            )
+            return memory.main.get_battle_hp()[self.battle_slot()]
+            #return self._read_char_battle_offset_address(
+            #    PlayerMagicNumbers.BATTLE_CUR_HP, self.battle_slot()
+            #)
 
     def max_hp(self, combat=False) -> int:
         if not combat:
@@ -423,6 +427,8 @@ class Player:
                 memory.main.read_val(PlayerMagicNumbers.ACTIVE_BATTLE_SLOTS + (2 * i))
                 == self.id
             ):
+                
+                #logger.debug(f"Char {self.id} in slot {i}")
                 return i
 
         offset = 0
