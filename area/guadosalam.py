@@ -17,6 +17,7 @@ FFXC = xbox.controller_handle()
 def arrival():
     logger.info("Starting Guadosalam section")
     checkpoint = 0
+    FFXC.set_neutral()
     memory.main.click_to_control()
     while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():

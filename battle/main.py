@@ -25,6 +25,7 @@ from players import (
     Yuna,
 )
 from players.rikku import omnis_items
+import menu
 
 game_vars = vars.vars_handle()
 
@@ -511,16 +512,20 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     )
                     if Tidus.is_turn():
                         CurrentPlayer().attack()
+                    elif Wakka.is_turn():
+                        CurrentPlayer().attack(target_id=21, direction_hint="r")
+                    elif Lulu.is_turn():
+                        buddy_swap(Yuna)
                     elif Yuna.is_turn():
                         aeon_summon(0)
+                        screen.await_turn()
+                        CurrentPlayer().cast_black_magic_spell(1, direction="right", target_id=22)
                         screen.await_turn()
                         if not aeon_turn:
                             aeon_turn = True
                             if memory.main.get_next_turn() < 20:
                                 CurrentPlayer().shield()
-                        CurrentPlayer().cast_black_magic_spell(1, direction="right")
-                        screen.await_turn()
-                        CurrentPlayer().cast_black_magic_spell(1, direction="right")
+                        CurrentPlayer().boost()
                     elif screen.turn_aeon():
                         while not memory.main.battle_complete():
                             if memory.main.turn_ready():
@@ -558,14 +563,7 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     elif memory.main.get_battle_char_slot(0) >= 3:
                         buddy_swap(Tidus)
                     else:
-                        buddy_swap(Yuna)
-                elif Lulu.is_turn() and enc_id != 37:
-                    if memory.main.get_battle_char_slot(4) >= 3:
-                        buddy_swap(Wakka)
-                    elif memory.main.get_battle_char_slot(0) >= 3:
-                        buddy_swap(Tidus)
-                    else:
-                        buddy_swap(Yuna)
+                        buddy_swap(Lulu)
                 elif enc_id == 31:
                     if Tidus.is_turn():
                         if turn_counter < 4:
@@ -575,6 +573,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                             flee_all()
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
                         CurrentPlayer().attack(target_id=20, direction_hint="l")
+                    elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[1] != 0:
+                        CurrentPlayer().cast_black_magic_spell(2, target_id=21)
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 32:
@@ -595,6 +595,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                             flee_all()
                     elif Wakka.is_turn():
                         CurrentPlayer().attack(target_id=21, direction_hint="r")
+                    elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
+                        CurrentPlayer().cast_black_magic_spell(2, target_id=20)
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 34:
@@ -605,23 +607,23 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                             flee_all()
                     elif Wakka.is_turn():
                         CurrentPlayer().attack(target_id=22, direction_hint="r")
+                    elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[1] != 0:
+                        CurrentPlayer().cast_black_magic_spell(2, target_id=21)
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 35 or enc_id == 36:
                     flee_all()
                 elif enc_id == 37:
+                    hp_pool = memory.main.get_enemy_current_hp()
                     if memory.main.get_speed() >= 16:
                         flee_all()
-                    elif yuna_went:
+                    elif hp_pool[1] and hp_pool[2] == 0:
                         flee_all()
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[2] != 0:
                         CurrentPlayer().attack(target_id=22, direction_hint="l")
                         yuna_went = True
-                    elif Yuna.is_turn():
-                        buddy_swap(Lulu)
-                        CurrentPlayer().cast_black_magic_spell(
-                            1, target_id=21, direction="l"
-                        )
+                    elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[1] != 0:
+                        CurrentPlayer().cast_black_magic_spell(1, target_id=21)
                     else:
                         CurrentPlayer().defend()
     logger.debug("Kilika Woods complete")
@@ -806,7 +808,7 @@ def after_blitz_3(early_haste):
                 CurrentPlayer().defend()
         elif Wakka.is_turn():
             logger.debug("Wakka Turn")
-            if hp_values[0] < 202 and (
+            if hp_values[0] < 302 and (
                 memory.main.get_next_turn() != 2
                 or memory.main.get_enemy_current_hp()[0] > 268
             ):
@@ -897,7 +899,13 @@ def miihen_road(self_destruct=False):
     logger.info("Fight start: Mi'ihen Road")
     logger.debug(f"Mi'ihen battle. Self-destruct: {game_vars.self_destruct_get()}")
     encounter_id = memory.main.get_encounter_id()
+    flee_all()
+    FFXC.set_movement(0, 1)
+    wrap_up()
+    # Note we no longer require self destruct with the new MRR skip.
+    game_vars.self_destruct_learned()
 
+def old_miihen_lancet_logic():
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.battle_type() == 2 and not check_tidus_ok():
             logger.info("Looks like we got ambushed. Skipping this battle.")
@@ -1012,7 +1020,7 @@ def mrr_battle(status):
                             buddy_swap(Yuna)
                             aeon_summon(0)
                             screen.await_turn()
-                            Valefor.overdrive(overdrive_num=1)
+                            Valefor.overdrive(overdrive_num=0)
                             status[2] = 1
                             status[5] = 1
             else:
@@ -1038,7 +1046,7 @@ def mrr_battle(status):
                         buddy_swap(Yuna)
                         aeon_summon(0)
                         screen.await_turn()
-                        Valefor.overdrive(overdrive_num=1)
+                        Valefor.overdrive(overdrive_num=0)
                         status[2] = 1
                         status[5] = 1
     elif status[5] == 1:  # Next need to recharge Valefor
@@ -1459,6 +1467,7 @@ def thunder_plains(section):
     lunar_slot = game_vars.get_blitz_win() or memory.main.get_item_slot(56) != 255
     light_slot = memory.main.get_item_slot(57) != 255
     petrify_slot = memory.main.get_item_slot(49) != 255
+    
 
     tidus_turns = 0
     while not memory.main.turn_ready():
@@ -1467,6 +1476,8 @@ def thunder_plains(section):
     # Petrify check is not working. Requires review.
     if check_petrify():
         logger.warning("Character petrified. Unhandled case -> Escaping")
+        flee_all()
+    elif memory.main.battle_type() == 2:
         flee_all()
     elif enc_id in [152, 155, 162]:  # Any battle with Larvae
         if lunar_slot:
@@ -3248,8 +3259,9 @@ def seymour_spell(target_face=True):
 def _use_healing_item(num=None, direction="l", item_id=0):
     logger.debug(f"Healing character, {num}")
     direction = direction.lower()
-    while not memory.main.turn_ready():
+    if not memory.main.turn_ready():
         logger.debug("Battle menu isn't up.")
+        return
     while not memory.main.main_battle_menu():
         pass
     while memory.main.battle_menu_cursor() != 1:
@@ -3301,6 +3313,18 @@ def _use_healing_item(num=None, direction="l", item_id=0):
 def use_potion_character(num, direction):
     logger.debug(f"Healing character, {num}")
     _use_healing_item(num=num, direction=direction, item_id=0)
+
+
+def use_hi_potion_character(num, direction):
+    # Check for hi-potions
+    pot_check = memory.main.get_item_slot(1) < 50
+    if pot_check:
+        pot_type = 1
+        logger.debug(f"Hi-Pot character, {num}")
+    else:
+        pot_type = 0
+        logger.debug(f"Potion character, {num}")
+    _use_healing_item(num=num, direction=direction, item_id=pot_type)
 
 
 def oblitz_rng_wait():

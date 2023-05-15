@@ -85,6 +85,7 @@ def ss_winno():
     FFXC.set_movement(1, -1)
     memory.main.wait_frames(2)
 
+'''
     logger.info("Talk to O'aka")
     # Talk to O'aka XXIII
     oaka_coords = [
@@ -114,7 +115,7 @@ def ss_winno():
         xbox.tap_down()
     xbox.tap_b()
     memory.main.click_to_control_3()
-
+'''
 
 def ss_winno_2():
     # To the deck

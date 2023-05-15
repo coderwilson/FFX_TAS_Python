@@ -1868,6 +1868,7 @@ def record_blitz_results_tyton(duration, test_mode=False):
             if (
                 records[seed][sub_key]["victory"] == victory
                 and duration >= records[str(seed)][str(sub_key)]["duration"]
+                and game_vars.csr()
             ):
                 return
 

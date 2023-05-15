@@ -7,7 +7,8 @@
                 "end_game_version_val": 123,
                 "nea_zone": 0,
                 "nem_ap_val": 1,
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
@@ -19,7 +20,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "20",
@@ -27,7 +29,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "4": {
@@ -37,7 +40,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "21",
@@ -45,7 +49,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
@@ -57,7 +62,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "23",
@@ -65,7 +71,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
@@ -77,7 +84,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "24",
@@ -85,7 +93,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "1": {
@@ -95,7 +104,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
@@ -107,7 +117,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "25",
@@ -115,7 +126,19 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
+            }
+        },
+        "2": {
+            "False": {
+                "save_num": "26",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
@@ -127,7 +150,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "28",
@@ -135,7 +159,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "3": {
@@ -145,7 +170,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "29",
@@ -153,7 +179,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -165,7 +192,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "30",
@@ -173,7 +201,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -185,7 +214,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "guado_start",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "31",
@@ -193,7 +223,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "guado_start",
+                "mrr_skip": true
             }
         }
     },
@@ -205,7 +236,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "34",
@@ -213,7 +245,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "2": {
@@ -223,7 +256,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "35",
@@ -231,7 +265,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "4": {
@@ -241,7 +276,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "36",
@@ -249,7 +285,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "6": {
@@ -259,7 +296,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "37",
@@ -267,7 +305,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "7": {
@@ -277,7 +316,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "38",
@@ -285,7 +325,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -297,7 +338,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "39",
@@ -305,7 +347,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "2": {
@@ -315,7 +358,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "40",
@@ -323,7 +367,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -335,7 +380,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "68",
@@ -343,7 +389,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "4": {
@@ -353,7 +400,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "42",
@@ -361,7 +409,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "5": {
@@ -371,7 +420,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "43",
@@ -379,7 +429,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "1": {
@@ -389,7 +440,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -401,7 +453,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "1": {
@@ -411,7 +464,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -423,7 +477,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "47",
@@ -431,7 +486,8 @@
                 "end_game_version_val": "4",
                 "nea_zone": "1",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -443,7 +499,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "48",
@@ -451,7 +508,8 @@
                 "end_game_version_val": "4",
                 "nea_zone": "1",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         },
         "3": {
@@ -461,7 +519,8 @@
                 "end_game_version_val": "4",
                 "nea_zone": "1",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": true
             }
         }
     },
@@ -473,7 +532,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             },
             "False": {
                 "save_num": "130",
@@ -481,7 +541,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "2": {
@@ -491,7 +552,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "2",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "4": {
@@ -501,7 +563,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "3",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "5": {
@@ -511,7 +574,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "3",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "6": {
@@ -521,7 +585,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "5",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "7": {
@@ -531,7 +596,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "7",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "8": {
@@ -541,7 +607,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "7",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "11": {
@@ -551,7 +618,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "12": {
@@ -561,7 +629,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "14": {
@@ -571,7 +640,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "9",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "15": {
@@ -581,7 +651,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "9",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "16": {
@@ -591,7 +662,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "11",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "17": {
@@ -601,7 +673,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "11",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "18": {
@@ -611,7 +684,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "13",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "19": {
@@ -621,7 +695,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "17",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "20": {
@@ -631,7 +706,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "20",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "22": {
@@ -641,7 +717,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "23": {
@@ -651,7 +728,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "24": {
@@ -661,7 +739,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "25": {
@@ -671,7 +750,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "3": {
@@ -681,7 +761,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "3",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "9": {
@@ -691,7 +772,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "8",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "10": {
@@ -701,7 +783,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "13": {
@@ -711,7 +794,8 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
@@ -723,11 +807,23 @@
                 "end_game_version_val": "1",
                 "nea_zone": "3",
                 "nem_ap_val": "27",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     },
     "MRR": {
+        "1": {
+            "False": {
+                "save_num": "3",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "MRR",
+                "mrr_skip": false
+            }
+        },
         "2": {
             "False": {
                 "save_num": "27",
@@ -735,7 +831,8 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none"
+                "special_movement": "none",
+                "mrr_skip": false
             }
         },
         "3": {
@@ -745,7 +842,21 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "MRR_crit_manip"
+                "special_movement": "MRR_crit_manip",
+                "mrr_skip": false
+            }
+        }
+    },
+    "Besaid": {
+        "3": {
+            "False": {
+                "save_num": "79",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none",
+                "mrr_skip": false
             }
         }
     }

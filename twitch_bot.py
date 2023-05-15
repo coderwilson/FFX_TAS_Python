@@ -121,11 +121,14 @@ class Bot(commands.Bot):
     # Define the start-CSR command
     @commands.command(aliases = ("csr_start","csr_launch"))
     async def start_csr(self, ctx: commands.Context):
+        arg_array = []
         if not ctx.author.name in self.allowed_users:
             await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
         elif self.csr is None:
             print(CSR_PATH)
-            self.csr = subprocess.Popen([CSR_PATH])
+            arg_array.append("--csr=true")
+            arg_array.append("--rngfix=false")
+            self.csr = subprocess.Popen([CSR_PATH] + arg_array)
             await ctx.send("CSR started.")
             print("CSR started.")
         else:

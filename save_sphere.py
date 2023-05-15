@@ -241,6 +241,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
             end_game_version_val = str(game_vars.end_game_version())
             nea_zone = str(game_vars.get_nea_zone())
             nem_ap_val = str(game_vars.nem_checkpoint_ap())
+            mrr_skip = game_vars.mrr_skip_val()
 
             new_val = {
                 game_state: {
@@ -252,6 +253,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
                             "nea_zone": nea_zone,
                             "nem_ap_val": nem_ap_val,
                             "special_movement": "none",
+                            "mrr_skip": mrr_skip,
                         }
                     }
                 }

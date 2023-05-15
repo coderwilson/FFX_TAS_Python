@@ -3,6 +3,13 @@ import logging
 
 import logs
 import memory.main
+from memory.main import (
+    user_control, 
+    turn_ready, 
+    battle_wrap_up_active, 
+    menu_open, 
+    s_grid_active
+)
 import vars
 import xbox
 
@@ -74,6 +81,13 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
 
 def _attempt_reset():
     memory.main.wait_frames(30 * 0.07)
+    while not (user_control() or turn_ready()) and memory.main.get_map() not in [23, 62, 348, 349]:
+        if battle_wrap_up_active() or memory.main.game_over():
+            xbox.menu_b()
+        else:
+            xbox.tap_a()
+
+
     while memory.main.get_map() not in [23, 348, 349]:
         logger.info("Attempting reset")
         logger.info(f"FFX map: {memory.main.get_map()}")

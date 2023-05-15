@@ -38,7 +38,17 @@ def move_after_load(spec_move: str):
         kilika_rng_manip()
     elif spec_move == "MRR_crit_manip":
         mrr_crit()
+    elif spec_move == "guado_start":
+        guado_start()
 
+
+def guado_start():
+    memory.main.await_control()
+    start_map = memory.main.get_map()
+    while memory.main.get_map() == start_map:
+        FFXC.set_movement(1,-1)
+    FFXC.set_neutral()
+    memory.main.await_control()
 
 def load_into_game(gamestate: str, step_counter: str):
     logger.debug(f"Loading game state {gamestate} | {step_counter}")
@@ -88,6 +98,7 @@ def load_into_game(gamestate: str, step_counter: str):
                 nea_zone = results[gamestate][step_counter][key]["nea_zone"]
                 nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
                 spec_move = results[gamestate][step_counter][key]["special_movement"]
+                mrr_skip = results[gamestate][step_counter][key]["mrr_skip"]
                 logger.debug(f"NEA zone {nea_zone}")
                 logger.debug(f"Nemesis checkpoint {nem_ap}")
 
@@ -109,6 +120,8 @@ def load_into_game(gamestate: str, step_counter: str):
                 move_after_load(spec_move=spec_move)
             else:
                 logger.debug("No Special movement needed")
+            if mrr_skip == True:
+                game_vars.mrr_skip_set(True)
 
             logger.debug(f"Blitz Win {game_vars.get_blitz_win()}")
             logger.debug(f"End game version {game_vars.end_game_version()}")
