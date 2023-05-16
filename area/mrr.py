@@ -12,7 +12,12 @@ import screen
 import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
-from players import Auron, Tidus, Wakka, Yuna
+from players import Auron, Tidus, Wakka
+from area.mrr_skip import (
+    skip_prep,
+    attempt_skip,
+    advance_to_aftermath
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -24,6 +29,7 @@ def arrival():
     logger.info("Arrival at MRR")
     memory.main.click_to_control()
     memory.main.close_menu()
+
     clasko_skip = True
 
     checkpoint = 0
@@ -33,6 +39,12 @@ def arrival():
                 logger.debug("CSR, skipping forward")
                 checkpoint = 4
                 logger.debug(f"Checkpoint {checkpoint}")
+            elif checkpoint == 6 and not game_vars.csr():
+                skip_prep()
+                attempt_skip()
+                advance_to_aftermath()
+                game_vars.mrr_skip_set(True)
+                return True
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -83,18 +95,29 @@ def arrival():
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()
+    if game_vars.csr():
+        # Logic for CSR mode
+        memory.main.await_control()
+        FFXC.set_movement(1,-1)
+        memory.main.await_event()
+        FFXC.set_neutral()
+        memory.main.await_control()
+        skip_prep()
+        attempt_skip()
+        advance_to_aftermath()
+        game_vars.mrr_skip_set(True)
+        return True
     logger.info("Done with prelim MRR area, now for the real deal.")
-    return clasko_skip
+    return False
 
 
 def log_mrr_kimahri_crit_chance():
     crit_chance = memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)
-    logger.debug(f"=== Next Kimahri crit: {crit_chance} ===")
+    logger.debug(f"Next Kimahri crit: {crit_chance}")
 
 
 def main_path():
     memory.main.await_control()
-    log_mrr_kimahri_crit_chance()
     crit_manip = False
     # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
@@ -105,8 +128,6 @@ def main_path():
     while memory.main.get_map() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
             status[2] = 2  # No need to do Valefor's overdrive and recharge.
-        if status[2] == 1 and Yuna.overdrive_percent() == 100:
-            status[2] = 2
         if status[0] == 1 and status[1] == 1 and status[2] == 2:
             # All pieces are complete. Move phase to final phase.
             status[5] = 3
@@ -114,7 +135,6 @@ def main_path():
             if checkpoint == 1:
                 save_sphere.touch_and_go()
                 memory.main.update_formation(Tidus, Wakka, Auron)
-                log_mrr_kimahri_crit_chance()
                 checkpoint += 1
             elif checkpoint == 4:
                 logger.info("Up the first lift")
@@ -131,12 +151,11 @@ def main_path():
             elif checkpoint == 46:
                 logger.info("Up the second lift.")
                 FFXC.set_neutral()
-                memory.main.update_formation(Tidus, Wakka, Auron)
                 xbox.skip_dialog(1)
                 checkpoint += 1
                 logger.debug(f"Lift Checkpoint {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
-                if memory.main.rng_seed() not in [31]:
+                if not memory.main.rng_seed() in [31]:
                     memory.main.click_to_event_temple(7)
                     logger.info("Got X-potion")
                 checkpoint += 1
@@ -176,7 +195,7 @@ def main_path():
                 if checkpoint == 61:
                     if memory.main.next_crit(
                         character=3, char_luck=18, enemy_luck=15
-                    ) in range(2,12):
+                    ) in [2, 3, 4, 5, 6, 7, 9]:
                         crit_manip = True
                         # Try to end on 1.
                         logger.debug(
@@ -222,8 +241,8 @@ def main_path():
             elif checkpoint < 47 and memory.main.get_map() == 128:
                 checkpoint = 47
 
-        #if memory.main.game_over():
-        #    return
+        if memory.main.game_over():
+            return
     # logs.write_stats("MRR Battles:")
     # logs.write_stats(battle_count)
     logs.write_stats("MRR crit manip:")
@@ -285,13 +304,11 @@ def battle_site():
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
-
-
-def gui_and_aftermath():
-    screen.await_turn()
-    log_mrr_kimahri_crit_chance()
     battle.boss.gui()
 
+
+def aftermath():
+    memory.main.click_to_control_dumb()
     checkpoint = 0
     while memory.main.get_map() != 93:
         if memory.main.user_control():

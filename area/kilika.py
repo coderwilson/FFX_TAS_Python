@@ -10,7 +10,7 @@ import save_sphere
 import vars
 import xbox
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
-from players import Kimahri, Tidus, Wakka, Yuna
+from players import Kimahri, Tidus, Wakka, Yuna, Lulu
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -138,8 +138,10 @@ def forest_1():
                     checkpoint += 1
             elif checkpoint == 86:
                 save_sphere.touch_and_go()
+                memory.main.update_formation(Tidus, Wakka, Yuna)
                 if not game_vars.did_full_klikk_menu():
                     menu.geneaux()
+                memory.main.close_menu()
                 checkpoint += 1
             elif checkpoint == 99:  # Lord O'holland
                 while memory.main.user_control():
@@ -159,6 +161,7 @@ def forest_1():
             if memory.main.battle_active():
                 if checkpoint < 9:
                     battle.main.lancet_tutorial()
+                    memory.main.update_formation(Tidus, Wakka, Lulu)
                     while best_of_two == 99:
                         next_two = rng_track.coming_battles(
                             area="kilika_woods", battle_count=advances
@@ -185,7 +188,7 @@ def forest_1():
                     )[0]
                     logger.debug(f"{next_battle}")
                     kilika_battles += 1
-                memory.main.update_formation(Tidus, Wakka, Yuna)
+                memory.main.update_formation(Tidus, Wakka, Lulu)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
@@ -322,7 +325,7 @@ def trials_end():
 def forest_3():
     logger.info("Kilika forest 3")
     # First, re-order the party
-    memory.main.update_formation(Tidus, Wakka, Yuna)
+    memory.main.update_formation(Tidus, Wakka, Lulu)
     kilika_battles = 0
     optimal_battles = 0
     checkpoint = 0
@@ -352,10 +355,7 @@ def forest_3():
                 kilika_battles += 1
                 if memory.main.get_encounter_id() in [32, 34, 37]:
                     optimal_battles += 1
-                if kilika_battles == 1 and memory.main.rng_seed() == 31:
-                    memory.main.update_formation(Kimahri, Yuna, Wakka)
-                else:
-                    memory.main.update_formation(Tidus, Wakka, Yuna)
+                memory.main.update_formation(Tidus, Wakka, Lulu)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 

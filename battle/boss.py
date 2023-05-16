@@ -60,6 +60,16 @@ def kimahri():
                     CurrentPlayer().attack()
                 else:
                     battle.main.use_potion_character(Tidus, "l")
+            elif (
+                Tidus.in_danger(200) and 
+                memory.main.get_turn_by_index(1) != 0 and
+                memory.main.get_turn_by_index(2) != 0 and
+                enemy_hp[0] > 119
+            ):
+                if Tidus.next_crit(12) == 2:
+                    CurrentPlayer().attack()
+                else:
+                    battle.main.use_potion_character(Tidus, "l")
             else:
                 CurrentPlayer().attack()
         elif memory.main.diag_skip_possible():
@@ -67,11 +77,16 @@ def kimahri():
     memory.main.click_to_control()
 
 
-@battle.utils.speedup_decorator
 def tidus_wakka_tutorial():
     memory.main.click_to_event()
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    xbox.click_to_battle()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            CurrentPlayer().attack()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
+    battle.main.wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -80,7 +95,7 @@ def black_magic_tutorial():
     CurrentPlayer().attack()
     xbox.click_to_battle()
     CurrentPlayer().cast_black_magic_spell(1)
-    memory.main.click_to_control()
+    battle.main.wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -296,53 +311,32 @@ def tros():
 def sin_fin():
     logger.info("Fight start: Sin's Fin")
     screen.await_turn()
-    fin_turns = 0
-    kim_turn = False
     complete = False
     while not complete:
         if memory.main.turn_ready():
-            fin_turns += 1
-            logger.debug("Determining first turn.")
+            logger.debug("First turns.")
             if Tidus.is_turn():
                 CurrentPlayer().defend()
                 logger.debug("Tidus defend")
             elif Yuna.is_turn():
                 battle.main.buddy_swap(Lulu)  # Yuna out, Lulu in
-            elif Kimahri.is_turn():
-                battle.main.lancet_target(target=23, direction="r")
-                kim_turn = True
-            elif Lulu.is_turn():
                 CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
-            elif 5 not in memory.main.get_active_battle_formation():
-                battle.main.buddy_swap(Lulu)
-            elif 3 not in memory.main.get_active_battle_formation():
-                battle.main.buddy_swap(Kimahri)
             else:
-                CurrentPlayer().defend()
-        if fin_turns >= 3 and kim_turn:
-            complete = True
+                battle.main.buddy_swap(Yuna)
+                battle.main.aeon_summon(0)
+                complete = True
 
     logger.info("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
-    turn_counter = 0
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            turn_counter += 1
-            if Kimahri.is_turn():
-                screen.await_turn()
-                battle.main.lancet_target(23, "r")
-            elif Lulu.is_turn():
-                CurrentPlayer().cast_black_magic_spell(1, 23, "r")
-            elif Tidus.is_turn():
-                if turn_counter < 4:
-                    CurrentPlayer().defend()
-                    memory.main.wait_frames(30 * 0.2)
-                else:
-                    battle.main.buddy_swap(Yuna)
-                    battle.main.aeon_summon(0)
-            elif screen.turn_aeon():
+            logger.debug(f"Valefor OD percent: {Valefor.overdrive_percent()}")
+            if Valefor.overdrive_percent(combat=True) == 20:
+                logger.info("Valefor energy ray")
                 Valefor.overdrive(overdrive_num=0, sin_fin=True)
-                logger.info("Valefor energy blast")
+            else:
+                logger.info("Valefor thunder")
+                Valefor.cast_black_magic_spell(spell_id=1, target_id=23)
     logger.info("Sin's Fin fight complete")
     xbox.click_to_battle()
 
@@ -420,15 +414,17 @@ def geneaux():
         battle.main.buddy_swap(Yuna)
     screen.await_turn()
     battle.main.aeon_summon(0)  # Summon Valefor
-    screen.await_turn()
-    Valefor.overdrive(overdrive_num=0)
 
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.turn_ready():
-            logger.debug("Valefor casting Fire")
-            CurrentPlayer().cast_black_magic_spell(0)
+            if Valefor.overdrive_percent(combat=True) == 20:
+                logger.info("Valefor energy ray")
+                Valefor.overdrive(overdrive_num=0, sin_fin=True)
+            else:
+                logger.info("Valefor fire")
+                Valefor.cast_black_magic_spell(spell_id=0)
         else:
             FFXC.set_neutral()
     logger.info("Battle with Sinspawn Geneaux Complete")
@@ -485,6 +481,25 @@ def oblitzerator(early_haste):
 
 
 def chocobo_eater():
+    logger.info("Fight start: Chocobo Eater")
+    screen.await_turn()
+    battle.main.tidus_haste(direction="l", character=20)
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            # Only if two people are down, very rare but for safety.
+            if screen.faint_check() >= 2:
+                logger.debug("Attempting revive")
+                battle.main.revive()
+            else:
+                CurrentPlayer().defend()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
+    logger.info("Chocobo Eater battle complete.")
+    memory.main.click_to_control()
+
+
+
+def chocobo_eater_old():
     logger.info("Fight start: Chocobo Eater")
     rng44Last = memory.main.rng_from_index(44)
     turns = 0
@@ -754,7 +769,40 @@ def gui():
             xbox.tap_b()
 
 
-@battle.utils.speedup_decorator
+def extractor_mrr_skip():
+    screen.await_turn()
+    cheer_count = 0
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            logger.debug(memory.main.get_actor_coords(3))
+            if Tidus.is_turn():
+                if memory.main.get_actor_coords(3)[2] < -150:
+                    #if Tidus.has_overdrive():
+                    #    Tidus.overdrive()
+                    #else:
+                    Tidus.attack()
+                elif cheer_count < 2:  # Dial in 2-4 cheers later
+                    cheer_count += 1
+                    battle.main.cheer()
+                else:
+                    CurrentPlayer().attack()
+            else:
+                if memory.main.get_actor_coords(3)[2] < -150:
+                    if Wakka.has_overdrive():
+                        Wakka.overdrive()
+                    else:
+                        Wakka.attack()
+                if Tidus.in_danger(230):
+                    battle.main.use_hi_potion_character(Tidus, "l")
+                elif Wakka.in_danger(230):
+                    battle.main.use_hi_potion_character(Wakka, "l")
+                else:
+                    CurrentPlayer().attack()
+        elif memory.main.special_text_open():
+            xbox.tap_b()
+    memory.main.click_to_control()
+
+#@battle.utils.speedup_decorator
 def extractor():
     logger.info("Fight start: Extractor")
     FFXC.set_neutral()
@@ -767,6 +815,9 @@ def extractor():
 
     screen.await_turn()
     battle.main.tidus_haste("l", character=4)
+    if game_vars.mrr_skip_val():
+        extractor_mrr_skip()
+        return
 
     cheer_count = 0
     while not memory.main.battle_complete():  # AKA end of battle screen
@@ -935,16 +986,16 @@ def spherimorph():
                     logger.manip(memory.main.rikku_mix_damage())
                     if spell_num == 1:
                         logger.debug("Creating Ice")
-                        battle.main.rikku_full_od("spherimorph1")
+                        Rikku.overdrive("spherimorph1")
                     elif spell_num == 2:
                         logger.debug("Creating Water")
-                        battle.main.rikku_full_od("spherimorph2")
+                        Rikku.overdrive("spherimorph2")
                     elif spell_num == 3:
                         logger.debug("Creating Thunder")
-                        battle.main.rikku_full_od("spherimorph3")
+                        Rikku.overdrive("spherimorph3")
                     elif spell_num == 4:
                         logger.debug("Creating Fire")
-                        battle.main.rikku_full_od("spherimorph4")
+                        Rikku.overdrive("spherimorph4")
                 else:
                     CurrentPlayer().defend()
 
@@ -977,7 +1028,9 @@ def crawler():
                         logger.debug("Swapping Tidus for Rikku")
                         battle.main.buddy_swap(Rikku)
                     else:
-                        CurrentPlayer().defend()
+                        battle.main.buddy_swap(Kimahri)
+                        lightningmarbleslot = memory.main.get_use_items_slot(30)
+                        battle.main.use_item(lightningmarbleslot, target=21)
                     tidus_turns += 1
                 elif Rikku.is_turn():
                     if luluturns < 2:
@@ -993,19 +1046,18 @@ def crawler():
                     rikku_turns += 1
                 elif Kimahri.is_turn():
                     if kimahriturns == 0:
+                        battle.main.buddy_swap(Yuna)
+                        CurrentPlayer().defend()
+                    else:
                         lightningmarbleslot = memory.main.get_use_items_slot(30)
                         battle.main.use_item(lightningmarbleslot, target=21)
-                    else:
-                        battle.main.buddy_swap(Yuna)
                     kimahriturns += 1
                 elif Lulu.is_turn():
                     battle.main.revive()
                     luluturns += 1
                 elif Yuna.is_turn():
-                    if yunaturns == 0:
-                        CurrentPlayer().defend()
-                    else:
-                        battle.main.buddy_swap(Tidus)
+                    battle.main.buddy_swap(Tidus)
+                    CurrentPlayer().defend()
                     yunaturns += 1
                 else:
                     CurrentPlayer().defend()

@@ -535,6 +535,53 @@ def djose_temple():
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
+def t_plains_mmr_skip():
+    open_grid(character=0)
+
+    # Sphere grid Tidus
+    menu_grid.move_first()
+    grid_right()
+    grid_up()
+    menu_grid.move_and_use()  # Move to Str sphere near Lv.2 lock
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()  # Str +1
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()  # HP +200
+    menu_grid.sel_sphere("speed", "none")
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+    
+def yuna_mrr_skip_recover():
+    open_grid(character=1)
+    menu_grid.move_first()  # Sphere grid on Yuna first
+    #menu_grid.sel_sphere("magic", "none")
+    #menu_grid.use_and_use_again()
+    #menu_grid.sel_sphere("mana", "none")
+    #menu_grid.use_and_move()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_right()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("speed", "none")
+    #menu_grid.use_and_quit()
+
 
 def m_woods():
     while not memory.main.menu_open():
@@ -1542,7 +1589,7 @@ def tidus_slayer(od_pos: int = 2):
     # memory.main.wait_frames(90)  # Testing
 
 
-def sell_all(nea=False):
+def sell_all(nea:bool = False, tstrike:bool = True):
     # Assume already on the sell items screen, index zero
     full_array = memory.main.all_equipment()
     sell_item = True
@@ -1583,6 +1630,12 @@ def sell_all(nea=False):
                 ):
                     # No-Encounters
                     sell_item = False
+                if (
+                    not tstrike and 
+                    full_array[memory.main.equip_sell_row()].has_ability(0x801D) and
+                    full_array[memory.main.equip_sell_row()].get_equip_owner() in [0,4]
+                ):
+                    sell_item = False  # Don't sell thunder strikes for Tidus/Wakka
                 if full_array[memory.main.equip_sell_row()].abilities() == [
                     0x8063,
                     0x8064,
@@ -1671,7 +1724,7 @@ def bfa():
         menu_grid.sel_sphere("attribute", "none")
         menu_grid.use_and_use_again()
     else:
-        menu_grid.sel_sphere("attribute", "l5")
+        menu_grid.sel_sphere("attribute", "l8")
         memory.main.wait_frames(30 * 0.07)
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("ret", "torikku")
@@ -1680,7 +1733,7 @@ def bfa():
         grid_down()
         grid_down()
         grid_left()
-        grid_down()
+        grid_left()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "none")
         menu_grid.use_and_move()

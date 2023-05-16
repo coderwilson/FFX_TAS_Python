@@ -2952,12 +2952,15 @@ def check_ability(ability=0x8032):
         current_handle = char_weaps.pop(0)
         if current_handle.has_ability(ability):
             results[5] = True
-
-    char_weaps = weapon_array_character(6)  # Rikku
-    while len(char_weaps) > 0:
-        current_handle = char_weaps.pop(0)
-        if current_handle.has_ability(ability):
-            results[6] = True
+    try:
+        char_weaps = weapon_array_character(6)  # Rikku
+        while len(char_weaps) > 0:
+            current_handle = char_weaps.pop(0)
+            if current_handle.has_ability(ability):
+                results[6] = True
+    except:
+        # Rikku not yet in the party.
+        results[6] = False
 
     return results
 

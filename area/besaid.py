@@ -11,6 +11,7 @@ import vars
 import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
 from players import Lulu, Tidus, Wakka, Yuna
+import save_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -104,7 +105,7 @@ def beach():
 def trials():
     checkpoint = 0
 
-    while memory.main.get_map() != 69:
+    while memory.main.get_map() != 60:
         if memory.main.user_control():
             # Spheres, glyphs, and pedestals
             if checkpoint == 1:  # First glyph
@@ -186,7 +187,16 @@ def trials():
 def leaving():
     logger.info("Ready to leave Besaid")
     memory.main.click_to_control()
-    checkpoint = 0
+    while not pathing.set_movement([0,23]):
+        pass
+    while not pathing.set_movement([0,-35]):
+        pass
+    pathing.set_movement([0,-100])
+    memory.main.await_event()
+    FFXC.set_neutral()
+    gil_guy = False
+    beach_heal = False
+    checkpoint = 17
 
     while memory.main.get_map() != 301:
         if memory.main.user_control():
@@ -253,7 +263,13 @@ def leaving():
                 logs.write_rng_track(memory.main.rng_10_array(array_len=1))
                 checkpoint += 1
             elif checkpoint in [60]:  # Beach, save sphere
+                # here
+                save_sphere.touch_and_go()
                 checkpoint += 1
+            elif checkpoint == 65 and not gil_guy:
+                pathing.approach_actor_by_index(13)
+                gil_guy = True
+                memory.main.click_to_control()
             elif checkpoint == 70:
                 checkpoint -= 2
 

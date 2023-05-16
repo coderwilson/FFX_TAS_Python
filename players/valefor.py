@@ -15,7 +15,7 @@ class ValeforImpl(Aeon):
         )
         while memory.main.other_battle_menu():
             xbox.tap_b()
-        if sin_fin:
+        if sin_fin and memory.main.battle_line_target() == 0:
             xbox.tap_down()
             xbox.tap_left()
         self._tap_targeting()

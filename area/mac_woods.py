@@ -141,6 +141,7 @@ def lake_road():
         xbox.tap_b()
     FFXC.set_neutral()
     menu.m_woods()  # Selling and buying, item sorting, etc
+    memory.main.click_to_control()
     memory.main.update_formation(Tidus, Kimahri, Yuna)
     while not pathing.set_movement([101, -72]):
         pass
@@ -230,6 +231,8 @@ def lake():
         battle.main.heal_up(full_menu_close=False)
 
     memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
+    menu.t_plains_mmr_skip()
+    menu.yuna_mrr_skip_recover()
     menu.m_lake_grid()
     memory.main.await_control()
 

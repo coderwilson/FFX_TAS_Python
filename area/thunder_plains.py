@@ -185,7 +185,7 @@ def agency_shop():
     ]
     logger.debug(f"Sellable Items in slot: {other_slots}")
     menu.sell_weapon(tidus_longsword)
-    menu.sell_weapon(auron_katana)
+    #menu.sell_weapon(auron_katana)
     if game_vars.get_blitz_win() and memory.main.get_gil_value() < 8725:
         for loc in other_slots:
             menu.sell_weapon(loc)

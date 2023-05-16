@@ -140,7 +140,9 @@ def rng_seed_setup():
 
 
 def load_game_state():
+    from json_ai_files.write_seed import write_state_step
     # loading from a save file
+    write_state_step(state=game.state, step=game.step)
     load_game.load_into_game(gamestate=game.state, step_counter=game.step)
     game.start_time = logs.time_stamp()
 
@@ -176,6 +178,8 @@ def perform_TAS():
 
             # Start of the game, start of Dream Zanarkand section
             if game.state == "none" and game.step == 1:
+                from json_ai_files.write_seed import write_new_game
+                write_new_game()
                 logger.info("New Game 1 function initiated.")
                 area.dream_zan.new_game(game.state)
                 logger.info("New Game 1 function complete.")
@@ -255,6 +259,7 @@ def perform_TAS():
                 if game.step == 2:
                     area.besaid.trials()
                     game.step = 3
+                    maybe_create_save(save_num=79)
 
                 if game.step == 3:
                     area.besaid.leaving()
@@ -329,7 +334,7 @@ def perform_TAS():
                         game.step = 3
                         game.state = "Luca"
 
-                    elif game_vars.loop_blitz() and blitz_duration < 440:
+                    elif game_vars.loop_blitz() and blitz_duration < 410:
                         logger.info("--------------")
                         logger.info(f"Good Blitz, worth completing the run. Blitz time: {blitz_duration} seconds.")
                         logger.info("--------------")
@@ -389,9 +394,11 @@ def perform_TAS():
 
             if game.state == "MRR":
                 if game.step == 1:
-                    area.mrr.arrival()
-                    game.step = 2
-                    maybe_create_save(save_num=27)
+                    if area.mrr.arrival():
+                        game.step = 4
+                    else:
+                        game.step = 2
+                        maybe_create_save(save_num=27)
                 
                 if game.step == 2:
                     area.mrr.main_path()
@@ -402,7 +409,9 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.mrr.battle_site()
-                    area.mrr.gui_and_aftermath()
+                    game.step = 4
+                if game.step == 4:
+                    area.mrr.aftermath()
                     end_time = logs.time_stamp()
                     total_time = end_time - game.start_time
                     logger.info(f"End of Battle Site timer is: {total_time}")
@@ -445,6 +454,8 @@ def perform_TAS():
                     if game_vars.create_saves():
                         while memory.main.get_map() != 243:
                             FFXC.set_movement(1, 1)
+                        FFXC.set_neutral()
+                        memory.main.await_control()
                         maybe_create_save(save_num=31)
                         while memory.main.get_map() != 135:
                             FFXC.set_movement(1, -1)

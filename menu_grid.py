@@ -593,6 +593,15 @@ def sel_sphere(s_type, shift):
         grid_left()
         grid_left()
         grid_left()
+    if shift == "l8":
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
     if shift == "right":
         grid_right()
     if shift == "r2":
@@ -630,6 +639,8 @@ def sel_sphere(s_type, shift):
         grid_up()
     if shift == "torikku":
         memory.main.wait_frames(30 * 0.2)
+        grid_down()
+        grid_down()
         grid_down()
         grid_down()
         grid_left()

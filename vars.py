@@ -77,6 +77,7 @@ class AllVars:
         # ----Equipment
         self.zombie_weapon_val = 255
         self.l_strike_count = 0
+        self.mrr_skip = False
 
         # ----RNG Manip
         self.yellows = 0  # Not yet implemented. Part of thunderstrike weapon manip.
@@ -322,6 +323,12 @@ class AllVars:
 
     def set_zombie(self, value):
         self.zombie_weapon_val = value
+
+    def mrr_skip_val(self):
+        return self.mrr_skip
+
+    def mrr_skip_set(self, value):
+        self.mrr_skip = value
 
     def early_tidus_grid_set_true(self):
         self.early_tidus_grid_val = True

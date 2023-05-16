@@ -140,6 +140,20 @@ class MRRBattleSite(AreaMovementBase):
     }
 
 
+class MRRSkip(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [-21, -313],
+        1: [1, -202],
+        2: [46, -81],
+        3: [65, 39],
+        4: [121, 132],
+        5: [183, 197],
+        6: [267, 347],
+        7: [318, 526],
+        8: [373, 772],
+        9: [390, 800],
+    }
+
 class MRRBattleSiteAftermath(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [148, 2836],

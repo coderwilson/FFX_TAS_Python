@@ -106,7 +106,8 @@ def path():
 def temple():
     logger.info("Djose Temple.")
     memory.main.click_to_control()
-    menu.djose_temple()
+    if not game_vars.mrr_skip_val:
+        menu.djose_temple()
     if not game_vars.csr():
         FFXC.set_movement(0, -1)
         memory.main.wait_frames(30 * 0.3)
