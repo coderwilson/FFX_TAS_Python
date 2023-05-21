@@ -82,7 +82,8 @@ def arrival():
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
 
-    game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
+    #game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
+    game_vars.set_skip_zan_luck(False)  # Not working properly.
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
     # game_vars.set_skip_zan_luck(True) #For testing

@@ -96,9 +96,10 @@ def attempt_skip():
             if memory.main.battle_active():
                 battle.main.flee_all()
                 battle.main.wrap_up()
-                if memory.main.get_hp()[0] < 520:
-                    battle.main.heal_up()
-                memory.main.update_formation(Tidus, Kimahri, Auron)
+                if _distance(position, tidus_coords) >= 15:
+                    if memory.main.get_hp()[0] < 520:
+                        battle.main.heal_up()
+                    memory.main.update_formation(Tidus, Kimahri, Auron)
             elif memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active():
                 xbox.tap_b()
             
@@ -112,6 +113,9 @@ def attempt_skip():
                 elif -380 > tidus_coords[1] > -400 and _distance(position, tidus_coords) < 60:
                     part_1_done = True
         
+        if memory.main.get_hp()[0] < 520:
+            battle.main.heal_up()
+        memory.main.update_formation(Tidus, Kimahri, Auron)
         logger.info("First barrier passed.")
         #FFXC.set_movement(1,1)
         #wait_frames(60)
@@ -131,9 +135,10 @@ def attempt_skip():
             if memory.main.battle_active():
                 battle.main.flee_all()
                 battle.main.wrap_up()
-                if memory.main.get_hp()[0] < 520:
-                    battle.main.heal_up()
-                memory.main.update_formation(Tidus, Kimahri, Auron)
+                if _distance(position, tidus_coords) >= 15:
+                    if memory.main.get_hp()[0] < 520:
+                        battle.main.heal_up()
+                    memory.main.update_formation(Tidus, Kimahri, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
             
@@ -158,6 +163,9 @@ def attempt_skip():
                         logger.info("In position.")
             
         FFXC.set_neutral()
+        if memory.main.get_hp()[0] < 520:
+            battle.main.heal_up()
+        memory.main.update_formation(Tidus, Kimahri, Auron)
         logger.info("Success!")
     except Exception as e:
         logger.warning(e)

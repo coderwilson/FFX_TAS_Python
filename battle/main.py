@@ -1888,7 +1888,7 @@ def seymour_guado_blitz_win():
                     elif rikkuposition >= 3:
                         buddy_swap(Rikku)
                 elif kimahriturns == 0:
-                    Kimahri.overdrive(3)
+                    Kimahri.overdrive(2)
                 elif kimahriturns == 1:
                     logs.write_rng_track("RNG11 on Seymour steal command")
                     logs.write_rng_track(
@@ -2617,7 +2617,7 @@ def home_2():
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             if Kimahri.is_turn():
-                Kimahri.overdrive(3)
+                Kimahri.overdrive(2)
             elif memory.main.get_battle_char_slot(3) >= 3:
                 buddy_swap(Kimahri)  # Tidus for Kimahri
                 lancet_home("none")
@@ -2686,7 +2686,7 @@ def home_4():
     while not memory.main.battle_complete():  # AKA end of battle screen
         if memory.main.turn_ready():
             if Kimahri.is_turn():
-                Kimahri.overdrive(4)
+                Kimahri.overdrive(3)
             elif memory.main.get_battle_char_slot(3) >= 3:
                 buddy_swap(Kimahri)  # Tidus for Kimahri
                 lancet_home("none")

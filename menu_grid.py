@@ -645,6 +645,8 @@ def sel_sphere(s_type, shift):
         grid_down()
         grid_left()
         grid_left()
+        if game_vars.end_game_version() == 4:
+            grid_left()
     if shift == "yunaspec":
         # Yuna Special
         grid_down()
