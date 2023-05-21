@@ -334,7 +334,7 @@ def perform_TAS():
                         game.step = 3
                         game.state = "Luca"
 
-                    elif game_vars.loop_blitz() and blitz_duration < 410:
+                    elif game_vars.loop_blitz() and blitz_duration < 420:
                         logger.info("--------------")
                         logger.info(f"Good Blitz, worth completing the run. Blitz time: {blitz_duration} seconds.")
                         logger.info("--------------")
