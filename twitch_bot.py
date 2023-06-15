@@ -1,5 +1,8 @@
 from twitchio.ext import commands
 import subprocess
+import random
+import os
+import json
 
 import yaml
 import logging
@@ -19,6 +22,12 @@ CHOCO_PATH = "z_choco_races_test.py"
 CSR_PATH = ""
 GAME_PATH = ""
 CONFIG_FILE_PATH = "bot-config.yaml"
+
+def oblitz_history():
+    filepath = os.path.join("json_ai_files", "oblitz_results.json")
+    with open(filepath, "r") as fp:
+        rng_values = json.load(fp)
+    return rng_values
 
 
 class BotConfig:
@@ -64,12 +73,21 @@ class Bot(commands.Bot):
         print(ctx.message.content)
         args = ctx.message.content.split()
         print(args)
+        seed_set = False
+        records = oblitz_history()
+        seed_num = str(random.choice(range(256)))
+        reroll = 0
+        print(records.keys())
+        while seed_num in records.keys() and reroll < 1000:
+            seed_num = str(random.choice(range(256)))
+            reroll += 1
         for i in range(len(args)):
             try:
                 if args[i].lower() == "seed":
                     arg_array.append("-seed")
                     seed_num = str(args[i+1])
                     print(f"Specified Seed: {seed_num}")
+                    seed_set = True
                     arg_array.append(seed_num)
                 if args[i].lower() == "state":
                     arg_array.append("-state")
@@ -77,9 +95,16 @@ class Bot(commands.Bot):
                 if args[i].lower() == "step":
                     arg_array.append("-step")
                     arg_array.append(args[i+1])
+                if args[i].lower() == "blitz":
+                    arg_array.append("-train_blitz")
+                    arg_array.append("True")
             except:
                 await ctx.send(f"There was an error with your command: {ctx.message.content}")
         
+        if not seed_set:
+            arg_array.append("-seed")
+            arg_array.append(seed_num)
+
         if self.process is None:
             print(["python", SCRIPT_PATH] + arg_array)
             self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
@@ -106,9 +131,9 @@ class Bot(commands.Bot):
     # Define the exit command
     @commands.command(aliases = ("stop", "quit", "terminate"))
     async def exit(self, ctx: commands.Context):
-        if not ctx.author.name in self.allowed_users:
-            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
-        elif self.process is not None:
+        #if not ctx.author.name in self.allowed_users:
+        #    await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        if self.process is not None:
             self.process.terminate()
             self.process.wait()
             self.process = None
@@ -151,9 +176,9 @@ class Bot(commands.Bot):
     # Launch FFX
     @commands.command(aliases = ("game_start", "launch_game"))
     async def start_game(self, ctx: commands.Context):
-        if not ctx.author.name in self.allowed_users:
-            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
-        elif self.game is None:
+        #if not ctx.author.name in self.allowed_users:
+        #    await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        if self.game is None:
             cwd = os.getcwd()
             print(cwd)
             os.chdir(GAME_PATH)
@@ -171,9 +196,9 @@ class Bot(commands.Bot):
     # Kill FFX
     @commands.command(aliases = ("game_stop", "halt_game"))
     async def stop_game(self, ctx: commands.Context):
-        if not ctx.author.name in self.allowed_users:
-            await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
-        elif self.game is not None:
+        #if not ctx.author.name in self.allowed_users:
+        #    await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        if self.game is not None:
             self.game.terminate()
             self.game.wait()
             self.game = None
@@ -202,8 +227,8 @@ class Bot(commands.Bot):
 
 
         if csr_val == None:
-            pass
-        elif not ctx.author.name in self.allowed_users:
+            csr_val = "True"
+        if not ctx.author.name in self.allowed_users:
             await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
         elif self.timer is None:
             if csr_val == "False":

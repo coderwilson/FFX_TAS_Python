@@ -10,7 +10,7 @@ import save_sphere
 import vars
 import xbox
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
-from players import Kimahri, Tidus, Wakka, Yuna, Lulu
+from players import Kimahri, Tidus, Wakka, Yuna, Lulu, Valefor
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -21,6 +21,7 @@ def arrival():
     # For certain seed/s, preferable to get luck sphere just to manipulate battles.
     # if memory.main.rng_seed() == 31 and game_vars.skip_kilika_luck():
     #    game_vars.dont_skip_kilika_luck()
+    game_vars.dont_skip_kilika_luck()
 
     logs.write_rng_track("Kilika start, RNG01")
     logs.write_rng_track(memory.main.rng_01())
@@ -96,8 +97,9 @@ def forest_1():
     advances = 2  # Used to find the best battle coming up.
     next_battle = []
     import rng_track
+    game_vars.dont_skip_kilika_luck()
 
-    valefor_charge = False
+    valefor_charge = Valefor.overdrive_percent() >= 20
     if game_vars.csr():
         checkpoint = 0
     else:
@@ -128,6 +130,7 @@ def forest_1():
             if checkpoint == 9:  # Chest with Wakkas weapon Scout
                 memory.main.click_to_event_temple(0)
                 menu.woods_menuing()
+                # memory.main.update_formation(Tidus, Wakka, Lulu)
                 checkpoint += 1
             elif checkpoint == 47:  # Luck sphere chest
                 luck_slot = memory.main.get_item_slot(94)
@@ -169,7 +172,7 @@ def forest_1():
                         best_of_two = select_best_of_two(next_two)
                         advances += 1
                         if advances > 150:
-                            logger.error("No valid battles in the next 150.")
+                            logger.manip("No valid battles.")
                             break
                     next_battle = rng_track.coming_battles(
                         area="kilika_woods", battle_count=1

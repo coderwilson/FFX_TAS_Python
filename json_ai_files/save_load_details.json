@@ -223,7 +223,7 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "guado_start",
+                "special_movement": "none",
                 "mrr_skip": true
             }
         }
@@ -484,7 +484,7 @@
                 "save_num": "47",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
-                "nea_zone": "1",
+                "nea_zone": "99",
                 "nem_ap_val": "1",
                 "special_movement": "none",
                 "mrr_skip": true
@@ -506,7 +506,7 @@
                 "save_num": "48",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
-                "nea_zone": "1",
+                "nea_zone": "99",
                 "nem_ap_val": "1",
                 "special_movement": "none",
                 "mrr_skip": true
@@ -517,7 +517,7 @@
                 "save_num": "50",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
-                "nea_zone": "1",
+                "nea_zone": "99",
                 "nem_ap_val": "1",
                 "special_movement": "none",
                 "mrr_skip": true

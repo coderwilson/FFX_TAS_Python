@@ -1,6 +1,7 @@
 import logging
 
 import battle.main
+import battle.boss
 import logs
 import memory.get
 import memory.main
@@ -444,8 +445,7 @@ def yunalesca():
             FFXC.set_value("btn_b", 0)
             FFXC.set_value("btn_a", 0)
             memory.main.wait_frames(1)
-    xbox.click_to_battle()
-    battle.main.aeon_summon(4)  # Summon Bahamut and attack.
+    battle.boss.yunalesca()
     memory.main.click_to_control()  # This does all the attacking and dialog skipping
 
     # Now to check for zombie strike and then report to logs.

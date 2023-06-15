@@ -199,7 +199,10 @@ class Player:
             logger.debug(
                 f"Casting {spell_id} on a specific target with id {target_id}, direction is {direction}"
             )
-        self.navigate_to_battle_menu(21)
+        try:
+            self.navigate_to_battle_menu(21)
+        except:
+            return
         while memory.main.main_battle_menu():
             xbox.tap_b()
         self._navigate_to_position(spell_id)
@@ -250,7 +253,7 @@ class Player:
 
         result = 0
         # Now tap to defending status.
-        while result == 0:
+        while result == 0 and memory.main.battle_active():
             result = self.is_defending()
             if result == 0:
                 xbox.tap_y()

@@ -7,7 +7,7 @@ import memory.main
 import menu_grid
 import vars
 import xbox
-from players import Auron, Rikku, Tidus, Wakka, Yuna
+from players import Auron, Rikku, Tidus, Wakka, Yuna, Lulu
 
 game_vars = vars.vars_handle()
 
@@ -207,7 +207,10 @@ def woods_menuing():
     menu_grid.use_and_quit()
     # Reorder the party
 
-    memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
+    if game_vars.rng_seed_num() == 30:
+        memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
+    else:
+        memory.main.update_formation(Tidus, Lulu, Wakka, full_menu_close=False)
     equip_scout(full_menu_close=True)
 
 
@@ -508,6 +511,39 @@ def sell_weapon(location):
 
 
 def djose_temple():
+    if game_vars.skip_kilika_luck():
+        return
+    if memory.main.get_slvl_wakka() >= 7:
+        open_grid(character=4)
+        menu_grid.move_first()
+
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_quit()
+        memory.main.close_menu()
+    elif memory.main.get_slvl_wakka() == 6:
+        open_grid(character=4)
+        menu_grid.move_first()
+
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("Lv1", "none")
+        menu_grid.use_and_move()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_quit()
+        memory.main.close_menu()
+
+
+def djose_temple_old():
     open_grid(character=0)
 
     # Sphere grid Tidus
@@ -535,7 +571,39 @@ def djose_temple():
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
-def t_plains_mmr_skip():
+def kimahri_terra():
+    open_grid(character=3)
+    menu_grid.move_first()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("speed", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("Lv1", "none")
+    menu_grid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("Lv1", "none")
+    menu_grid.use_and_move()
+    grid_up()
+    grid_up()
+    grid_left()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")  # Steal
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("ability", "none")  # Use
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+
+def t_plains_terra_skip():
     open_grid(character=0)
 
     # Sphere grid Tidus
@@ -551,9 +619,10 @@ def t_plains_mmr_skip():
     menu_grid.use_and_quit()
     memory.main.close_menu()
     
-def yuna_mrr_skip_recover():
+def yuna_terra_skip_recover():
     open_grid(character=1)
     menu_grid.move_first()  # Sphere grid on Yuna first
+    # Removed due to Terra skip
     #menu_grid.sel_sphere("magic", "none")
     #menu_grid.use_and_use_again()
     #menu_grid.sel_sphere("mana", "none")
@@ -594,6 +663,29 @@ def m_woods():
 def m_lake_grid():
     open_grid(character=1)  # Start with Yuna
     menu_grid.move_first()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_right()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("speed", "none")
+    menu_grid.use_and_move()
     grid_up()
     grid_up()
     grid_up()
@@ -627,7 +719,7 @@ def m_lake_grid():
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
 
-    menu_grid.use_shift_right("kimahri")  # And last is Yuna
+    menu_grid.use_shift_right("kimahri")  # And last is Kimahri (removed for Terra skip)
     menu_grid.move_first()
     grid_down()
     grid_down()
@@ -661,8 +753,9 @@ def m_lake_grid():
 
 def mac_temple():
     open_grid(character=0)
-
     menu_grid.use_first()
+
+    menu_grid.use_and_use_again()
     menu_grid.sel_sphere("Lv2", "none")
     menu_grid.use_and_move()
     grid_right()
@@ -733,8 +826,9 @@ def mac_temple():
         menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
 
-    if game_vars.get_blitz_win():
-        equip_weapon(character=0, special="brotherhood")
+    #if game_vars.get_blitz_win():
+        # Should be equipped from Crawler fight.
+    #    equip_weapon(character=0, special="brotherhood")
     memory.main.close_menu()
 
 

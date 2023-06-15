@@ -49,7 +49,7 @@ def approach(do_grid=True):
     memory.main.await_control()
     if do_grid:
         menu.mac_temple()
-    save_sphere.touch_and_go()
+    #save_sphere.touch_and_go()
 
 
 def arrival():

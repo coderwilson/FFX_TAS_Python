@@ -23,6 +23,7 @@ from paths import (
     SeymourFlux,
 )
 from players import Auron, CurrentPlayer, Kimahri, Rikku, Tidus, Wakka, Yuna
+from area.ne_armor import next_green
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -53,6 +54,7 @@ def calm_lands():
     battle.main.heal_up(full_menu_close=True)
 
     rng_track.print_manip_info()
+    next_green()
     logger.debug(f"RNG10: {memory.main.rng_10()}")
     logger.debug(f"RNG12: {memory.main.rng_12()}")
     logger.debug(f"RNG13: {memory.main.rng_13()}")
@@ -84,6 +86,7 @@ def calm_lands():
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
                 rng_track.print_manip_info()
+                next_green()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
@@ -112,6 +115,7 @@ def defender_x():
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
     rng_track.print_manip_info()
+    next_green()
 
 
 def to_the_ronso():

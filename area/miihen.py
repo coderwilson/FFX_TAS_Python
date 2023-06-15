@@ -18,18 +18,21 @@ FFXC = xbox.controller_handle()
 
 
 def post_battle_logic(force_charge=False):
-    if memory.main.overdrive_state_2()[1] < 43 or (
-        force_charge and memory.main.overdrive_state_2()[1] != 100
-    ):
-        memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
-    else:
-        if game_vars.self_destruct_get():
-            memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
-        else:
-            memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
+    #if memory.main.overdrive_state_2()[1] < 43 or (
+    #    force_charge and memory.main.overdrive_state_2()[1] != 100
+    #):
+    #    memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
+    #else:
+    #    if game_vars.self_destruct_get():
+    #        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
+    #    else:
+    #        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
+    memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     hp_check = memory.main.get_hp()
     logger.debug(f"HP check: {hp_check}")
-    if hp_check[0] < 520 or hp_check[1] < 220:
+    #if hp_check[0] < 520 or hp_check[1] < 220:
+    #    battle.main.heal_up()
+    if 1 in memory.main.ambushes():
         battle.main.heal_up()
     else:
         logger.debug("No need to heal up. Moving onward.")
@@ -322,7 +325,8 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
                 memory.main.wait_frames(30 * 0.2)
                 memory.main.click_to_control()
                 FFXC.set_movement(0, -1)
-                memory.main.wait_frames(30 * 4)
+                memory.main.wait_frames(10)
+                memory.main.await_event()
                 FFXC.set_neutral()
                 checkpoint += 1
 
