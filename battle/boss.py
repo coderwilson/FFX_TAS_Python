@@ -19,6 +19,8 @@ from players import (
     Wakka,
     Yuna,
 )
+import rng_track
+from area.gagazet import check_gems
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -48,13 +50,15 @@ def ammes():
 @battle.utils.speedup_decorator
 def kimahri():
     FFXC.set_neutral()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if screen.battle_screen():
             enemy_hp = memory.main.get_enemy_current_hp()
             if (
-                not game_vars.early_tidus_grid()
-                and Tidus.in_danger(120)
-                and enemy_hp[0] > 119
+                not game_vars.early_tidus_grid() and
+                memory.main.get_turn_by_index(1) != 0 and
+                memory.main.get_turn_by_index(2) != 0 and
+                Tidus.in_danger(140) and
+                enemy_hp[0] > 119
             ):
                 if Tidus.next_crit(12) == 2:
                     CurrentPlayer().attack()
@@ -111,7 +115,7 @@ def summon_tutorial():
                 battle.main.buddy_swap(Yuna)
             else:
                 CurrentPlayer().defend()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             CurrentPlayer().cast_black_magic_spell(1)
 
@@ -155,7 +159,7 @@ def klikk():
     klikk_attacks = 0
     klikk_revives = 0
     steal_count = 0
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if Tidus.is_dead():
                 battle.main.revive()
@@ -233,7 +237,7 @@ def tros():
     while not memory.main.turn_ready():
         pass
 
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.turn_ready():
@@ -324,19 +328,26 @@ def sin_fin():
             else:
                 battle.main.buddy_swap(Yuna)
                 battle.main.aeon_summon(0)
+                Valefor.overdrive(overdrive_num=0, sin_fin=True)
                 complete = True
 
     logger.info("First few turns are complete. Now for the rest of the fight.")
     # After the first two turns, the rest of the fight is pretty much scripted.
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            logger.debug(f"Valefor OD percent: {Valefor.overdrive_percent()}")
-            if Valefor.overdrive_percent(combat=True) == 20:
-                logger.info("Valefor energy ray")
-                Valefor.overdrive(overdrive_num=0, sin_fin=True)
+            if Lulu.is_turn() or Valefor.is_turn():
+                CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
             else:
-                logger.info("Valefor thunder")
-                Valefor.cast_black_magic_spell(spell_id=1, target_id=23)
+                CurrentPlayer().defend()
+            
+            # Old logic:
+            #logger.debug(f"Valefor OD percent: {Valefor.overdrive_percent()}")
+            #if Valefor.overdrive_percent(combat=True) == 20:
+            #    logger.info("Valefor energy ray")
+            #    Valefor.overdrive(overdrive_num=0, sin_fin=True)
+            #else:
+            #    logger.info("Valefor thunder")
+            #    Valefor.cast_black_magic_spell(spell_id=1, target_id=23)
     logger.info("Sin's Fin fight complete")
     xbox.click_to_battle()
 
@@ -353,7 +364,7 @@ def echuilles():
     tidus_counter = 0
     while not memory.main.turn_ready():
         pass
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if screen.faint_check() > 0:
                 battle.main.revive()
@@ -415,7 +426,7 @@ def geneaux():
     screen.await_turn()
     battle.main.aeon_summon(0)  # Summon Valefor
 
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.diag_skip_possible():
             xbox.tap_b()
         elif memory.main.turn_ready():
@@ -441,7 +452,7 @@ def oblitzerator(early_haste):
         # First turn is always Tidus. Haste Lulu if we've got the levels.
         battle.main.tidus_haste(direction="left", character=5)
 
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if crane < 3:
                 if Lulu.is_turn():
@@ -673,7 +684,7 @@ def gui():
     went = False
     while not memory.main.turn_ready():
         pass
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready() and memory.main.get_battle_char_turn() == 8:
             next_hp = memory.main.get_battle_hp()[0]
             last_turn = next_turn
@@ -728,7 +739,7 @@ def gui():
         or memory.main.get_overdrive_battle(1) == 100
     ):
         logger.info("Gui2 - with extra Aeon overdrive")
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 if screen.turn_seymour() and seymour_turn < 2:
                     battle.main.seymour_spell(target_face=False)
@@ -752,7 +763,7 @@ def gui():
                     CurrentPlayer().defend()
     else:
         logger.info("Gui2 - standard")
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 if screen.turn_seymour():
                     battle.main.seymour_spell(target_face=True)
@@ -820,7 +831,7 @@ def extractor():
         return
 
     cheer_count = 0
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         # First determine if cheers are needed.
         if game_vars.get_l_strike() % 2 == 0 and cheer_count < 4:
             tidus_cheer = True
@@ -886,7 +897,7 @@ def spherimorph():
     kim_turn = False
     while not memory.main.turn_ready():
         pass
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if game_vars.use_pause():
                 memory.main.wait_frames(2)
@@ -925,18 +936,18 @@ def spherimorph():
                     battle.main.revive()
                     kim_turn = True
                 elif not kim_turn:
-                    logger.manip(
-                        f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}"
-                    )
-                    logs.write_rng_track("RNG11 before Spherimorph")
-                    logs.write_rng_track(
-                        memory.main.rng_array_from_index(index=11, array_len=30)
-                    )
-                    # if memory.main.next_steal_rare(pre_advance=6):
+                    #logger.manip(
+                    #    f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}"
+                    #)
+                    #logs.write_rng_track("RNG11 before Spherimorph")
+                    #logs.write_rng_track(
+                    #    memory.main.rng_array_from_index(index=11, array_len=30)
+                    #)
+                    #if memory.main.next_steal_rare(pre_advance=8):
                     # One each for Spherimorph, Negator, Crawler, and guados.
                     # Except we haven't learned Steal yet. That's no good.
                     #    _steal()
-                    # else:
+                    #else:
                     CurrentPlayer().defend()
                     kim_turn = True
                 elif not Rikku.active():
@@ -1008,61 +1019,63 @@ def crawler():
     logger.info("Starting battle with Crawler")
     xbox.click_to_battle()
 
-    if memory.main.next_steal_rare(pre_advance=5):
-        # One each for two Negators, Crawler, and guados.
-        battle.main.negator_with_steal()
-    else:
-        tidus_turns = 0
-        rikku_turns = 0
-        kimahriturns = 0
-        luluturns = 0
-        yunaturns = 0
+    #if memory.main.next_steal_rare(pre_advance=5):
+    #    # One each for two Negators, Crawler, and guados.
+    #    battle.main.negator_with_steal()
+    #else:
+    tidus_turns = 0
+    luluturns = 0
 
-        while not memory.main.turn_ready():
-            pass
-        while not memory.main.battle_complete():  # AKA end of battle screen
-            FFXC.set_neutral()
-            if memory.main.turn_ready():
-                if Tidus.is_turn():
-                    if tidus_turns == 0:
-                        logger.debug("Swapping Tidus for Rikku")
-                        battle.main.buddy_swap(Rikku)
-                    else:
-                        battle.main.buddy_swap(Kimahri)
-                        lightningmarbleslot = memory.main.get_use_items_slot(30)
-                        battle.main.use_item(lightningmarbleslot, target=21)
-                    tidus_turns += 1
-                elif Rikku.is_turn():
-                    if luluturns < 2:
-                        logger.debug("Using Lightning Marble")
-                        lightningmarbleslot = memory.main.get_use_items_slot(30)
-                        if rikku_turns < 1:
-                            battle.main.use_item(lightningmarbleslot, target=21)
-                        else:
-                            battle.main.use_item(lightningmarbleslot, target=21)
-                    else:
-                        logger.debug("Starting Rikkus overdrive")
-                        battle.main.rikku_full_od("crawler")
-                    rikku_turns += 1
-                elif Kimahri.is_turn():
-                    if kimahriturns == 0:
-                        battle.main.buddy_swap(Yuna)
-                        CurrentPlayer().defend()
-                    else:
-                        lightningmarbleslot = memory.main.get_use_items_slot(30)
-                        battle.main.use_item(lightningmarbleslot, target=21)
-                    kimahriturns += 1
-                elif Lulu.is_turn():
-                    battle.main.revive()
-                    luluturns += 1
-                elif Yuna.is_turn():
-                    battle.main.buddy_swap(Tidus)
-                    CurrentPlayer().defend()
-                    yunaturns += 1
+    while not memory.main.turn_ready():
+        pass
+    while memory.main.battle_active():  # AKA end of battle screen
+        FFXC.set_neutral()
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                if tidus_turns == 0:
+                    logger.debug("Swapping Tidus for Rikku")
+                    battle.main.buddy_swap(Rikku)
                 else:
-                    CurrentPlayer().defend()
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
+                    if Rikku.is_dead():
+                        battle.main.revive_target(target=6)
+                    else:
+                        Tidus.defend()
+
+                tidus_turns += 1
+            elif Rikku.is_turn():
+                if Rikku.overdrive_percent(combat=True) < 100:
+                    logger.debug("Using Lightning Marble")
+                    lightningmarbleslot = memory.main.get_use_items_slot(30)
+                    #if rikku_turns < 1:
+                    #    battle.main.use_item(lightningmarbleslot, target=21)
+                    #else:
+                    battle.main.use_item(lightningmarbleslot, target=21)
+                else:
+                    logger.debug("Starting Rikkus overdrive")
+                    battle.main.rikku_full_od("crawler")
+            elif Kimahri.is_turn():
+                lightningmarbleslot = memory.main.get_use_items_slot(30)
+                battle.main.use_item(lightningmarbleslot, target=21)
+            elif Lulu.is_turn():
+                if luluturns == 0:
+                    battle.main.revive_target(target=6)
+                    luluturns += 1
+                else:
+                    battle.main.buddy_swap(Yuna)
+                    if Rikku.is_dead():
+                        battle.main.revive_target(target=6)
+                    else:
+                        CurrentPlayer().defend()
+            elif Yuna.is_turn():
+                battle.main.buddy_swap(Tidus)
+                if Rikku.is_dead():
+                    battle.main.revive_target(target=6)
+                else:
+                    Tidus.swap_battle_weapon(named_equip="brotherhood")
+            else:
+                CurrentPlayer().defend()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
 
     memory.main.click_to_control()
 
@@ -1112,11 +1125,11 @@ def wendigo():
                     ):
                         CurrentPlayer().swap_battle_weapon()
                     yuna_ap = True
-                # If Yuna has had a turn swap for Lulu
+                # If Yuna has had a turn swap for Kimahri, maybe can charge up.
                 else:
-                    if not Lulu.active():
-                        logger.debug("Swapping to Lulu")
-                        battle.main.buddy_swap(Lulu)
+                    if not Kimahri.active():
+                        logger.debug("Swapping to Kimahri")
+                        battle.main.buddy_swap(Kimahri)
                     elif not Rikku.active():
                         battle.main.buddy_swap(Rikku)
                     else:
@@ -1144,12 +1157,12 @@ def wendigo():
                         battle.main.revive_all()
                     elif memory.main.get_throw_items_slot(6) < 255:
                         battle.main.revive()
-                elif (
-                    memory.main.get_enemy_current_hp()[1] < 6000
-                    and memory.main.get_overdrive_battle(0) == 100
-                    and not game_vars.skip_kilika_luck()
-                ):
-                    Tidus.overdrive(direction="left", character=21)
+                #elif (
+                #    memory.main.get_enemy_current_hp()[1] < 6000
+                #    and memory.main.get_overdrive_battle(0) == 100
+                #    and not game_vars.skip_kilika_luck()
+                #):
+                #    Tidus.overdrive(direction="left", character=21)
                 elif tidushealself:
                     if party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
                         logger.debug(
@@ -1221,17 +1234,29 @@ def wendigo():
                     )
                     == 0
                 ):
-                    battle.main.buddy_swap(Kimahri)
+                    if not 3 in memory.main.get_active_battle_formation():
+                        battle.main.buddy_swap(Kimahri)
+                    elif not 6 in memory.main.get_active_battle_formation():
+                        battle.main.buddy_swap(Rikku)
+                    else:
+                        battle.main.buddy_swap(Yuna)
+
             elif Lulu.is_turn():
-                if (
-                    battle.main.wendigo_res_heal(
-                        turn_char=Lulu,
-                        use_power_break=usepowerbreak,
-                        tidus_max_hp=tidus_max_hp,
-                    )
-                    == 0
-                ):
-                    CurrentPlayer().swap_battle_weapon()
+                if not 3 in memory.main.get_active_battle_formation():
+                    battle.main.buddy_swap(Kimahri)
+                elif not 6 in memory.main.get_active_battle_formation():
+                    battle.main.buddy_swap(Rikku)
+                else:
+                    battle.main.buddy_swap(Yuna)
+                #if (
+                #    battle.main.wendigo_res_heal(
+                #        turn_char=Lulu,
+                #        use_power_break=usepowerbreak,
+                #        tidus_max_hp=tidus_max_hp,
+                #    )
+                #    == 0
+                #):
+                #    CurrentPlayer().swap_battle_weapon()
             else:
                 if (
                     usepowerbreak
@@ -1277,27 +1302,28 @@ def evrae():
     # This gets us past the tutorial and all the dialog.
     xbox.click_to_battle()
 
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             logger.debug(f"Tidus prep turns: {tidus_prep}")
             if Tidus.is_turn():
                 logger.debug("Registering Tidus' turn")
-                if game_vars.skip_kilika_luck():
-                    if tidus_prep == 0:
-                        tidus_prep = 1
-                        battle.main.tidus_haste("none")
-                    elif tidus_prep in [1, 2]:
-                        tidus_prep += 1
-                        battle.main.cheer()
-                    elif (
-                        tidus_attacks == 4
-                        or memory.main.get_enemy_current_hp()[0] <= 9999
-                    ):
-                        tidus_attacks += 1
-                        Tidus.overdrive()
-                    else:
-                        tidus_attacks += 1
-                        CurrentPlayer().attack()
+                #if game_vars.skip_kilika_luck():
+                if tidus_prep == 0:
+                    tidus_prep = 1
+                    battle.main.tidus_haste("none")
+                elif tidus_prep in [1, 2]:
+                    tidus_prep += 1
+                    battle.main.cheer()
+                elif (
+                    tidus_attacks == 4
+                    or memory.main.get_enemy_current_hp()[0] <= 9999
+                ):
+                    tidus_attacks += 1
+                    Tidus.overdrive()
+                else:
+                    tidus_attacks += 1
+                    CurrentPlayer().attack()
+                '''
                 elif game_vars.get_blitz_win():  # Blitz win logic
                     if tidus_prep == 0:
                         tidus_prep = 1
@@ -1331,6 +1357,7 @@ def evrae():
                     else:
                         tidus_attacks += 1
                         CurrentPlayer().attack()
+                '''
             elif Rikku.is_turn():
                 logger.debug("Registering Rikkus turn")
                 if rikku_turns == 0:
@@ -1352,6 +1379,10 @@ def evrae():
                         battle.main.use_item(memory.main.get_use_items_slot(20))
                     else:
                         logger.debug("Heal should be successful.")
+                else:
+                    battle.main.steal()
+                    steal_count += 1
+                '''
                 elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
                         throw_slot = memory.main.get_use_items_slot(32)
@@ -1365,9 +1396,7 @@ def evrae():
                         battle.main.steal()
                     else:
                         battle.main.use_item(throw_slot)
-                else:
-                    battle.main.steal()
-                    steal_count += 1
+                '''
             elif Kimahri.is_turn():
                 logger.debug("Registering Kimahri's turn")
                 if not game_vars.get_blitz_win() and not lunar_curtain:
@@ -1385,6 +1414,10 @@ def evrae():
                         battle.main.use_item(memory.main.get_use_items_slot(20))
                     else:
                         logger.debug("Heal should be successful.")
+                else:
+                    battle.main.steal()
+                    steal_count += 1
+                '''
                 elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
                         throw_slot = memory.main.get_use_items_slot(32)
@@ -1398,9 +1431,7 @@ def evrae():
                         battle.main.steal()
                     else:
                         battle.main.use_item(throw_slot)
-                else:
-                    battle.main.steal()
-                    steal_count += 1
+                '''
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
 
@@ -1418,7 +1449,7 @@ def isaaru():
         game_vars.add_rescue_count()
 
     logger.info("Starting battle: Isaaru")
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if Yuna.is_turn():
                 if memory.main.get_encounter_id() in [257, 260]:
@@ -1442,12 +1473,16 @@ def evrae_altana():
         battle.main.flee_all()
     else:
         logger.info("Evrae Altana fight start")
-        if not memory.main.next_steal_rare():
+        gems = check_gems()
+        if gems >= 2:
+            logger.manip(f"We have {gems} gems already. No need to steal.")
+        elif not memory.main.next_steal_rare():
+            logger.manip(f"We have {gems} gems, and the next steal is not rare.")
             evrae_altana_steal()
         else:
-            logger.debug("Next steal will crit, do not steal.")
+            logger.debug(f"Next steal will crit, do not steal. {gems}")
         thrown_item = False
-        while not memory.main.battle_complete():  # AKA end of battle screen
+        while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():
                 if memory.main.get_item_slot(18) != 255 and not thrown_item:
                     battle.main._use_healing_item(item_id=18)
@@ -1608,7 +1643,7 @@ def seymour_flux():
     xbox.click_to_battle()
     if bahamut_crit == 2:
         bahamut_summoned = False
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 if screen.turn_aeon():
                     CurrentPlayer().attack()
@@ -1627,7 +1662,7 @@ def seymour_flux():
                         CurrentPlayer().defend()
     elif game_vars.end_game_version() == 3:
         bahamut_summoned = False
-        while not memory.main.battle_complete():  # AKA end of battle screen
+        while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():
                 if Tidus.is_turn():
                     battle.main.buddy_swap(Yuna)
@@ -1647,7 +1682,7 @@ def seymour_flux():
                 else:
                     CurrentPlayer().defend()
     else:
-        while not memory.main.battle_complete():  # AKA end of battle screen
+        while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():
                 last_hp = memory.main.get_enemy_current_hp()[0]
                 logger.debug("Last HP")
@@ -1705,7 +1740,7 @@ def s_keeper():
     xbox.click_to_battle()
     bahamut_crit = s_keeper_bahamut_crit()
     if bahamut_crit == 2 or bahamut_crit == 7:
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 s_keeper_bahamut_crit()
                 if screen.turn_aeon():
@@ -1715,7 +1750,7 @@ def s_keeper():
                 else:
                     CurrentPlayer().defend()
     elif game_vars.end_game_version() == 3 and game_vars.get_blitz_win():
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 s_keeper_bahamut_crit()
                 if Yuna.is_turn():
@@ -1726,7 +1761,7 @@ def s_keeper():
                     CurrentPlayer().defend()
     else:
         armor_break = False
-        while not memory.main.battle_complete():
+        while memory.main.battle_active():
             if memory.main.turn_ready():
                 s_keeper_bahamut_crit()
                 if Tidus.is_turn():
@@ -1742,6 +1777,17 @@ def s_keeper():
                 else:
                     CurrentPlayer().defend()
     memory.main.click_to_control()
+
+
+
+@battle.utils.speedup_decorator
+def yunalesca():
+    xbox.click_to_battle()
+    battle.main.aeon_summon(4)  # Summon Bahamut and attack.
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            CurrentPlayer().attack()
+    battle.main.wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -1771,7 +1817,7 @@ def omnis():
                 CurrentPlayer().defend()
 
     logger.debug("Ready for aeon.")
-    while not memory.main.battle_complete():  # AKA end of battle screen
+    while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             logger.debug(f"Character turn: {memory.main.get_battle_char_turn()}")
             if Yuna.is_turn():
@@ -1883,56 +1929,10 @@ def yu_yevon():
             logger.debug(f"za_char: {za_char}")
             logger.debug(f"zombie_attack: {zombie_attack}")
             logger.debug(f"weap_swap: {weap_swap}")
-            if za_char == 1 and not zombie_attack:  # Yuna logic
-                if not weap_swap and Yuna.is_turn():
-                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
-                    weap_swap = True
-                elif Yuna.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                elif weap_swap and not zombie_attack and Tidus.is_turn():
-                    CurrentPlayer().swap_battle_weapon()
-                else:
-                    CurrentPlayer().defend()
-            elif za_char == 0 and not zombie_attack:  # Tidus logic:
-                if Yuna.is_turn():
-                    CurrentPlayer().defend()
-                elif Tidus.is_turn() and not weap_swap:
-                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
-                    weap_swap = True
-                elif Tidus.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                else:
-                    CurrentPlayer().defend()
-            elif za_char == 2 and not zombie_attack:  # Auron logic:
-                if Yuna.is_turn():
-                    battle.main.buddy_swap(Auron)
-                elif Auron.is_turn() and not weap_swap:
-                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
-                    weap_swap = True
-                elif Auron.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                else:
-                    CurrentPlayer().defend()
-            elif za_char == 6 and not zombie_attack:  # Rikku logic:
-                if Yuna.is_turn() and not weap_swap:
-                    # Piggy back off the weap_swap function
-                    CurrentPlayer().defend()
-                    weap_swap = True
-                elif Yuna.is_turn():
-                    CurrentPlayer().swap_battle_weapon()
-                elif Tidus.is_turn():
-                    battle.main.tidus_haste("r", character=6)
-                elif Rikku.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                else:
-                    CurrentPlayer().defend()
-            elif zombie_attack:  # Throw P.down to end game
+            if zombie_attack == True:  # Throw P.down to end game
                 item_num = battle.main.yu_yevon_item()
                 if item_num == 99:
+                    logger.warning("No phoenix downs!!! Panic!!!")
                     CurrentPlayer().attack()
                 else:
                     while memory.main.battle_menu_cursor() != 1:
@@ -1947,13 +1947,62 @@ def yu_yevon():
                         xbox.tap_up()
                     battle.main.tap_targeting()
                 logger.info("Phoenix Down on Yu Yevon. Good game.")
-            elif Tidus.is_turn() and za_char == 255:
-                # Tidus to use Zombie Strike ability
-                battle.main.use_skill(0)
-                zombie_attack = True
-            elif za_char == 255 and not Tidus.is_turn():
-                # Non-Tidus char to defend so Tidus can use Zombie Strike ability
-                CurrentPlayer().defend()
+            elif za_char == 1:  # Yuna zombie weapon
+                if Yuna.is_turn():
+                    if not weap_swap:
+                        CurrentPlayer().swap_battle_weapon(ability=[0x8032])
+                        weap_swap = True
+                    else:
+                        CurrentPlayer().attack()
+                        zombie_attack = True
+                elif weap_swap and Tidus.is_turn():
+                    CurrentPlayer().swap_battle_weapon()
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 0:  # Tidus zombie weapon
+                if Tidus.is_turn():
+                    if not weap_swap:
+                        CurrentPlayer().swap_battle_weapon(ability=[0x8032])
+                        weap_swap = True
+                    else:
+                        CurrentPlayer().attack()
+                        zombie_attack = True
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 2:  # Auron logic:
+                if Yuna.is_turn():
+                    battle.main.buddy_swap(Auron)
+                elif Auron.is_turn():
+                    if not weap_swap:
+                        CurrentPlayer().swap_battle_weapon(ability=[0x8032])
+                        weap_swap = True
+                    else:
+                        CurrentPlayer().attack()
+                        zombie_attack = True
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 6:  # Rikku logic:
+                if Yuna.is_turn() and not weap_swap:
+                    # Piggy back off the weap_swap function
+                    CurrentPlayer().defend()
+                    weap_swap = True  # Just to piggy back for turn manip.
+                elif Yuna.is_turn():
+                    CurrentPlayer().swap_battle_weapon()
+                elif Tidus.is_turn():
+                    battle.main.tidus_haste("r", character=6)
+                elif Rikku.is_turn():
+                    CurrentPlayer().attack()
+                    zombie_attack = True
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 255:
+                if Tidus.is_turn():
+                    # Tidus to use Zombie Strike ability
+                    battle.main.use_skill(0)
+                    zombie_attack = True
+                else:
+                    # Non-Tidus char to defend so Tidus can use Zombie Strike ability
+                    CurrentPlayer().defend()
             else:
                 if memory.main.get_battle_char_turn() == za_char:
                     CurrentPlayer().attack()

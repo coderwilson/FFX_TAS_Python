@@ -29,12 +29,10 @@ print("------------------")
 '''
 
 to_drop = rng_track.item_to_be_dropped(enemy= "yunalesca")[0]
-while to_drop.equipment_type() != 0:
-    print("No weapon, advancing.")
+while to_drop.equipment_type() == 0:
+    print("Weapon, advancing.")
     memory.main.advance_rng_index(index=12)
     to_drop = rng_track.item_to_be_dropped(enemy= "yunalesca")[0]
 print("Advance complete.")
-print(f"Owner: {to_drop.owner()}")
-print(f"Slots: {to_drop.slot_count()}")
 
 time.sleep(3)

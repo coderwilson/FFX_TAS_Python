@@ -1,3 +1,5 @@
+blitz_threshold = 440
+
 # Libraries and Core Files
 import logging
 import random
@@ -68,6 +70,7 @@ def configuration_setup():
     parser.add_argument("-seed")
     parser.add_argument("-state")
     parser.add_argument("-step")
+    parser.add_argument("-train_blitz")
     args = parser.parse_args()
     
     # gamestate
@@ -86,6 +89,10 @@ def configuration_setup():
         game.state = "VAR_ERROR"
         game.step = 999
     
+
+    if args.train_blitz != None:
+        game_vars.set_loop_blitz(True)
+        logger.warning("Training Blitzball, may reset after Blitzball wins.")
     if args.seed != None:
         logger.debug(f"Seed passed from Twitch: {args.seed}")
         twitch_seed = int(args.seed)
@@ -334,7 +341,7 @@ def perform_TAS():
                         game.step = 3
                         game.state = "Luca"
 
-                    elif game_vars.loop_blitz() and blitz_duration < 420:
+                    elif game_vars.loop_blitz() and blitz_duration < blitz_threshold:
                         logger.info("--------------")
                         logger.info(f"Good Blitz, worth completing the run. Blitz time: {blitz_duration} seconds.")
                         logger.info("--------------")
@@ -342,7 +349,7 @@ def perform_TAS():
                     elif game_vars.loop_blitz() and blitz_loops < max_loops:
                         FFXC.set_neutral()
                         logger.info("-------------")
-                        logger.info("- Resetting -")
+                        logger.info("- Resetting: Blitz time: {blitz_duration} seconds.")
                         logger.info("-------------")
                         screen.await_turn()
                         game.state, game.step = reset.mid_run_reset()
@@ -622,7 +629,8 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    if game_vars.ne_armor() == 255:
+                    _, loop_back = rng_track.nea_track()
+                    if game_vars.ne_armor() == 255 and loop_back <= 5:
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:

@@ -196,6 +196,9 @@ class AllVars:
     def loop_blitz(self):
         return self.blitz_loop
 
+    def set_loop_blitz(self, value):
+        self.blitz_loop = value
+
     def loop_seeds(self):
         return self.force_loop
 
@@ -363,8 +366,14 @@ class AllVars:
     def add_rescue_count(self):
         self.rescue_count += 1
 
+    def remove_rescue_count(self):
+        self.rescue_count = 3
+
+    def set_rescue_count(self, value):
+        self.rescue_count = value
+
     def completed_rescue_fights(self):
-        logger.debug(f"Completed {self.rescue_count} exp kills")
+        #logger.debug(f"Completed {self.rescue_count} exp kills")
         return self.rescue_count >= 4
 
     def add_ytk_farm(self):

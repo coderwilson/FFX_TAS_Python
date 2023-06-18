@@ -130,6 +130,7 @@ def arrival(rikku_charged):
 def lake_road():
     logger.info("Lake road")
     memory.main.await_control()
+    #menu.kimahri_terra()
     while not pathing.set_movement([174, -96]):
         pass
     while not pathing.set_movement([138, -83]):
@@ -231,8 +232,6 @@ def lake():
         battle.main.heal_up(full_menu_close=False)
 
     memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
-    menu.t_plains_mmr_skip()
-    menu.yuna_mrr_skip_recover()
     menu.m_lake_grid()
     memory.main.await_control()
 

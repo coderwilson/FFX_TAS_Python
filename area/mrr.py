@@ -57,6 +57,7 @@ def arrival():
                 if not memory.main.user_control():
                     battle.main.flee_all()
                     battle.main.wrap_up()
+                    memory.main.update_formation(Tidus, Wakka, Auron)
                     FFXC.set_movement(-1, 0)
                     memory.main.wait_frames(30 * 0.7)
                     FFXC.set_neutral()
@@ -91,7 +92,11 @@ def arrival():
                 battle.main.flee_all()
                 memory.main.click_to_control_3()
                 if memory.main.get_hp()[0] < 520:
-                    battle.main.heal_up()
+                    battle.main.heal_up(full_menu_close=False)
+                elif 1 in memory.main.ambushes():
+                    battle.main.heal_up(full_menu_close=False)
+                memory.main.update_formation(Tidus, Wakka, Auron)
+                memory.main.close_menu()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()

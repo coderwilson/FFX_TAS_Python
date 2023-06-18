@@ -1292,11 +1292,11 @@ def state_sleep(character):
     key = base_pointer_address + offset
     ret_val = process.read_bytes(key, 1)
 
-    if ret_val == 3:
-        logger.debug(f"Character {character} is asleep")
+    if ret_val != 0:
+        logger.debug(f"Character {character} is asleep (probably)")
         return True
     else:
-        logger.debug(f"Character {character} is not asleep")
+        logger.debug(f"Character {character} is not asleep (probably)")
         return False
 
 
@@ -2816,6 +2816,7 @@ def all_equipment():
 def weapon_array_character(char_num):
     equip_handles = all_equipment()
     first_equipment = True
+    char_weaps = []
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.owner() == char_num and current_handle.equipment_type() == 0:
@@ -3641,6 +3642,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
     logger.debug("Touch Save Sphere")
     clear_save_menu_cursor()
     clear_save_menu_cursor_2()
+    if not user_control():
+        return False
 
     ss_details = get_save_sphere_details()
     while user_control():
@@ -3650,7 +3653,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
     FFXC.set_neutral()
     logger.debug("Waiting for cursor to reset before we do things - Mark 1")
     while menu_control() == 0:
-        pass
+        if battle_active():
+            return False
     wait_frames(1)
     logger.debug("Mark 2")
     # wait_frames(300)
@@ -3703,6 +3707,7 @@ def touch_save_sphere(save_cursor_num: int = 0):
         f"Cursor test E: {save_menu_cursor()} | {save_menu_cursor_2()} | {inc}"
     )
     inc += 1
+    return True
 
 
 def touch_save_sphere_not_working(save_cursor_num: int = 0):
@@ -4073,6 +4078,20 @@ def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
     return results[0]
 
 
+def ambushes(advances:int = 12, extra:int = 0):
+    # https://grayfox96.github.io/FFX-Info/rng/encounters
+    ret_array = []
+    rng_array = rng_array_from_index(index=1, array_len=(advances*2)+1+extra)
+    for i in range(advances):
+        rng_val = rng_array[(2*i)+2+extra] & 255
+        if rng_val >= 223:
+            # Append battle number from current (i.e. first or second battle), 1 == next battle.
+            ret_array.append(i+1)
+    ret_array.append(99)  # Just so we don't have an empty array. This will never be used otherwise.
+    logger.manip(f"Upcoming ambushes: {ret_array}")
+    return ret_array
+
+
 def rikku_mix_damage() -> List[int]:
     initial_rng_vals = rng_array_from_index(index=26, array_len=9)
     dmg_rng = [(x & 31) + 0xF0 for x in initial_rng_vals[1:]]
@@ -4169,6 +4188,18 @@ def set_test_rng_02():
 def rng_10():
     global base_value
     return process.read(base_value + 0xD35F00)
+
+
+def highbridge_drops():
+    test_array = rng_10_array(array_len = 40)
+    ret_val = []
+    for i in range(len(test_array)):
+        if i < 3:
+            pass
+        elif (test_array[i] & 0x7FFFFFFF) % 255 < 30:
+            ret_val.append(i-3)
+    logger.warning(ret_val)
+    return ret_val
 
 
 def rng_10_array(array_len: int = 256):

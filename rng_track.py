@@ -1760,10 +1760,10 @@ def nea_track():
 
 def print_manip_info():
     pre_x, post_x = nea_track()
-    logger.debug("Upcoming RNGs:")
-    logger.debug(f"Next, before X: {pre_x} | Next, after X: {post_x}")
-    logger.debug(
-        f"RNG10: {memory.main.next_chance_rng_10()} | Pre Defender X: {memory.main.next_chance_rng_10_calm()}"
+    logger.manip("Upcoming RNGs:")
+    logger.manip(f"Next drop: {post_x}")
+    logger.manip(
+        f"RNG10: {memory.main.next_chance_rng_10()} | Adjusted for Defender X drop: {memory.main.next_chance_rng_10_calm()}"
     )
 
 

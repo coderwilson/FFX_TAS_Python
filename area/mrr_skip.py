@@ -16,7 +16,7 @@ from paths import MRRSkip
 import screen
 import vars
 import xbox
-from players import Auron, Kimahri, Tidus
+from players import Auron, Kimahri, Tidus, Wakka
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -99,7 +99,7 @@ def attempt_skip():
                 if _distance(position, tidus_coords) >= 15:
                     if memory.main.get_hp()[0] < 520:
                         battle.main.heal_up()
-                    memory.main.update_formation(Tidus, Kimahri, Auron)
+                    memory.main.update_formation(Tidus, Wakka, Auron)
             elif memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active():
                 xbox.tap_b()
             
@@ -115,7 +115,7 @@ def attempt_skip():
         
         if memory.main.get_hp()[0] < 520:
             battle.main.heal_up()
-        memory.main.update_formation(Tidus, Kimahri, Auron)
+            memory.main.update_formation(Tidus, Wakka, Auron)
         logger.info("First barrier passed.")
         #FFXC.set_movement(1,1)
         #wait_frames(60)
@@ -138,7 +138,7 @@ def attempt_skip():
                 if _distance(position, tidus_coords) >= 15:
                     if memory.main.get_hp()[0] < 520:
                         battle.main.heal_up()
-                    memory.main.update_formation(Tidus, Kimahri, Auron)
+                    memory.main.update_formation(Tidus, Wakka, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
             
@@ -163,7 +163,7 @@ def attempt_skip():
                         logger.info("In position.")
             
         FFXC.set_neutral()
-        if memory.main.get_hp()[0] < 520:
+        if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():
             battle.main.heal_up()
         memory.main.update_formation(Tidus, Kimahri, Auron)
         logger.info("Success!")
@@ -183,9 +183,9 @@ def advance_to_aftermath():
             if memory.main.battle_active():
                 battle.main.flee_all()
                 battle.main.wrap_up()
-                if memory.main.get_hp()[0] < 520:
+                if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():
                     battle.main.heal_up()
-                memory.main.update_formation(Tidus, Kimahri, Auron)
+                memory.main.update_formation(Tidus, Wakka, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 

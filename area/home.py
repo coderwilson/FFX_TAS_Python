@@ -9,7 +9,7 @@ import save_sphere
 import vars
 import xbox
 from paths import BikanelDesert, BikanelHome
-from players import Auron, Kimahri, Rikku, Tidus, Wakka
+from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -144,7 +144,7 @@ def desert():
                     logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 12 and not first_format:
                 first_format = True
-                memory.main.update_formation(Tidus, Wakka, Auron)
+                memory.main.update_formation(Tidus, Wakka, Lulu)
 
             # Sandragora skip logic
             elif checkpoint == 57:
@@ -172,6 +172,9 @@ def desert():
                 ):  # Cannot move on if we're short on throwable items
                     checkpoint -= 2
                 elif need_speed:  # Cannot move on if we're short on speed spheres
+                    checkpoint -= 2
+                elif 1 in memory.main.ambushes() and Kimahri.overdrive_percent() < 100:
+                    # Avoids game-over state on the second battle, new with Terra skip
                     checkpoint -= 2
                 else:
                     checkpoint += 1
@@ -209,6 +212,9 @@ def desert():
 
                 # After-battle logic
                 memory.main.click_to_control()
+                # Yuna can't heal up the party if she's not in it.
+                #if 1 in memory.main.ambushes():
+                #    battle.main.heal_up(full_menu_close=False)
 
                 # First, check and update party format.
                 if checkpoint > 10:
@@ -223,7 +229,7 @@ def desert():
                     elif items_needed >= 1:
                         memory.main.update_formation(Tidus, Auron, Rikku)
                     else:  # Catchall
-                        memory.main.update_formation(Tidus, Auron, Rikku)
+                        memory.main.update_formation(Tidus, Auron, Lulu)
 
                 # Next, figure out how many items we need.
                 steal_items = battle.main.update_steal_items_desert()
@@ -254,6 +260,7 @@ def desert():
 def find_summoners():
     logger.info("Desert complete. Starting Home section")
     menu.home_grid()
+    learn_first_OD = False
 
     checkpoint = 7
     while memory.main.get_map() != 261:
@@ -268,9 +275,7 @@ def find_summoners():
                 checkpoint = 12
             elif checkpoint < 18 and memory.main.get_map() == 280:
                 checkpoint = 19
-            elif checkpoint == 34 and game_vars.nemesis():
-                checkpoint = 60
-            elif checkpoint == 34 and game_vars.skip_kilika_luck():
+            elif checkpoint == 34:
                 checkpoint = 60
             elif checkpoint == 63:
                 memory.main.click_to_event_temple(6)
@@ -312,6 +317,8 @@ def find_summoners():
                     checkpoint = 21
                 else:
                     checkpoint = 81
+            elif checkpoint in [24,25] and 1 in memory.main.ambushes():
+                checkpoint = 22
             elif checkpoint == 31 and not game_vars.csr():
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
@@ -333,17 +340,18 @@ def find_summoners():
                 if memory.main.get_encounter_id() == 417:
                     logger.info("Home, battle 1")
                     battle.main.home_1()
+                    memory.main.update_formation(Tidus, Auron, Lulu)
                 elif memory.main.get_encounter_id() == 419:
                     if memory.main.get_map() == 280:
                         logger.info("Home, battle 2")
-                        battle.main.home_2()
-                        memory.main.update_formation(Tidus, Auron, Rikku)
+                        learn_first_OD = battle.main.home_2()
+                        memory.main.update_formation(Tidus, Auron, Lulu)
                     else:
                         logger.info("Home, bonus battle for Blitz loss")
                         battle.main.home_3()
                 elif memory.main.get_encounter_id() == 420:
                     logger.info("Home, final battle")
-                    battle.main.home_4()
+                    battle.main.home_4(learn_first_OD)
                     memory.main.update_formation(Tidus, Rikku, Kimahri)
                 else:
                     logger.debug(f"Flee from battle: {memory.main.get_encounter_id()}")
