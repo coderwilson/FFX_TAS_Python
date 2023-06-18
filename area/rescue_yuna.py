@@ -446,21 +446,6 @@ def trials_end():
 def via_purifico():
     memory.main.click_to_control()
 
-    # Old logic, retain until new stuff is well tested.
-    # FFXC.set_movement(0, 1)
-    # memory.main.wait_frames(30 * 3)
-    # FFXC.set_movement(1, 1)
-    # memory.main.wait_frames(30 * 0.15)
-    # FFXC.set_movement(0, 1)
-    # memory.main.wait_frames(30 * 5)
-    # FFXC.set_neutral()
-
-    # if not game_vars.csr():
-    #    memory.main.wait_frames(30 * 5.7)  # Wait for the right direction
-    # FFXC.set_movement(0, 1)
-    # memory.main.wait_frames(30 * 2)
-    # FFXC.set_neutral()
-
     # New logic
     path = [[-1, 142], [-2, 324], [-2, 503]]
     checkpoint = 0
@@ -576,7 +561,12 @@ def evrae_altana():
 
 def natus_formation(battles:int = 0, full_menu_close:bool=True):
     logger.warning(f"NEA drops as equipment drop number {rng_track.nea_track()[1]} from now.")
-    if battles >= 2 or memory.main.highbridge_drops()[0] - (battles * 9) > 20:
+    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
+    '''
+    if memory.main.get_yuna_slvl() <= 13:
+        # Just need levels
+        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
+    elif battles >= 2 or memory.main.highbridge_drops()[0] - (battles * 9) > 20:
         # Must be ready for Natus, and no reason to manip if nothing drops here.
         memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
     elif rng_track.nea_track()[1] >= 3:
@@ -584,65 +574,40 @@ def natus_formation(battles:int = 0, full_menu_close:bool=True):
         memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
     else:
         memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
-
+    '''
 
 
 def seymour_natus():
     memory.main.click_to_control()
-    yuna_levels = False
-    battle_count = 0
 
-    if memory.main.get_yuna_slvl() >= 15:
-        yuna_levels = True
+    if memory.main.get_yuna_slvl() >= 14:
         if game_vars.get_blitz_win():
             menu.seymour_natus_blitz_win()
         else:
             menu.seymour_natus_blitz_loss()
-    logger.debug(f"Yuna Levels complete (start): {yuna_levels}")
-    rng_track.print_manip_info()
-    logger.warning(memory.main.highbridge_drops())
 
-    natus_formation()
+    memory.main.update_formation(Tidus, Yuna, Auron)
     save_sphere.touch_and_go()
     complete = 0
     while complete == 0:
         if memory.main.user_control():
-            prog = memory.main.get_coords()[1]
-            if prog != 0 and prog < 250 and not yuna_levels:
-                pathing.set_movement([2, memory.main.get_coords()[1] + 50])
-                memory.main.wait_frames(30)
-            else:
-                pathing.set_movement([2, memory.main.get_coords()[1] - 50])
+            pathing.set_movement([2, memory.main.get_coords()[1] - 50])
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
                 logger.info("Battle Start")
-                if rng_track.nea_track()[1] >= 3 and memory.main.highbridge_drops()[0] - (battle_count * 9) < 20 and battle_count < 2:
-                    battle.main.highbridge_drops()
-                    battle.main.wrap_up()
-                    natus_formation(battles = battle_count, full_menu_close=False)
-                    battle.main.heal_up()
-                elif memory.main.battle_type() == 2:
+                if memory.main.battle_type() == 2:
                     battle.main.flee_all()
                     battle.main.wrap_up()
-                    natus_formation(battles = battle_count, full_menu_close=False)
-                    battle.main.heal_up()
                 else:
                     complete = battle.boss.seymour_natus()
-                    battle.main.wrap_up()
-                    natus_formation(battles = battle_count, full_menu_close=False)
-                    battle.main.heal_up()
 
                 if memory.main.get_yuna_slvl() >= 14:
-                    yuna_levels = True
-                    game_vars.set_rescue_count(4)
                     if game_vars.get_blitz_win():
                         menu.seymour_natus_blitz_win()
                     else:
                         menu.seymour_natus_blitz_loss()
-                    logger.warning(f"Yuna Levels complete: {yuna_levels}")
                 rng_track.print_manip_info()
-                battle_count += 1
 
     # Movement for make-out scene
     memory.main.click_to_control()

@@ -57,7 +57,7 @@ def kimahri():
                 not game_vars.early_tidus_grid() and
                 memory.main.get_turn_by_index(1) != 0 and
                 memory.main.get_turn_by_index(2) != 0 and
-                Tidus.in_danger(120) and
+                Tidus.in_danger(140) and
                 enemy_hp[0] > 119
             ):
                 if Tidus.next_crit(12) == 2:
@@ -1516,10 +1516,10 @@ def evrae_altana_steal():
 @battle.utils.speedup_decorator
 def seymour_natus():
     aeon_summoned = False
-    while memory.main.battle_active():
+    while not memory.main.battle_complete():
         if memory.main.get_encounter_id() == 272:  # Seymour Natus
             logger.info("Seymour Natus engaged")
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if memory.main.turn_ready():
                     if Tidus.is_turn():
                         if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis():
@@ -1547,7 +1547,7 @@ def seymour_natus():
                         CurrentPlayer().defend()
             return 1
         elif memory.main.get_encounter_id() == 270:  # YAT-63 x2
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
@@ -1560,7 +1560,7 @@ def seymour_natus():
                     else:
                         CurrentPlayer().defend()
         elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
@@ -1573,7 +1573,7 @@ def seymour_natus():
                     else:
                         CurrentPlayer().defend()
         elif memory.main.get_encounter_id() == 271:  # one YAT-63, two YAT-99
-            while memory.main.battle_active():
+            while not memory.main.battle_complete():
                 if game_vars.completed_rescue_fights():
                     battle.main.flee_all()
                 elif memory.main.turn_ready():
@@ -1929,56 +1929,10 @@ def yu_yevon():
             logger.debug(f"za_char: {za_char}")
             logger.debug(f"zombie_attack: {zombie_attack}")
             logger.debug(f"weap_swap: {weap_swap}")
-            if za_char == 1 and not zombie_attack:  # Yuna logic
-                if not weap_swap and Yuna.is_turn():
-                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
-                    weap_swap = True
-                elif Yuna.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                elif weap_swap and not zombie_attack and Tidus.is_turn():
-                    CurrentPlayer().swap_battle_weapon()
-                else:
-                    CurrentPlayer().defend()
-            elif za_char == 0 and not zombie_attack:  # Tidus logic:
-                if Yuna.is_turn():
-                    CurrentPlayer().defend()
-                elif Tidus.is_turn() and not weap_swap:
-                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
-                    weap_swap = True
-                elif Tidus.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                else:
-                    CurrentPlayer().defend()
-            elif za_char == 2 and not zombie_attack:  # Auron logic:
-                if Yuna.is_turn():
-                    battle.main.buddy_swap(Auron)
-                elif Auron.is_turn() and not weap_swap:
-                    CurrentPlayer().swap_battle_weapon(ability=[0x8032])
-                    weap_swap = True
-                elif Auron.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                else:
-                    CurrentPlayer().defend()
-            elif za_char == 6 and not zombie_attack:  # Rikku logic:
-                if Yuna.is_turn() and not weap_swap:
-                    # Piggy back off the weap_swap function
-                    CurrentPlayer().defend()
-                    weap_swap = True
-                elif Yuna.is_turn():
-                    CurrentPlayer().swap_battle_weapon()
-                elif Tidus.is_turn():
-                    battle.main.tidus_haste("r", character=6)
-                elif Rikku.is_turn():
-                    CurrentPlayer().attack()
-                    zombie_attack = True
-                else:
-                    CurrentPlayer().defend()
-            elif zombie_attack:  # Throw P.down to end game
+            if zombie_attack == True:  # Throw P.down to end game
                 item_num = battle.main.yu_yevon_item()
                 if item_num == 99:
+                    logger.warning("No phoenix downs!!! Panic!!!")
                     CurrentPlayer().attack()
                 else:
                     while memory.main.battle_menu_cursor() != 1:
@@ -1993,13 +1947,62 @@ def yu_yevon():
                         xbox.tap_up()
                     battle.main.tap_targeting()
                 logger.info("Phoenix Down on Yu Yevon. Good game.")
-            elif Tidus.is_turn() and za_char == 255:
-                # Tidus to use Zombie Strike ability
-                battle.main.use_skill(0)
-                zombie_attack = True
-            elif za_char == 255 and not Tidus.is_turn():
-                # Non-Tidus char to defend so Tidus can use Zombie Strike ability
-                CurrentPlayer().defend()
+            elif za_char == 1:  # Yuna zombie weapon
+                if Yuna.is_turn():
+                    if not weap_swap:
+                        CurrentPlayer().swap_battle_weapon(ability=[0x8032])
+                        weap_swap = True
+                    else:
+                        CurrentPlayer().attack()
+                        zombie_attack = True
+                elif weap_swap and Tidus.is_turn():
+                    CurrentPlayer().swap_battle_weapon()
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 0:  # Tidus zombie weapon
+                if Tidus.is_turn():
+                    if not weap_swap:
+                        CurrentPlayer().swap_battle_weapon(ability=[0x8032])
+                        weap_swap = True
+                    else:
+                        CurrentPlayer().attack()
+                        zombie_attack = True
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 2:  # Auron logic:
+                if Yuna.is_turn():
+                    battle.main.buddy_swap(Auron)
+                elif Auron.is_turn():
+                    if not weap_swap:
+                        CurrentPlayer().swap_battle_weapon(ability=[0x8032])
+                        weap_swap = True
+                    else:
+                        CurrentPlayer().attack()
+                        zombie_attack = True
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 6:  # Rikku logic:
+                if Yuna.is_turn() and not weap_swap:
+                    # Piggy back off the weap_swap function
+                    CurrentPlayer().defend()
+                    weap_swap = True  # Just to piggy back for turn manip.
+                elif Yuna.is_turn():
+                    CurrentPlayer().swap_battle_weapon()
+                elif Tidus.is_turn():
+                    battle.main.tidus_haste("r", character=6)
+                elif Rikku.is_turn():
+                    CurrentPlayer().attack()
+                    zombie_attack = True
+                else:
+                    CurrentPlayer().defend()
+            elif za_char == 255:
+                if Tidus.is_turn():
+                    # Tidus to use Zombie Strike ability
+                    battle.main.use_skill(0)
+                    zombie_attack = True
+                else:
+                    # Non-Tidus char to defend so Tidus can use Zombie Strike ability
+                    CurrentPlayer().defend()
             else:
                 if memory.main.get_battle_char_turn() == za_char:
                     CurrentPlayer().attack()

@@ -2816,6 +2816,7 @@ def all_equipment():
 def weapon_array_character(char_num):
     equip_handles = all_equipment()
     first_equipment = True
+    char_weaps = []
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
         if current_handle.owner() == char_num and current_handle.equipment_type() == 0:

@@ -2978,9 +2978,7 @@ def altana_heal():
 
 
 def attack_highbridge():
-    if memory.main.get_encounter_id() == 270:
-        CurrentPlayer().attack(target_id=22, direction_hint="r")
-    elif memory.main.get_encounter_id() == 271:
+    if memory.main.get_encounter_id() == 271:
         CurrentPlayer().attack(target_id=21, direction_hint="l")
     else:
         CurrentPlayer().attack()
@@ -3040,6 +3038,19 @@ def highbridge_drops():
                     Bahamut.unique()
                 else:
                     buddy_swap(Yuna)
+
+
+def calm_impulse():
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Bahamut.is_turn():
+                Bahamut.unique()
+            elif not Yuna.active():
+                buddy_swap(Yuna)
+            elif Yuna.is_turn():
+                aeon_summon(4)
+            else:
+                CurrentPlayer().defend()
 
 
 def calm_lands_gems():
@@ -3466,9 +3477,9 @@ def oblitz_rng_wait():
                     f"No result (preferred), loop. {[coming_seeds[i], duration, victory, pos]}"
                 )
             else:
-                duration = 540 + pos
-                # 540 is about the maximum duration we desire.
-                victory = False
+                duration = 480 + pos
+                # 460-480 is about the maximum duration we desire.
+                victory = True
                 logger.debug(
                     f"No result (undesirable), full. {[coming_seeds[i], duration, victory, pos]}"
                 )

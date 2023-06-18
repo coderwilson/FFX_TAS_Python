@@ -450,10 +450,20 @@ def yunalesca():
 
     # Now to check for zombie strike and then report to logs.
     logger.info("Ready to check for Zombiestrike")
+    game_vars.set_zombie(value=confirm_zombie())
     logs.write_stats("Zombiestrike:")
     logs.write_stats(game_vars.zombie_weapon())
     logger.info("++Zombiestrike:")
     logger.info(f"++ {game_vars.zombie_weapon()}")
+
+
+def confirm_zombie() -> int:
+    equip_handles = memory.main.all_equipment()
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.has_ability(0x8032):
+            return current_handle.owner()
+    return 255
 
 
 def post_yunalesca(checkpoint=0):

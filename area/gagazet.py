@@ -81,7 +81,10 @@ def calm_lands():
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                battle.main.calm_lands_manip()
+                if memory.main.get_yuna_slvl() < 4:
+                    battle.main.calm_impulse()
+                else:
+                    battle.main.calm_lands_manip()
                 memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
@@ -374,10 +377,7 @@ def cave():
                     FFXC.set_movement(0, 1)
                     memory.main.wait_frames(30 * 0.5)
             elif checkpoint == 35:
-                if memory.main.user_control():
-                    FFXC.set_movement(-1, 1)
-                else:
-                    FFXC.set_neutral()
+                FFXC.set_movement(-1, 1)
 
             elif checkpoint == 42:
                 logger.info("Out of swimming map, second trial.")
@@ -406,13 +406,15 @@ def cave():
             if checkpoint == 35:
                 if memory.main.diag_progress_flag() == 2:
                     logger.info("Second trial start")
-                    memory.main.wait_frames(90)
-                    xbox.menu_b()
                     if game_vars.csr():
+                        logger.warning("Version 1")
                         FFXC.set_value("d_pad", 8)
-                        memory.main.wait_frames(20)
+                        memory.main.wait_frames(100)
                         FFXC.set_neutral()
                     else:
+                        logger.warning("Version 2")
+                        memory.main.wait_frames(90)
+                        xbox.menu_b()
                         FFXC.set_value("d_pad", 8)
                         memory.main.wait_frames(90)
                     FFXC.set_neutral()
@@ -420,10 +422,10 @@ def cave():
                     checkpoint += 1
                     logger.info("Second trial is complete")
                 elif memory.main.diag_progress_flag() == 3:
+                    logger.warning("Version 3")
                     # CSR second trial
-                    memory.main.wait_frames(10)
                     FFXC.set_value("d_pad", 8)
-                    memory.main.wait_frames(45)
+                    memory.main.wait_frames(10)
                     FFXC.set_neutral()
                     memory.main.click_to_control_dumb()
                     checkpoint += 1
