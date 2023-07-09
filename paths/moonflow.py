@@ -20,7 +20,7 @@ class Moonflow1(AreaMovementBase):
         # Start of the long Moonflow path/map
         14: [-988, 1678],
         15: [-1072, 1557],
-        16: [-1112, 1484],
+        16: [-1112, 1484],  # Here we can branch for lv.1 spheres
         17: [-1159, 1369],
         18: [-1176, 1347],
         19: [-1230, 1140],
@@ -60,6 +60,15 @@ class Moonflow1(AreaMovementBase):
         53: [-960, -500],  # Last before "Whoa a Shoopuff"
         54: [-200, -60],
         55: [-30, 180],
+        70: [-1085, 1594],
+        71: [-1112, 1579],
+        72: [-1123, 1589],
+        73: [-1112, 1615],
+        74: [-1127, 1636],
+        75: [-1130, 1640],  # Grab chest
+        76: [-1123, 1589],
+        77: [-1112, 1579],
+        78: [-1085, 1594]
     }
     checkpoint_fallback = {
         2: "Picking up chest",

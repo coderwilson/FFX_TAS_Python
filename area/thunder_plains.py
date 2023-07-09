@@ -10,6 +10,7 @@ import pathing
 import screen
 import vars
 import xbox
+import save_sphere
 from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 from players import Auron, Tidus, Wakka
 
@@ -28,6 +29,7 @@ def south_pathing():
     memory.main.close_menu()
     count50 = 0
     checkpoint = 0
+    save_touched = False
 
     with logging_redirect_tqdm():
         with tqdm(total=50) as pbar:
@@ -41,10 +43,16 @@ def south_pathing():
                             pbar.update(1)
                     elif checkpoint == 2 and game_vars.nemesis():
                         checkpoint = 20
+                    elif checkpoint == 3 and not save_touched:
+                        while not memory.main.touch_save_sphere():
+                            battle.main.flee_all()
+                            battle.main.wrap_up()
+                        save_touched = True
                     elif checkpoint == 2 and not game_vars.get_blitz_win():
                         checkpoint = 20
                     elif checkpoint == 21:
-                        # memory.touch_save_sphere()
+                        memory.main.touch_save_sphere()
+                        save_touched = True
                         checkpoint += 1
                     elif checkpoint == 25:
                         while memory.main.user_control():
@@ -185,7 +193,7 @@ def agency_shop():
     ]
     logger.debug(f"Sellable Items in slot: {other_slots}")
     menu.sell_weapon(tidus_longsword)
-    menu.sell_weapon(auron_katana)
+    #menu.sell_weapon(auron_katana)
     if game_vars.get_blitz_win() and memory.main.get_gil_value() < 8725:
         for loc in other_slots:
             menu.sell_weapon(loc)
@@ -276,6 +284,7 @@ def agency():
 
 def north_pathing():
     memory.main.click_to_control()
+    menu.equip_armor(character=0, ability=0x8028)
 
     l_strike_count = memory.main.l_strike_count()
     lunar_slot = memory.main.get_item_slot(56) != 255
@@ -288,7 +297,7 @@ def north_pathing():
                 logger.debug("Dodge")
                 l_strike_count = memory.main.l_strike_count()
             elif game_vars.csr() and checkpoint == 14:
-                checkpoint = 16
+                checkpoint = 24
             elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunar_slot:
                 checkpoint -= 2
                 logger.debug(f"No lunar curtain. Checkpoint {checkpoint}")

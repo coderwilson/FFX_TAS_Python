@@ -1529,7 +1529,7 @@ def decide_skip_zan_luck() -> bool:
         logger.debug("Expecting no crit on Face")
         attack_count += 3  # Should be 3, but we're over-damaging.
     if not future_attack_hit(
-        character=7, enemy="seymour_flux", attack_index=attack_count
+        character=7, enemy="seymour_omnis", attack_index=attack_count
     ):
         logger.debug("Miss on Omnis")
         return False
@@ -1760,10 +1760,10 @@ def nea_track():
 
 def print_manip_info():
     pre_x, post_x = nea_track()
-    logger.debug("Upcoming RNGs:")
-    logger.debug(f"Next, before X: {pre_x} | Next, after X: {post_x}")
-    logger.debug(
-        f"RNG10: {memory.main.next_chance_rng_10()} | Pre Defender X: {memory.main.next_chance_rng_10_calm()}"
+    logger.manip("Upcoming RNGs:")
+    logger.manip(f"Next drop: {post_x}")
+    logger.manip(
+        f"RNG10: {memory.main.next_chance_rng_10()} | Adjusted for Defender X drop: {memory.main.next_chance_rng_10_calm()}"
     )
 
 
@@ -1868,6 +1868,7 @@ def record_blitz_results_tyton(duration, test_mode=False):
             if (
                 records[seed][sub_key]["victory"] == victory
                 and duration >= records[str(seed)][str(sub_key)]["duration"]
+                and game_vars.csr()
             ):
                 return
 

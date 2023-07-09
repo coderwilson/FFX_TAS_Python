@@ -185,29 +185,27 @@ def cursor_1():
 
 def jassu_pass_timing() -> int:
     shot_distance = distance(0, 11)
-    shot_mod = int(shot_distance / 160)
+    shot_mod = int(shot_distance / 100) + 9  # Distance/time plus animation time. Extra distance for swimming to the goal
+    pass_distance = distance(0,3)
+    pass_mod = int(pass_distance / 120) + 7  # Distance/time plus animation time.
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = 156
-        #base_timing = int(154 - shot_mod)
+        base_timing = int(180 - shot_mod - pass_mod)
     else:
-        base_timing = int(265 - shot_mod)
-
-    #for x in range(5):
-    #    if distance(0, x + 6) < 180:
-    #        base_timing = int(base_timing - 4)
+        base_timing = int(300 - shot_mod - pass_mod)  # Wakka shot is a faster animation.
+    
     return base_timing
 
 
 def tidus_shot_timing() -> int:
     shot_distance = distance(0, 11)
-    shot_mod = int(shot_distance / 160)
+    shot_mod = int(shot_distance / 120) + 9  # Distance/time plus animation time.
     if 540 <= memory.main.get_story_progress() < 570:
-        base_timing = int(170 - shot_mod)
+        base_timing = int(180 - shot_mod)
     else:
-        base_timing = int(288 - shot_mod)
+        base_timing = int(300 - shot_mod)  # Wakka shot is a faster animation.
 
     for x in range(5):
-        if distance(0, x + 6) < 180:
+        if distance(0, x + 6) < 160:
             base_timing = int(base_timing - 4)
     return base_timing
 
@@ -231,9 +229,9 @@ def game_stage():
             # Requires special timing before Wakka comes in
             stages = [
                 0,
-                30,
-                70,
-                jassu_pass_timing() - 14,
+                37,
+                105,
+                jassu_pass_timing() - 13,
                 jassu_pass_timing(),
                 tidus_shot_timing(),
             ]
@@ -398,9 +396,9 @@ def radius_movement(radius: int = 580, direction="forward"):
 
 def working_forward():
     c_player = player_array[controlling_player()].get_coords()
-    # if distance(3,10) < 330:
-    #    radius_movement(direction='back')
-    if c_player[1] > -180:
+    if distance(3,10) < 400:
+        radius_movement(direction='back')
+    elif c_player[1] > -180:
         # logger.debug("In position")
         blitz_pathing.set_movement([-585, -130])
     else:
@@ -421,7 +419,7 @@ def find_safe_place():
     if c_player_num in [1, 4]:
         target_coords = [520, -20]
     elif c_player_num in [2, 3]:
-        if player_array[7].get_coords()[1] < 10 or player_array[6].get_coords()[1] < 10:
+        if player_array[7].get_coords()[1] < -10 or player_array[6].get_coords()[1] < -10:
             safe_spot = 3
             # safe_spot = 2
         else:
@@ -456,9 +454,9 @@ def jassu_train():
     jassu_coords = player_array[3].get_coords()
     if abs(jassu_coords[0]) < 30:
         if jassu_coords[1] > 400:
-            FFXC.set_movement(0, -1)
+            blitz_pathing.set_movement([0, -1])
         else:
-            FFXC.set_movement(0, -1)
+            blitz_pathing.set_movement([0, -1])
     elif jassu_coords[0] < 10:
         radius_movement(direction="back")
     else:
@@ -466,9 +464,12 @@ def jassu_train():
 
 
 def pass_ball(target=0, break_through=5):
+    logger.debug("Test 2")
     if controlling_player() == 4:
         break_through = 0
+    logger.debug("Test 3")
     if select_breakthrough():
+        logger.debug("Selecting breakthrough value")
         if break_through == 5:
             if cursor_1() == 0:
                 xbox.menu_up()
@@ -478,18 +479,26 @@ def pass_ball(target=0, break_through=5):
         else:
             xbox.menu_b()
     elif select_action():
+        logger.debug("Selecting action (pass/shoot) value")
         if cursor_1() != 0:  # Pass command
             xbox.menu_down()
             memory.main.wait_frames(3)
         else:
             xbox.menu_b()
     elif select_pass_target():
+        logger.debug(f"Selecting pass target value, target {target}")
         while not active_clock():
+            logger.debug(f"Attempting to select target: {targeted_player()} | {target}")
             if targeted_player() != target:
-                xbox.menu_down()
+                if target <= 2:
+                    xbox.menu_down()
+                else:
+                    xbox.menu_up()
+                memory.main.wait_frames(3)
             else:
                 xbox.tap_b()
     else:
+        logger.debug("Pass - other")
         xbox.menu_b()
 
 
@@ -524,7 +533,8 @@ def shoot_ball(break_through=5):
             memory.main.wait_frames(3)
         else:
             xbox.menu_b()
-        game_vars.blitz_first_shot_taken()
+        if controlling_player == 0:
+            game_vars.blitz_first_shot_taken()
 
 
 def dribble_ball():
@@ -585,46 +595,65 @@ def tidus_move():
     if distance(0, 10) < 180:
         other_distance += 1
 
-    shoot_target = [-170, 540]
+    shoot_target = [-90, 550]
 
     if current_stage > 15:
-        if player_array[0].get_coords()[0] > 50:
-            FFXC.set_movement(-1, -1)
+        if get_char_radius(0) < 390:
+            blitz_pathing.set_movement([-400, -100])
         else:
             radius_movement(radius=400, direction="back")
         if distance(0, 3) < 330:
             xbox.tap_x()
     elif memory.main.get_story_progress() > 700:
+        logger.debug(f"Post-story Blitzball. {current_stage}")
         if other_distance >= 2:
             xbox.tap_x()
         elif current_stage == 4:
             xbox.tap_x()
         elif blitz_pathing.set_movement(shoot_target):
             xbox.tap_x()
-    elif current_stage in [0, 1, 2, 5]:
+    elif current_stage == 5:
         FFXC.set_movement(-1, -1)
         xbox.tap_x()
-    elif current_stage == 4:
-        if graav_distance < 240:
-            # Graav too close.
-            FFXC.set_movement(-1, -1)
+        #logger.debug(f"Get rid of ball {current_stage}")
+    elif current_stage in [0, 1, 2]:
+        if blitz_pathing.set_movement([-500, -100]):
             xbox.tap_x()
+    elif current_stage == 4:
+        if graav_distance < 280:
+            # Graav too close.
+            blitz_pathing.set_movement([-10, 580])
+            xbox.tap_x()
+            #logger.debug(f"Graav too close! {current_stage}")
         elif other_distance >= 2:
             # Too many players closing in.
-            FFXC.set_movement(-1, -1)
+            blitz_pathing.set_movement([-10, 580])
             xbox.tap_x()
+            #logger.debug(f"Too many plaers!!! {current_stage}")
         elif (
             blitz_pathing.set_movement(shoot_target)
             and memory.main.get_story_progress() >= 570
         ):
-            FFXC.set_movement(-1, -1)
-            xbox.tap_x()
-    else:  # stages 3 and 4 only. All other stages we try to pass, or just shoot.
-        if player_array[0].get_coords()[1] > 470:  # Force shot
-            FFXC.set_movement(-1, -1)
+            #logger.debug("Time to shoot (A)")
+            blitz_pathing.set_movement([10, 580])
             xbox.tap_x()
         else:
-            radius_movement(radius=570, direction="forward")
+            blitz_pathing.set_movement([10, 580])
+    else:  # stages 3 and 4 only. All other stages we try to pass, or just shoot.
+        if graav_distance < 280 or distance(0,10) < 280:
+            # Graav too close.
+            blitz_pathing.set_movement([-10, 580])
+            xbox.tap_x()
+        elif distance(0,11) < 40:
+            blitz_pathing.set_movement([10, 580])
+            #logger.debug(f"SHOOOOOT!!! (B))")
+            xbox.tap_x()
+        elif player_array[0].get_coords()[1] > 460:  # Force shot
+            blitz_pathing.set_movement([10, 580])
+            #logger.debug(f"Charge the net! (D)")
+        else:
+            blitz_pathing.set_movement([10, 590])
+            #logger.debug("Just move (E)")
 
 
 def tidus_act():
@@ -643,7 +672,10 @@ def tidus_act():
         other_distance += 1
 
     if current_stage > 15:
-        pass_ball(target=3)
+        if other_distance >= 2:
+            shoot_ball(break_through=0)
+        else:
+            pass_ball(target=3)
         game_vars.blitz_first_shot_taken()
     elif memory.main.get_story_progress() > 700:
         shoot_ball(break_through=0)
@@ -657,7 +689,9 @@ def tidus_act():
             shoot_ball(break_through=0)
     elif current_stage in [0, 1, 2]:
         # Early game. Try to get the ball to Jassu.
-        if distance(0, 3) < 350:
+        if distance(0, 8) < 180 or distance(0, 9) < 180 or distance(0, 10) < 180:
+            shoot_ball(break_through=0)
+        elif distance(0, 3) < 350:
             pass_ball(target=3)
             game_vars.blitz_first_shot_taken()
         elif distance(0, 2) < 350:
@@ -685,29 +719,19 @@ def letty_move():
         find_safe_place()
         xbox.tap_x()
     elif current_stage >= 3:
-        FFXC.set_movement(1, 0)
+        blitz_pathing.set_movement([10, 580])
         xbox.tap_x()
-    elif current_stage == 2:
-        target_coords = [-20, -585]
-        blitz_pathing.set_movement(target_coords)
-        if not player_guarded(3):
-            xbox.tap_x()
-        elif not player_guarded(2):
-            xbox.tap_x()
-    elif current_stage == 1:
-        # if not player_guarded(3) and distance(3, 10) > 380 and graav_distance > 380:
-        if distance(3, 8) > 400:
+    elif current_stage in [1,2]:
+        if distance(3,8) > 400 and distance(3,10) > 400:
             xbox.tap_x()
         else:
-            if find_safe_place() and graav_distance < 280:
-                xbox.tap_x()
+            find_safe_place()
     else:
         find_safe_place()
 
 
 def letty_act():
     current_stage = game_stage()
-    distance(0, 2)
 
     if current_stage == 20:
         if distance(0, 8) > 400:
@@ -723,34 +747,24 @@ def letty_act():
             pass_ball(target=1, break_through=0)
     elif current_stage >= 4:
         pass_ball(target=0)
-        if report_state:
-            logger.debug("Letty Action 1")
     elif current_stage == 3:
-        pass_ball(target=3)
-        if report_state:
-            logger.debug("Letty Action 2")
-    elif player_array[2].current_hp() < 10:
         pass_ball(target=3)
     elif current_stage == 2:
         if distance(2, 8) < 250:
             break_through_val = 5
         else:
             break_through_val = 0
-
-        if not player_guarded(3):
-            tar = 3
-        elif not player_guarded(0):
-            tar = 0
+        if distance(3,8) > 400 and distance(3,10) > 400:
+            pass_ball(target=3, break_through=break_through_val)
         else:
-            tar = 3
-        pass_ball(target=tar, break_through=break_through_val)
+            dribble_ball()
     else:
         if not game_vars.blitz_first_shot() and distance(0, 8) > 400:
-            logger.debug("Letty pass to Tidus")
             pass_ball(target=0)
-        else:
-            logger.debug("Letty pass to Jassu")
+        elif distance(3,8) > 380 and distance(3,10) > 380:
             pass_ball(target=3)
+        else:
+            dribble_ball()
 
 
 def jassu_move():
@@ -778,7 +792,7 @@ def jassu_move():
     if current_stage == 20:
         find_safe_place()
         if (
-            distance(0, 8) > 280 and 
+            distance(0, 8) > 330 and 
             distance(0, 10) > 360 and 
             get_char_radius(3) > 450 and 
             player_array[0].get_coords()[0] < -80 and
@@ -809,32 +823,39 @@ def jassu_move():
         # Move forward to staging position, prep for shot.
         working_forward()
         move_forward = True
+    elif (
+        game_vars.get_blitz_ot() and 
+        player_array[0].get_coords()[1] > player_array[10].get_coords()[1] and
+        distance(0,10) > 370
+    ):
+        xbox.tap_x()
+    #elif (
+    #    current_stage >= 3 and 
+    #    distance(0,7) < 300 and
+    #    distance(0,8) < 300 and
+    #    distance(0,10) < 300
+    #):
+    #    logger.debug("Tidus guarded, passing to Datto. (tap X)")
+    #    xbox.tap_x()
     elif current_stage == 3:
-        if (
-            distance(0,7) < 200 and
-            distance(0,8) < 200 and
-            distance(0,10) < 200 and
-            
-            distance(1,7) < 200 and
-            distance(1,8) < 200 and
-            distance(1,10) < 200
-        ):
-            logger.debug("Tidus guarded, passing to Datto. (tap X)")
+        rel_dist = int((tidus_c[1] - p10C[1]) + (tidus_c[0] - p10C[0]))
+        int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
+        if rel_dist > 180 and memory.main.get_story_progress() > 570:  # Wakka in position behind defender
             xbox.tap_x()
+            move_forward = True
+        elif distance(3, 10) > 450:
+            target_coords = radius_movement(radius=560, direction="forward")
+            move_forward = True
+        elif distance(3, 10) > 340:
+            #move_radius = min(int(get_char_radius() + 150), 570)
+            target_coords = [p10C[0] - 180, p10C[1] - 180]
+            #logger.warning(target_coords)
+            blitz_pathing.set_movement(target_coords)
+            move_forward = True
         else:
-            rel_dist = int((tidus_c[1] - p10C[1]) + (tidus_c[0] - p10C[0]))
-            int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
-            if rel_dist > 220:  # Tidus in position behind defender
-                xbox.tap_x()
-                move_forward = True
-            elif distance(3, 10) > 340:
-                move_radius = min(int(get_char_radius() + 150), 570)
-                target_coords = radius_movement(radius=move_radius, direction="forward")
-                move_forward = True
-            else:
-                move_radius = min(int(get_char_radius() + 150), 570)
-                target_coords = radius_movement(radius=move_radius, direction="back")
-                move_forward = True
+            move_radius = max(get_char_radius(player_index=3), get_char_radius(player_index=10))
+            target_coords = radius_movement(radius=move_radius, direction="back")
+            move_forward = True
     else:  # Pass to Tidus
         target_coords = [p10C[0] - 180, p10C[1] - 150]
         xbox.tap_x()
@@ -858,9 +879,7 @@ def jassu_act():
     graav_c = player_array[8].get_coords()
     tidus_c = player_array[0].get_coords()
     current_stage = game_stage()
-    if report_state:
-        logger.debug("Jassu Action")
-        logger.debug(f"Stage: {current_stage}")
+    logger.debug(f"Stage: {current_stage}")
     graav_distance = distance(3, 8)
     other_distance = 0
     if distance(3, 6) < 350:
@@ -874,11 +893,11 @@ def jassu_act():
 
     if current_stage == 20:
         if (
-            distance(0, 8) > 260 and 
+            distance(0, 8) > 310 and 
             distance(0, 10) > 340 and 
-            get_char_radius(3) > 420 and 
-            player_array[0].get_coords()[0] < -100 and
-            player_array[9].get_coords()[1] > 80
+            get_char_radius(3) > 440 and 
+            player_array[0].get_coords()[0] < -80 and
+            player_array[9].get_coords()[1] > 100
         ):
             pass_ball(0)
         else:
@@ -896,72 +915,71 @@ def jassu_act():
         pass_ball(target=0)
     elif current_stage == 2:
         dribble_ball()
+    elif (
+        game_vars.get_blitz_ot() and 
+        player_array[0].get_coords()[1] > player_array[10].get_coords()[1] and
+        distance(0,10) > 300
+    ):
+        pass_ball(target=0)
+    #elif (
+    #    current_stage >= 3 and 
+    #    distance(0,7) < 300 and
+    #    distance(0,8) < 300 and
+    #    distance(0,10) < 300
+    #):
+    #    logger.debug("Tidus guarded, passing to Datto. (pass command)")
+    #    pass_ball(target=2)
     elif current_stage == 3:
-        if (
-            distance(0,7) < 200 and
-            distance(0,8) < 200 and
-            distance(0,10) < 200 and
-            
-            distance(1,7) < 200 and
-            distance(1,8) < 200 and
-            distance(1,10) < 200
-        ):
-            logger.debug("Tidus guarded, passing to Datto. (pass command)")
-            pass_ball(target=1)
+        #logger.warning("Mark 1")
+        rel_dist = int((tidus_c[1] - p10C[1]) + (tidus_c[0] - p10C[0]))
+        graav_distance = int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
+        if rel_dist > 180 and memory.main.get_story_progress() > 570:  # Wakka in position behind defender
+            #logger.warning("Mark 2")
+            pass_ball(target=0)
+        #elif graav_distance < 150:
+        #    logger.warning("Mark 3")
+        #    # Graav too close
+        #    pass_ball(target=0)
         else:
-            rel_dist = int((tidus_c[1] - p10C[1]) + (tidus_c[0] - p10C[0]))
-            int((tidus_c[1] - graav_c[1]) + (tidus_c[0] - graav_c[0]))
-            if rel_dist > 180:
-                pass_ball(target=0)
-            elif graav_distance < 150:
-                # Graav too close
-                pass_ball(target=0)
-            elif player_array[0].get_coords()[1] - player_array[10].get_coords()[1] > 280:
-                # Tidus in position for break-away.
-                pass_ball(target=0)
-            else:
-                dribble_ball()
+            #logger.warning("Mark 4")
+            dribble_ball()
     else:  # Pass to Tidus
         pass_ball(target=0)
 
 
 def other_move():  # fix
     current_stage = game_stage()
-    if current_stage == 3 and controlling_player() == 1:
-        if blitz_pathing.set_movement([40,520]):
+    me = controlling_player()
+
+    if me == 1:
+        # Datto sucks at everything!
+        if current_stage in [4,5]:
+            blitz_pathing.set_movement([10,580])
             xbox.tap_x()
-    elif get_char_radius(controlling_player()) < 540:
-        FFXC.set_movement(0, 1)
-    elif player_array[controlling_player()].get_coords()[1] < -400:
-        xbox.tap_x()
-    elif distance(controlling_player(), 8) < 300:
-        xbox.tap_x()
+        else:
+            if blitz_pathing.set_movement([480,-200]):
+                xbox.tap_x()
     else:
-        radius_movement(radius=570, direction="back")
+        if get_char_radius(4) < 400:
+            blitz_pathing.set_movement([480,-200])
+        elif player_array[4].get_coords()[1] < -500:
+            xbox.tap_x()
+        else:
+            radius_movement(radius=580, direction="back")
 
 
 def other_act():
     current_stage = game_stage()
+    me = controlling_player()
 
-    if report_state:
-        logger.debug("Botta/Datto action")
-        logger.debug(f"Stage: {current_stage}")
-    
-    if current_stage == 3 and controlling_player() == 1:
-        shoot_ball()
-
-    elif memory.main.get_story_progress() > 700:
-        if controlling_player() == 1:
+    if me == 1:
+        # Datto sucks at everything!
+        if current_stage in [4,5]:
             shoot_ball()
         else:
-            if player_array[0].get_coords()[1] > player_array[1].get_coords()[1]:
-                pass_ball(target=2, break_through=0)
-            else:
-                pass_ball(target=3, break_through=0)
-    elif distance(controlling_player(), 8) < 300:
-        pass_ball(target=2)
+            pass_ball(target=4)
     else:
-        pass_ball(target=3)
+        pass_ball(target=3, break_through=5)
 
 
 def blitz_movement():
@@ -980,6 +998,7 @@ def blitz_movement():
 def decide_action():
     FFXC.set_neutral()
     update_player_array()
+    logger.debug(controlling_player())
     if controlling_player() == 0:
         tidus_act()
     elif controlling_player() == 2:
@@ -1103,6 +1122,10 @@ def blitz_main(force_blitz_win):
                             logger.debug("Selecting action (Shoot/Pass/Dribble)")
                             last_menu = 7
                         decide_action()
+                    else:
+                        if last_menu != 91:
+                            logger.debug(f"Unknown_menu_state!!! {memory.main.blitz_menu_num()}")
+                            last_menu = 91
             else:
                 FFXC.set_neutral()
                 if last_state != 3:
@@ -1151,3 +1174,4 @@ def blitz_main(force_blitz_win):
     else:
         rng_track.record_blitz_results(duration=total_time)
     logger.info(f"--Blitz Win value: {game_vars.get_blitz_win()}")
+    return total_time

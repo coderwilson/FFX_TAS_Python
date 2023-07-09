@@ -112,20 +112,32 @@ def to_hidden_cave():
 
 
 def next_green() -> bool:
-    next_green = memory.main.next_chance_rng_01(version="green")[0][0]
+    next_green_val = [0,0,0]
+    next_green_val[0] = memory.main.next_chance_rng_01(version="green")[0][0]
+    next_green_val[1] = memory.main.next_chance_rng_01(version="green")[0][1]
+    next_green_val[2] = memory.main.next_chance_rng_01(version="green")[0][2]
+    green_index = 0
     next_white = memory.main.next_chance_rng_01()[0][0]
-    logger.debug("Next Ghost coming up:")
-    logger.debug(f"Green: {next_green}")
-    logger.debug(f"White: {next_white}")
+    logger.manip("Next Ghost coming up:")
+    logger.manip(f"Green: {next_green_val[0]}, {next_green_val[1]}, {next_green_val[2]}")
+    logger.manip(f"White: {next_white}")
     go_green = False
-    if next_green < next_white:
-        if next_green >= 2:
+    if next_green_val[0] < next_white:
+        if next_green_val[0] >= 2:
             go_green = True
+    if not go_green and next_green_val[1] < next_white:
+        if next_green_val[1] >= 2:
+            go_green = True
+            green_index = 1
+    if not go_green and next_green_val[2] < next_white:
+        if next_green_val[2] >= 2:
+            go_green = True
+            green_index = 2
     logger.debug(f"## Going to Green: {go_green}")
     if game_vars.accessibility_vars()[2]:
         if go_green:
             tts.message("Green")
-            tts.message(str(next_green))
+            tts.message(str(next_green_val))
         else:
             tts.message("White")
             tts.message(str(next_white))

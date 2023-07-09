@@ -74,22 +74,22 @@ class RikkuImp(Player):
         elif battle == "spherimorph1":
             item1 = memory.main.get_item_slot(24)
             logger.debug(f"Arctic Wind in slot: {item1}")
-            item2 = memory.main.get_item_slot(90)
+            item2 = memory.main.get_item_slot(89)
             logger.debug(f"Mag Def Sphere in slot: {item2}")
         elif battle == "spherimorph2":
             item1 = memory.main.get_item_slot(32)
             logger.debug(f"Fish Scale in slot: {item1}")
-            item2 = memory.main.get_item_slot(90)
+            item2 = memory.main.get_item_slot(89)
             logger.debug(f"Mag Sphere in slot: {item2}")
         elif battle == "spherimorph3":
             item1 = memory.main.get_item_slot(30)
             logger.debug(f"Lightning Marble in slot: {item1}")
-            item2 = memory.main.get_item_slot(90)
+            item2 = memory.main.get_item_slot(89)
             logger.debug(f"Mag Sphere in slot: {item2}")
         elif battle == "spherimorph4":
             item1 = memory.main.get_item_slot(27)
             logger.debug(f"Bomb Core in slot: {item1}")
-            item2 = memory.main.get_item_slot(90)
+            item2 = memory.main.get_item_slot(89)
             logger.debug(f"Mag Sphere in slot: {item2}")
         elif battle == "bfa":
             item1 = memory.main.get_item_slot(35)

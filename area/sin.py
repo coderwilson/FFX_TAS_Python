@@ -61,13 +61,14 @@ def shedinja():  # shelinda
     if not game_vars.csr():
         memory.main.click_to_diag_progress(100)
     memory.main.click_to_diag_progress(76)  # Have you found a way? Well?
-    memory.main.wait_frames(20)
+    memory.main.wait_frames(10)
     xbox.tap_down()
     xbox.menu_b()  # We fight Yu Yevon.
 
-    memory.main.click_to_diag_progress(74)
-    memory.main.click_to_diag_progress(28)
-    memory.main.click_to_control_3()
+    if not game_vars.csr():
+        memory.main.click_to_diag_progress(74)
+        memory.main.click_to_diag_progress(28)
+        memory.main.click_to_control()
 
 
 def exit_cockpit():
@@ -214,6 +215,7 @@ def execute_egg_hunt():
             1,
             2,
         ]:
+            logger.info(f"Character: {game_vars.zombie_weapon()}, equipping zombie weapon.")
             menu.equip_weapon(
                 character=game_vars.zombie_weapon(),
                 ability=0x8032,

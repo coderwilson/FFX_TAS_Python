@@ -1,7 +1,10 @@
+blitz_threshold = 440
+
 # Libraries and Core Files
 import logging
 import random
 import sys
+import argparse
 
 # This needs to be before the other imports in case they decide to log things when imported
 import log_init
@@ -61,12 +64,40 @@ def configuration_setup():
     # Open the config file and parse game configuration
     # This may overwrite configuration above
     config_data = config.open_config()
+    
+    # Argument parsing
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-seed")
+    parser.add_argument("-state")
+    parser.add_argument("-step")
+    parser.add_argument("-train_blitz")
+    args = parser.parse_args()
+    
     # gamestate
-    game.state = config_data.get("gamestate", "none")
-    game.step = config_data.get("step_counter", 1)
+    try:
+        #logger.warning(args)
+        logger.info(f"Twitch states passed forward: {args.state}, {args.step}")
+        if args.state != None or args.step != None:
+            logger.warning(f"Loading in variables from Twitch, {args.state}, {args.step}")
+            game.state = args.state
+            game.step = int(args.step)
+        else:
+            game.state = config_data.get("gamestate", "none")
+            game.step = config_data.get("step_counter", 1)
+    except:
+        logger.warning("Failure, could not load variables from Twitch")
+        game.state = "VAR_ERROR"
+        game.step = 999
+    
 
-    if game.state == "Luca" and game.step == 3:
-        game_length = "Testing Blitzball only"
+    if args.train_blitz != None:
+        game_vars.set_loop_blitz(True)
+        logger.warning("Training Blitzball, may reset after Blitzball wins.")
+    if args.seed != None:
+        logger.debug(f"Seed passed from Twitch: {args.seed}")
+        twitch_seed = int(args.seed)
+        game_vars.rng_seed_num_set(twitch_seed)
+        game_length = "Seed set via Twitch chat"
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game_vars.rng_seed_num_set(255)
         game_length = "Loading mid point for testing."
@@ -116,12 +147,15 @@ def rng_seed_setup():
 
 
 def load_game_state():
+    from json_ai_files.write_seed import write_state_step
     # loading from a save file
+    write_state_step(state=game.state, step=game.step)
     load_game.load_into_game(gamestate=game.state, step_counter=game.step)
     game.start_time = logs.time_stamp()
 
 
 def maybe_create_save(save_num: int):
+    memory.main.await_control()
     memory.main.wait_frames(6)
     game_vars = vars.vars_handle()
     if game_vars.create_saves():
@@ -129,8 +163,14 @@ def maybe_create_save(save_num: int):
             save_num=save_num, game_state=game.state, step_count=game.step
         )
 
-
 def perform_TAS():
+    # Force looping on Blitzball only.
+    if game.state == "Luca" and game.step == 3:
+        only_play_blitz = True
+        logger.warning("Who's ready to play some Blitzball?")
+    else:
+        only_play_blitz = False
+
     game_vars = vars.vars_handle()
 
     # Original seed for when looping
@@ -145,6 +185,8 @@ def perform_TAS():
 
             # Start of the game, start of Dream Zanarkand section
             if game.state == "none" and game.step == 1:
+                from json_ai_files.write_seed import write_new_game
+                write_new_game()
                 logger.info("New Game 1 function initiated.")
                 area.dream_zan.new_game(game.state)
                 logger.info("New Game 1 function complete.")
@@ -224,6 +266,7 @@ def perform_TAS():
                 if game.step == 2:
                     area.besaid.trials()
                     game.step = 3
+                    maybe_create_save(save_num=79)
 
                 if game.step == 3:
                     area.besaid.leaving()
@@ -261,6 +304,7 @@ def perform_TAS():
             if game.state == "Boat3":
                 area.boats.ss_winno_2()
                 game.state = "Luca"
+                maybe_create_save(save_num=81)
 
             if game.state == "Luca":
                 if game.step == 1:
@@ -283,15 +327,29 @@ def perform_TAS():
                 if game.step == 4:
                     logger.info("----- Blitz Start")
                     force_blitz_win = game_vars.get_force_blitz_win()
-                    blitz.blitz_main(force_blitz_win)
+                    blitz_duration = blitz.blitz_main(force_blitz_win)
                     logger.info("----- Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
 
-                    if game_vars.loop_blitz() and blitz_loops < max_loops:
+                    if only_play_blitz:
+                        logger.info("------------------------")
+                        logger.info("- Need more Blitzball! -")
+                        logger.info("------------------------")
+                        game.state, game.step = reset.mid_run_reset()
+                        load_game.load_into_game(gamestate="Luca", step_counter=3)
+                        game.step = 3
+                        game.state = "Luca"
+
+                    elif game_vars.loop_blitz() and blitz_duration < blitz_threshold:
+                        logger.info("--------------")
+                        logger.info(f"Good Blitz, worth completing the run. Blitz time: {blitz_duration} seconds.")
+                        logger.info("--------------")
+                        game.step = 5
+                    elif game_vars.loop_blitz() and blitz_loops < max_loops:
                         FFXC.set_neutral()
                         logger.info("-------------")
-                        logger.info("- Resetting -")
+                        logger.info("- Resetting: Blitz time: {blitz_duration} seconds.")
                         logger.info("-------------")
                         screen.await_turn()
                         game.state, game.step = reset.mid_run_reset()
@@ -322,11 +380,12 @@ def perform_TAS():
                     area.miihen.arrival_2(
                         return_array[0], return_array[1], return_array[2]
                     )
-                    game.step = 2
-
-                if game.step == 2:
                     area.miihen.mid_point()
                     logger.info("End of Mi'ihen mid point section.")
+                    game.step = 2
+                    maybe_create_save(save_num=26)
+
+                if game.step == 2:
                     area.miihen.low_road(
                         return_array[0], return_array[1], return_array[2]
                     )
@@ -342,16 +401,24 @@ def perform_TAS():
 
             if game.state == "MRR":
                 if game.step == 1:
-                    area.mrr.arrival()
+                    if area.mrr.arrival():
+                        game.step = 4
+                    else:
+                        game.step = 2
+                        maybe_create_save(save_num=27)
+                
+                if game.step == 2:
                     area.mrr.main_path()
                     if memory.main.game_over():
                         game.state = "game_over_error"
-                    game.step = 2
-                    maybe_create_save(save_num=27)
+                    game.step = 3
+                    maybe_create_save(save_num=88)
 
-                if game.step == 2:
+                if game.step == 3:
                     area.mrr.battle_site()
-                    area.mrr.gui_and_aftermath()
+                    game.step = 4
+                if game.step == 4:
+                    area.mrr.aftermath()
                     end_time = logs.time_stamp()
                     total_time = end_time - game.start_time
                     logger.info(f"End of Battle Site timer is: {total_time}")
@@ -394,6 +461,8 @@ def perform_TAS():
                     if game_vars.create_saves():
                         while memory.main.get_map() != 243:
                             FFXC.set_movement(1, 1)
+                        FFXC.set_neutral()
+                        memory.main.await_control()
                         maybe_create_save(save_num=31)
                         while memory.main.get_map() != 135:
                             FFXC.set_movement(1, -1)
@@ -560,7 +629,8 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    if game_vars.ne_armor() == 255:
+                    _, loop_back = rng_track.nea_track()
+                    if game_vars.ne_armor() == 255 and loop_back <= 5:
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:
@@ -800,7 +870,6 @@ def perform_TAS():
                 game.state, game.step = reset.mid_run_reset(
                     land_run=True, start_time=game.start_time
                 )
-            logger.debug("Mark 4")
             logger.debug("Looping")
             logger.debug(f"{game.state} | {game.step}")
 

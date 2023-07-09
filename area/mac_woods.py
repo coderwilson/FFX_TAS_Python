@@ -130,6 +130,7 @@ def arrival(rikku_charged):
 def lake_road():
     logger.info("Lake road")
     memory.main.await_control()
+    #menu.kimahri_terra()
     while not pathing.set_movement([174, -96]):
         pass
     while not pathing.set_movement([138, -83]):
@@ -141,6 +142,7 @@ def lake_road():
         xbox.tap_b()
     FFXC.set_neutral()
     menu.m_woods()  # Selling and buying, item sorting, etc
+    memory.main.click_to_control()
     memory.main.update_formation(Tidus, Kimahri, Yuna)
     while not pathing.set_movement([101, -72]):
         pass

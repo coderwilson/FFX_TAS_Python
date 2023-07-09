@@ -1,6 +1,7 @@
 import logging
 
 import battle.main
+import battle.boss
 import logs
 import memory.get
 import memory.main
@@ -82,7 +83,8 @@ def arrival():
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
 
-    game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
+    #game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
+    game_vars.set_skip_zan_luck(False)  # Not working properly.
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
     # game_vars.set_skip_zan_luck(True) #For testing
@@ -443,16 +445,25 @@ def yunalesca():
             FFXC.set_value("btn_b", 0)
             FFXC.set_value("btn_a", 0)
             memory.main.wait_frames(1)
-    xbox.click_to_battle()
-    battle.main.aeon_summon(4)  # Summon Bahamut and attack.
+    battle.boss.yunalesca()
     memory.main.click_to_control()  # This does all the attacking and dialog skipping
 
     # Now to check for zombie strike and then report to logs.
     logger.info("Ready to check for Zombiestrike")
+    game_vars.set_zombie(value=confirm_zombie())
     logs.write_stats("Zombiestrike:")
     logs.write_stats(game_vars.zombie_weapon())
     logger.info("++Zombiestrike:")
     logger.info(f"++ {game_vars.zombie_weapon()}")
+
+
+def confirm_zombie() -> int:
+    equip_handles = memory.main.all_equipment()
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.has_ability(0x8032):
+            return current_handle.owner()
+    return 255
 
 
 def post_yunalesca(checkpoint=0):

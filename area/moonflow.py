@@ -3,6 +3,7 @@ import logging
 import battle.boss
 import battle.main
 import memory.main
+from memory.main import get_item_slot, get_item_count_slot
 import menu
 import pathing
 import screen
@@ -19,10 +20,14 @@ FFXC = xbox.controller_handle()
 
 def arrival():
     logger.info("Starting Moonflow section")
+    keys = 0
+    key_slot = get_item_slot(81)
+    keys_start = get_item_count_slot(key_slot)
 
     checkpoint = 0
     while memory.main.get_map() != 235:
         if memory.main.user_control():
+            #logger.debug(keys)
             # Chests
             if checkpoint == 2:  # Gil outside Djose temple
                 logger.info("Djose gil chest")
@@ -31,12 +36,32 @@ def arrival():
                 FFXC.set_movement(1, -1)
                 memory.main.click_to_control()
                 checkpoint += 1
+            elif checkpoint == 15 and keys == 0:
+                key_slot = get_item_slot(81)
+                keys = get_item_count_slot(key_slot)
+                if keys == keys_start:
+                    checkpoint = 70
+                logger.debug(f"Key sphere checkpoint: {checkpoint}")
+            elif checkpoint == 38:
+                checkpoint = 45
+                logger.info(f"No longer get mdef sphere. Updated checkpoint: {checkpoint}")
             elif checkpoint == 43:  # Moonflow chest
                 if memory.main.get_item_slot(90) < 200:
                     checkpoint += 1
                 else:
                     pathing.set_movement([-1796, -480])
                     xbox.tap_b()
+            elif checkpoint == 75:
+                key_slot = get_item_slot(81)
+                keys = get_item_count_slot(key_slot)
+                if keys == keys_start:
+                    FFXC.set_movement(0,1)
+                    xbox.tap_b()
+                else:
+                    checkpoint += 1
+                    logger.debug(f"Chest gotten. {checkpoint}")
+            elif checkpoint == 77:
+                checkpoint = 17
 
             # Map changes
             elif checkpoint < 6 and memory.main.get_map() == 76:
@@ -60,8 +85,10 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
+            if memory.main.battle_active():
                 battle.main.flee_all()
+                battle.main.wrap_up()
+                battle.main.heal_up()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
@@ -80,6 +107,9 @@ def south_bank(checkpoint: int = 0):
 
     memory.main.click_to_control_3()
     party_hp = memory.main.get_hp()
+    if memory.main.equipped_weapon_has_ability(char_num=0, ability_num=0x8026):
+        if memory.main.check_ability(ability=0x804B):
+            menu.equip_weapon(character=0, ability=0x804B, full_menu_close=False)
     if party_hp[4] < 800:
         battle.main.heal_up(2)
     elif party_hp[0] < 700:

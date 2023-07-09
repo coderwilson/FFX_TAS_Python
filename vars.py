@@ -33,7 +33,7 @@ class AllVars:
             self.skip_cutscene_flag = False
         elif config_vars.get("game_mode") == "swag":
             self.perfect_aeon_kills = True
-        elif config_vars.get("game_mode") == "blitz_only":
+        elif config_vars.get("game_mode") == "blitz_loop":
             self.blitz_loop = True
 
         # === RNG settings ===
@@ -58,7 +58,7 @@ class AllVars:
         # === Vars used by the TAS, no pre-set values ===
         # ----Cutscene remover, TAS will set this value on New Game
         # ----If loading to a save file without CSR, may need to change this.
-        self.csr_value = False
+        self.csr_value = True
 
         # ----Blitzball
         self.blitz_loss_force_reset = True
@@ -77,6 +77,7 @@ class AllVars:
         # ----Equipment
         self.zombie_weapon_val = 255
         self.l_strike_count = 0
+        self.mrr_skip = False
 
         # ----RNG Manip
         self.yellows = 0  # Not yet implemented. Part of thunderstrike weapon manip.
@@ -194,6 +195,9 @@ class AllVars:
 
     def loop_blitz(self):
         return self.blitz_loop
+
+    def set_loop_blitz(self, value):
+        self.blitz_loop = value
 
     def loop_seeds(self):
         return self.force_loop
@@ -323,6 +327,12 @@ class AllVars:
     def set_zombie(self, value):
         self.zombie_weapon_val = value
 
+    def mrr_skip_val(self):
+        return self.mrr_skip
+
+    def mrr_skip_set(self, value):
+        self.mrr_skip = value
+
     def early_tidus_grid_set_true(self):
         self.early_tidus_grid_val = True
 
@@ -356,8 +366,14 @@ class AllVars:
     def add_rescue_count(self):
         self.rescue_count += 1
 
+    def remove_rescue_count(self):
+        self.rescue_count = 3
+
+    def set_rescue_count(self, value):
+        self.rescue_count = value
+
     def completed_rescue_fights(self):
-        logger.debug(f"Completed {self.rescue_count} exp kills")
+        #logger.debug(f"Completed {self.rescue_count} exp kills")
         return self.rescue_count >= 4
 
     def add_ytk_farm(self):

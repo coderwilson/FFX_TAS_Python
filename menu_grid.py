@@ -593,6 +593,15 @@ def sel_sphere(s_type, shift):
         grid_left()
         grid_left()
         grid_left()
+    if shift == "l8":
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
+        grid_left()
     if shift == "right":
         grid_right()
     if shift == "r2":
@@ -632,8 +641,12 @@ def sel_sphere(s_type, shift):
         memory.main.wait_frames(30 * 0.2)
         grid_down()
         grid_down()
+        grid_down()
+        grid_down()
         grid_left()
         grid_left()
+        if game_vars.end_game_version() == 4:
+            grid_left()
     if shift == "yunaspec":
         # Yuna Special
         grid_down()

@@ -32,6 +32,10 @@ class WakkaImpl(Player):
         xbox.tap_b()  # Second reel
         memory.main.wait_frames(5)
         xbox.tap_b()  # Third reel
+        while memory.main.battle_active() and not memory.main.turn_ready():
+            if memory.main.special_text_open():
+                # Mostly used for Extractor fight.
+                xbox.tap_b()
 
     def overdrive_active(self):
         return memory.main.read_val(0x00DA0BD0, 1) != 0

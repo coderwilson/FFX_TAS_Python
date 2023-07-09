@@ -604,6 +604,8 @@ def navigate_to_character(cur_character):
             tap_right()
         elif memory.main.get_naming_index() > position_target:
             tap_left()
+        #memory.main.wait_frames(1)
+    memory.main.wait_frames(1)
 
 
 def name_aeon(character=""):

@@ -106,7 +106,8 @@ def path():
 def temple():
     logger.info("Djose Temple.")
     memory.main.click_to_control()
-    menu.djose_temple()
+    if not game_vars.mrr_skip_val:
+        menu.djose_temple()
     if not game_vars.csr():
         FFXC.set_movement(0, -1)
         memory.main.wait_frames(30 * 0.3)
@@ -389,10 +390,10 @@ def leaving_djose():
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 memory.main.click_to_event_temple(0)
-                if checkpoint == 9:
-                    checkpoint = 35
-                else:
-                    checkpoint += 1
+                #if checkpoint == 9:
+                #    checkpoint = 35
+                #else:
+                checkpoint += 1
             elif checkpoint == 14:
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1

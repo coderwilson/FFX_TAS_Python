@@ -12,6 +12,7 @@ import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
 from players import Auron, CurrentPlayer
+from json_ai_files.write_seed import write_seed_num
 
 game_vars = vars.vars_handle()
 
@@ -112,7 +113,7 @@ def listen_story():
         if memory.main.user_control():
             # Events
             if checkpoint == 5:
-                FFXC.set_movement(0, -1)
+                FFXC.set_movement(-1, -1)
                 while not memory.main.name_aeon_ready():
                     xbox.tap_b()
                 logger.info("Ready to name Tidus")
@@ -203,6 +204,7 @@ def ammes_battle():
     else:
         logging.error(f"Unable to derive seed from recorded hits: {hits_array}")
     logger.info(f"Confirmed RNG seed: {memory.main.rng_seed()}")
+    write_seed_num(seed=memory.main.rng_seed())
     logger.info("Done Killing Sinspawn")
     memory.main.wait_frames(6)  # Just for no overlap
     logger.debug("Clicking to battle.")

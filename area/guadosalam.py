@@ -7,6 +7,8 @@ import vars
 import xbox
 from paths import GuadoSkip, GuadoStart, GuadoStoryline
 from players import Auron, Lulu, Rikku, Wakka, Yuna
+import battle.main
+import menu
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -17,11 +19,16 @@ FFXC = xbox.controller_handle()
 def arrival():
     logger.info("Starting Guadosalam section")
     checkpoint = 0
+    FFXC.set_neutral()
     memory.main.click_to_control()
     while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():
             if checkpoint == 4:
                 # Into the first door
+                if 1 in memory.main.ambushes():
+                    FFXC.set_neutral()
+                    battle.main.heal_up(full_menu_close=True)
+                menu.t_plains_terra_skip()
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1

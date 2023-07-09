@@ -29,7 +29,7 @@ class Miihen1(AreaMovementBase):
         # Shelinda
         28: [5, 2982],
         29: [2, 3088],
-        30: [0, 3500],
+        30: [-400, 3500],
         31: [0, -227],
     }
     checkpoint_fallback = {

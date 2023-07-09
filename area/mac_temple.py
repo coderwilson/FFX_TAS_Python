@@ -49,7 +49,7 @@ def approach(do_grid=True):
     memory.main.await_control()
     if do_grid:
         menu.mac_temple()
-    save_sphere.touch_and_go()
+    #save_sphere.touch_and_go()
 
 
 def arrival():
@@ -322,6 +322,7 @@ def escape():
     logger.info("Done pathing. Now for the Wendigo fight.")
     battle.boss.wendigo()
     logger.info("Wendigo fight over")
+    memory.main.click_to_control_dumb()
 
 
 def under_lake():

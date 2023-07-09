@@ -199,7 +199,10 @@ class Player:
             logger.debug(
                 f"Casting {spell_id} on a specific target with id {target_id}, direction is {direction}"
             )
-        self.navigate_to_battle_menu(21)
+        try:
+            self.navigate_to_battle_menu(21)
+        except:
+            return
         while memory.main.main_battle_menu():
             xbox.tap_b()
         self._navigate_to_position(spell_id)
@@ -250,7 +253,7 @@ class Player:
 
         result = 0
         # Now tap to defending status.
-        while result == 0:
+        while result == 0 and memory.main.battle_active():
             result = self.is_defending()
             if result == 0:
                 xbox.tap_y()
@@ -367,6 +370,9 @@ class Player:
         return memory.main.get_battle_char_turn() == self.id
 
     def in_danger(self, danger_threshold) -> bool:
+        logger.debug(f"Danger check: {self.id}")
+        logger.debug(self.in_combat())
+        logger.debug(self.hp(self.in_combat()))
         return self.hp(self.in_combat()) <= danger_threshold
 
     def is_dead(self) -> bool:
@@ -402,9 +408,10 @@ class Player:
         if not combat:
             return self._read_char_offset_address(PlayerMagicNumbers.CUR_HP)
         else:
-            return self._read_char_battle_offset_address(
-                PlayerMagicNumbers.BATTLE_CUR_HP, self.battle_slot()
-            )
+            return memory.main.get_battle_hp()[self.battle_slot()]
+            #return self._read_char_battle_offset_address(
+            #    PlayerMagicNumbers.BATTLE_CUR_HP, self.battle_slot()
+            #)
 
     def max_hp(self, combat=False) -> int:
         if not combat:
@@ -423,6 +430,8 @@ class Player:
                 memory.main.read_val(PlayerMagicNumbers.ACTIVE_BATTLE_SLOTS + (2 * i))
                 == self.id
             ):
+                
+                #logger.debug(f"Char {self.id} in slot {i}")
                 return i
 
         offset = 0

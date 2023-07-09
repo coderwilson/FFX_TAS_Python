@@ -12,7 +12,7 @@ import screen
 import vars
 import xbox
 from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Yuna
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Yuna, Wakka
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -446,21 +446,6 @@ def trials_end():
 def via_purifico():
     memory.main.click_to_control()
 
-    # Old logic, retain until new stuff is well tested.
-    # FFXC.set_movement(0, 1)
-    # memory.main.wait_frames(30 * 3)
-    # FFXC.set_movement(1, 1)
-    # memory.main.wait_frames(30 * 0.15)
-    # FFXC.set_movement(0, 1)
-    # memory.main.wait_frames(30 * 5)
-    # FFXC.set_neutral()
-
-    # if not game_vars.csr():
-    #    memory.main.wait_frames(30 * 5.7)  # Wait for the right direction
-    # FFXC.set_movement(0, 1)
-    # memory.main.wait_frames(30 * 2)
-    # FFXC.set_neutral()
-
     # New logic
     path = [[-1, 142], [-2, 324], [-2, 503]]
     checkpoint = 0
@@ -572,6 +557,24 @@ def evrae_altana():
             if checkpoint == 50:
                 xbox.tap_b()
     return 0
+
+
+def natus_formation(battles:int = 0, full_menu_close:bool=True):
+    logger.warning(f"NEA drops as equipment drop number {rng_track.nea_track()[1]} from now.")
+    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
+    '''
+    if memory.main.get_yuna_slvl() <= 13:
+        # Just need levels
+        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
+    elif battles >= 2 or memory.main.highbridge_drops()[0] - (battles * 9) > 20:
+        # Must be ready for Natus, and no reason to manip if nothing drops here.
+        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
+    elif rng_track.nea_track()[1] >= 3:
+        # Need to advance RNG
+        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
+    else:
+        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
+    '''
 
 
 def seymour_natus():

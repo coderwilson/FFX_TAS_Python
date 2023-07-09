@@ -13,6 +13,11 @@ import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 from players import Auron, Tidus, Wakka
+from area.mrr_skip import (
+    skip_prep,
+    attempt_skip,
+    advance_to_aftermath
+)
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -24,6 +29,7 @@ def arrival():
     logger.info("Arrival at MRR")
     memory.main.click_to_control()
     memory.main.close_menu()
+
     clasko_skip = True
 
     checkpoint = 0
@@ -33,6 +39,12 @@ def arrival():
                 logger.debug("CSR, skipping forward")
                 checkpoint = 4
                 logger.debug(f"Checkpoint {checkpoint}")
+            elif checkpoint == 6 and not game_vars.csr():
+                skip_prep()
+                attempt_skip()
+                advance_to_aftermath()
+                game_vars.mrr_skip_set(True)
+                return True
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -45,6 +57,7 @@ def arrival():
                 if not memory.main.user_control():
                     battle.main.flee_all()
                     battle.main.wrap_up()
+                    memory.main.update_formation(Tidus, Wakka, Auron)
                     FFXC.set_movement(-1, 0)
                     memory.main.wait_frames(30 * 0.7)
                     FFXC.set_neutral()
@@ -79,12 +92,28 @@ def arrival():
                 battle.main.flee_all()
                 memory.main.click_to_control_3()
                 if memory.main.get_hp()[0] < 520:
-                    battle.main.heal_up()
+                    battle.main.heal_up(full_menu_close=False)
+                elif 1 in memory.main.ambushes():
+                    battle.main.heal_up(full_menu_close=False)
+                memory.main.update_formation(Tidus, Wakka, Auron)
+                memory.main.close_menu()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()
+    if game_vars.csr():
+        # Logic for CSR mode
+        memory.main.await_control()
+        FFXC.set_movement(1,-1)
+        memory.main.await_event()
+        FFXC.set_neutral()
+        memory.main.await_control()
+        skip_prep()
+        attempt_skip()
+        advance_to_aftermath()
+        game_vars.mrr_skip_set(True)
+        return True
     logger.info("Done with prelim MRR area, now for the real deal.")
-    return clasko_skip
+    return False
 
 
 def log_mrr_kimahri_crit_chance():
@@ -131,7 +160,7 @@ def main_path():
                 checkpoint += 1
                 logger.debug(f"Lift Checkpoint {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
-                if memory.main.rng_seed() not in [31]:
+                if not memory.main.rng_seed() in [31]:
                     memory.main.click_to_event_temple(7)
                     logger.info("Got X-potion")
                 checkpoint += 1
@@ -280,11 +309,11 @@ def battle_site():
             FFXC.set_neutral()
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
-
-
-def gui_and_aftermath():
     battle.boss.gui()
 
+
+def aftermath():
+    memory.main.click_to_control_dumb()
     checkpoint = 0
     while memory.main.get_map() != 93:
         if memory.main.user_control():

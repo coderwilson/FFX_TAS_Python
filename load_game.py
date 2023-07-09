@@ -36,7 +36,19 @@ def move_after_load(spec_move: str):
         load_mrr()
     elif spec_move == "Kilika_rng_manip":
         kilika_rng_manip()
+    elif spec_move == "MRR_crit_manip":
+        mrr_crit()
+    elif spec_move == "guado_start":
+        guado_start()
 
+
+def guado_start():
+    memory.main.await_control()
+    start_map = memory.main.get_map()
+    while memory.main.get_map() == start_map:
+        FFXC.set_movement(1,-1)
+    FFXC.set_neutral()
+    memory.main.await_control()
 
 def load_into_game(gamestate: str, step_counter: str):
     logger.debug(f"Loading game state {gamestate} | {step_counter}")
@@ -86,6 +98,7 @@ def load_into_game(gamestate: str, step_counter: str):
                 nea_zone = results[gamestate][step_counter][key]["nea_zone"]
                 nem_ap = results[gamestate][step_counter][key]["nem_ap_val"]
                 spec_move = results[gamestate][step_counter][key]["special_movement"]
+                mrr_skip = results[gamestate][step_counter][key]["mrr_skip"]
                 logger.debug(f"NEA zone {nea_zone}")
                 logger.debug(f"Nemesis checkpoint {nem_ap}")
 
@@ -107,6 +120,8 @@ def load_into_game(gamestate: str, step_counter: str):
                 move_after_load(spec_move=spec_move)
             else:
                 logger.debug("No Special movement needed")
+            if mrr_skip == True:
+                game_vars.mrr_skip_set(True)
 
             logger.debug(f"Blitz Win {game_vars.get_blitz_win()}")
             logger.debug(f"End game version {game_vars.end_game_version()}")
@@ -121,252 +136,36 @@ def load_into_game(gamestate: str, step_counter: str):
 
 
 def load_into_game_old(gamestate: str, step_counter: str):
-    logger.debug(f"Loading game, old method: {gamestate} | {step_counter}")
-    if not (gamestate == "Luca" and step_counter == 3):
-        area.dream_zan.new_game(gamestate)
-        game.start_time = logs.time_stamp()
-        logs.write_stats("Start time:")
-        logs.write_stats(str(game.start_time))
-
-    # Need to update these to use load_game.load_save_num(number) for all.
-
-    if gamestate == "Baaj" and step_counter == 1:
-        load_save_num(40)
-    if gamestate == "Baaj" and step_counter == 4:
-        load_save_num(100)
-    # Save pop-up after falling off of Rikkus boat
-    if gamestate == "Besaid" and step_counter == 1:
-        load_save_num(111)
-    # Save pop-up after falling off of Rikkus boat
-    if gamestate == "Besaid" and step_counter == 2:
-        load_save_num(6)
-        besaid_trials()
-    # Crusader's lodge after "Enough, Wakka!"
-    if gamestate == "Besaid" and step_counter == 3:
-        load_save_num(39)
-        logger.info("Load complete")
-        while memory.main.user_control():
-            if memory.main.get_coords()[0] > 0.5:
-                FFXC.set_movement(1, 1)
-            else:
-                FFXC.set_movement(0, 1)
-        logger.info("Ready for regular path")
-    # Besaid beach before boarding SS Liki ( nice alliteration :D )
-    if gamestate == "Boat1":
-        load_save_num(31)
-        boat_1()
-    if gamestate == "Kilika" and step_counter == 1:  # Just after entering the woods
-        load_save_num(22)
-    if gamestate == "Luca" and step_counter == 1:  # Approaching Luca via boat
-        load_save_num(112)
-    if gamestate == "Luca" and step_counter == 5:
-        load_save_num(5)
-    if gamestate == "Miihen" and step_counter == 1:  # After the talk with Auron
-        load_save_num(16)  # With laughing scene
-        load_miihen_start_laugh()
-    if gamestate == "Miihen" and step_counter == 2:  # Agency
-        load_save_num(28)
-    if gamestate == "MRR" and step_counter == 1:  # Mi'ihen North after meeting Seymour
-        load_save_num(38)
-        memory.main.set_gil_value(4000)  # Fixes a low gil state for this save file.
-        load_mrr()
-    # Aftermath, after talking to Seymour and then Auron
-    if gamestate == "Djose" and step_counter == 1:
-        load_save_num(27)
-        after_gui()
-    if gamestate == "Moonflow" and step_counter == 2:  # North bank, before Rikku
-        load_save_num(2)
-        moonflow_2()
-    if gamestate == "Guadosalam" and step_counter == 2:  # After the Farplane
-        load_save_num(3)
-        load_guado_skip()
-    if gamestate == "Macalania" and step_counter == 1:  # 1 = south, 2 = north
-        load_save_num(9)
-    if gamestate == "Macalania" and step_counter == 2:  # 1 = south, 2 = north
-        load_save_num(7)
-    if gamestate == "Macalania" and step_counter == 4:  # Right before Jyscal skip
-        load_save_num(190)
-        load_mac_temple()
-        import menu
-
-        menu.equip_weapon(character=0, special="brotherhood")
-        menu.mac_temple()
-    # Outside temple, before escaping.
-    if gamestate == "Macalania" and step_counter == 6:
-        load_save_num(4)
-    if gamestate == "Home" and step_counter == 1:
-        load_save_num(60)
-    if gamestate == "Home" and step_counter == 2:
-        load_save_num(11)
-    if gamestate == "rescue_yuna" and step_counter == 1:  # Airship, first movement.
-        # Blitz Win, save less speed/power spheres
-        load_save_num(56)
-    if gamestate == "rescue_yuna" and step_counter == 2:  # Bevelle trials
-        load_save_num(15)
-    if gamestate == "rescue_yuna" and step_counter == 4:  # Altana
-        load_save_num(12)
-        # memory.main.set_encounter_rate(set_val=0)
-        # memory.main.set_game_speed(set_val=1)
-    # Highbridge before Seymour Natus
-    if gamestate == "rescue_yuna" and step_counter == 5:
-        load_save_num(42)  # Regular
-        # load_game.load_save_num(67) #Nemesis
-    if gamestate == "Gagazet" and step_counter == 1:  # Just before Calm Lands
-        load_save_num(43)
-        load_calm()
-        game_vars.set_blitz_win(True)
-    if gamestate == "Gagazet" and step_counter == 2:  # NE armor save
-        load_save_num(57)
-    if gamestate == "Gagazet" and step_counter == 3:  # Gagazet gates, after B&Y
-        load_save_num(138)  # Blitz Win
-        # load_game.load_save_num(53) # Blitz Loss
-        game_vars.end_game_version_set(4)
-        load_gagazet_gates()
-    if gamestate == "Gagazet" and step_counter == 6:  # After the dream
-        load_save_num(98)
-        game_vars.end_game_version_set(4)
-        load_gagazet_dream()
-        game_vars.flux_overkill_success()
-    if gamestate == "Gagazet" and step_counter == 10:  # Calm Lands, but Nemesis version
-        load_save_num(43)
-        load_calm()
-    if gamestate == "Gagazet" and step_counter == 11:  # Calm Lands, but Nemesis version
-        load_save_num(64)
-        FFXC.set_movement(1, 0)
-        memory.main.wait_frames(60)
-        FFXC.set_movement(0, 1)
-        memory.main.wait_frames(60)
-        FFXC.set_neutral()
-        import menu
-
-        menu.prep_calm_lands()
-    if gamestate == "Zanarkand" and step_counter == 1:  # Intro scene revisited
-        load_save_num(99)
-        game_vars.end_game_version_set(1)
-        game_vars.flux_overkill_success()
-        game_vars.end_game_version_set(4)
-    if gamestate == "Zanarkand" and step_counter == 2:  # Just before the trials.
-        load_offset(35)
-        zan_trials()
-        game_vars.end_game_version_set(4)
-    if gamestate == "Zanarkand" and step_counter == 3:  # After trials, before boss
-        load_save_num(45)
-        game_vars.end_game_version_set(4)
-    if gamestate == "Zanarkand" and step_counter == 4:  # After Sanctuary Keeper
-        load_save_num(44)
-        game_vars.end_game_version_set(4)
-    if gamestate == "Zanarkand" and step_counter == 5:  # After Yunalesca
-        load_save_num(13)
-    # Save sphere on the Highbridge before talking to Shedinja
-    if gamestate == "Sin" and step_counter == 2:
-        # load_game.load_save_num(49)
-        # Nemesis logic, double friend sphere drops from B&Y
-        load_save_num(70)
-        while memory.main.oaka_gil_cursor() not in [8, 20]:
-            if memory.main.user_control():
-                import pathing
-
-                pathing.set_movement([-251, 340])
-            else:
-                FFXC.set_neutral()
-            xbox.menu_b()
-        memory.main.check_nea_armor()
-    if gamestate == "Sin" and step_counter == 3:  # Start of "Sea of Sorrows" section
-        load_save_num(50)
-    if gamestate == "Sin" and step_counter == 4:  # Before point of no return
-        # This save has zombiestrike weapons for all except Kimahri
-        # Please use for egg hunt and zombie weapon testing.
-        load_save_num(51)
-        game_vars.set_zombie(5)
-        load_egg_hunt()
-
-    # Nemesis run loads
-    if gamestate == "Nem_Farm" and step_counter == 1:
-        load_save_num(14)
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 2:
-        load_save_num(69)
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 3:
-        load_save_num(84)
-        game_vars.set_nem_checkpoint_ap(3)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-        # import nemesis.arena_prep
-        nemesis.arena_prep.arena_return()
-    if gamestate == "Nem_Farm" and step_counter == 5:
-        load_save_num(71)
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 6:
-        load_save_num(72)
-        game_vars.end_game_version_set(4)
-        game_vars.set_nem_checkpoint_ap(2)  # See nemesis.menu
-    if gamestate == "Nem_Farm" and step_counter == 8:
-        load_save_num(73)
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 9:
-        # Start of Nemesis farm
-        # import nemesis.menu
-        # import memory.main
-        load_save_num(19)
-        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-        # memory.main.arena_array_nines()
-        # while not memory.main.get_tidus_slvl() >= 70:
-        #    nemesis.menu.perform_next_grid()
-        #    memory.main.set_tidus_slvl(memory.main.get_tidus_slvl()+1)
-    if gamestate == "Nem_Farm" and step_counter == 11:
-        load_save_num(20)
-        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 13:
-        load_save_num(17)
-        game_vars.set_nem_checkpoint_ap(7)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 14:
-        load_save_num(76)
-        game_vars.set_nem_checkpoint_ap(10)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 16:
-        load_save_num(113)
-        game_vars.set_nem_checkpoint_ap(12)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 17:
-        load_save_num(111)
-        game_vars.set_nem_checkpoint_ap(14)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 18:
-        load_save_num(114)
-        game_vars.set_nem_checkpoint_ap(15)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 19:  # Gagazet
-        load_save_num(29)
-        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 21:
-        load_save_num(79)
-        nemesis.arena_prep.arena_return()
-        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 22:
-        load_save_num(25)
-        # import nemesis.menu
-        # nemesis.menu.rikku_haste()
-        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-        game_vars.end_game_version_set(4)
-    if gamestate == "Nem_Farm" and step_counter == 23:
-        load_save_num(21)
-        game_vars.set_nem_checkpoint_ap(27)  # See nemesis.menu
-    if gamestate == "Nem_Farm" and step_counter == 24:  # Kilika final shop
-        load_save_num(32)
-        game_vars.set_nem_checkpoint_ap(30)  # See nemesis.menu
-        memory.main.set_gil_value(3400000)
-    if gamestate == "Nem_Farm" and step_counter == 20:
-        load_save_num(85)
-        game_vars.set_nem_checkpoint_ap(30)
-    if gamestate == "Nem_Farm":
-        memory.main.check_nea_armor()
-    memory.main.check_nea_armor()
-
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    xbox.tap_a()
+    logger.warning(f"No game state found for vars {gamestate} | {step_counter}")
+    
+    # Now to tell the user where they went wrong:
+    filepath = os.path.join("json_ai_files", "save_load_details.json")
+    with open(filepath, "r") as fp:
+        results = json.load(fp)
+    try:
+        if len(results[gamestate]) >= 1:
+            logger.warning(f"For game state {gamestate}, valid step values: ")
+            list_keys = results[gamestate].keys()
+            for key in list_keys:
+                logger.warning(key)
+    except:
+        logger.warning(f"For game states, the valid values are (in non-sorted order): ")
+        for key in results:
+            logger.warning(key)
+            #for x in results[key]:
+            #    logger.warning(str(results[key][x]) + " | ")
+    
+    logger.error("TAS terminating")
+    exit(1)
 
 def get_saved_files():
     save_files_full = sorted(
@@ -573,6 +372,20 @@ def kilika_rng_manip():
         )
     logger.warning(f"==== Chosen Value: {rng_value}")
 
+
+def mrr_crit():
+    from memory.main import next_crit
+    from memory.main import advance_rng_index
+
+    escape_count = 0
+    while next_crit(character=3, char_luck=18, enemy_luck=15) != 1:
+        advance_rng_index(index=23)
+        escape_count += 1
+        if escape_count > 1000:
+            print("Could not find RNG value.")
+            return
+    print("RNG value found.")
+    return
 
 def besaid_trials():
     # Exit Tent
