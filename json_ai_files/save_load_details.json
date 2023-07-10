@@ -467,6 +467,17 @@
                 "special_movement": "none",
                 "mrr_skip": true
             }
+        },
+        "5": {
+            "False": {
+                "save_num": "45",
+                "blitz_win_value": "True",
+                "end_game_version_val": "1",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none",
+                "mrr_skip": true
+            }
         }
     },
     "Zanarkand": {

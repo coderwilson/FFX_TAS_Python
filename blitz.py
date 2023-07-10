@@ -9,6 +9,7 @@ import memory.main
 import rng_track
 import vars
 import xbox
+import random
 from memory.main import BlitzActor
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ def select_movement():
 
 
 def select_formation():
-    return memory.main.blitz_menu_num() in [122, 133]
+    return memory.main.blitz_menu_num() in range(122, 145)
 
 
 def select_formation_2():
@@ -62,7 +63,7 @@ def select_action():
 
 
 def select_pass_target():
-    return memory.main.blitz_menu_num() in [226, 228, 236]
+    return memory.main.blitz_menu_num() in range(226,237)
 
 
 def select_shot_type():
@@ -219,94 +220,111 @@ def game_stage():
     # Stage 5: Shoot for goal
     current_stage = 0
     global engage_defender
-    # Logic that immediately moves to scoring phases if in overtime.
-    if 570 < memory.main.get_story_progress() < 700:
-        if game_clock() in [2, 3, 4, 5, 6, 7]:
-            game_vars.set_blitz_ot(True)
 
-    if memory.main.get_story_progress() < 570:
-        if memory.main.get_story_progress() > 540:
-            # Requires special timing before Wakka comes in
-            stages = [
-                0,
-                37,
-                105,
-                jassu_pass_timing() - 13,
-                jassu_pass_timing(),
-                tidus_shot_timing(),
-            ]
-        elif (
-            memory.main.get_story_progress() < 540 and not game_vars.blitz_first_shot()
-        ):
-            current_stage = 20  # default 20
-        else:
-            current_stage = 30
-    else:
-        if game_vars.get_blitz_ot():
-            stages = [0, 2, 2, 2, 300, 300]
-        else:
-            # logger.info("After Wakka")
-            stages = [
-                0,
-                160,
-                200,
-                jassu_pass_timing() - 14,
-                jassu_pass_timing(),
-                tidus_shot_timing(),
-            ]
-
-    # Determine base stage. Modified by following logic.
-    if (
-        abs(memory.main.blitz_own_score() - memory.main.blitz_opp_score()) >= 2
-        and memory.main.get_story_progress() >= 570
-    ):
-        current_stage = 30
-    elif memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 1 and (
-        570 < memory.main.get_story_progress() < 700
-    ):
-        # Ahead by 1 goal after Wakka enters, just end the game.
-        current_stage = 30
-    elif memory.main.get_story_progress() < 540:
-        if not game_vars.blitz_first_shot():
-            current_stage = 20
-        else:
-            current_stage = 30
-    elif current_stage == 0:
-        for i in range(6):
-            if stages[i] < game_clock():
-                current_stage = i
-
-        if memory.main.get_story_progress() < 700 and current_stage >= 1:
-            # Only apply following logic for the storyline game
-            # Logic that updates stage based on defender movements
-            if player_array[0].get_coords()[1] - player_array[10].get_coords()[1] > 300:
-                if current_stage < 3:
-                    current_stage = 4
-
-            # Logic that reduces stage if score is too far apart.
-            if (
-                memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 2
-                and memory.main.get_story_progress() >= 570
-            ):
-                current_stage = 0
-
-            # Logic if we're in defensive zone trying to move forward
-            if (
-                current_stage == 3
-                and player_array[controlling_player()].get_coords()[1] < -200
-            ):
+    if memory.main.get_story_progress() > 700:  # Non-storyline game
+        if controlling_player() in [2,4]:  # Brother and other defender pass to Ropp
+            current_stage = 1
+        elif controlling_player() == 3:  # Ropp does Ropp things
+            if player_array[controlling_player()].get_coords()[1] > -200:
+                current_stage = 3
+            else:
                 current_stage = 2
-    if current_stage == 3 and not engage_defender:
-        logger.debug("Start engaging defender!")
-        engage_defender = True
-    elif current_stage == 2 and engage_defender:
-        current_stage = 3
-    elif current_stage in [0, 1, 20, 30] and engage_defender:
-        logger.debug("Disengaging defender logic")
-        engage_defender = False
+        elif controlling_player() == 0:  # First forward moves to position and shoots.
+            if distance(0,11) > 250:
+                current_stage = 3
+            else:
+                current_stage = 4
+        elif controlling_player() == 1:  # Second forward shoots
+            current_stage = 4
+    else:
+        # Logic that immediately moves to scoring phases if in overtime.
+        if 570 < memory.main.get_story_progress() < 700:
+            if game_clock() in [2, 3, 4, 5, 6, 7]:
+                game_vars.set_blitz_ot(True)
 
-    if current_stage < 3 and controlling_player() == 0:
-        current_stage = 30
+        if memory.main.get_story_progress() < 570:
+            if memory.main.get_story_progress() > 540:
+                # Requires special timing before Wakka comes in
+                stages = [
+                    0,
+                    37,
+                    105,
+                    jassu_pass_timing() - 13,
+                    jassu_pass_timing(),
+                    tidus_shot_timing(),
+                ]
+            elif (
+                memory.main.get_story_progress() < 540 and not game_vars.blitz_first_shot()
+            ):
+                current_stage = 20  # default 20
+            else:
+                current_stage = 30
+        else:
+            if game_vars.get_blitz_ot():
+                stages = [0, 2, 2, 2, 300, 300]
+            else:
+                # logger.info("After Wakka")
+                stages = [
+                    0,
+                    160,
+                    200,
+                    jassu_pass_timing() - 14,
+                    jassu_pass_timing(),
+                    tidus_shot_timing(),
+                ]
+
+        # Determine base stage. Modified by following logic.
+        if (
+            abs(memory.main.blitz_own_score() - memory.main.blitz_opp_score()) >= 2
+            and memory.main.get_story_progress() >= 570
+        ):
+            current_stage = 30
+        elif memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 1 and (
+            570 < memory.main.get_story_progress() < 700
+        ):
+            # Ahead by 1 goal after Wakka enters, just end the game.
+            current_stage = 30
+        elif memory.main.get_story_progress() < 540:
+            if not game_vars.blitz_first_shot():
+                current_stage = 20
+            else:
+                current_stage = 30
+        elif current_stage == 0:
+            for i in range(6):
+                if stages[i] < game_clock():
+                    current_stage = i
+
+            if memory.main.get_story_progress() < 700 and current_stage >= 1:
+                # Only apply following logic for the storyline game
+                # Logic that updates stage based on defender movements
+                if player_array[0].get_coords()[1] - player_array[10].get_coords()[1] > 300:
+                    if current_stage < 3:
+                        current_stage = 4
+
+                # Logic that reduces stage if score is too far apart.
+                if (
+                    memory.main.blitz_own_score() - memory.main.blitz_opp_score() >= 2
+                    and memory.main.get_story_progress() >= 570
+                ):
+                    current_stage = 0
+
+                # Logic if we're in defensive zone trying to move forward
+                if (
+                    current_stage == 3
+                    and player_array[controlling_player()].get_coords()[1] < -200
+                ):
+                    current_stage = 2
+        if current_stage == 3 and not engage_defender:
+            logger.debug("Start engaging defender!")
+            engage_defender = True
+        elif current_stage == 2 and engage_defender:
+            current_stage = 3
+        elif current_stage in [0, 1, 20, 30] and engage_defender:
+            logger.debug("Disengaging defender logic")
+            engage_defender = False
+
+        if current_stage < 3 and controlling_player() == 0:
+            current_stage = 30
     return current_stage
 
 
@@ -595,7 +613,10 @@ def tidus_move():
     if distance(0, 10) < 180:
         other_distance += 1
 
-    shoot_target = [-90, 550]
+    if memory.main.get_story_progress() > 700:
+        shoot_target = [-30, 585]
+    else:
+        shoot_target = [-60, 570]
 
     if current_stage > 15:
         if get_char_radius(0) < 390:
@@ -605,13 +626,15 @@ def tidus_move():
         if distance(0, 3) < 330:
             xbox.tap_x()
     elif memory.main.get_story_progress() > 700:
-        logger.debug(f"Post-story Blitzball. {current_stage}")
-        if other_distance >= 2:
-            xbox.tap_x()
-        elif current_stage == 4:
-            xbox.tap_x()
-        elif blitz_pathing.set_movement(shoot_target):
-            xbox.tap_x()
+        FFXC.set_movement(-1, -1)
+        xbox.tap_x()
+        #logger.debug(f"Post-story Blitzball. {current_stage}")
+        #if other_distance >= 2:
+        #    xbox.tap_x()
+        #elif current_stage == 4:
+        #    xbox.tap_x()
+        #elif blitz_pathing.set_movement(shoot_target):
+        #    xbox.tap_x()
     elif current_stage == 5:
         FFXC.set_movement(-1, -1)
         xbox.tap_x()
@@ -671,14 +694,14 @@ def tidus_act():
     if distance(0, 10) < 280:
         other_distance += 1
 
-    if current_stage > 15:
+    if memory.main.get_story_progress() > 700:
+        shoot_ball(break_through=0)
+    elif current_stage > 15:
         if other_distance >= 2:
             shoot_ball(break_through=0)
         else:
             pass_ball(target=3)
         game_vars.blitz_first_shot_taken()
-    elif memory.main.get_story_progress() > 700:
-        shoot_ball(break_through=0)
     elif current_stage in [4, 5]:
         # Late on the timer. Shoot at all costs.
         if memory.main.get_story_progress() < 540:
@@ -723,6 +746,7 @@ def letty_move():
         xbox.tap_x()
     elif current_stage in [1,2]:
         if distance(3,8) > 400 and distance(3,10) > 400:
+            blitz_pathing.set_movement([10, 580])
             xbox.tap_x()
         else:
             find_safe_place()
@@ -741,10 +765,11 @@ def letty_act():
     elif current_stage == 30:
         pass_ball(target=3)
     elif memory.main.get_story_progress() > 700:  # Post-storyline blitzball only
-        if player_array[0].get_coords()[1] > player_array[1].get_coords()[1]:
-            pass_ball(target=0, break_through=0)
-        else:
+        pass_target = random.choice(range(100))
+        if pass_target < 90:  # More likely to pass to first defender / second attacker.
             pass_ball(target=1, break_through=0)
+        else:  # Otherwise, pass to first defender, set up like normal.
+            pass_ball(target=0, break_through=0)
     elif current_stage >= 4:
         pass_ball(target=0)
     elif current_stage == 3:
@@ -770,7 +795,7 @@ def letty_act():
 def jassu_move():
     target_coords = [999, 999]
     current_stage = game_stage()
-    player_array[controlling_player()].get_coords()
+    jassu_coords = player_array[controlling_player()].get_coords()
     target_coords = [-585, -130]
     p10C = player_array[10].get_coords()
     graav_c = player_array[8].get_coords()
@@ -789,7 +814,10 @@ def jassu_move():
     if distance(3, 10) < 350:
         other_distance += 1
 
-    if current_stage == 20:
+    if memory.main.get_story_progress() > 700:
+        working_forward()
+        xbox.tap_x()
+    elif current_stage == 20:
         find_safe_place()
         if (
             distance(0, 8) > 330 and 
@@ -874,7 +902,7 @@ def jassu_move():
 
 def jassu_act():
     current_stage = game_stage()
-    player_array[controlling_player()].get_coords()
+    jassu_coords = player_array[controlling_player()].get_coords()
     p10C = player_array[10].get_coords()
     graav_c = player_array[8].get_coords()
     tidus_c = player_array[0].get_coords()
@@ -891,7 +919,9 @@ def jassu_act():
     if distance(3, 10) < 350:
         other_distance += 1
 
-    if current_stage == 20:
+    if memory.main.get_story_progress() > 700:
+        pass_ball(1)
+    elif current_stage == 20:
         if (
             distance(0, 8) > 310 and 
             distance(0, 10) > 340 and 
@@ -951,7 +981,10 @@ def other_move():  # fix
     current_stage = game_stage()
     me = controlling_player()
 
-    if me == 1:
+    if me == 1 and memory.main.get_story_progress() > 700:
+        blitz_pathing.set_movement([10, 580])
+        xbox.tap_x()
+    elif me == 1 and memory.main.get_story_progress() < 700:
         # Datto sucks at everything!
         if current_stage in [4,5]:
             blitz_pathing.set_movement([10,580])
@@ -978,6 +1011,8 @@ def other_act():
             shoot_ball()
         else:
             pass_ball(target=4)
+    elif memory.main.get_story_progress() > 700:
+        pass_ball(target=1, break_through=5)
     else:
         pass_ball(target=3, break_through=5)
 
@@ -998,7 +1033,7 @@ def blitz_movement():
 def decide_action():
     FFXC.set_neutral()
     update_player_array()
-    logger.debug(controlling_player())
+    logger.debug(f"Decide action - Player: {controlling_player()}")
     if controlling_player() == 0:
         tidus_act()
     elif controlling_player() == 2:
@@ -1050,6 +1085,8 @@ def blitz_main(force_blitz_win):
                 FFXC.set_neutral()
                 xbox.menu_b()
             if memory.main.get_map() == 62:
+                # print(f"Clock: {active_clock()} | Menu: {memory.main.blitz_menu_num()}")
+                # Note that logs don't work if we load Blitzball directly.
                 if active_clock():
                     if last_state != 1:
                         logger.debug("Clock running.")
@@ -1133,11 +1170,15 @@ def blitz_main(force_blitz_win):
                     last_state = 3
                 if half_summary_screen():
                     if memory.main.diag_progress_flag() == 113:
-                        if cursor_1() != 1:  # Pass command
-                            xbox.menu_down()
+                        if cursor_1() != 0:  # Continue or quit?
+                            memory.main.wait_frames(60)
+                            xbox.menu_up()
                             memory.main.wait_frames(3)
                         else:
+                            memory.main.wait_frames(60)
                             xbox.menu_b()
+                            memory.main.wait_frames(90)
+                            return 0
                     elif (
                         memory.main.diag_skip_possible()
                     ):  # Skip through everything else

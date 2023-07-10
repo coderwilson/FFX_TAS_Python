@@ -12,6 +12,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from battle import avina_memory
 from paths import (
     YunalescaToAirship,
     ZanarkandDome,
@@ -73,6 +74,32 @@ def decide_nea(bonus_advance: int = 0):
     return
 
 
+def decide_luck():
+    # Pull from JSON file to get dynamic value.
+    decision = False
+    force_luck = True
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        if seed_str in records.keys():
+            if records[seed_str]["zan_luck"] == ["True", "False"]:
+                if records[seed_str]["zan_luck"] == "False":
+                    force_luck = False
+                logger.manip(f"Luck decision based on memory: {force_luck}")
+                decision = True
+            else:
+                logger.manip("I have no memory of this seed. (A)")
+        else:
+            logger.manip("I have no memory of this seed. (B)")
+    except:
+        logger.manip("I have no memory of this seed. (C)")
+    if not decision:
+        force_luck = rng_track.decide_skip_zan_luck()
+        logger.manip(f"RNG track logic indicates: {force_luck}")
+    return force_luck
+
+
 def arrival():
     memory.main.await_control()
     decide_nea()
@@ -83,8 +110,7 @@ def arrival():
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
 
-    #game_vars.set_skip_zan_luck(rng_track.decide_skip_zan_luck())
-    game_vars.set_skip_zan_luck(False)  # Not working properly.
+    game_vars.set_skip_zan_luck(decide_luck())
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
     # game_vars.set_skip_zan_luck(True) #For testing
@@ -399,7 +425,7 @@ def sanctuary_keeper():
         xbox.click_to_battle()
     battle.main.aeon_summon(4)  # This is the whole fight. Kinda sad.
     s_keeper_print_bahamut_crit_chance()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             logger.debug(memory.main.rng_array_from_index(index=43, array_len=4))
             battle.main.attack("none")
@@ -445,7 +471,8 @@ def yunalesca():
             FFXC.set_value("btn_b", 0)
             FFXC.set_value("btn_a", 0)
             memory.main.wait_frames(1)
-    battle.boss.yunalesca()
+    if not battle.boss.yunalesca():
+        return False
     memory.main.click_to_control()  # This does all the attacking and dialog skipping
 
     # Now to check for zombie strike and then report to logs.
@@ -455,6 +482,7 @@ def yunalesca():
     logs.write_stats(game_vars.zombie_weapon())
     logger.info("++Zombiestrike:")
     logger.info(f"++ {game_vars.zombie_weapon()}")
+    return True
 
 
 def confirm_zombie() -> int:

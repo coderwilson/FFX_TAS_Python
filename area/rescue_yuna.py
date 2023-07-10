@@ -70,7 +70,7 @@ def guards():
         memory.main.get_item_slot(3) < 200
         and memory.main.get_hp() != memory.main.get_max_hp()
     ):
-        menu.before_guards()
+        menu.overworld_use_item()
     memory.main.close_menu()
     memory.main.wait_frames(2)
 
@@ -550,7 +550,7 @@ def evrae_altana():
         elif screen.battle_screen():
             battle.boss.evrae_altana()
             rng_track.print_manip_info()
-        elif screen.battle_complete():
+        elif memory.main.battle_wrap_up_active():
             xbox.menu_b()
         else:
             FFXC.set_neutral()
@@ -580,13 +580,14 @@ def natus_formation(battles:int = 0, full_menu_close:bool=True):
 def seymour_natus():
     memory.main.click_to_control()
 
+    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
     if memory.main.get_yuna_slvl() >= 14:
         if game_vars.get_blitz_win():
             menu.seymour_natus_blitz_win()
         else:
             menu.seymour_natus_blitz_loss()
+    memory.main.close_menu()
 
-    memory.main.update_formation(Tidus, Yuna, Auron)
     save_sphere.touch_and_go()
     complete = 0
     while complete == 0:
@@ -601,13 +602,22 @@ def seymour_natus():
                     battle.main.wrap_up()
                 else:
                     complete = battle.boss.seymour_natus()
+                    if complete == 1 and not game_vars.csr():
+                        memory.main.click_to_diag_progress(num=9)
+                        memory.main.click_to_control()
+                    else:
+                        battle.main.wrap_up()
 
+                memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+                battle.main.heal_up(full_menu_close=True)
                 if memory.main.get_yuna_slvl() >= 14:
                     if game_vars.get_blitz_win():
                         menu.seymour_natus_blitz_win()
                     else:
                         menu.seymour_natus_blitz_loss()
+                memory.main.close_menu()
                 rng_track.print_manip_info()
+            
 
     # Movement for make-out scene
     memory.main.click_to_control()

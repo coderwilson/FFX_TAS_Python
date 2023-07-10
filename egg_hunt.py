@@ -57,6 +57,21 @@ def path_around(player, circle, target, radius=11):
     return p2
 
 
+def distance(n1, n2):
+    try:
+        return abs(n1[1] - n2[1]) + abs(n1[0] - n2[0])
+    except Exception as x:
+        logger.error(f"Exception: {x}")
+        return 999
+
+
+def check_icicle_distances(target, ice_array):
+    for icicle in ice_array:
+        if distance(target, [icicle.x, icicle.y]) < 20:
+            return False  # Not safe to use this spot.
+    return True  # Safe to use this spot.
+
+
 def engage():
     FFXC = xbox.controller_handle()
     logger.info("Start egg hunt")
@@ -67,12 +82,9 @@ def engage():
     logger.info("Generating Plot file (the X/Y kind)")
     active_egg = 99
     target = [10, -10]
-    checkpoint = 0
     logger.info("Ready for movement.")
     while memory.main.get_story_progress() < 3251:
         looking_count += 1
-        if looking_count % 40 == 0:
-            checkpoint += 1
         if memory.main.battle_active():
             logger.info("Battle engaged - using flee.")
             FFXC.set_neutral()
@@ -99,16 +111,25 @@ def engage():
                 active_egg = 99
 
             if active_egg == 99:  # Positions to go to if we are stalling.
-                if checkpoint == 0:
-                    target = [-20, -20]
-                elif checkpoint == 1:
-                    target = [20, -20]
-                elif checkpoint == 2:
-                    target = [20, 20]
-                elif checkpoint >= 3:
-                    target = [-20, 20]
-                elif checkpoint >= 4:
-                    checkpoint = 0
+                loop_break = 0
+                while active_egg == 99 and memory.main.user_control() and loop_break < 100:
+                    if checkpoint == 0:
+                        target = [-50, -50]
+                    elif checkpoint == 1:
+                        target = [50, -50]
+                    elif checkpoint == 2:
+                        target = [50, 50]
+                    elif checkpoint >= 3:
+                        target = [-50, 50]
+                    elif checkpoint >= 4:
+                        checkpoint = 0
+                    if check_icicle_distances(target, ice_array):
+                        active_egg = 100 # just to break loop
+                    else:
+                        checkpoint += 1
+                    loop_break += 1
+            if active_egg == 100:
+                active_egg = 99  # Put it back after breaking the loop.
 
             # And now the code to move to the target.
             old_target = target
@@ -173,12 +194,12 @@ def engage():
                 and egg_array[active_egg].distance < 15
                 and egg_array[active_egg].egg_life < 130
             ):
-                time.sleep(0.15)
+                memory.main.wait_frames(7)
                 FFXC.set_neutral()
                 logger.debug(f"Stutter-step to egg. | {checkpoint}")
                 xbox.tap_b()
             elif active_egg == 99:
-                logger.debug(f"Looking for a new egg. | {checkpoint}")
+                logger.debug(f"Looking for new egg. | {checkpoint}")
                 xbox.tap_b()
             else:
                 logger.debug(f"Targeting egg: | {checkpoint}")

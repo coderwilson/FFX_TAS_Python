@@ -19,6 +19,7 @@ import os
 # Define the path to the Python script to run
 SCRIPT_PATH = "main.py"
 CHOCO_PATH = "z_choco_races_test.py"
+BLITZ_PATH = "x_blitz_only.py"
 CSR_PATH = ""
 GAME_PATH = ""
 CONFIG_FILE_PATH = "bot-config.yaml"
@@ -108,6 +109,19 @@ class Bot(commands.Bot):
         if self.process is None:
             print(["python", SCRIPT_PATH] + arg_array)
             self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
+            await ctx.send("FFX TAS started.")
+            print("aVIna FFX TAS started.")
+        else:
+            await ctx.send("FFX TAS is already running.")
+            print("aVIna FFX TAS is already running.")
+        return self.process
+    
+    # Define the start command
+    @commands.command()
+    async def blitz(self, ctx: commands.Context):
+        if self.process is None:
+            print(["python", BLITZ_PATH])
+            self.process = subprocess.Popen(["python", BLITZ_PATH])
             await ctx.send("FFX TAS started.")
             print("aVIna FFX TAS started.")
         else:
@@ -268,8 +282,8 @@ class Bot(commands.Bot):
     # Define the help command
     @commands.command()
     async def help(self, ctx: commands.Context):
-        await ctx.send("Available commands: !start, !stop, !exit, !help || With !start, you can add the following arguments: 'seed x', where x is any value from 0 to 255 (for new game) - 'state y', where y is a section of the TAS, like Luca or Zanarkand. - 'step z', where z is a progress value for the y state. - For y and z, if the value is invalid, the TAS will terminate, but tell you what valid values are available, aka where you went wrong.")
-        await ctx.send("Other commands: !game_start, !game_stop, !csr_start, !csr_stop, !timer_start (csr True/False), !timer_stop, !race")
+        await ctx.send("Available commands: !start, !race, or !blitz from the New Game screen, or !stop if already running.")
+        await ctx.send("Other commands: !game_start, !game_stop, !csr_start, !csr_stop, !timer_start, !timer_stop")
 
 
 # Main entry point of script

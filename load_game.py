@@ -209,7 +209,7 @@ def load_save_num(number):
             else:
                 xbox.tap_up()
 
-        for _ in range(7):
+        for _ in range(20):
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.await_control()

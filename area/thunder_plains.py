@@ -30,6 +30,7 @@ def south_pathing():
     count50 = 0
     checkpoint = 0
     save_touched = False
+    battle_count = 0
 
     with logging_redirect_tqdm():
         with tqdm(total=50) as pbar:
@@ -86,7 +87,9 @@ def south_pathing():
                     ):
                         xbox.menu_b()
                     elif screen.battle_screen():
-                        battle.main.thunder_plains(1)
+                        result = battle.main.thunder_plains(1, battle_count=battle_count)
+                        if not result:
+                            return 999
                     elif memory.main.menu_open():
                         xbox.tap_b()
 
@@ -102,7 +105,8 @@ def south_pathing():
         if memory.main.diag_skip_possible():
             xbox.menu_b()
     FFXC.set_neutral()
-    menu.auto_sort_equipment()
+    #menu.auto_sort_equipment()
+    return battle_count
 
 
 def agency_shop():
@@ -162,6 +166,7 @@ def agency_shop():
             xbox.tap_b()
     memory.main.close_menu()
 
+def agency_shop_part_2():  # We'll grab Auron's weapon from O'aka, Macalania Woods
     # Next, Grab Auron's weapon
     xbox.skip_dialog(0.1)
     FFXC.set_neutral()
@@ -282,7 +287,7 @@ def agency():
                 xbox.tap_b()
 
 
-def north_pathing():
+def north_pathing(battle_count:int):
     memory.main.click_to_control()
     menu.equip_armor(character=0, ability=0x8028)
 
@@ -312,7 +317,9 @@ def north_pathing():
             if memory.main.diag_skip_possible() and not memory.main.battle_active():
                 xbox.menu_b()
             if screen.battle_screen():
-                battle.main.thunder_plains(1)
+                result = battle.main.thunder_plains(1, battle_count=battle_count)
+                if not result:
+                    return False
                 lunar_slot = memory.main.get_item_slot(56) != 255
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -337,3 +344,4 @@ def north_pathing():
     else:
         while not pathing.set_movement([258, -7]):
             pass
+    return True
