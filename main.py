@@ -1,4 +1,4 @@
-blitz_threshold = 440
+blitz_threshold = 410
 
 # Libraries and Core Files
 import logging
@@ -269,9 +269,12 @@ def perform_TAS():
                     maybe_create_save(save_num=79)
 
                 if game.step == 3:
-                    area.besaid.leaving()
-                    game.state = "Boat1"
-                    game.step = 1
+                    kim_success = area.besaid.leaving()
+                    if kim_success:
+                        game.state = "Boat1"
+                        game.step = 1
+                    else:
+                        game.state, game.step = reset.mid_run_reset()
 
             if game.state == "Boat1":
                 area.boats.ss_liki()
@@ -342,9 +345,10 @@ def perform_TAS():
                         game.state = "Luca"
 
                     elif game_vars.loop_blitz() and blitz_duration < blitz_threshold:
-                        logger.info("--------------")
-                        logger.info(f"Good Blitz, worth completing the run. Blitz time: {blitz_duration} seconds.")
-                        logger.info("--------------")
+                        logger.manip("--------------")
+                        logger.manip(f"Good Blitz, worth completing the run. Blitz time in seconds:")
+                        logger.manip(blitz_duration)
+                        logger.manip("--------------")
                         game.step = 5
                     elif game_vars.loop_blitz() and blitz_loops < max_loops:
                         FFXC.set_neutral()
@@ -377,18 +381,24 @@ def perform_TAS():
             if game.state == "Miihen":
                 if game.step == 1:
                     return_array = area.miihen.arrival()
-                    area.miihen.arrival_2(
-                        return_array[0], return_array[1], return_array[2]
+                    if return_array[2] == False:
+                        game.state, game.step = reset.mid_run_reset()
+                    return_array = area.miihen.arrival_2(
+                        return_array[0], return_array[1]
                     )
+                    if return_array[2] == False:
+                        game.state, game.step = reset.mid_run_reset()
                     area.miihen.mid_point()
                     logger.info("End of Mi'ihen mid point section.")
                     game.step = 2
                     maybe_create_save(save_num=26)
 
                 if game.step == 2:
-                    area.miihen.low_road(
-                        return_array[0], return_array[1], return_array[2]
+                    return_val = area.miihen.low_road(
+                        return_array[0], return_array[1]
                     )
+                    if return_val == False:
+                        game.state, game.step = reset.mid_run_reset()
 
                     # Report duration at the end of Mi'ihen section for all runs.
                     end_time = logs.time_stamp()
@@ -401,8 +411,11 @@ def perform_TAS():
 
             if game.state == "MRR":
                 if game.step == 1:
-                    if area.mrr.arrival():
+                    result = area.mrr.arrival()
+                    if result == 1:
                         game.step = 4
+                    elif result == 2:
+                        game.state, game.step = reset.mid_run_reset()
                     else:
                         game.step = 2
                         maybe_create_save(save_num=27)
@@ -484,19 +497,25 @@ def perform_TAS():
 
             if game.state == "ThunderPlains":
                 if game.step == 1:
-                    area.thunder_plains.south_pathing()
-                    game.step = 2
-                    # maybe_create_save(save_num=33)
+                    plains_battles = area.thunder_plains.south_pathing()
+                    if plains_battles == 999:
+                        game.state, game.step = reset.mid_run_reset()
+                    else:
+                        game.step = 2
+                        # maybe_create_save(save_num=33)
 
                 if game.step == 2:
                     area.thunder_plains.agency()
                     game.step = 3
 
                 if game.step == 3:
-                    area.thunder_plains.north_pathing()
-                    game.state = "Macalania"
-                    game.step = 1
-                    maybe_create_save(save_num=34)
+                    result = area.thunder_plains.north_pathing(plains_battles)
+                    if result:
+                        game.state = "Macalania"
+                        game.step = 1
+                        maybe_create_save(save_num=34)
+                    else:
+                        game.state, game.step = reset.mid_run_reset()
 
             if game.state == "Macalania":
                 if game.step == 1:
@@ -669,8 +688,10 @@ def perform_TAS():
                     maybe_create_save(save_num=47)
 
                 if game.step == 4:
-                    area.zanarkand.yunalesca()
-                    game.step = 5
+                    if area.zanarkand.yunalesca():
+                        game.step = 5
+                    else:
+                        game.state, game.step = reset.mid_run_reset()
 
                 if game.step == 5:
                     area.zanarkand.post_yunalesca()
@@ -699,17 +720,25 @@ def perform_TAS():
                     maybe_create_save(save_num=50)
 
                 if game.step == 3:
-                    area.sin.inside_sin()
-                    game.step = 4
+                    if area.sin.inside_sin():
+                        game.step = 4
+                    else:
+                        # Seymour fail/death
+                        game.state, game.step = reset.mid_run_reset()
 
                 if game.step == 4:
                     area.sin.execute_egg_hunt()
+                    final_battle = True
                     if game_vars.nemesis():
-                        battle.main.bfa_nem()
+                        final_battle = battle.main.bfa_nem()
                     else:
-                        battle.boss.bfa()
-                        battle.boss.yu_yevon()
-                    game.state = "End"
+                        final_battle = battle.boss.bfa()
+                        if final_battle:
+                            battle.boss.yu_yevon()
+                    if final_battle:
+                        game.state = "End"
+                    else:
+                        game.state, game.step = reset.mid_run_reset()
                     logger.debug(f"State: {game.state}")
                     logger.debug(f"Step: {game.step}")
 
@@ -921,6 +950,7 @@ def write_final_logs():
     #    pass
     area.chocobos.to_remiem()
     area.chocobos.remiem_races()
+    reset.reset_no_battles()
 
     memory.main.end()
     logger.info("Automation complete. Shutting down. Have a great day!")

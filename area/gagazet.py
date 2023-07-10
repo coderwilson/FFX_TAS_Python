@@ -107,7 +107,7 @@ def defender_x():
     FFXC.set_neutral()
 
     xbox.click_to_battle()
-    while not memory.main.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 battle.main.buddy_swap(Yuna)
@@ -212,17 +212,17 @@ def flux():
     if game_vars.end_game_version() != 3:
         memory.main.update_formation(Tidus, Yuna, Auron)
     checkpoint = 0
-    while memory.main.get_map() != 309:
+    while checkpoint < 8:
         if memory.main.user_control():
             if checkpoint == 7:
                 FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
                 save_sphere.touch_and_go()
                 checkpoint += 1
-            elif checkpoint == 8:
-                while memory.main.user_control():
-                    FFXC.set_movement(1, 1)
-                FFXC.set_neutral()
+            #elif checkpoint == 8:
+            #    while memory.main.user_control():
+            #        FFXC.set_movement(1, 1)
+            #    FFXC.set_neutral()
             elif pathing.set_movement(SeymourFlux.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
@@ -248,6 +248,8 @@ def flux():
 
 
 def dream(checkpoint: int = 0):
+    while memory.main.get_map() != 309:
+        FFXC.set_movement(1,1)
     memory.main.click_to_control()
     logger.info("Dream sequence")
     memory.main.wait_frames(3)

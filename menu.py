@@ -655,8 +655,23 @@ def yuna_terra_skip_recover():
 def m_woods():
     while not memory.main.menu_open():
         xbox.tap_b()  # Talking through O'aka's conversation.
-    memory.main.close_menu()
+    if memory.main.get_gil_value() < 15400:
+        memory.main.close_menu()
+        memory.main.click_to_diag_progress(14)
+        memory.main.click_to_diag_progress(12)
+        while not memory.main.menu_open():
+            xbox.tap_b()
+        if memory.main.get_gil_value() < 11550:
+            memory.main.wait_frames(5)
+            xbox.menu_right()
+            xbox.menu_b()
+            memory.main.wait_frames(3)
+            sell_all(gil_need=11550)
+            xbox.menu_a()
+            memory.main.wait_frames(10)
+            xbox.menu_left()
     buy_weapon(0, equip=True)
+    buy_weapon(3, equip=True)
     memory.main.close_menu()
 
 
@@ -875,7 +890,7 @@ def home_grid():
     memory.main.close_menu()
 
 
-def before_guards(item_to_use: int = 3):
+def overworld_use_item(item_to_use: int = 3):
     while not memory.main.menu_open():
         memory.main.open_menu()
 
@@ -1555,7 +1570,7 @@ def add_ability(
         while memory.main.get_menu_cursor_pos() != 8:
             memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 8, 11)
         while memory.main.menu_number() == 5:
-            xbox.tap_b()
+            xbox.menu_b()
     item_to_modify = find_equipment_index(
         owner=owner,
         equipment_type=equipment_type,
@@ -1683,7 +1698,7 @@ def tidus_slayer(od_pos: int = 2):
     # memory.main.wait_frames(90)  # Testing
 
 
-def sell_all(nea:bool = False, tstrike:bool = True):
+def sell_all(nea:bool = False, tstrike:bool = True, gil_need:int = None):
     # Assume already on the sell items screen, index zero
     full_array = memory.main.all_equipment()
     sell_item = True
@@ -1750,6 +1765,8 @@ def sell_all(nea:bool = False, tstrike:bool = True):
                     sell_item = True
 
                 pbar.update(1)
+                if gil_need != None and memory.main.get_gil_value() > gil_need:
+                    return
 
 
 def after_flux():

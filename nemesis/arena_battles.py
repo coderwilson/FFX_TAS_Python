@@ -259,7 +259,7 @@ def auto_life():
                 CurrentPlayer().attack()
             elif not Tidus.is_turn():
                 CurrentPlayer().defend()
-        elif memory.main.battle_complete():
+        elif not memory.main.battle_active():
             return False
     while memory.main.battle_menu_cursor() != 22:
         if not Tidus.is_turn():

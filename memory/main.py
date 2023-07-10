@@ -210,7 +210,11 @@ def game_over():
 
 
 def battle_complete():
-    return battle_wrap_up_active()
+    key = base_value + 0x00D2A8E0
+    value = process.read_bytes(key, 1)
+    if value in [1,2,3]:
+        return True
+    return False
 
 
 def battle_arena_results():
@@ -234,8 +238,6 @@ def battle_value():
 
 def battle_active() -> bool:
     global base_value
-    if game_over():
-        return False
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
     if value == 0:
@@ -408,6 +410,8 @@ def controlled_actor_id():
 
 
 def await_control():
+    if user_control():
+        return True
     logger.debug("Awaiting control (no clicking)")
     with logging_redirect_tqdm():
         fmt = "Awaiting control... elapsed {elapsed}"
@@ -420,6 +424,8 @@ def await_control():
 
 
 def click_to_control_dumb():
+    if user_control():
+        return True
     logger.debug("Awaiting control (clicking)")
     with logging_redirect_tqdm():
         fmt = "Awaiting control... elapsed {elapsed}"
@@ -432,8 +438,10 @@ def click_to_control_dumb():
 
 
 def click_to_control_smart():
+    if user_control():
+        return True
     logger.debug("Awaiting control (clicking only when appropriate - dialog)")
-    wait_frames(6)
+    wait_frames(6)  # Why?
     with logging_redirect_tqdm():
         fmt = "{desc}... elapsed {elapsed}"
         with tqdm(bar_format=fmt) as pbar:
@@ -480,7 +488,7 @@ def click_to_control_special():
                 FFXC.set_value("btn_y", 0)
                 wait_frames(30 * 0.035)
                 pbar.update()
-    wait_frames(30 * 0.05)
+    wait_frames(2)
     logger.debug("User control restored.")
     return True
 
@@ -1681,7 +1689,7 @@ def diag_skip_possible():
         # logger.debug("Skip 2")
         return False
     else:
-        key = base_value + 0x0085A03C
+        key = base_value + 0x0085A03C #  English
         if process.read_bytes(key, 1) == 1:
             # logger.debug("Skip 3")
             if game_vars.accessibility_vars()[2]:
@@ -4081,16 +4089,25 @@ def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
 def ambushes(advances:int = 12, extra:int = 0):
     # https://grayfox96.github.io/FFX-Info/rng/encounters
     ret_array = []
+    home_check = 99
     rng_array = rng_array_from_index(index=1, array_len=(advances*2)+1+extra)
     for i in range(advances):
         rng_val = rng_array[(2*i)+2+extra] & 255
         if rng_val >= 223:
             # Append battle number from current (i.e. first or second battle), 1 == next battle.
             ret_array.append(i+1)
+        if home_check == 99:
+            rng_val = rng_array[(2*i)+1+extra] & 255
+            if rng_val >= 223:
+                # Append battle number from current (i.e. first or second battle), 1 == next battle.
+                home_check = i+1
+
     ret_array.append(99)  # Just so we don't have an empty array. This will never be used otherwise.
     logger.manip(f"Upcoming ambushes: {ret_array}")
+    logger.manip(f"Home check: {home_check}")
+    if get_map() == 280:
+        ret_array.append(home_check)
     return ret_array
-
 
 def rikku_mix_damage() -> List[int]:
     initial_rng_vals = rng_array_from_index(index=26, array_len=9)
@@ -4102,10 +4119,10 @@ def rikku_mix_damage() -> List[int]:
 
 
 def future_attack_will_crit(
-    character: int, char_luck: int, enemy_luck: int, attack_index: int = 0
+    character: int, char_luck: int, enemy_luck: int, attack_index: int = 1
 ) -> bool:
     # Returns if a specific attack in the future will crit.
-    # Attack Index 0 represents the next attack.
+    # Attack Index 1 represents the next attack.
     # Assumes no escape attempts, primarily this is used for Aeons anyway.
     rng_index = min(20 + character, 27)
     rng_array = rng_array_from_index(index=rng_index, array_len=200)

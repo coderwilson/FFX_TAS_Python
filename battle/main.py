@@ -10,6 +10,7 @@ import rng_track
 import screen
 import vars
 import xbox
+from battle import avina_memory
 from memory.main import s32
 from memory.main import future_attack_will_crit
 from players import (
@@ -827,12 +828,12 @@ def after_blitz_3(early_haste):
                 CurrentPlayer().defend()
         elif Wakka.is_turn():
             logger.debug("Wakka Turn")
-            if hp_values[0] < 302 and (
+            if hp_values[0] < 302 and hp_values[0] != 0 and (
                 memory.main.get_next_turn() != 2
                 or memory.main.get_enemy_current_hp()[0] > 268
             ):
                 use_potion_character(2, "u")
-            elif hp_values[1] < 312 and tidus_turn < 2:
+            elif hp_values[1] < 312 and hp_values[1] != 0 and tidus_turn < 2:
                 use_potion_character(0, "u")
             else:
                 CurrentPlayer().defend()
@@ -919,6 +920,8 @@ def miihen_road(self_destruct=False):
     logger.debug(f"Mi'ihen battle. Self-destruct: {game_vars.self_destruct_get()}")
     encounter_id = memory.main.get_encounter_id()
     flee_all()
+    if memory.main.game_over():
+        return
     FFXC.set_movement(0, 1)
     wrap_up()
     # Note we no longer require self destruct with the new MRR skip.
@@ -1472,7 +1475,31 @@ def mix_tutorial():
 
 
 @battle.utils.speedup_decorator
-def thunder_plains(section):
+def thunder_plains(section, battle_count:int = 0):
+    # AI logic - it remembers!!! Skynet and all that stuff.
+    heal_array = []
+    ml_heals = False
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        logger.manip(f"Seed: {seed_str}")
+        if seed_str in records.keys():
+            if "t_plains_heals" in records[seed_str].keys():
+                for i in range(30):
+                    if i in records[seed_str]["t_plains_heals"]:
+                        if records[seed_str]["t_plains_heals"][i] == "True":
+                            heal_array.append(i)
+            else:
+                logger.info("I have no memory of this seed. (A)")
+            if "ml_heals" in records[seed_str].keys():
+                if records[seed_str]["ml_heals"] == "True":
+                    ml_heals = True
+        else:
+            logger.info("I have no memory of this seed. (B)")
+    except:
+        logger.info("I have no memory of this seed. (C)")
+
     enc_id = memory.main.get_encounter_id()
     grenade_slot = memory.main.get_item_slot(35)
     logger.debug(f"Grenade Slot {grenade_slot}")
@@ -1612,6 +1639,14 @@ def thunder_plains(section):
     else:  # Nothing useful this battle. Moving on.
         flee_all()
 
+    if memory.main.game_over():
+        seed_str = str(memory.main.rng_seed())
+        avina_memory.add_battle_to_memory(
+            seed=seed_str,
+            area="t_plains_heals",
+            battle_num=battle_count-1
+        )
+        return False
     logger.info("Battle is ended - Thunder Plains")
     wrap_up()
     memory.main.wait_frames(2)  # Allow lightning to attemt a strike
@@ -1621,17 +1656,25 @@ def thunder_plains(section):
     logger.debug("Checking party format and resolving if needed.")
     memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     logger.debug("Party format is good. Now checking health values (check for ambush only).")
-    if (
-        Tidus.in_danger(400)
-        or Auron.in_danger(400)
-        or Wakka.in_danger(400)
-        or Rikku.in_danger(280)
-    ):
-        heal_up()
-    if 1 in memory.main.ambushes():
-        heal_up()
+    logger.debug(f"ML heals value: {ml_heals}")
+    if ml_heals:
+        logger.warning("aVIna deciding if we need to heal.")
+        if battle_count in heal_array:
+            heal_up()
+    else:
+        logger.warning("Old heal logic.")
+        if (
+            Tidus.in_danger(400)
+            or Auron.in_danger(400)
+            or Wakka.in_danger(400)
+            or Rikku.in_danger(280)
+        ):
+            heal_up()
+        elif 1 in memory.main.ambushes():
+            heal_up()
     memory.main.close_menu()
     logger.debug("Ready to continue onward.")
+    return True
 
 
 @battle.utils.speedup_decorator
@@ -1707,6 +1750,8 @@ def m_woods():
                 logger.debug("Looking ahead, no need to manip")
                 flee_all()
 
+    if memory.main.game_over():
+        return
     logger.info("Battle complete, now to deal with the aftermath.")
     wrap_up()
 
@@ -2447,9 +2492,9 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
         battle_goal = 3
     else:
         items = update_steal_items_desert()
-        if items[1] < 2:
+        if items[1] < 2 and memory.main.battle_type() != 2:
             battle_goal = 0  # Steal an item
-        elif items[1] == 0 and items[2] == 0:
+        elif items[1] == 0 and items[2] == 0 and memory.main.battle_type() != 2:
             battle_goal = 0  # Steal an item
         # Extra items into power/speed
         elif status[3] <= -1 and (throw_power or throw_speed):
@@ -2457,11 +2502,11 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
         elif status[3] > -1:
             # Steal to an excess of one item (so we can throw in future battles)
             battle_goal = 0
-        elif not status[0]:
+        elif not status[0] and memory.main.battle_type() != 2:
             battle_goal = 2  # Rikku still needs charging.
         else:
             battle_goal = 3  # Nothing to do but get to Home.
-
+    
     # Then we take action.
     while memory.main.battle_active():
         if battle_goal == 0:  # Steal an item
@@ -3054,6 +3099,7 @@ def calm_impulse():
 
 
 def calm_lands_gems():
+    advance_pre_x, advance_post_x = rng_track.nea_track()
     while not memory.main.turn_ready():
         pass
     steal_complete = False
@@ -3067,7 +3113,11 @@ def calm_lands_gems():
                 if not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif steal_complete:
-                    flee_all()
+                    if memory.main.next_chance_rng_10(60) in [0,2]:
+                        advances = advance_pre_x
+                    else:
+                        advances = advance_post_x
+                    advance_rng_10(advances)
                 elif Kimahri.is_turn():
                     # Red element in center slot, with machina and dog
                     if memory.main.get_encounter_id() in [273, 281]:
@@ -3549,7 +3599,7 @@ def attack_oblitz_end():
         if memory.main.battle_menu_cursor() not in [0, 203, 210, 216]:
             logger.debug(f"Battle Menu Cursor: {memory.main.battle_menu_cursor()}")
             xbox.tap_up()
-        elif screen.battle_complete():
+        elif not memory.main.battle_active():
             return
         else:
             xbox.menu_b()
@@ -3571,7 +3621,7 @@ def attack(direction="none"):
         if memory.main.battle_menu_cursor() not in [0, 203, 210, 216]:
             logger.debug(f"Battle Menu Cursor: {memory.main.battle_menu_cursor()}")
             xbox.tap_up()
-        elif screen.battle_complete():
+        elif not memory.main.battle_active():
             return
         else:
             xbox.tap_b()
@@ -3973,26 +4023,26 @@ def flee_all(exclude:int = 99):
 
 def escape_all():
     logger.info("escape_all function")
-    while not screen.battle_complete():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             escape_one()
 
 
 def escape_action():
     while memory.main.main_battle_menu():
-        if memory.main.battle_complete():
+        if not memory.main.battle_active():
             break
         else:
             xbox.tap_right()
     logger.debug("In other battle menu")
     while memory.main.battle_cursor_2() != 2:
-        if memory.main.battle_complete():
+        if not memory.main.battle_active():
             break
         else:
             xbox.tap_down()
     logger.debug("Targeted Escape")
     while memory.main.other_battle_menu():
-        if memory.main.battle_complete():
+        if not memory.main.battle_active():
             break
         else:
             xbox.tap_b()
@@ -4286,7 +4336,7 @@ def bfa_nem():
             xbox.tap_b()
     logger.debug("GG Nemesis%")
     logger.debug("Returning to main")
-    return
+    return True
 
 
 def yu_yevon_item():
@@ -4543,13 +4593,13 @@ def calm_lands_manip():
     mid_array = [277, 279, 285, 287, 289, 290]
     rng_10_next_chance_high = memory.main.next_chance_rng_10(128)
     high_array = [278, 286, 288]
+    advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
     if check_gems() < 2:
         logger.debug(f"Gems: {check_gems()}")
         logger.debug("Calm Lands battle, need gems.")
         calm_lands_gems()
     else:
         logger.debug("Gems good. NEA manip logic.")
-        advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
         if advance_pre_x not in [0, 2] and advance_post_x not in [0, 2]:
             # Non-zero for both
             logger.debug("Not lined up for NEA")
@@ -4580,16 +4630,16 @@ def calm_lands_manip():
                 flee_all()
         elif advance_post_x == 0:  # Lined up for next drop NEA before defender X.
             logger.debug("The next equipment to drop will be NEA")
-            if memory.main.get_coords()[0] > 1300:
-                logger.debug("Near Gagazet, just get off RNG10 equipment drop.")
-                if memory.main.next_chance_rng_10() == 0:
-                    advance_rng_10(1)
+            #if memory.main.get_coords()[0] > 1300:
+            #    logger.debug("Near Gagazet, just get off RNG10 equipment drop.")
+            if memory.main.next_chance_rng_10() == 0:
+                advance_rng_10(1)
                     # Gets us off of a drop on defender X - probably. :D
                     # Don't want to have Defender X drop an item
-                else:
-                    flee_all()
-            elif memory.main.next_chance_rng_10_calm():
-                advance_rng_10(memory.main.next_chance_rng_10_calm())
+            #    else:
+            #        flee_all()
+            #elif memory.main.next_chance_rng_10_calm():
+            #    advance_rng_10(memory.main.next_chance_rng_10_calm())
             else:
                 logger.debug("Lined up OK, ready for NEA. Just flee.")
                 flee_all()
@@ -4615,7 +4665,7 @@ def calm_lands_manip():
 
 
 def calm_steal():
-    if memory.main.get_encounter_id() == 313:
+    if memory.main.get_encounter_id() in [276,313]:
         _steal("down")
     elif memory.main.get_encounter_id() == 289:
         _steal("up")
@@ -4642,9 +4692,9 @@ def advance_rng_10(num_advances: int):
                 elif memory.main.get_encounter_id() == 321:
                     logger.debug("Registering evil jar guy, fleeing.")
                     flee_all()
-                elif memory.main.get_encounter_id() == 287:
-                    logger.debug("Registering Anaconadeur - I am French!!! - fleeing")
-                    flee_all()
+                #elif memory.main.get_encounter_id() == 287:
+                #    logger.debug("Registering Anaconadeur - I am French!!! - fleeing")
+                #    flee_all()
                 elif num_advances >= 6:
                     if escape_success_count == 0:
                         if escape_one():
@@ -4704,12 +4754,14 @@ def advance_rng_10(num_advances: int):
                         CurrentPlayer().defend()
                 elif num_advances in [1, 2]:
                     logger.debug(f"Registering advances: {num_advances}")
-                    if Kimahri.is_turn():
+                    if Kimahri.is_turn() or Rikku.is_turn():
                         logger.debug("Registering turn, steal character")
                         calm_steal()
                         num_advances -= 1
                     elif not Kimahri.active():
                         buddy_swap(Kimahri)
+                    elif not Rikku.active():
+                        buddy_swap(Rikku)
                     elif Tidus.is_turn():
                         flee_all()
                     elif not Tidus.active():
