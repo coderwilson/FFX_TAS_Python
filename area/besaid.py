@@ -187,15 +187,14 @@ def trials():
 def leaving():
     logger.info("Ready to leave Besaid")
     memory.main.click_to_control()
-    while not pathing.set_movement([0,23]):
+    while not pathing.set_movement([0, 23]):
         pass
-    while not pathing.set_movement([0,-35]):
+    while not pathing.set_movement([0, -35]):
         pass
-    pathing.set_movement([0,-100])
+    pathing.set_movement([0, -100])
     memory.main.await_event()
     FFXC.set_neutral()
     gil_guy = False
-    beach_heal = False
     checkpoint = 17
 
     while memory.main.get_map() != 301:

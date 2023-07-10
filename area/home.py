@@ -10,7 +10,7 @@ import vars
 import xbox
 import random
 from paths import BikanelDesert, BikanelHome
-from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu, Yuna
+from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -59,7 +59,6 @@ def check_spheres():
 def desert():
     logger.info("Desert")
     memory.main.click_to_control()
-    battle_count = 0
 
     need_speed, need_power = check_spheres()
     # Logic for finding Teleport Spheres x2 (only chest in this area)
@@ -73,7 +72,7 @@ def desert():
     # Bomb cores, sleeping powders, smoke bombs, silence grenades
     steal_items = [0, 0, 0, 0]
     items_needed = 0
-    chance = random.choice(range(0,100))
+    chance = random.choice(range(0, 100))
     if chance < 20:
         manip_drops = True
     else:
@@ -225,7 +224,7 @@ def desert():
                 # After-battle logic
                 memory.main.click_to_control()
                 # Come back to this. Could save some runs.
-                #if 1 in memory.main.ambushes():
+                # if 1 in memory.main.ambushes():
                 #    menu.main.overworld_use_item()
 
                 # First, check and update party format.
@@ -329,7 +328,7 @@ def find_summoners():
                     checkpoint = 21
                 else:
                     checkpoint = 81
-            elif checkpoint in [24,25] and 1 in memory.main.ambushes():
+            elif checkpoint in [24, 25] and 1 in memory.main.ambushes():
                 checkpoint = 22
             elif checkpoint == 31 and not game_vars.csr():
                 memory.main.click_to_event_temple(6)

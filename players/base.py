@@ -211,7 +211,7 @@ class Player:
             )
         try:
             self.navigate_to_battle_menu(21)
-        except:
+        except Exception:
             return
         while memory.main.main_battle_menu():
             xbox.tap_b()
@@ -285,7 +285,7 @@ class Player:
                 else:
                     xbox.tap_down()
                 current_position = memory.main.battle_menu_cursor()
-            except:
+            except Exception:
                 xbox.tap_up()
                 current_position = memory.main.battle_menu_cursor()
 
@@ -322,7 +322,7 @@ class Player:
         )
         while (not memory.main.main_battle_menu()) and memory.main.battle_active():
             xbox.tap_b()
-            #if not self.is_turn():
+            # if not self.is_turn():
             #    return
         logger.debug(
             f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
@@ -425,9 +425,9 @@ class Player:
             return self._read_char_offset_address(PlayerMagicNumbers.CUR_HP)
         else:
             return memory.main.get_battle_hp()[self.battle_slot()]
-            #return self._read_char_battle_offset_address(
+            # return self._read_char_battle_offset_address(
             #    PlayerMagicNumbers.BATTLE_CUR_HP, self.battle_slot()
-            #)
+            # )
 
     def max_hp(self, combat=False) -> int:
         if not combat:
@@ -446,8 +446,7 @@ class Player:
                 memory.main.read_val(PlayerMagicNumbers.ACTIVE_BATTLE_SLOTS + (2 * i))
                 == self.id
             ):
-                
-                #logger.debug(f"Char {self.id} in slot {i}")
+                # logger.debug(f"Char {self.id} in slot {i}")
                 return i
 
         offset = 0

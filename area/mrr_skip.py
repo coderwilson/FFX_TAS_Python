@@ -1,20 +1,11 @@
 import logging
-import time
 
 import battle.main
 from battle import avina_memory
-import logs
 import memory.main
-from memory.main import (
-    wait_frames,
-    get_actor_id,
-    actor_index,
-    get_actor_coords,
-    get_coords
-)
+from memory.main import wait_frames, actor_index, get_actor_coords, get_coords
 import pathing
 from paths import MRRSkip
-import screen
 import vars
 import xbox
 from players import Auron, Kimahri, Tidus, Wakka
@@ -34,7 +25,8 @@ def _distance(n1, n2):
         logger.exception(x)
         return 999
 
-def movements(target, stutter : bool=False, buffer:int = 10):
+
+def movements(target, stutter: bool = False, buffer: int = 10):
     while _distance(get_coords(), target) > buffer:
         if memory.main.user_control():
             pathing.set_movement(target)
@@ -46,7 +38,9 @@ def movements(target, stutter : bool=False, buffer:int = 10):
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.flee_all()
-            elif memory.main.battle_wrap_up_active() or memory.main.diag_skip_possible():
+            elif (
+                memory.main.battle_wrap_up_active() or memory.main.diag_skip_possible()
+            ):
                 xbox.tap_b()
     FFXC.set_neutral()
     wait_frames(9)
@@ -54,7 +48,7 @@ def movements(target, stutter : bool=False, buffer:int = 10):
 
 def skip_prep():
     logger.info("Attempting MRR Skip")
-    
+
     # Get near the spot, but out of the way of the runner.
     logger.info("Near but away from the runner")
     runner_index = actor_index(8323)
@@ -64,11 +58,11 @@ def skip_prep():
         if memory.main.diag_skip_possible():
             xbox.tap_b()
     logger.info("Runner seems in a good spot. Let's go.")
-    
+
     target = [-18, -400]
     movements(target)
     logger.info("Moving to position.")
-    
+
     target = [-14.7, -400]
     movements(target, stutter=True, buffer=0.5)
     FFXC.set_movement(0, -1)
@@ -76,7 +70,8 @@ def skip_prep():
     FFXC.set_neutral()
     wait_frames(3)
     logger.info("In position.")
-    
+
+
 def attempt_skip():
     logger.info("Waiting for the guy to come back")
     part_1_done = False
@@ -87,7 +82,7 @@ def attempt_skip():
             runner_index = actor_index(8323)
             position = get_actor_coords(runner_index)
             tidus_coords = get_coords()
-            
+
             if attempt and position[1] > tidus_coords[1] + 15:
                 logger.debug(" - Runner too far. Wait for him to come back.")
                 attempt = False
@@ -101,9 +96,11 @@ def attempt_skip():
                     if memory.main.get_hp()[0] < 520:
                         battle.main.heal_up()
                     memory.main.update_formation(Tidus, Wakka, Auron)
-            elif memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active():
+            elif (
+                memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active()
+            ):
                 xbox.tap_b()
-            
+
             if attempt:
                 if _distance(position, tidus_coords) < 15:
                     # Attempting skip / talking
@@ -111,17 +108,20 @@ def attempt_skip():
                     wait_frames(1)
                     FFXC.set_value("btn_b", 0)
                     wait_frames(1)
-                elif -380 > tidus_coords[1] > -400 and _distance(position, tidus_coords) < 60:
+                elif (
+                    -380 > tidus_coords[1] > -400
+                    and _distance(position, tidus_coords) < 60
+                ):
                     part_1_done = True
-        
+
         if memory.main.get_hp()[0] < 520:
             battle.main.heal_up()
             memory.main.update_formation(Tidus, Wakka, Auron)
         logger.info("First barrier passed.")
-        #FFXC.set_movement(1,1)
-        #wait_frames(60)
-        #FFXC.set_neutral()
-        #wait_frames(6)
+        # FFXC.set_movement(1,1)
+        # wait_frames(60)
+        # FFXC.set_neutral()
+        # wait_frames(6)
         while not part_2_done:
             if get_coords()[1] != 0:
                 runner_index = actor_index(8323)
@@ -142,7 +142,7 @@ def attempt_skip():
                     memory.main.update_formation(Tidus, Wakka, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-            
+
             elif attempt:
                 if tidus_coords[1] > -360:
                     part_2_done = True
@@ -162,7 +162,7 @@ def attempt_skip():
                         FFXC.set_neutral()
                         wait_frames(3)
                         logger.info("In position.")
-            
+
         FFXC.set_neutral()
         if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():
             battle.main.heal_up()
@@ -170,6 +170,7 @@ def attempt_skip():
         logger.info("Success!")
     except Exception as e:
         logger.warning(e)
+
 
 def advance_to_aftermath():
     logger.info("Now to escape this area")
@@ -194,7 +195,7 @@ def advance_to_aftermath():
                     ml_heals = True
         else:
             logger.info("I have no memory of this seed. (B)")
-    except:
+    except Exception:
         logger.info("I have no memory of this seed. (C)")
     if 0 in heal_array:
         battle.main.heal_up()
@@ -212,7 +213,7 @@ def advance_to_aftermath():
                     pass
                 if memory.main.game_over():
                     avina_memory.add_battle_to_memory(
-                        seed=seed_str, area="mrr_heals", key=battle_num-1
+                        seed=seed_str, area="mrr_heals", key=battle_num - 1
                     )
                     return False
                 battle.main.flee_all()
@@ -227,4 +228,3 @@ def advance_to_aftermath():
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
     return True
-

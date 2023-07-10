@@ -92,7 +92,7 @@ def decide_luck():
                 logger.manip("I have no memory of this seed. (A)")
         else:
             logger.manip("I have no memory of this seed. (B)")
-    except:
+    except Exception:
         logger.manip("I have no memory of this seed. (C)")
     if not decision:
         force_luck = rng_track.decide_skip_zan_luck()

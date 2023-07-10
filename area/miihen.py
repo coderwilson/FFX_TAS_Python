@@ -10,7 +10,7 @@ import vars
 import xbox
 from battle import avina_memory
 from paths import Miihen1, MiihenAgency, MiihenLowroad
-from players import Auron, Kimahri, Tidus, Wakka, Yuna
+from players import Auron, Kimahri, Tidus, Wakka
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -18,7 +18,7 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 
-def post_battle_logic(section:str = "highroad_heals", battle_num:int = 0):
+def post_battle_logic(section: str = "highroad_heals", battle_num: int = 0):
     heal_array = []
     ml_heals = False
     try:
@@ -39,7 +39,7 @@ def post_battle_logic(section:str = "highroad_heals", battle_num:int = 0):
                     ml_heals = True
         else:
             logger.info("I have no memory of this seed. (B)")
-    except:
+    except Exception:
         logger.info("I have no memory of this seed. (C)")
 
     memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
@@ -224,9 +224,9 @@ def arrival():
                     if memory.main.game_over():
                         seed_str = str(memory.main.rng_seed())
                         avina_memory.add_battle_to_memory(
-                            seed=seed_str, 
+                            seed=seed_str,
                             area="highroad_heals",
-                            battle_num=battle_count-1
+                            battle_num=battle_count - 1,
                         )
                         return [False, 0, False, False]
                     logger.debug("Battle complete")
@@ -288,9 +288,9 @@ def arrival_2(self_destruct, battle_count):
                     if memory.main.game_over():
                         seed_str = str(memory.main.rng_seed())
                         avina_memory.add_battle_to_memory(
-                            seed=seed_str, 
+                            seed=seed_str,
                             area="highroad_heals",
-                            battle_num=battle_count-1
+                            battle_num=battle_count - 1,
                         )
                         return [False, 0, False, False]
                     logger.debug("Battle complete")
@@ -386,9 +386,9 @@ def low_road(self_destruct, battle_count):
                 if memory.main.game_over():
                     seed_str = str(memory.main.rng_seed())
                     avina_memory.add_battle_to_memory(
-                        seed=seed_str, 
+                        seed=seed_str,
                         area="highroad_heals",
-                        battle_num=battle_count-1
+                        battle_num=battle_count - 1,
                     )
                     return False
                 logger.info("Battle complete")

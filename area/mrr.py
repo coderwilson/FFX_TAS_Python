@@ -13,11 +13,7 @@ import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 from players import Auron, Tidus, Wakka
-from area.mrr_skip import (
-    skip_prep,
-    attempt_skip,
-    advance_to_aftermath
-)
+from area.mrr_skip import skip_prep, attempt_skip, advance_to_aftermath
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -29,8 +25,6 @@ def arrival():
     logger.info("Arrival at MRR")
     memory.main.click_to_control()
     memory.main.close_menu()
-
-    clasko_skip = True
 
     checkpoint = 0
     while memory.main.get_map() != 92:
@@ -80,7 +74,6 @@ def arrival():
                     current_time = time.time()
                     if current_time > max_time:
                         logger.warning("Skip seemingly failed. Moving on without it.")
-                        clasko_skip = False
                         break
                 memory.main.click_to_control()
                 FFXC.set_neutral()
@@ -105,7 +98,7 @@ def arrival():
     if game_vars.csr():
         # Logic for CSR mode
         memory.main.await_control()
-        FFXC.set_movement(1,-1)
+        FFXC.set_movement(1, -1)
         memory.main.await_event()
         FFXC.set_neutral()
         memory.main.await_control()
@@ -162,7 +155,7 @@ def main_path():
                 checkpoint += 1
                 logger.debug(f"Lift Checkpoint {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
-                if not memory.main.rng_seed() in [31]:
+                if memory.main.rng_seed() not in [31]:
                     memory.main.click_to_event_temple(7)
                     logger.info("Got X-potion")
                 checkpoint += 1

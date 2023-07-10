@@ -571,6 +571,7 @@ def djose_temple_old():
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
+
 def kimahri_terra():
     open_grid(character=3)
     menu_grid.move_first()
@@ -603,6 +604,7 @@ def kimahri_terra():
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
+
 def t_plains_terra_skip():
     open_grid(character=0)
 
@@ -618,15 +620,16 @@ def t_plains_terra_skip():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
-    
+
+
 def yuna_terra_skip_recover():
     open_grid(character=1)
     menu_grid.move_first()  # Sphere grid on Yuna first
     # Removed due to Terra skip
-    #menu_grid.sel_sphere("magic", "none")
-    #menu_grid.use_and_use_again()
-    #menu_grid.sel_sphere("mana", "none")
-    #menu_grid.use_and_move()
+    # menu_grid.sel_sphere("magic", "none")
+    # menu_grid.use_and_use_again()
+    # menu_grid.sel_sphere("mana", "none")
+    # menu_grid.use_and_move()
     grid_right()
     grid_right()
     grid_right()
@@ -649,7 +652,7 @@ def yuna_terra_skip_recover():
     menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
-    #menu_grid.use_and_quit()
+    # menu_grid.use_and_quit()
 
 
 def m_woods():
@@ -841,8 +844,8 @@ def mac_temple():
         menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
 
-    #if game_vars.get_blitz_win():
-        # Should be equipped from Crawler fight.
+    # if game_vars.get_blitz_win():
+    # Should be equipped from Crawler fight.
     #    equip_weapon(character=0, special="brotherhood")
     memory.main.close_menu()
 
@@ -1698,7 +1701,7 @@ def tidus_slayer(od_pos: int = 2):
     # memory.main.wait_frames(90)  # Testing
 
 
-def sell_all(nea:bool = False, tstrike:bool = True, gil_need:int = None):
+def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
     # Assume already on the sell items screen, index zero
     full_array = memory.main.all_equipment()
     sell_item = True
@@ -1740,9 +1743,10 @@ def sell_all(nea:bool = False, tstrike:bool = True, gil_need:int = None):
                     # No-Encounters
                     sell_item = False
                 if (
-                    not tstrike and 
-                    full_array[memory.main.equip_sell_row()].has_ability(0x801D) and
-                    full_array[memory.main.equip_sell_row()].get_equip_owner() in [0,4]
+                    not tstrike
+                    and full_array[memory.main.equip_sell_row()].has_ability(0x801D)
+                    and full_array[memory.main.equip_sell_row()].get_equip_owner()
+                    in [0, 4]
                 ):
                     sell_item = False  # Don't sell thunder strikes for Tidus/Wakka
                 if full_array[memory.main.equip_sell_row()].abilities() == [
@@ -1765,7 +1769,7 @@ def sell_all(nea:bool = False, tstrike:bool = True, gil_need:int = None):
                     sell_item = True
 
                 pbar.update(1)
-                if gil_need != None and memory.main.get_gil_value() > gil_need:
+                if gil_need is not None and memory.main.get_gil_value() > gil_need:
                     return
 
 

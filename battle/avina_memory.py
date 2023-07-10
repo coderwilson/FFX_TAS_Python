@@ -1,7 +1,10 @@
 import json
 import os
 import logging
+from jsonmerge import merge
+
 logger = logging.getLogger(__name__)
+
 
 def retrieve_memory():
     logger.debug("Retrieving aVIna memory")
@@ -18,14 +21,10 @@ def save_memory(to_write):
         json.dump(writing, fp, indent=4)
 
 
-def add_to_memory(seed:int, key:str = "kimahri_force_heal", value:str = "True"):
-    filepath = os.path.join("json_ai_files", "aVIna_memory.json")
+def add_to_memory(seed: int, key: str = "kimahri_force_heal", value: str = "True"):
+    os.path.join("json_ai_files", "aVIna_memory.json")
     records = retrieve_memory()
-    new_val = {
-        str(seed): {
-            key: value
-        }
-    }
+    new_val = {str(seed): {key: value}}
     logger.info("Adding to aVIna memory:")
     logger.info(new_val)
     if str(seed) in records.keys():
@@ -39,20 +38,17 @@ def add_to_memory(seed:int, key:str = "kimahri_force_heal", value:str = "True"):
 
     save_memory(to_write=records)
 
-def add_battle_to_memory(seed:int, area:str = "mrr_heals", battle_num:int = 0, value:str = "True"):
-    filepath = os.path.join("json_ai_files", "aVIna_memory.json")
+
+def add_battle_to_memory(
+    seed: int, area: str = "mrr_heals", battle_num: int = 0, value: str = "True"
+):
+    os.path.join("json_ai_files", "aVIna_memory.json")
     records = retrieve_memory()
-    new_val = {
-        str(seed): {
-            area: {
-                battle_num: value
-            }
-        }
-    }
+    new_val = {str(seed): {area: {battle_num: value}}}
     logger.info("Adding to aVIna memory:")
     logger.info(new_val)
     results = merge(records, new_val)
-    '''
+    """
     if str(seed) in records.keys():
         if area in records[str(seed)].keys():
             if key in records[str(seed)][area].keys():
@@ -64,7 +60,6 @@ def add_battle_to_memory(seed:int, area:str = "mrr_heals", battle_num:int = 0, v
                 records[str(seed)][area]
     else:
         records.update(new_val)
-    '''
+    """
 
     save_memory(to_write=results)
-

@@ -68,9 +68,8 @@ def arrival(rikku_charged):
                     ml_heals = True
         else:
             logger.info("I have no memory of this seed. (B)")
-    except:
+    except Exception:
         logger.info("I have no memory of this seed. (C)")
-
 
     logger.info("Arriving at Macalania Woods")
     memory.main.click_to_control()
@@ -129,9 +128,9 @@ def arrival(rikku_charged):
                 if memory.main.game_over():
                     seed_str = str(memory.main.rng_seed())
                     avina_memory.add_battle_to_memory(
-                        seed=seed_str, 
+                        seed=seed_str,
                         area="macalania_heals",
-                        battle_num=battle_count-1
+                        battle_num=battle_count - 1,
                     )
                     return False
                 rikku_charged = memory.main.overdrive_state()[6] == 100
@@ -174,7 +173,7 @@ def arrival(rikku_charged):
 def lake_road():
     logger.info("Lake road")
     memory.main.await_control()
-    #menu.kimahri_terra()
+    # menu.kimahri_terra()
     while not pathing.set_movement([174, -96]):
         pass
     while not pathing.set_movement([138, -83]):

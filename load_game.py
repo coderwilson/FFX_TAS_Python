@@ -6,15 +6,12 @@ from pathlib import Path
 
 import airship_pathing
 import area.dream_zan
-import logs
 import memory.main
-import nemesis.arena_prep
 import pathing
 import reset
 import screen
 import vars
 import xbox
-from gamestate import game
 from players import Kimahri, Rikku, Tidus
 
 logger = logging.getLogger(__name__)
@@ -46,9 +43,10 @@ def guado_start():
     memory.main.await_control()
     start_map = memory.main.get_map()
     while memory.main.get_map() == start_map:
-        FFXC.set_movement(1,-1)
+        FFXC.set_movement(1, -1)
     FFXC.set_neutral()
     memory.main.await_control()
+
 
 def load_into_game(gamestate: str, step_counter: str):
     logger.debug(f"Loading game state {gamestate} | {step_counter}")
@@ -120,7 +118,7 @@ def load_into_game(gamestate: str, step_counter: str):
                 move_after_load(spec_move=spec_move)
             else:
                 logger.debug("No Special movement needed")
-            if mrr_skip == True:
+            if mrr_skip is True:
                 game_vars.mrr_skip_set(True)
 
             logger.debug(f"Blitz Win {game_vars.get_blitz_win()}")
@@ -146,7 +144,7 @@ def load_into_game_old(gamestate: str, step_counter: str):
     xbox.tap_a()
     xbox.tap_a()
     logger.warning(f"No game state found for vars {gamestate} | {step_counter}")
-    
+
     # Now to tell the user where they went wrong:
     filepath = os.path.join("json_ai_files", "save_load_details.json")
     with open(filepath, "r") as fp:
@@ -157,15 +155,16 @@ def load_into_game_old(gamestate: str, step_counter: str):
             list_keys = results[gamestate].keys()
             for key in list_keys:
                 logger.warning(key)
-    except:
-        logger.warning(f"For game states, the valid values are (in non-sorted order): ")
+    except Exception:
+        logger.warning("For game states, the valid values are (in non-sorted order): ")
         for key in results:
             logger.warning(key)
-            #for x in results[key]:
+            # for x in results[key]:
             #    logger.warning(str(results[key][x]) + " | ")
-    
+
     logger.error("TAS terminating")
     exit(1)
+
 
 def get_saved_files():
     save_files_full = sorted(
@@ -386,6 +385,7 @@ def mrr_crit():
             return
     print("RNG value found.")
     return
+
 
 def besaid_trials():
     # Exit Tent

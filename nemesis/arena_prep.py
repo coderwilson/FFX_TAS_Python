@@ -2218,7 +2218,7 @@ def mac_woods(cap_num: int = 10):
                 elif pref_area == 2:
                     target = [13, 14]
                 else:
-                    target = [10,10]
+                    target = [10, 10]
                 battle.main.wrap_up()
                 memory.main.await_control()
                 memory.main.update_formation(Tidus, Yuna, Wakka)
