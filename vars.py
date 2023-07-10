@@ -373,7 +373,7 @@ class AllVars:
         self.rescue_count = value
 
     def completed_rescue_fights(self):
-        #logger.debug(f"Completed {self.rescue_count} exp kills")
+        # logger.debug(f"Completed {self.rescue_count} exp kills")
         return self.rescue_count >= 4
 
     def add_ytk_farm(self):

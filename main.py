@@ -64,7 +64,7 @@ def configuration_setup():
     # Open the config file and parse game configuration
     # This may overwrite configuration above
     config_data = config.open_config()
-    
+
     # Argument parsing
     parser = argparse.ArgumentParser()
     parser.add_argument("-seed")
@@ -72,28 +72,29 @@ def configuration_setup():
     parser.add_argument("-step")
     parser.add_argument("-train_blitz")
     args = parser.parse_args()
-    
+
     # gamestate
     try:
-        #logger.warning(args)
+        # logger.warning(args)
         logger.info(f"Twitch states passed forward: {args.state}, {args.step}")
-        if args.state != None or args.step != None:
-            logger.warning(f"Loading in variables from Twitch, {args.state}, {args.step}")
+        if args.state is not None or args.step is not None:
+            logger.warning(
+                f"Loading in variables from Twitch, {args.state}, {args.step}"
+            )
             game.state = args.state
             game.step = int(args.step)
         else:
             game.state = config_data.get("gamestate", "none")
             game.step = config_data.get("step_counter", 1)
-    except:
+    except Exception:
         logger.warning("Failure, could not load variables from Twitch")
         game.state = "VAR_ERROR"
         game.step = 999
-    
 
-    if args.train_blitz != None:
+    if args.train_blitz is not None:
         game_vars.set_loop_blitz(True)
         logger.warning("Training Blitzball, may reset after Blitzball wins.")
-    if args.seed != None:
+    if args.seed is not None:
         logger.debug(f"Seed passed from Twitch: {args.seed}")
         twitch_seed = int(args.seed)
         game_vars.rng_seed_num_set(twitch_seed)
@@ -148,6 +149,7 @@ def rng_seed_setup():
 
 def load_game_state():
     from json_ai_files.write_seed import write_state_step
+
     # loading from a save file
     write_state_step(state=game.state, step=game.step)
     load_game.load_into_game(gamestate=game.state, step_counter=game.step)
@@ -162,6 +164,7 @@ def maybe_create_save(save_num: int):
         save_sphere.touch_and_save(
             save_num=save_num, game_state=game.state, step_count=game.step
         )
+
 
 def perform_TAS():
     # Force looping on Blitzball only.
@@ -186,6 +189,7 @@ def perform_TAS():
             # Start of the game, start of Dream Zanarkand section
             if game.state == "none" and game.step == 1:
                 from json_ai_files.write_seed import write_new_game
+
                 write_new_game()
                 logger.info("New Game 1 function initiated.")
                 area.dream_zan.new_game(game.state)
@@ -346,14 +350,18 @@ def perform_TAS():
 
                     elif game_vars.loop_blitz() and blitz_duration < blitz_threshold:
                         logger.manip("--------------")
-                        logger.manip(f"Good Blitz, worth completing the run. Blitz time in seconds:")
+                        logger.manip(
+                            "Good Blitz, worth completing the run. Blitz time in seconds:"
+                        )
                         logger.manip(blitz_duration)
                         logger.manip("--------------")
                         game.step = 5
                     elif game_vars.loop_blitz() and blitz_loops < max_loops:
                         FFXC.set_neutral()
                         logger.info("-------------")
-                        logger.info("- Resetting: Blitz time: {blitz_duration} seconds.")
+                        logger.info(
+                            "- Resetting: Blitz time: {blitz_duration} seconds."
+                        )
                         logger.info("-------------")
                         screen.await_turn()
                         game.state, game.step = reset.mid_run_reset()
@@ -381,12 +389,12 @@ def perform_TAS():
             if game.state == "Miihen":
                 if game.step == 1:
                     return_array = area.miihen.arrival()
-                    if return_array[2] == False:
+                    if return_array[2] is False:
                         game.state, game.step = reset.mid_run_reset()
                     return_array = area.miihen.arrival_2(
                         return_array[0], return_array[1]
                     )
-                    if return_array[2] == False:
+                    if return_array[2] is False:
                         game.state, game.step = reset.mid_run_reset()
                     area.miihen.mid_point()
                     logger.info("End of Mi'ihen mid point section.")
@@ -394,10 +402,8 @@ def perform_TAS():
                     maybe_create_save(save_num=26)
 
                 if game.step == 2:
-                    return_val = area.miihen.low_road(
-                        return_array[0], return_array[1]
-                    )
-                    if return_val == False:
+                    return_val = area.miihen.low_road(return_array[0], return_array[1])
+                    if return_val is False:
                         game.state, game.step = reset.mid_run_reset()
 
                     # Report duration at the end of Mi'ihen section for all runs.
@@ -419,7 +425,7 @@ def perform_TAS():
                     else:
                         game.step = 2
                         maybe_create_save(save_num=27)
-                
+
                 if game.step == 2:
                     area.mrr.main_path()
                     if memory.main.game_over():
@@ -816,7 +822,7 @@ def perform_TAS():
 
                 if game.step == 8:
                     nemesis.advanced_farm.full_farm(phase=4)
-                    #nemesis.advanced_farm.full_farm(phase=7)
+                    # nemesis.advanced_farm.full_farm(phase=7)
                     game.step = 9
                     maybe_create_save(save_num=58)
 

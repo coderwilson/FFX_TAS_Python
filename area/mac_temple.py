@@ -50,7 +50,7 @@ def approach(do_grid=True):
     memory.main.await_control()
     if do_grid:
         menu.mac_temple()
-    #save_sphere.touch_and_go()
+    # save_sphere.touch_and_go()
 
 
 def arrival():
@@ -277,7 +277,7 @@ def escape():
     menu.equip_sonic_steel(full_menu_close=True)
 
     logger.info("Now to escape the Guado")
-    chance = random.choice(range(0,100))
+    chance = random.choice(range(0, 100))
     if chance < 20:
         force_battle = True
     else:

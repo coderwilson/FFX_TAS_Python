@@ -37,8 +37,8 @@ def nearest_save_actor() -> int:
     FFXC.set_neutral()
     for x in range(memory.main.get_actor_array_size()):
         actor_mem = memory.main.get_actor_id(x)
-        #if actor_mem != 52685:
-            #logger.debug(f"nearest_save_actor: {actor_mem} | {x}")
+        # if actor_mem != 52685:
+        # logger.debug(f"nearest_save_actor: {actor_mem} | {x}")
         if actor_mem in [20481, 20482, 20651]:
             save_actors.append(x)
     logger.debug(save_actors)

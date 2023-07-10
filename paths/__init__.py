@@ -29,7 +29,7 @@ from paths.mac_temple import (
 from paths.mac_woods import MacalaniaLake, MacalaniaWoods
 from paths.miihen import Miihen1, MiihenAgency, MiihenLowroad
 from paths.moonflow import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
-from paths.mrr import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart, MRRSkip
+from paths.mrr import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 from paths.ne_armor import (
     GagazetNELoopback,
     NEApproach,

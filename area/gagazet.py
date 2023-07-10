@@ -219,7 +219,7 @@ def flux():
                 FFXC.set_neutral()
                 save_sphere.touch_and_go()
                 checkpoint += 1
-            #elif checkpoint == 8:
+            # elif checkpoint == 8:
             #    while memory.main.user_control():
             #        FFXC.set_movement(1, 1)
             #    FFXC.set_neutral()
@@ -249,7 +249,7 @@ def flux():
 
 def dream(checkpoint: int = 0):
     while memory.main.get_map() != 309:
-        FFXC.set_movement(1,1)
+        FFXC.set_movement(1, 1)
     memory.main.click_to_control()
     logger.info("Dream sequence")
     memory.main.wait_frames(3)

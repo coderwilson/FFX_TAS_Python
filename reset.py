@@ -3,13 +3,7 @@ import logging
 
 import logs
 import memory.main
-from memory.main import (
-    user_control, 
-    turn_ready, 
-    battle_wrap_up_active, 
-    menu_open, 
-    s_grid_active
-)
+from memory.main import user_control, turn_ready, battle_wrap_up_active
 import vars
 import xbox
 
@@ -93,8 +87,8 @@ def _attempt_reset():
             move_complete,
             use_ready,
             ready_select_sphere,
-            
         )
+
         while memory.main.s_grid_active():
             if ready_use_sphere():
                 logger.debug("Using the current item.")
@@ -106,12 +100,12 @@ def _attempt_reset():
                 logger.debug("quitting sphere grid")
                 xbox.menu_b()
             elif (
-                move_use_menu() or 
-                move_ready() or 
-                move_active() or 
-                move_complete() or 
-                use_ready() or 
-                ready_select_sphere()
+                move_use_menu()
+                or move_ready()
+                or move_active()
+                or move_complete()
+                or use_ready()
+                or ready_select_sphere()
             ):
                 xbox.menu_a()
         while memory.main.menu_number() != 5:
@@ -128,9 +122,13 @@ def _attempt_reset():
     if memory.main.menu_open():
         logger.debug("Reset: menu open")
         memory.main.close_menu()
-    while not (user_control() or turn_ready()) and memory.main.get_map() not in [23, 62, 348, 349]:
+    while not (user_control() or turn_ready()) and memory.main.get_map() not in [
+        23,
+        62,
+        348,
+        349,
+    ]:
         xbox.tap_a()
-
 
     while memory.main.get_map() not in [23, 348, 349]:
         logger.info("Attempting reset")
@@ -157,11 +155,16 @@ def reset_to_main_menu():
         _attempt_reset()
     logger.info("Resetting")
 
+
 def reset_no_battles():
     memory.main.wait_frames(90)
-    while not (user_control() or turn_ready()) and memory.main.get_map() not in [23, 62, 348, 349]:
+    while not (user_control() or turn_ready()) and memory.main.get_map() not in [
+        23,
+        62,
+        348,
+        349,
+    ]:
         xbox.tap_a()
-
 
     while memory.main.get_map() not in [23, 348, 349]:
         logger.info("Attempting reset")

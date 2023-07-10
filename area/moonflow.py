@@ -42,9 +42,9 @@ def arrival():
                     ml_heals = True
         else:
             logger.info("I have no memory of this seed. (B)")
-    except:
+    except Exception:
         logger.info("I have no memory of this seed. (C)")
-    
+
     logger.info("Starting Moonflow section")
     keys = 0
     key_slot = get_item_slot(81)
@@ -54,7 +54,7 @@ def arrival():
     checkpoint = 0
     while memory.main.get_map() != 235:
         if memory.main.user_control():
-            #logger.debug(keys)
+            # logger.debug(keys)
             # Chests
             if checkpoint == 2:  # Gil outside Djose temple
                 logger.info("Djose gil chest")
@@ -71,7 +71,9 @@ def arrival():
                 logger.debug(f"Key sphere checkpoint: {checkpoint}")
             elif checkpoint == 38:
                 checkpoint = 45
-                logger.info(f"No longer get mdef sphere. Updated checkpoint: {checkpoint}")
+                logger.info(
+                    f"No longer get mdef sphere. Updated checkpoint: {checkpoint}"
+                )
             elif checkpoint == 43:  # Moonflow chest
                 if memory.main.get_item_slot(90) < 200:
                     checkpoint += 1
@@ -82,7 +84,7 @@ def arrival():
                 key_slot = get_item_slot(81)
                 keys = get_item_count_slot(key_slot)
                 if keys == keys_start:
-                    FFXC.set_movement(0,1)
+                    FFXC.set_movement(0, 1)
                     xbox.tap_b()
                 else:
                     checkpoint += 1
@@ -118,9 +120,9 @@ def arrival():
                 if memory.main.game_over():
                     seed_str = str(memory.main.rng_seed())
                     avina_memory.add_battle_to_memory(
-                        seed=seed_str, 
+                        seed=seed_str,
                         area="moonflow_heals",
-                        battle_num=battle_count-1
+                        battle_num=battle_count - 1,
                     )
                     return [False, 0, False, False]
                 battle.main.wrap_up()

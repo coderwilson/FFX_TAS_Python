@@ -12,7 +12,7 @@ import screen
 import vars
 import xbox
 from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
-from players import Auron, Kimahri, Lulu, Rikku, Tidus, Yuna, Wakka
+from players import Auron, Kimahri, Lulu, Rikku, Tidus, Yuna
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -559,10 +559,12 @@ def evrae_altana():
     return 0
 
 
-def natus_formation(battles:int = 0, full_menu_close:bool=True):
-    logger.warning(f"NEA drops as equipment drop number {rng_track.nea_track()[1]} from now.")
+def natus_formation(battles: int = 0, full_menu_close: bool = True):
+    logger.warning(
+        f"NEA drops as equipment drop number {rng_track.nea_track()[1]} from now."
+    )
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
-    '''
+    """
     if memory.main.get_yuna_slvl() <= 13:
         # Just need levels
         memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
@@ -574,7 +576,7 @@ def natus_formation(battles:int = 0, full_menu_close:bool=True):
         memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
     else:
         memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
-    '''
+    """
 
 
 def seymour_natus():
@@ -617,7 +619,6 @@ def seymour_natus():
                         menu.seymour_natus_blitz_loss()
                 memory.main.close_menu()
                 rng_track.print_manip_info()
-            
 
     # Movement for make-out scene
     memory.main.click_to_control()

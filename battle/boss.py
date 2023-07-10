@@ -19,7 +19,6 @@ from players import (
     Wakka,
     Yuna,
 )
-import rng_track
 from battle import avina_memory
 from area.gagazet import check_gems
 
@@ -37,7 +36,9 @@ def ammes():
         if memory.main.turn_ready():
             logger.info("Attacking Sinspawn Ammes")
             if Tidus.is_turn() and Tidus.has_overdrive():
-                if memory.main.future_attack_will_crit(character=0, char_luck=18, enemy_luck=10):
+                if memory.main.future_attack_will_crit(
+                    character=0, char_luck=18, enemy_luck=10
+                ):
                     logger.manip("Overdrive crit")
                     Tidus.overdrive()
                 elif memory.main.get_enemy_current_hp()[0] < 700:
@@ -75,7 +76,7 @@ def kimahri():
                 force_heal = True
         else:
             logger.info("I have no memory of this seed.")
-    except:
+    except Exception:
         pass
     logger.debug(f"Forcing heal: {force_heal}")
     if force_heal:
@@ -95,21 +96,21 @@ def kimahri():
                 battle.main.use_potion_character(Tidus, "l")
                 force_heal = False
             elif (
-                not game_vars.early_tidus_grid() and
-                memory.main.get_turn_by_index(1) != 0 and
-                memory.main.get_turn_by_index(2) != 0 and
-                Tidus.in_danger(140) and
-                enemy_hp[0] > 119
+                not game_vars.early_tidus_grid()
+                and memory.main.get_turn_by_index(1) != 0
+                and memory.main.get_turn_by_index(2) != 0
+                and Tidus.in_danger(140)
+                and enemy_hp[0] > 119
             ):
                 if Tidus.next_crit(12) == 2:
                     CurrentPlayer().attack()
                 else:
                     battle.main.use_potion_character(Tidus, "l")
             elif (
-                Tidus.in_danger(200) and 
-                memory.main.get_turn_by_index(1) != 0 and
-                memory.main.get_turn_by_index(2) != 0 and
-                enemy_hp[0] > 119
+                Tidus.in_danger(200)
+                and memory.main.get_turn_by_index(1) != 0
+                and memory.main.get_turn_by_index(2) != 0
+                and enemy_hp[0] > 119
             ):
                 if Tidus.next_crit(12) == 2:
                     CurrentPlayer().attack()
@@ -232,9 +233,13 @@ def klikk():
                 logger.debug(f"==== Next Turn: {memory.main.get_next_turn()}")
                 logger.debug(f"==== Enemy HP: {memory.main.get_enemy_current_hp()[0]}")
 
-                if Tidus.in_danger(120) and not heal_used and not (
-                    memory.main.get_next_turn() == 0
-                    and memory.main.get_enemy_current_hp()[0] <= 181
+                if (
+                    Tidus.in_danger(120)
+                    and not heal_used
+                    and not (
+                        memory.main.get_next_turn() == 0
+                        and memory.main.get_enemy_current_hp()[0] <= 181
+                    )
                 ):
                     battle.main.use_potion_character(Tidus, "l")
                     klikk_revives += 1
@@ -387,13 +392,13 @@ def sin_fin():
                 CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
             else:
                 CurrentPlayer().defend()
-            
+
             # Old logic:
-            #logger.debug(f"Valefor OD percent: {Valefor.overdrive_percent()}")
-            #if Valefor.overdrive_percent(combat=True) == 20:
+            # logger.debug(f"Valefor OD percent: {Valefor.overdrive_percent()}")
+            # if Valefor.overdrive_percent(combat=True) == 20:
             #    logger.info("Valefor energy ray")
             #    Valefor.overdrive(overdrive_num=0, sin_fin=True)
-            #else:
+            # else:
             #    logger.info("Valefor thunder")
             #    Valefor.cast_black_magic_spell(spell_id=1, target_id=23)
     logger.info("Sin's Fin fight complete")
@@ -555,7 +560,6 @@ def chocobo_eater():
             xbox.tap_b()
     logger.info("Chocobo Eater battle complete.")
     memory.main.click_to_control()
-
 
 
 def chocobo_eater_old():
@@ -836,9 +840,9 @@ def extractor_mrr_skip():
             logger.debug(memory.main.get_actor_coords(3))
             if Tidus.is_turn():
                 if memory.main.get_actor_coords(3)[2] < -150:
-                    #if Tidus.has_overdrive():
+                    # if Tidus.has_overdrive():
                     #    Tidus.overdrive()
-                    #else:
+                    # else:
                     Tidus.attack()
                 elif cheer_count < 2:  # Dial in 2-4 cheers later
                     cheer_count += 1
@@ -861,7 +865,8 @@ def extractor_mrr_skip():
             xbox.tap_b()
     memory.main.click_to_control()
 
-#@battle.utils.speedup_decorator
+
+# @battle.utils.speedup_decorator
 def extractor():
     logger.info("Fight start: Extractor")
     FFXC.set_neutral()
@@ -984,18 +989,18 @@ def spherimorph():
                     battle.main.revive()
                     kim_turn = True
                 elif not kim_turn:
-                    #logger.manip(
+                    # logger.manip(
                     #    f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}"
-                    #)
-                    #logs.write_rng_track("RNG11 before Spherimorph")
-                    #logs.write_rng_track(
+                    # )
+                    # logs.write_rng_track("RNG11 before Spherimorph")
+                    # logs.write_rng_track(
                     #    memory.main.rng_array_from_index(index=11, array_len=30)
-                    #)
-                    #if memory.main.next_steal_rare(pre_advance=8):
+                    # )
+                    # if memory.main.next_steal_rare(pre_advance=8):
                     # One each for Spherimorph, Negator, Crawler, and guados.
                     # Except we haven't learned Steal yet. That's no good.
                     #    _steal()
-                    #else:
+                    # else:
                     CurrentPlayer().defend()
                     kim_turn = True
                 elif not Rikku.active():
@@ -1067,10 +1072,10 @@ def crawler():
     logger.info("Starting battle with Crawler")
     xbox.click_to_battle()
 
-    #if memory.main.next_steal_rare(pre_advance=5):
+    # if memory.main.next_steal_rare(pre_advance=5):
     #    # One each for two Negators, Crawler, and guados.
     #    battle.main.negator_with_steal()
-    #else:
+    # else:
     tidus_turns = 0
     luluturns = 0
 
@@ -1094,9 +1099,9 @@ def crawler():
                 if Rikku.overdrive_percent(combat=True) < 100:
                     logger.debug("Using Lightning Marble")
                     lightningmarbleslot = memory.main.get_use_items_slot(30)
-                    #if rikku_turns < 1:
+                    # if rikku_turns < 1:
                     #    battle.main.use_item(lightningmarbleslot, target=21)
-                    #else:
+                    # else:
                     battle.main.use_item(lightningmarbleslot, target=21)
                 else:
                     logger.debug("Starting Rikkus overdrive")
@@ -1205,11 +1210,11 @@ def wendigo():
                         battle.main.revive_all()
                     elif memory.main.get_throw_items_slot(6) < 255:
                         battle.main.revive()
-                #elif (
+                # elif (
                 #    memory.main.get_enemy_current_hp()[1] < 6000
                 #    and memory.main.get_overdrive_battle(0) == 100
                 #    and not game_vars.skip_kilika_luck()
-                #):
+                # ):
                 #    Tidus.overdrive(direction="left", character=21)
                 elif tidushealself:
                     if party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
@@ -1282,28 +1287,28 @@ def wendigo():
                     )
                     == 0
                 ):
-                    if not 3 in memory.main.get_active_battle_formation():
+                    if 3 not in memory.main.get_active_battle_formation():
                         battle.main.buddy_swap(Kimahri)
-                    elif not 6 in memory.main.get_active_battle_formation():
+                    elif 6 not in memory.main.get_active_battle_formation():
                         battle.main.buddy_swap(Rikku)
                     else:
                         battle.main.buddy_swap(Yuna)
 
             elif Lulu.is_turn():
-                if not 3 in memory.main.get_active_battle_formation():
+                if 3 not in memory.main.get_active_battle_formation():
                     battle.main.buddy_swap(Kimahri)
-                elif not 6 in memory.main.get_active_battle_formation():
+                elif 6 not in memory.main.get_active_battle_formation():
                     battle.main.buddy_swap(Rikku)
                 else:
                     battle.main.buddy_swap(Yuna)
-                #if (
+                # if (
                 #    battle.main.wendigo_res_heal(
                 #        turn_char=Lulu,
                 #        use_power_break=usepowerbreak,
                 #        tidus_max_hp=tidus_max_hp,
                 #    )
                 #    == 0
-                #):
+                # ):
                 #    CurrentPlayer().swap_battle_weapon()
             else:
                 if (
@@ -1397,7 +1402,7 @@ def evrae():
                 else:
                     battle.main.steal()
                     steal_count += 1
-                '''
+                """
                 elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
                         throw_slot = memory.main.get_use_items_slot(32)
@@ -1411,7 +1416,7 @@ def evrae():
                         battle.main.steal()
                     else:
                         battle.main.use_item(throw_slot)
-                '''
+                """
             elif Kimahri.is_turn():
                 logger.debug("Registering Kimahri's turn")
                 if not game_vars.get_blitz_win() and not lunar_curtain:
@@ -1432,7 +1437,7 @@ def evrae():
                 else:
                     battle.main.steal()
                     steal_count += 1
-                '''
+                """
                 elif game_vars.skip_kilika_luck():
                     if memory.main.get_use_items_slot(32) != 255:
                         throw_slot = memory.main.get_use_items_slot(32)
@@ -1446,7 +1451,7 @@ def evrae():
                         battle.main.steal()
                     else:
                         battle.main.use_item(throw_slot)
-                '''
+                """
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
 
@@ -1511,6 +1516,7 @@ def evrae_altana():
 
     memory.main.click_to_control()
 
+
 def evrae_altana_steal():
     logger.debug("Steal logic, we will get two gems")
     haste_count = False
@@ -1572,7 +1578,10 @@ def seymour_natus():
                     CurrentPlayer().defend()
         logger.warning("Natus complete, returning 1")
         return 1
-    elif memory.main.next_chance_rng_10(30) == 0 and memory.main.next_chance_rng_12() == 1:
+    elif (
+        memory.main.next_chance_rng_10(30) == 0
+        and memory.main.next_chance_rng_12() == 1
+    ):
         steal_occurred = False
         while memory.main.battle_active():
             if game_vars.completed_rescue_fights():
@@ -1631,8 +1640,8 @@ def seymour_natus():
                         highbridge_attack()
                 else:
                     CurrentPlayer().defend()
-    
-    #memory.main.click_to_control()
+
+    # memory.main.click_to_control()
     while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
@@ -1827,7 +1836,6 @@ def s_keeper():
     memory.main.click_to_control()
 
 
-
 @battle.utils.speedup_decorator
 def yunalesca():
     xbox.click_to_battle()
@@ -1933,6 +1941,7 @@ def bfa():
             CurrentPlayer().attack()
     if memory.main.game_over():
         logger.error("Failure on BFA!")
+        seed = game_vars.rng_seed_num()
         avina_memory.add_to_memory(seed=seed, key="zan_luck", value="False")
 
     # Skip the cutscene
@@ -1992,7 +2001,7 @@ def yu_yevon():
             logger.debug(f"za_char: {za_char}")
             logger.debug(f"zombie_attack: {zombie_attack}")
             logger.debug(f"weap_swap: {weap_swap}")
-            if zombie_attack == True:  # Throw P.down to end game
+            if zombie_attack is True:  # Throw P.down to end game
                 item_num = battle.main.yu_yevon_item()
                 if item_num == 99:
                     logger.warning("No phoenix downs!!! Panic!!!")

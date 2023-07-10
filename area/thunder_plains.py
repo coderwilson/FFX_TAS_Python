@@ -10,7 +10,6 @@ import pathing
 import screen
 import vars
 import xbox
-import save_sphere
 from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 from players import Auron, Tidus, Wakka
 
@@ -87,7 +86,9 @@ def south_pathing():
                     ):
                         xbox.menu_b()
                     elif screen.battle_screen():
-                        result = battle.main.thunder_plains(1, battle_count=battle_count)
+                        result = battle.main.thunder_plains(
+                            1, battle_count=battle_count
+                        )
                         if not result:
                             return 999
                     elif memory.main.menu_open():
@@ -105,7 +106,7 @@ def south_pathing():
         if memory.main.diag_skip_possible():
             xbox.menu_b()
     FFXC.set_neutral()
-    #menu.auto_sort_equipment()
+    # menu.auto_sort_equipment()
     return battle_count
 
 
@@ -166,6 +167,7 @@ def agency_shop():
             xbox.tap_b()
     memory.main.close_menu()
 
+
 def agency_shop_part_2():  # We'll grab Auron's weapon from O'aka, Macalania Woods
     # Next, Grab Auron's weapon
     xbox.skip_dialog(0.1)
@@ -198,7 +200,7 @@ def agency_shop_part_2():  # We'll grab Auron's weapon from O'aka, Macalania Woo
     ]
     logger.debug(f"Sellable Items in slot: {other_slots}")
     menu.sell_weapon(tidus_longsword)
-    #menu.sell_weapon(auron_katana)
+    # menu.sell_weapon(auron_katana)
     if game_vars.get_blitz_win() and memory.main.get_gil_value() < 8725:
         for loc in other_slots:
             menu.sell_weapon(loc)
@@ -287,7 +289,7 @@ def agency():
                 xbox.tap_b()
 
 
-def north_pathing(battle_count:int):
+def north_pathing(battle_count: int):
     memory.main.click_to_control()
     menu.equip_armor(character=0, ability=0x8028)
 

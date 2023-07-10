@@ -218,7 +218,9 @@ def execute_egg_hunt():
             1,
             2,
         ]:
-            logger.info(f"Character: {game_vars.zombie_weapon()}, equipping zombie weapon.")
+            logger.info(
+                f"Character: {game_vars.zombie_weapon()}, equipping zombie weapon."
+            )
             menu.equip_weapon(
                 character=game_vars.zombie_weapon(),
                 ability=0x8032,

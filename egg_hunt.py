@@ -112,7 +112,9 @@ def engage():
 
             if active_egg == 99:  # Positions to go to if we are stalling.
                 loop_break = 0
-                while active_egg == 99 and memory.main.user_control() and loop_break < 100:
+                while (
+                    active_egg == 99 and memory.main.user_control() and loop_break < 100
+                ):
                     if checkpoint == 0:
                         target = [-50, -50]
                     elif checkpoint == 1:
@@ -124,7 +126,7 @@ def engage():
                     elif checkpoint >= 4:
                         checkpoint = 0
                     if check_icicle_distances(target, ice_array):
-                        active_egg = 100 # just to break loop
+                        active_egg = 100  # just to break loop
                     else:
                         checkpoint += 1
                     loop_break += 1

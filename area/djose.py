@@ -390,9 +390,9 @@ def leaving_djose():
                 checkpoint = 13
             elif checkpoint in [3, 9, 12]:
                 memory.main.click_to_event_temple(0)
-                #if checkpoint == 9:
+                # if checkpoint == 9:
                 #    checkpoint = 35
-                #else:
+                # else:
                 checkpoint += 1
             elif checkpoint == 14:
                 memory.main.click_to_event_temple(2)

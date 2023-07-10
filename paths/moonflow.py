@@ -68,7 +68,7 @@ class Moonflow1(AreaMovementBase):
         75: [-1130, 1640],  # Grab chest
         76: [-1123, 1589],
         77: [-1112, 1579],
-        78: [-1085, 1594]
+        78: [-1085, 1594],
     }
     checkpoint_fallback = {
         2: "Picking up chest",

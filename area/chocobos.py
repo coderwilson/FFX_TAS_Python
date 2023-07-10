@@ -275,7 +275,7 @@ def choco_tame_3():
         memory.main.wait_frames(12)
         if try_fourth_race:
             xbox.tap_up()  # Up for something else, down for done.
-            #xbox.tap_down()  # Up for something else, down for done.
+            # xbox.tap_down()  # Up for something else, down for done.
             xbox.tap_b()
             memory.main.wait_frames(30)
             xbox.tap_up()
@@ -290,7 +290,7 @@ def choco_tame_3():
         return False
 
 
-def distance_balloon(index:int):
+def distance_balloon(index: int):
     try:
         player1 = memory.main.get_actor_coords(actor_index=0)
         player2 = memory.main.get_actor_coords(actor_index=index)
@@ -298,7 +298,6 @@ def distance_balloon(index:int):
     except Exception as x:
         logger.error(f"Exception: {x}")
         return 999
-
 
 
 def closest_balloon():
@@ -314,9 +313,8 @@ def closest_balloon():
             if dist < distance:
                 closest = i
                 distance = dist
-    #logger.warning(f"Balloon: {closest} | Distance: {distance}")
+    # logger.warning(f"Balloon: {closest} | Distance: {distance}")
     return closest
-
 
 
 def choco_tame_4():
@@ -336,10 +334,10 @@ def choco_tame_4():
         delta_x = position[0] - b_pos[0]
         delta_y = position[1] - b_pos[1]
 
-        desired_angle = math.atan2(delta_y,delta_x)
+        desired_angle = math.atan2(delta_y, delta_x)
         # math.atan2(y,x)/math.pi*180 gives from -180 to 180
-        #logger.warning(f"Desired: {desired_angle} | Actual: {angle}")
-        
+        # logger.warning(f"Desired: {desired_angle} | Actual: {angle}")
+
         if abs(desired_angle - angle) < 0.3:
             if last_button != 0:
                 logger.debug("Straight")
@@ -357,7 +355,6 @@ def choco_tame_4():
                 logger.warning("Right")
                 FFXC.set_value("d_pad", 8)
                 last_button = 8
-
 
     logger.debug("Race complete.")
     FFXC.set_neutral()

@@ -212,7 +212,7 @@ def game_over():
 def battle_complete():
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
-    if value in [1,2,3]:
+    if value in [1, 2, 3]:
         return True
     return False
 
@@ -401,6 +401,7 @@ def user_control():
         return False
     else:
         return True
+
 
 def controlled_actor_id():
     global base_value
@@ -1689,7 +1690,7 @@ def diag_skip_possible():
         # logger.debug("Skip 2")
         return False
     else:
-        key = base_value + 0x0085A03C #  English
+        key = base_value + 0x0085A03C  #  English
         if process.read_bytes(key, 1) == 1:
             # logger.debug("Skip 3")
             if game_vars.accessibility_vars()[2]:
@@ -1952,6 +1953,7 @@ def name_from_number(char_num):
 def get_actor_array_size():
     global base_value
     return process.read(base_value + 0x01FC44E0)
+
 
 def get_actors_loaded():
     global base_value
@@ -2967,7 +2969,7 @@ def check_ability(ability=0x8032):
             current_handle = char_weaps.pop(0)
             if current_handle.has_ability(ability):
                 results[6] = True
-    except:
+    except Exception:
         # Rikku not yet in the party.
         results[6] = False
 
@@ -4086,28 +4088,31 @@ def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
     return results[0]
 
 
-def ambushes(advances:int = 12, extra:int = 0):
+def ambushes(advances: int = 12, extra: int = 0):
     # https://grayfox96.github.io/FFX-Info/rng/encounters
     ret_array = []
     home_check = 99
-    rng_array = rng_array_from_index(index=1, array_len=(advances*2)+1+extra)
+    rng_array = rng_array_from_index(index=1, array_len=(advances * 2) + 1 + extra)
     for i in range(advances):
-        rng_val = rng_array[(2*i)+2+extra] & 255
+        rng_val = rng_array[(2 * i) + 2 + extra] & 255
         if rng_val >= 223:
             # Append battle number from current (i.e. first or second battle), 1 == next battle.
-            ret_array.append(i+1)
+            ret_array.append(i + 1)
         if home_check == 99:
-            rng_val = rng_array[(2*i)+1+extra] & 255
+            rng_val = rng_array[(2 * i) + 1 + extra] & 255
             if rng_val >= 223:
                 # Append battle number from current (i.e. first or second battle), 1 == next battle.
-                home_check = i+1
+                home_check = i + 1
 
-    ret_array.append(99)  # Just so we don't have an empty array. This will never be used otherwise.
+    ret_array.append(
+        99
+    )  # Just so we don't have an empty array. This will never be used otherwise.
     logger.manip(f"Upcoming ambushes: {ret_array}")
     logger.manip(f"Home check: {home_check}")
     if get_map() == 280:
         ret_array.append(home_check)
     return ret_array
+
 
 def rikku_mix_damage() -> List[int]:
     initial_rng_vals = rng_array_from_index(index=26, array_len=9)
@@ -4208,13 +4213,13 @@ def rng_10():
 
 
 def highbridge_drops():
-    test_array = rng_10_array(array_len = 40)
+    test_array = rng_10_array(array_len=40)
     ret_val = []
     for i in range(len(test_array)):
         if i < 3:
             pass
         elif (test_array[i] & 0x7FFFFFFF) % 255 < 30:
-            ret_val.append(i-3)
+            ret_val.append(i - 3)
     logger.warning(ret_val)
     return ret_val
 
@@ -4526,12 +4531,12 @@ def rng_array_from_index(index: int = 20, array_len: int = 20):
     ret_val = [rng_from_index(index)]  # First value is the current value
     for x in range(array_len):  # Subsequent values are based on first value.
         ret_val.append(roll_next_rng(ret_val[x], index))
-    #logger.debug(ret_val)
+    # logger.debug(ret_val)
     ret_val = [
         x & 0x7FFFFFFF for x in ret_val
     ]  # Anding it because that's the value that's actually used
-    #logger.warning(ret_val)
-    #wait_frames(90)
+    # logger.warning(ret_val)
+    # wait_frames(90)
     return ret_val
 
 
@@ -4554,10 +4559,10 @@ def next_steal(steal_count: int = 0, pre_advance: int = 0):
 
 
 def next_steal_rare(pre_advance: int = 0):
-    indeces = 1+pre_advance
+    indeces = 1 + pre_advance
     use_array = rng_array_from_index(index=11, array_len=indeces)
-    #logger.debug(use_array)
-    #for i in range(len(use_array)):
+    # logger.debug(use_array)
+    # for i in range(len(use_array)):
     #    logger.warning(f"{i} - {use_array[i] & 255}")
     steal_crit_rng = use_array[indeces] & 255
     logger.warning(f" RNG&255: {steal_crit_rng} | Returning {steal_crit_rng < 32}")

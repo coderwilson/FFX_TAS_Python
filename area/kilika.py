@@ -10,7 +10,7 @@ import save_sphere
 import vars
 import xbox
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
-from players import Kimahri, Tidus, Wakka, Yuna, Lulu, Valefor
+from players import Tidus, Wakka, Yuna, Lulu, Valefor
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -97,6 +97,7 @@ def forest_1():
     advances = 2  # Used to find the best battle coming up.
     next_battle = []
     import rng_track
+
     game_vars.dont_skip_kilika_luck()
 
     valefor_charge = Valefor.overdrive_percent() >= 20

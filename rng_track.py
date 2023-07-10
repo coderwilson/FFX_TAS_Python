@@ -1943,7 +1943,7 @@ def record_blitz_results(duration, test_mode=False):
             records.update(new_val)
     logger.debug(new_val)
 
-    #logger.debug(records)
+    # logger.debug(records)
 
     with open(filepath, "w") as fp:
         json.dump(records, fp, indent=4)
