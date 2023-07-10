@@ -8,6 +8,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from battle import avina_memory
 from paths import Miihen1, MiihenAgency, MiihenLowroad
 from players import Auron, Kimahri, Tidus, Wakka, Yuna
 
@@ -17,22 +18,41 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 
-def post_battle_logic(force_charge=False):
-    #if memory.main.overdrive_state_2()[1] < 43 or (
-    #    force_charge and memory.main.overdrive_state_2()[1] != 100
-    #):
-    #    memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
-    #else:
-    #    if game_vars.self_destruct_get():
-    #        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
-    #    else:
-    #        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
+def post_battle_logic(section:str = "highroad_heals", battle_num:int = 0):
+    heal_array = []
+    ml_heals = False
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        logger.manip(f"Seed: {seed_str}")
+        if seed_str in records.keys():
+            if section in records[seed_str].keys():
+                for i in range(30):
+                    if i in records[seed_str][section]:
+                        if records[seed_str][section][i] == "True":
+                            heal_array.append(i)
+            else:
+                logger.info("I have no memory of this seed. (A)")
+            if "ml_heals" in records[seed_str].keys():
+                if records[seed_str]["ml_heals"] == "True":
+                    ml_heals = True
+        else:
+            logger.info("I have no memory of this seed. (B)")
+    except:
+        logger.info("I have no memory of this seed. (C)")
+
     memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     hp_check = memory.main.get_hp()
     logger.debug(f"HP check: {hp_check}")
-    #if hp_check[0] < 520 or hp_check[1] < 220:
-    #    battle.main.heal_up()
-    if 1 in memory.main.ambushes():
+    logger.debug(f"ML heals value: {ml_heals}")
+    if ml_heals:
+        logger.warning("aVIna deciding if we need to heal.")
+        if battle_num in heal_array:
+            battle.main.heal_up()
+        else:
+            logger.debug("No need to heal up. Moving onward.")
+    elif 1 in memory.main.ambushes():
         battle.main.heal_up()
     else:
         logger.debug("No need to heal up. Moving onward.")
@@ -46,7 +66,6 @@ def arrival():
     logger.info("Now onward to scenes and Mi'ihen skip. Good luck!")
     miihen_skip = False
     battle_count = 0
-    sd_encounter_id = 0
 
     checkpoint = 0
     while memory.main.get_map() != 120:
@@ -185,7 +204,7 @@ def arrival():
             FFXC.set_neutral()
             if memory.main.turn_ready():
                 if checkpoint < 4:  # Tutorial battle with Auron
-                    while not memory.main.battle_complete():
+                    while memory.main.battle_active():
                         if memory.main.turn_ready():
                             Tidus.attack()
                     FFXC.set_movement(0, 1)
@@ -202,8 +221,16 @@ def arrival():
                     logger.debug("Starting battle")
                     battle_count += 1
                     battle.main.miihen_road()
+                    if memory.main.game_over():
+                        seed_str = str(memory.main.rng_seed())
+                        avina_memory.add_battle_to_memory(
+                            seed=seed_str, 
+                            area="highroad_heals",
+                            battle_num=battle_count-1
+                        )
+                        return [False, 0, False, False]
                     logger.debug("Battle complete")
-                    post_battle_logic()
+                    post_battle_logic(battle_num=battle_count)
 
                 # Kimahri manip
                 next_crit_kim = memory.main.next_crit(
@@ -223,10 +250,10 @@ def arrival():
                     FFXC.set_value("btn_b", 0)
                     memory.main.wait_frames(3)
     logger.debug(f"Mi'ihen skip status: {miihen_skip}")
-    return [game_vars.self_destruct_get(), battle_count, sd_encounter_id, miihen_skip]
+    return [game_vars.self_destruct_get(), battle_count, True, miihen_skip]
 
 
-def arrival_2(self_destruct, battle_count, sd_encounter_id):
+def arrival_2(self_destruct, battle_count):
     logger.info("Start of the second map")
     checkpoint = 15
     while memory.main.get_map() != 171:
@@ -258,6 +285,14 @@ def arrival_2(self_destruct, battle_count, sd_encounter_id):
                 else:
                     logger.debug("Starting battle")
                     battle.main.miihen_road()
+                    if memory.main.game_over():
+                        seed_str = str(memory.main.rng_seed())
+                        avina_memory.add_battle_to_memory(
+                            seed=seed_str, 
+                            area="highroad_heals",
+                            battle_num=battle_count-1
+                        )
+                        return [False, 0, False, False]
                     logger.debug("Battle complete")
                     post_battle_logic()
             elif memory.main.menu_open():
@@ -273,7 +308,7 @@ def arrival_2(self_destruct, battle_count, sd_encounter_id):
                 checkpoint = 20
             elif checkpoint < 31 and memory.main.get_map() == 58:
                 checkpoint = 31
-    return [game_vars.self_destruct_get(), battle_count, sd_encounter_id]
+    return [game_vars.self_destruct_get(), battle_count, True]
 
 
 def mid_point():
@@ -307,9 +342,9 @@ def mid_point():
 
 
 # Starts just after the save sphere.
-def low_road(self_destruct, battle_count, sd_encounter_id):
+def low_road(self_destruct, battle_count):
     checkpoint = 0
-    post_battle_logic(force_charge=True)
+    post_battle_logic(battle_num=battle_count)
     while memory.main.get_map() != 79:
         if memory.main.user_control():
             # Utility stuff
@@ -348,8 +383,16 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
                 battle_count += 1
                 logger.info("Starting battle")
                 battle.main.miihen_road()
+                if memory.main.game_over():
+                    seed_str = str(memory.main.rng_seed())
+                    avina_memory.add_battle_to_memory(
+                        seed=seed_str, 
+                        area="highroad_heals",
+                        battle_num=battle_count-1
+                    )
+                    return False
                 logger.info("Battle complete")
-                post_battle_logic(force_charge=True)
+                post_battle_logic(battle_num=battle_count)
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
@@ -357,3 +400,4 @@ def low_road(self_destruct, battle_count, sd_encounter_id):
                     xbox.tap_b()
     # logs.write_stats('Miihen encounters:')
     # logs.write_stats(battle_count)
+    return True

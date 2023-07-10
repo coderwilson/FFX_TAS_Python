@@ -8,6 +8,7 @@ import pathing
 import save_sphere
 import vars
 import xbox
+import random
 from paths import BikanelDesert, BikanelHome
 from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu, Yuna
 
@@ -58,6 +59,7 @@ def check_spheres():
 def desert():
     logger.info("Desert")
     memory.main.click_to_control()
+    battle_count = 0
 
     need_speed, need_power = check_spheres()
     # Logic for finding Teleport Spheres x2 (only chest in this area)
@@ -71,6 +73,11 @@ def desert():
     # Bomb cores, sleeping powders, smoke bombs, silence grenades
     steal_items = [0, 0, 0, 0]
     items_needed = 0
+    chance = random.choice(range(0,100))
+    if chance < 20:
+        manip_drops = True
+    else:
+        manip_drops = False
 
     # Now to figure out how many items we need.
     steal_items = battle.main.update_steal_items_desert()
@@ -150,7 +157,12 @@ def desert():
             elif checkpoint == 57:
                 checkpoint += 1
             elif checkpoint == 60:
-                if memory.main.get_coords()[1] < 812:
+                if manip_drops:
+                    FFXC.set_movement(-1, 1)
+                    memory.main.await_event()
+                    manip_drops = False
+                    checkpoint -= 2
+                elif memory.main.get_coords()[1] < 812:
                     # Dialing in. 810 works 95%, but was short once.
                     FFXC.set_movement(0, 1)
                 else:
@@ -212,9 +224,9 @@ def desert():
 
                 # After-battle logic
                 memory.main.click_to_control()
-                # Yuna can't heal up the party if she's not in it.
+                # Come back to this. Could save some runs.
                 #if 1 in memory.main.ambushes():
-                #    battle.main.heal_up(full_menu_close=False)
+                #    menu.main.overworld_use_item()
 
                 # First, check and update party format.
                 if checkpoint > 10:
@@ -229,7 +241,7 @@ def desert():
                     elif items_needed >= 1:
                         memory.main.update_formation(Tidus, Auron, Rikku)
                     else:  # Catchall
-                        memory.main.update_formation(Tidus, Auron, Lulu)
+                        memory.main.update_formation(Tidus, Wakka, Lulu)
 
                 # Next, figure out how many items we need.
                 steal_items = battle.main.update_steal_items_desert()

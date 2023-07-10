@@ -20,6 +20,7 @@ from players import (
     Yuna,
 )
 import rng_track
+from battle import avina_memory
 from area.gagazet import check_gems
 
 FFXC = xbox.controller_handle()
@@ -31,15 +32,21 @@ logger = logging.getLogger(__name__)
 def ammes():
     battle_complete = 0
     count_attacks = 0
-    tidus_od_flag = False
 
     while battle_complete != 1:
         if memory.main.turn_ready():
-            if not tidus_od_flag and Tidus.is_turn() and Tidus.has_overdrive():
-                Tidus.overdrive()
-                tidus_od_flag = True
+            logger.info("Attacking Sinspawn Ammes")
+            if Tidus.is_turn() and Tidus.has_overdrive():
+                if memory.main.future_attack_will_crit(character=0, char_luck=18, enemy_luck=10):
+                    logger.manip("Overdrive crit")
+                    Tidus.overdrive()
+                elif memory.main.get_enemy_current_hp()[0] < 700:
+                    logger.manip("Boss low, just hit the overdrive.")
+                    Tidus.overdrive()
+                else:
+                    logger.manip("Attack. Maybe a crit later?")
+                    CurrentPlayer().attack()
             else:
-                logger.info("Attacking Sinspawn Ammes")
                 CurrentPlayer().attack()
                 count_attacks += 1
         if memory.main.user_control():
@@ -47,13 +54,47 @@ def ammes():
             logger.info("Ammes battle complete")
 
 
+def kimahri_game_over():
+    seed = str(game_vars.rng_seed_num())
+    logger.error(f"Kimahri game over!!! {seed}")
+    avina_memory.add_to_memory(seed=seed, key="kimahri_force_heal", value="True")
+    # Report to JSON file for future acknowledgement
+
+
 @battle.utils.speedup_decorator
 def kimahri():
     FFXC.set_neutral()
+    # Pull from JSON file to get dynamic value.
+    force_heal = False
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        if seed_str in records.keys():
+            if records[seed_str]["kimahri_force_heal"] == "True":
+                force_heal = True
+        else:
+            logger.info("I have no memory of this seed.")
+    except:
+        pass
+    logger.debug(f"Forcing heal: {force_heal}")
+    if force_heal:
+        logger.info("This RNG seed requires a heal on the Kimahri fight.")
+    else:
+        logger.info("No memory of this seed for Kimahri fight. Treating like normal.")
+
     while memory.main.battle_active():
-        if screen.battle_screen():
+        if memory.main.game_over():
+            logger.warning("GAME OVER!!!")
+            kimahri_game_over()
+            return False
+        elif memory.main.turn_ready():
             enemy_hp = memory.main.get_enemy_current_hp()
-            if (
+            if force_heal and Tidus.in_danger(300):
+                logger.info("Known game-over RNG state, forcing heal on Tidus.")
+                battle.main.use_potion_character(Tidus, "l")
+                force_heal = False
+            elif (
                 not game_vars.early_tidus_grid() and
                 memory.main.get_turn_by_index(1) != 0 and
                 memory.main.get_turn_by_index(2) != 0 and
@@ -78,7 +119,13 @@ def kimahri():
                 CurrentPlayer().attack()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
+    if memory.main.game_over():
+        logger.warning("GAME OVER!!!")
+        kimahri_game_over()
+        return False
+    logger.info("Kimahri fight complete.")
     memory.main.click_to_control()
+    return True
 
 
 def tidus_wakka_tutorial():
@@ -245,9 +292,10 @@ def tros():
             logger.debug(f"Battle clock: {battle_clock}")
             tros_pos = 2
             logger.debug("Determining Tros position")
-            while tros_pos == 2 and not memory.main.battle_complete():
+            while tros_pos == 2 and memory.main.battle_active():
                 # Two for "not yet determined". Maybe can be HP-based instead?
                 camera = memory.main.get_camera()
+                logger.debug(f"Camera position: {camera[0]}")
                 # First, determine position of Tros
                 if camera[0] > 2:
                     tros_pos = 1  # One for cannot attack.
@@ -256,7 +304,7 @@ def tros():
                     tros_pos = 1  # One for cannot attack.
                     logger.debug("Tros is long-range. Cannot attack.")
                 else:
-                    tros_pos = 0  # One for "Close range, can be attacked.
+                    tros_pos = 0  # Zero for "Close range, can be attacked.
                     logger.debug("Tros is short-range.")
 
             # Assuming battle is not complete:
@@ -1305,59 +1353,26 @@ def evrae():
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             logger.debug(f"Tidus prep turns: {tidus_prep}")
-            if Tidus.is_turn():
+            if Tidus.is_turn():  # Terra skip strat
                 logger.debug("Registering Tidus' turn")
-                #if game_vars.skip_kilika_luck():
                 if tidus_prep == 0:
                     tidus_prep = 1
                     battle.main.tidus_haste("none")
-                elif tidus_prep in [1, 2]:
+                elif tidus_prep == 1:
                     tidus_prep += 1
                     battle.main.cheer()
-                elif (
-                    tidus_attacks == 4
-                    or memory.main.get_enemy_current_hp()[0] <= 9999
-                ):
+                elif tidus_prep == 2 and memory.main.get_next_turn() == 0:
+                    Tidus.swap_battle_armor(ability=[0x8028])
+                elif tidus_prep == 4:
+                    tidus_prep += 1
+                    battle.main.cheer()
+                elif memory.main.get_enemy_current_hp()[0] <= 9999:
                     tidus_attacks += 1
                     Tidus.overdrive()
                 else:
+                    tidus_prep += 1
                     tidus_attacks += 1
                     CurrentPlayer().attack()
-                '''
-                elif game_vars.get_blitz_win():  # Blitz win logic
-                    if tidus_prep == 0:
-                        tidus_prep = 1
-                        battle.main.tidus_haste("none")
-                    elif tidus_prep == 1:
-                        tidus_prep += 1
-                        battle.main.cheer()
-                    elif tidus_prep == 2 and rikku_turns == 0:
-                        tidus_prep += 1
-                        Tidus.swap_battle_armor(ability=[0x8028])
-                    elif tidus_prep == 2 and tidus_attacks == 2:
-                        tidus_prep += 1
-                        battle.main.cheer()
-                    else:
-                        tidus_attacks += 1
-                        CurrentPlayer().attack()
-                else:  # Blitz loss logic
-                    if tidus_prep == 0:
-                        tidus_prep = 1
-                        battle.main.tidus_haste("none")
-                    elif tidus_prep <= 2:
-                        tidus_prep += 1
-                        battle.main.cheer()
-                    elif tidus_prep == 3:
-                        logger.debug("Equip Baroque Sword.")
-                        Tidus.swap_battle_weapon(named_equip="baroque")
-                        tidus_prep += 1
-                    elif tidus_attacks == 4 and game_vars.skip_kilika_luck():
-                        tidus_attacks += 1
-                        Tidus.overdrive()
-                    else:
-                        tidus_attacks += 1
-                        CurrentPlayer().attack()
-                '''
             elif Rikku.is_turn():
                 logger.debug("Registering Rikkus turn")
                 if rikku_turns == 0:
@@ -1474,7 +1489,8 @@ def evrae_altana():
     else:
         logger.info("Evrae Altana fight start")
         gems = check_gems()
-        if gems >= 2:
+        if gems != 0:
+            # One gem is enough to justify stealing in Calm Lands.
             logger.manip(f"We have {gems} gems already. No need to steal.")
         elif not memory.main.next_steal_rare():
             logger.manip(f"We have {gems} gems, and the next steal is not rare.")
@@ -1513,81 +1529,113 @@ def evrae_altana_steal():
     logger.debug("End of steal logic. Back to regular.")
 
 
+def highbridge_attack():
+    if memory.main.get_enemy_current_hp().count(0) == 1:
+        return False
+    elif memory.main.get_encounter_id() == 271:
+        CurrentPlayer().attack(target_id=21, direction_hint="l")
+    else:
+        CurrentPlayer().attack()
+    return True
+
+
 @battle.utils.speedup_decorator
 def seymour_natus():
     aeon_summoned = False
-    while not memory.main.battle_complete():
-        if memory.main.get_encounter_id() == 272:  # Seymour Natus
-            logger.info("Seymour Natus engaged")
-            while not memory.main.battle_complete():
-                if memory.main.turn_ready():
-                    if Tidus.is_turn():
-                        if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis():
-                            battle.main.buddy_swap(Lulu)
-                            screen.await_turn()
-                            CurrentPlayer().swap_battle_weapon()
-                        elif aeon_summoned:
-                            battle.main.tidus_haste("d", character=1)
-                        else:
-                            CurrentPlayer().attack()
-                    elif Lulu.is_turn():
-                        battle.main.buddy_swap(Tidus)
+    if memory.main.get_encounter_id() == 272:  # Seymour Natus
+        logger.info("Seymour Natus engaged")
+        while memory.main.battle_active():
+            if memory.main.turn_ready():
+                if Tidus.is_turn():
+                    if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis():
+                        battle.main.buddy_swap(Lulu)
                         screen.await_turn()
-                        xbox.tap_up()
+                        CurrentPlayer().swap_battle_weapon()
+                    elif aeon_summoned:
+                        battle.main.tidus_haste("d", character=1)
+                    else:
                         CurrentPlayer().attack()
-                    elif Yuna.is_turn():
-                        if not aeon_summoned:
-                            battle.main.aeon_summon(4)
-                            aeon_summoned = True
-                        else:
-                            battle.main.aeon_summon(2)
-                    elif screen.turn_aeon():
-                        xbox.skip_dialog(3)  # Finishes the fight.
+                elif Lulu.is_turn():
+                    battle.main.buddy_swap(Tidus)
+                    screen.await_turn()
+                    xbox.tap_up()
+                    CurrentPlayer().attack()
+                elif Yuna.is_turn():
+                    if not aeon_summoned:
+                        battle.main.aeon_summon(4)
+                        aeon_summoned = True
                     else:
-                        CurrentPlayer().defend()
-            return 1
-        elif memory.main.get_encounter_id() == 270:  # YAT-63 x2
-            while not memory.main.battle_complete():
-                if game_vars.completed_rescue_fights():
-                    battle.main.flee_all()
-                elif memory.main.turn_ready():
-                    if Tidus.is_turn() or Yuna.is_turn():
-                        if memory.main.get_enemy_current_hp().count(0) == 1:
-                            battle.main.flee_all()
-                            game_vars.add_rescue_count()
-                        else:
-                            CurrentPlayer().attack(target_id=22, direction_hint="r")
+                        battle.main.aeon_summon(2)
+                elif screen.turn_aeon():
+                    xbox.skip_dialog(3)  # Finishes the fight.
+                else:
+                    CurrentPlayer().defend()
+        logger.warning("Natus complete, returning 1")
+        return 1
+    elif memory.main.next_chance_rng_10(30) == 0 and memory.main.next_chance_rng_12() == 1:
+        steal_occurred = False
+        while memory.main.battle_active():
+            if game_vars.completed_rescue_fights():
+                battle.main.flee_all()
+            elif memory.main.turn_ready():
+                if Rikku.is_turn() and not steal_occurred:
+                    battle.main.steal()
+                    steal_occurred = True
+                elif not Rikku.active() and not steal_occurred:
+                    battle.main.buddy_swap(Rikku)
+                elif Tidus.is_turn() or Yuna.is_turn():
+                    if not highbridge_attack():
+                        battle.main.flee_all()
+                elif not Tidus.active():
+                    battle.main.buddy_swap(Tidus)
+                elif not Yuna.active():
+                    battle.main.buddy_swap(Yuna)
+                else:
+                    CurrentPlayer().defend()
+    elif memory.main.get_encounter_id() == 270:  # YAT-63 x2
+        while memory.main.battle_active():
+            if game_vars.completed_rescue_fights():
+                battle.main.flee_all()
+            elif memory.main.turn_ready():
+                if Tidus.is_turn() or Yuna.is_turn():
+                    if memory.main.get_enemy_current_hp().count(0) == 1:
+                        battle.main.flee_all()
+                        game_vars.add_rescue_count()
                     else:
-                        CurrentPlayer().defend()
-        elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
-            while not memory.main.battle_complete():
-                if game_vars.completed_rescue_fights():
-                    battle.main.flee_all()
-                elif memory.main.turn_ready():
-                    if Tidus.is_turn() or Yuna.is_turn():
-                        if memory.main.get_enemy_current_hp().count(0) == 1:
-                            battle.main.flee_all()
-                            game_vars.add_rescue_count()
-                        else:
-                            CurrentPlayer().attack()
+                        highbridge_attack()
+                else:
+                    CurrentPlayer().defend()
+    elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
+        while memory.main.battle_active():
+            if game_vars.completed_rescue_fights():
+                battle.main.flee_all()
+            elif memory.main.turn_ready():
+                if Tidus.is_turn() or Yuna.is_turn():
+                    if memory.main.get_enemy_current_hp().count(0) == 1:
+                        battle.main.flee_all()
+                        game_vars.add_rescue_count()
                     else:
-                        CurrentPlayer().defend()
-        elif memory.main.get_encounter_id() == 271:  # one YAT-63, two YAT-99
-            while not memory.main.battle_complete():
-                if game_vars.completed_rescue_fights():
-                    battle.main.flee_all()
-                elif memory.main.turn_ready():
-                    if Tidus.is_turn() or Yuna.is_turn():
-                        if memory.main.get_enemy_current_hp().count(0) == 1:
-                            battle.main.flee_all()
-                            game_vars.add_rescue_count()
-                        else:
-                            CurrentPlayer().attack(target_id=21, direction_hint="l")
+                        highbridge_attack()
+                else:
+                    CurrentPlayer().defend()
+    elif memory.main.get_encounter_id() == 271:  # one YAT-63, two YAT-99
+        while memory.main.battle_active():
+            if game_vars.completed_rescue_fights():
+                battle.main.flee_all()
+            elif memory.main.turn_ready():
+                if Tidus.is_turn() or Yuna.is_turn():
+                    if memory.main.get_enemy_current_hp().count(0) == 1:
+                        battle.main.flee_all()
+                        game_vars.add_rescue_count()
                     else:
-                        CurrentPlayer().defend()
+                        highbridge_attack()
+                else:
+                    CurrentPlayer().defend()
+    
+    #memory.main.click_to_control()
+    while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
-    battle.main.wrap_up()
     return 0
 
 
@@ -1786,8 +1834,15 @@ def yunalesca():
     battle.main.aeon_summon(4)  # Summon Bahamut and attack.
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            CurrentPlayer().attack()
+            if not Bahamut.is_turn():
+                logger.error("Bahamut is down! This is a fail state!")
+                seed = str(game_vars.rng_seed_num())
+                avina_memory.add_to_memory(seed=seed, key="zan_luck", value="False")
+                return False
+            else:
+                CurrentPlayer().attack()
     battle.main.wrap_up()
+    return True
 
 
 @battle.utils.speedup_decorator
@@ -1835,8 +1890,12 @@ def omnis():
         elif memory.main.diag_skip_possible():
             logger.debug("Skipping dialog maybe?")
             xbox.tap_b()
-    logger.debug("Should be done now.")
-    memory.main.click_to_control()
+    if memory.main.game_over():
+        return False
+    else:
+        logger.debug("Should be done now.")
+        memory.main.click_to_control()
+        return True
 
 
 def bfa():
@@ -1872,6 +1931,9 @@ def bfa():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             CurrentPlayer().attack()
+    if memory.main.game_over():
+        logger.error("Failure on BFA!")
+        avina_memory.add_to_memory(seed=seed, key="zan_luck", value="False")
 
     # Skip the cutscene
     logger.info("BFA down. Ready for Aeons")
@@ -1915,6 +1977,7 @@ def bfa():
         elif not memory.main.battle_active():
             xbox.tap_b()
     logger.debug("End of aeons")
+    return True
 
 
 def yu_yevon():

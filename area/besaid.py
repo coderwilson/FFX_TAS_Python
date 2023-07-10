@@ -285,7 +285,9 @@ def leaving():
                 xbox.skip_scene(fast_mode=True)
             # Kimahri fight
             elif checkpoint > 25 and checkpoint < 30 and screen.battle_screen():
-                battle.boss.kimahri()
+                boss_kim_success = battle.boss.kimahri()
+                if not boss_kim_success:
+                    return False
             # Valefor summon tutorial
             elif (
                 checkpoint in [31, 32, 33, 34, 35, 36, 37, 38]
@@ -318,3 +320,4 @@ def leaving():
                 checkpoint = 51
             elif checkpoint < 59 and memory.main.get_map() == 19:
                 checkpoint = 59
+    return True

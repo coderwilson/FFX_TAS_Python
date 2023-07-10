@@ -81,11 +81,55 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
 
 def _attempt_reset():
     memory.main.wait_frames(30 * 0.07)
-    while not (user_control() or turn_ready()) and memory.main.get_map() not in [23, 62, 348, 349]:
-        if battle_wrap_up_active() or memory.main.game_over():
+    if memory.main.s_grid_active():
+        logger.debug("Reset: S-grid open")
+        from menu_grid import (
+            ready_use_sphere,
+            first_position,
+            quit_grid_ready,
+            move_use_menu,
+            move_ready,
+            move_active,
+            move_complete,
+            use_ready,
+            ready_select_sphere,
+            
+        )
+        while memory.main.s_grid_active():
+            if ready_use_sphere():
+                logger.debug("Using the current item.")
+                xbox.menu_b()
+            elif first_position():
+                logger.debug("Opening the Quit menu")
+                xbox.menu_a()
+            elif quit_grid_ready():
+                logger.debug("quitting sphere grid")
+                xbox.menu_b()
+            elif (
+                move_use_menu() or 
+                move_ready() or 
+                move_active() or 
+                move_complete() or 
+                use_ready() or 
+                ready_select_sphere()
+            ):
+                xbox.menu_a()
+        while memory.main.menu_number() != 5:
+            pass
+    if memory.main.game_over():
+        logger.debug("Reset: game over")
+        while memory.main.get_map() not in [23, 62, 348, 349]:
+            xbox.tap_b()
+            return
+    if battle_wrap_up_active():
+        logger.debug("Reset: end of battle")
+        while battle_wrap_up_active():
             xbox.menu_b()
-        else:
-            xbox.tap_a()
+    if memory.main.menu_open():
+        logger.debug("Reset: menu open")
+        memory.main.close_menu()
+    while not (user_control() or turn_ready()) and memory.main.get_map() not in [23, 62, 348, 349]:
+        xbox.tap_a()
 
 
     while memory.main.get_map() not in [23, 348, 349]:
@@ -112,3 +156,17 @@ def reset_to_main_menu():
     else:
         _attempt_reset()
     logger.info("Resetting")
+
+def reset_no_battles():
+    memory.main.wait_frames(90)
+    while not (user_control() or turn_ready()) and memory.main.get_map() not in [23, 62, 348, 349]:
+        xbox.tap_a()
+
+
+    while memory.main.get_map() not in [23, 348, 349]:
+        logger.info("Attempting reset")
+        logger.info(f"FFX map: {memory.main.get_map()}")
+        memory.main.set_map_reset()
+        memory.main.wait_frames(30 * 0.1)
+        memory.main.force_map_load()
+        memory.main.wait_frames(30 * 1)

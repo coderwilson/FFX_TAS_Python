@@ -9,6 +9,7 @@ import pathing
 import screen
 import vars
 import xbox
+from battle import avina_memory
 from paths import Moonflow1, MoonflowBankNorth, MoonflowBankSouth
 from players import Auron, Tidus, Wakka
 
@@ -19,10 +20,36 @@ FFXC = xbox.controller_handle()
 
 
 def arrival():
+    # aVIna has perfect memory. Right? Right?!
+    heal_array = []
+    ml_heals = False
+    section = "moonflow_heals"
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        logger.manip(f"Seed: {seed_str}")
+        if seed_str in records.keys():
+            if section in records[seed_str].keys():
+                for i in range(30):
+                    if i in records[seed_str][section]:
+                        if records[seed_str][section][i] == "True":
+                            heal_array.append(i)
+            else:
+                logger.info("I have no memory of this seed. (A)")
+            if "ml_heals" in records[seed_str].keys():
+                if records[seed_str]["ml_heals"] == "True":
+                    ml_heals = True
+        else:
+            logger.info("I have no memory of this seed. (B)")
+    except:
+        logger.info("I have no memory of this seed. (C)")
+    
     logger.info("Starting Moonflow section")
     keys = 0
     key_slot = get_item_slot(81)
     keys_start = get_item_count_slot(key_slot)
+    battle_count = 0
 
     checkpoint = 0
     while memory.main.get_map() != 235:
@@ -86,9 +113,26 @@ def arrival():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
+                battle_count += 1
                 battle.main.flee_all()
+                if memory.main.game_over():
+                    seed_str = str(memory.main.rng_seed())
+                    avina_memory.add_battle_to_memory(
+                        seed=seed_str, 
+                        area="moonflow_heals",
+                        battle_num=battle_count-1
+                    )
+                    return [False, 0, False, False]
                 battle.main.wrap_up()
-                battle.main.heal_up()
+                logger.debug(f"ML heals value: {ml_heals}")
+                if ml_heals:
+                    logger.warning("aVIna deciding if we need to heal.")
+                    if battle_count in heal_array:
+                        battle.main.heal_up()
+                    else:
+                        logger.debug("No need to heal up. Moving onward.")
+                else:
+                    battle.main.heal_up()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():

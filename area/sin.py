@@ -170,7 +170,9 @@ def inside_sin():
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(30 * 5)
                 FFXC.set_neutral()
-                battle.boss.omnis()
+                if not battle.boss.omnis():
+                    logger.error("Seymour battle failed.")
+                    return False
                 memory.main.click_to_control()
             elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
@@ -194,6 +196,7 @@ def inside_sin():
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             elif memory.main.menu_open():
                 xbox.tap_b()
+    return True
 
 
 def execute_egg_hunt():

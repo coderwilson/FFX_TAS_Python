@@ -166,24 +166,34 @@ class Player:
                 f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
             )
         if not memory.main.turn_ready():
+            logger.warning("Bad practice - should not attack when turn is not ready.")
             while not memory.main.turn_ready():
-                if memory.main.battle_complete():
+                if memory.main.game_over() or not memory.main.battle_complete():
+                    logger.warning("Battle has ended. Returning.")
                     return
         attack_menu_id = [x for x in [0, 203, 207, 210, 216] if x in self.battle_menu][
             0
         ]
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
+            logger.debug("Battle menu is up.")
             xbox.tap_b()
-            if memory.main.battle_complete():
+            if not memory.main.battle_active():
+                logger.warning("Battle is complete! Possibly something is wrong.")
                 return
         if target_id is not None and not skip_direction:
+            logger.debug(f"Targetting ID {target_id}")
             self._target_specific_id(target_id, direction_hint)
         if record_results:
+            logger.debug("First six hits logic")
+            xbox.tap_b()
+            xbox.tap_b()
+            xbox.tap_b()
             xbox.tap_b()
             xbox.tap_b()
             xbox.tap_b()
         else:
+            logger.debug("Tap targetting logic.")
             self._tap_targeting()
 
     # spell_id should become an enum at some point
@@ -267,13 +277,17 @@ class Player:
             current_position = memory.main.battle_menu_cursor()
         target_position = self.battle_menu.index(target)
         while current_position != target:
-            if current_position == 255:
-                pass
-            elif self.battle_menu.index(current_position) > target_position:
+            try:
+                if current_position == 255:
+                    pass
+                elif self.battle_menu.index(current_position) > target_position:
+                    xbox.tap_up()
+                else:
+                    xbox.tap_down()
+                current_position = memory.main.battle_menu_cursor()
+            except:
                 xbox.tap_up()
-            else:
-                xbox.tap_down()
-            current_position = memory.main.battle_menu_cursor()
+                current_position = memory.main.battle_menu_cursor()
 
     def luck(self) -> int:
         return self._read_char_stat_offset_address(PlayerMagicNumbers.LUCK)
@@ -308,6 +322,8 @@ class Player:
         )
         while (not memory.main.main_battle_menu()) and memory.main.battle_active():
             xbox.tap_b()
+            #if not self.is_turn():
+            #    return
         logger.debug(
             f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
         )

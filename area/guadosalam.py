@@ -27,15 +27,16 @@ def arrival():
                 # Into the first door
                 if 1 in memory.main.ambushes():
                     FFXC.set_neutral()
-                    battle.main.heal_up(full_menu_close=True)
+                    battle.main.heal_up(full_menu_close=False)
                 menu.t_plains_terra_skip()
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 6:
                 # Back out the door
-                FFXC.set_movement(0, -1)
-                memory.main.await_event()
+                if memory.main.get_story_progress() < 1104:
+                    FFXC.set_movement(0, -1)
+                    memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 8:
                 # Into the dining hall
