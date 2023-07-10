@@ -1460,7 +1460,7 @@ def decide_skip_zan_luck() -> bool:
     # This function tracks if we need to pick up the luck and fortune spheres in Zanarkand.
     # This will track through from Yunalesca to BFA, the two fights with ~4% chance to miss.
     # False == there will be a miss. True == no miss.
-    extra_xp = 0  # where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
+    extra_xp = 1  # where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
     bahamut_luck = 17
     keeper_crit = memory.main.future_attack_will_crit(
         character=7, char_luck=bahamut_luck, enemy_luck=20, attack_index=extra_xp
@@ -1780,7 +1780,7 @@ def next_action_hit(character: int = 0, enemy: str = "anima"):
     return future_attack_hit(character=character, enemy=enemy)
 
 
-def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: int = 0):
+def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: int = 1):
     # logger.debug(f"Checking hit chance - character: {character}")
     # Need more work on this. There are a lot of variables we still need from memory.
     # Character info, get these from memory
@@ -1812,7 +1812,7 @@ def future_attack_hit(character: int = 0, enemy: str = "anima", attack_index: in
 
     hit_rng = (
         memory.main.rng_array_from_index(index=index, array_len=attack_index + 3)[
-            attack_index + 1
+            attack_index
         ]
         % 101
     )
@@ -1854,7 +1854,7 @@ def save_oblitz_history(rng_vals):
 def record_blitz_results_tyton(duration, test_mode=False):
     records = oblitz_history()
     if test_mode:
-        seed = "31"
+        seed = "999"
         sub_key = "9999"
         victory = False
     else:
@@ -1881,14 +1881,14 @@ def record_blitz_results(duration, test_mode=False):
     filepath = os.path.join("json_ai_files", "oblitz_results.json")
     records = oblitz_history()
     if test_mode:
-        new_val = {31: {9999: {"duration": duration, "victory": False}}}
-        if str(31) in records.keys():
-            logger.debug(new_val[31].keys())
-            if 9999 in new_val[31].keys():
-                records["31"]["9999"]["victory"] = True
-                records["31"]["9999"]["duration"] = duration
+        new_val = {999: {9999: {"duration": duration, "victory": False}}}
+        if str(999) in records.keys():
+            logger.debug(new_val[999].keys())
+            if 9999 in new_val[999].keys():
+                records["999"]["9999"]["victory"] = True
+                records["999"]["9999"]["duration"] = duration
             else:
-                records["31"].update(new_val[31])
+                records["999"].update(new_val[999])
         else:
             records.update(new_val)
     else:
@@ -1925,10 +1925,10 @@ def record_blitz_results(duration, test_mode=False):
                 ):
                     if (
                         duration
-                        > records[str(memory.main.rng_seed())][
+                        < records[str(memory.main.rng_seed())][
                             game_vars.oblitz_rng_check()
                         ]["duration"]
-                    ):
+                    ):  # Prefer faster times, even if it's not consistent.
                         records[str(memory.main.rng_seed())][
                             game_vars.oblitz_rng_check()
                         ]["victory"] = game_vars.get_blitz_win()
@@ -1943,7 +1943,7 @@ def record_blitz_results(duration, test_mode=False):
             records.update(new_val)
     logger.debug(new_val)
 
-    logger.debug(records)
+    #logger.debug(records)
 
     with open(filepath, "w") as fp:
         json.dump(records, fp, indent=4)

@@ -10,6 +10,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from battle import avina_memory
 from paths import MacalaniaLake, MacalaniaWoods
 from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
 
@@ -46,8 +47,36 @@ def calculate_possible_weaknesses() -> List[int]:
 
 
 def arrival(rikku_charged):
+    # ML logic, this qualifies us as AI, right? Right?? Awwww :(
+    battle_count = 0
+    heal_array = []
+    ml_heals = False
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        if seed_str in records.keys():
+            if "macalania_heals" in records[seed_str].keys():
+                for i in range(30):
+                    if i in records[seed_str]["macalania_heals"]:
+                        if records[seed_str]["macalania_heals"][i] == "True":
+                            heal_array.append(i)
+            else:
+                logger.info("I have no memory of this seed. (A)")
+            if "ml_heals" in records[seed_str].keys():
+                if records[seed_str]["ml_heals"] == "True":
+                    ml_heals = True
+        else:
+            logger.info("I have no memory of this seed. (B)")
+    except:
+        logger.info("I have no memory of this seed. (C)")
+
+
     logger.info("Arriving at Macalania Woods")
     memory.main.click_to_control()
+    if ml_heals and 0 in heal_array:
+        logger.warning("aVIna deciding if we need to heal.")
+        battle.main.heal_up(full_menu_close=False)
     memory.main.update_formation(Tidus, Rikku, Auron)
     memory.main.close_menu()
 
@@ -95,19 +124,33 @@ def arrival(rikku_charged):
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
+                battle_count += 1
                 battle.main.m_woods()
+                if memory.main.game_over():
+                    seed_str = str(memory.main.rng_seed())
+                    avina_memory.add_battle_to_memory(
+                        seed=seed_str, 
+                        area="macalania_heals",
+                        battle_num=battle_count-1
+                    )
+                    return False
                 rikku_charged = memory.main.overdrive_state()[6] == 100
                 memory.main.click_to_control()
                 logger.info(
                     "Rikku charged" if rikku_charged else "Rikku is not charged."
                 )
-                party_hp = memory.main.get_hp()
-                if (
-                    party_hp[0] < 450
-                    or (party_hp[6] < 180 and not rikku_charged)
-                    or party_hp[2] + party_hp[4] < 500
-                ):
-                    battle.main.heal_up(full_menu_close=False)
+                if ml_heals:
+                    logger.warning("aVIna deciding if we need to heal.")
+                    if battle_count in heal_array:
+                        battle.main.heal_up(full_menu_close=False)
+                else:
+                    party_hp = memory.main.get_hp()
+                    if (
+                        party_hp[0] < 450
+                        or (party_hp[6] < 180 and not rikku_charged)
+                        or party_hp[2] + party_hp[4] < 500
+                    ):
+                        battle.main.heal_up(full_menu_close=False)
                 if rikku_charged:
                     memory.main.update_formation(Tidus, Wakka, Auron)
                 else:
@@ -125,6 +168,7 @@ def arrival(rikku_charged):
     memory.main.wait_frames(1)
     save_sphere.touch_and_go()
     FFXC.set_neutral()
+    return True
 
 
 def lake_road():

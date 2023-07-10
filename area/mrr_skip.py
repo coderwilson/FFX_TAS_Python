@@ -2,6 +2,7 @@ import logging
 import time
 
 import battle.main
+from battle import avina_memory
 import logs
 import memory.main
 from memory.main import (
@@ -173,6 +174,30 @@ def attempt_skip():
 def advance_to_aftermath():
     logger.info("Now to escape this area")
     checkpoint = 0
+    battle_num = 0
+    heal_array = []
+    ml_heals = False
+    try:
+        records = avina_memory.retrieve_memory()
+        logger.debug(records.keys())
+        seed_str = str(memory.main.rng_seed())
+        if seed_str in records.keys():
+            if "mrr_heals" in records[seed_str].keys():
+                for i in range(30):
+                    if i in records[seed_str]["mrr_heals"]:
+                        if records[seed_str]["mrr_heals"][i] == "True":
+                            heal_array.append(i)
+            else:
+                logger.info("I have no memory of this seed. (A)")
+            if "ml_heals" in records[seed_str].keys():
+                if records[seed_str]["ml_heals"] == "True":
+                    ml_heals = True
+        else:
+            logger.info("I have no memory of this seed. (B)")
+    except:
+        logger.info("I have no memory of this seed. (C)")
+    if 0 in heal_array:
+        battle.main.heal_up()
     while memory.main.get_map() != 131:
         if memory.main.user_control():
             if pathing.set_movement(MRRSkip.execute(checkpoint)):
@@ -181,11 +206,25 @@ def advance_to_aftermath():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
+                battle_num += 1
+                logger.debug(f"Battle Start: {battle_num}")
+                while not memory.main.turn_ready():
+                    pass
+                if memory.main.game_over():
+                    avina_memory.add_battle_to_memory(
+                        seed=seed_str, area="mrr_heals", key=battle_num-1
+                    )
+                    return False
                 battle.main.flee_all()
                 battle.main.wrap_up()
-                if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():
-                    battle.main.heal_up()
+                if not ml_heals:
+                    if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():
+                        battle.main.heal_up()
+                else:
+                    if battle_num in heal_array:
+                        battle.main.heal_up()
                 memory.main.update_formation(Tidus, Wakka, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+    return True
 

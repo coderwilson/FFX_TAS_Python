@@ -1,1 +1,1 @@
-Seed num: 10
+Seed num: 114

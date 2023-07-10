@@ -147,11 +147,9 @@ def forest_1():
                 memory.main.close_menu()
                 checkpoint += 1
             elif checkpoint == 99:  # Lord O'holland
-                while memory.main.user_control():
-                    pathing.set_movement([-30, 45])
-                    xbox.tap_b()
+                pathing.approach_actor_by_id(5)  # Wakka is party member 4, ID 5
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control_dumb()
                 checkpoint += 1
 
             # General pathing

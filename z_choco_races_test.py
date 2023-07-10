@@ -37,6 +37,7 @@ import nemesis.arena_battles
 import nemesis.arena_prep
 import nemesis.changes
 import xbox
+import reset
 
 FFXC = xbox.controller_handle()
 while not memory.main.start():
@@ -57,3 +58,4 @@ area.chocobos.remiem_races()
 
 logger.warning("END CHOCO TEST")
 memory.main.wait_frames(60)
+reset.reset_no_battles()

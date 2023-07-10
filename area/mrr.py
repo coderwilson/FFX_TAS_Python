@@ -41,10 +41,12 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 6 and not game_vars.csr():
                 skip_prep()
-                attempt_skip()
-                advance_to_aftermath()
-                game_vars.mrr_skip_set(True)
-                return True
+                if attempt_skip():
+                    advance_to_aftermath()
+                    game_vars.mrr_skip_set(1)
+                    return 1
+                else:
+                    return 2
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -113,7 +115,7 @@ def arrival():
         game_vars.mrr_skip_set(True)
         return True
     logger.info("Done with prelim MRR area, now for the real deal.")
-    return False
+    return 0
 
 
 def log_mrr_kimahri_crit_chance():

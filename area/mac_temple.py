@@ -9,6 +9,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+import random
 from paths import (
     MacalaniaTempleApproach,
     MacalaniaTempleEscape,
@@ -276,7 +277,11 @@ def escape():
     menu.equip_sonic_steel(full_menu_close=True)
 
     logger.info("Now to escape the Guado")
-    force_battle = False
+    chance = random.choice(range(0,100))
+    if chance < 20:
+        force_battle = True
+    else:
+        force_battle = False
 
     checkpoint = 0
     while memory.main.get_encounter_id() != 195:
