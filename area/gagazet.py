@@ -121,20 +121,20 @@ def defender_x():
     next_green()
 
 
-def to_the_ronso():
-    checkpoint = 2
-    while memory.main.get_map() != 259:
-        if memory.main.user_control():
-            if pathing.set_movement(DefenderX.execute(checkpoint)):
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
-        else:
-            FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+def to_the_ronso(checkpoint:int = 2):
+    if checkpoint < 6:
+        while memory.main.get_map() != 259:
+            if memory.main.user_control():
+                if pathing.set_movement(DefenderX.execute(checkpoint)):
+                    checkpoint += 1
+                    logger.debug(f"Checkpoint {checkpoint}")
+            else:
+                FFXC.set_neutral()
+                if memory.main.diag_skip_possible():
+                    xbox.tap_b()
+        checkpoint = 0
 
     # Now in screen with Ronso
-    checkpoint = 0
     while memory.main.get_map() != 244:
         if memory.main.user_control():
             if pathing.set_movement(KelkRonso.execute(checkpoint)):
@@ -150,7 +150,7 @@ def to_the_ronso():
                 xbox.tap_b()
 
 
-def gagazet_gates():
+def gagazet_gates(checkpoint:int = 0):
     # Should appear on the map just before the Ronso hymn
     end_ver = game_vars.end_game_version()
     logger.debug(f"Grid version: {end_ver}")
@@ -170,7 +170,7 @@ def gagazet_gates():
     memory.main.close_menu()  # just in case
 
     logger.info("Gagazet path section")
-    checkpoint = 0
+    
     while memory.main.get_map() != 285:
         if memory.main.user_control():
             if checkpoint == 22 and game_vars.nemesis():

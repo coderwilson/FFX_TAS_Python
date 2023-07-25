@@ -4919,7 +4919,10 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
     # We should force extra manip in gorge if no silence grenade,
     # so should be guaranteed if this triggers.
     pref_drop = [0, 4, 6]
-    silence_used = False
+    if memory.main.next_chance_rng_10() >= 3:
+        silence_used = False
+    else:
+        silence_used = True
     tidus_hasted = False
     while memory.main.next_chance_rng_10():
         if memory.main.turn_ready():

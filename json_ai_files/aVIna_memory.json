@@ -44,5 +44,26 @@
     },
     "99": {
         "kimahri_force_heal": "True"
+    },
+    "73": {
+        "kimahri_force_heal": "True"
+    },
+    "251": {
+        "kimahri_force_heal": "True"
+    },
+    "21": {
+        "kimahri_force_heal": "True"
+    },
+    "144": {
+        "kimahri_force_heal": "True"
+    },
+    "81": {
+        "kimahri_force_heal": "True"
+    },
+    "219": {
+        "kimahri_force_heal": "True"
+    },
+    "139": {
+        "ml_heals": "True"
     }
 }
