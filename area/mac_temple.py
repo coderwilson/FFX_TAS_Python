@@ -278,6 +278,10 @@ def escape():
 
     logger.info("Now to escape the Guado")
     chance = random.choice(range(0, 100))
+    if game_vars.rng_seed_num() == 139:
+        chance = 1  # Testing where 139 does the extra battle.
+    else:
+        chance = 99  # For now, don't use randomness.
     if chance < 20:
         force_battle = True
     else:
