@@ -8,11 +8,7 @@ repos:
     rev: 'v0.0.280'
     hooks:
       - id: ruff
-        args: [
-          --fix, 
-          --ignore, E402, # E402 = module level import not at top of file
-          --ignore, E501, # E501 = line too long
-          ]
+        args: [--fix]
 
   - repo: https://github.com/psf/black
     rev: 23.7.0
