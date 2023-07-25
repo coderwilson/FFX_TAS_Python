@@ -1093,7 +1093,7 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
             )
         memory.main.wait_frames(1)
         xbox.tap_b()
-        memory.main.wait_frames(18)
+        memory.main.wait_frames(19)
         xbox.tap_down()
         while memory.main.menu_number() != 26:
             xbox.tap_b()

@@ -655,9 +655,14 @@ def perform_TAS():
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
                     _, loop_back = rng_track.nea_track()
-                    if game_vars.ne_armor() == 255 and loop_back <= 5:
-                        area.ne_armor.loop_back_from_ronso()
-                        game.step = 2
+                    if game_vars.ne_armor() == 255:
+                        if loop_back <= 5:
+                            area.ne_armor.loop_back_from_ronso()
+                            game.step = 2
+                        else:
+                            area.gagazet.to_the_ronso(checkpoint=7)
+                            area.gagazet.gagazet_gates()
+                            game.step = 4
                     else:
                         area.gagazet.gagazet_gates()
                         game.step = 4

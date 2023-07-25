@@ -73,6 +73,7 @@ def desert():
     steal_items = [0, 0, 0, 0]
     items_needed = 0
     chance = random.choice(range(0, 100))
+    chance = 99  # For now, no randomness.
     if chance < 20:
         manip_drops = True
     else:
