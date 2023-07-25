@@ -119,7 +119,8 @@ def log_mrr_kimahri_crit_chance():
 def main_path():
     memory.main.await_control()
     crit_manip = False
-    # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna grid complete, MRR phase
+    # Yuna complete, Kimahri complete, Valefor overdrive,
+    # Battle counter, Yuna grid complete, MRR phase
     status = [0, 0, 0, 1, 0, 0]
     logger.debug("Resetting checkpoint.")
     last_gil_value = 0
@@ -198,9 +199,10 @@ def main_path():
                     ) in [2, 3, 4, 5, 6, 7, 9]:
                         crit_manip = True
                         # Try to end on 1.
-                        logger.debug(
-                            f"We can manip: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                        _next_crit = memory.main.next_crit(
+                            character=3, char_luck=18, enemy_luck=15
                         )
+                        logger.debug(f"We can manip: {_next_crit}")
                         checkpoint = 59
                     else:
                         checkpoint += 1

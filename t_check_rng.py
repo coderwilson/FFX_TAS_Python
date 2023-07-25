@@ -1,10 +1,9 @@
 # currently unused file, should be removed if abandoned
 import time
-
 import memory.main
+import rng_track
 
 memory.main.start()
-import rng_track
 
 read_vals = False
 

@@ -68,7 +68,8 @@ def decide_nea(bonus_advance: int = 0):
             game_vars.set_nea_zone(3)
             print_nea_zone(i + 1)
             return
-    # If we won't get it in next five per zone, default to Inside Sin. The most possible battles there.
+    # If we won't get it in next five per zone,
+    # default to Inside Sin. The most possible battles there.
     game_vars.set_nea_zone(99)
     print_nea_zone(99)
     return

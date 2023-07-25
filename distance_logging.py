@@ -47,7 +47,8 @@ def perform_distance_logging():
                     _update(distance_travelled, location, zone)
                     previously_added = distance_travelled
             distance_travelled = new_travelled
-            # The map updates faster than the steps reset to 0 on screen transition, so we need a bit of a delay.
+            # The map updates faster than the steps reset to 0 on screen transition,
+            # so we need a bit of a delay.
             if time.time() - last_updated_map_time >= 1:
                 location = memory.main.get_map()
                 last_updated_map_time = time.time()

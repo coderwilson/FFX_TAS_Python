@@ -567,15 +567,23 @@ def natus_formation(battles: int = 0, full_menu_close: bool = True):
     """
     if memory.main.get_yuna_slvl() <= 13:
         # Just need levels
-        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
+        memory.main.update_formation(
+            Tidus, Wakka, Auron, full_menu_close=full_menu_close
+        )
     elif battles >= 2 or memory.main.highbridge_drops()[0] - (battles * 9) > 20:
         # Must be ready for Natus, and no reason to manip if nothing drops here.
-        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
+        memory.main.update_formation(
+            Tidus, Yuna, Auron, full_menu_close=full_menu_close
+        )
     elif rng_track.nea_track()[1] >= 3:
         # Need to advance RNG
-        memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=full_menu_close)
+        memory.main.update_formation(
+            Tidus, Wakka, Auron, full_menu_close=full_menu_close
+        )
     else:
-        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
+        memory.main.update_formation(
+            Tidus, Yuna, Auron, full_menu_close=full_menu_close
+        )
     """
 
 

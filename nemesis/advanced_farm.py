@@ -351,7 +351,8 @@ def full_farm(phase: int):
         if get_map() == 374:
             logger.debug(f"P.down Slot: {memory.main.get_item_slot(6)}")
             logger.debug(
-                f"P.down Count: {memory.main.get_item_count_slot(memory.main.get_item_slot(6))}"
+                "P.down Count: "
+                + f"{memory.main.get_item_count_slot(memory.main.get_item_slot(6))}"
             )
             if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 30:
                 rin_equip_dump(stock_downs=True)

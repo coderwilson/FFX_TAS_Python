@@ -38,10 +38,9 @@ class LocProcess(Process):
         super(LocProcess, self).__init__(*args, **kwargs)
 
     def read_bytes(self, lp_base_address: int, size: int = 4):
-        """
-        See the original ReadWriteMemory values for details on how this works. This version allows us to pass
-        the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
-        """
+        # See the original ReadWriteMemory values for details on how this works.
+        # This version allows us to pass the number of bytes to be retrieved instead
+        # of a static 4-byte size. Default is 4 for reverse-compatibility
         try:
             read_buffer = ctypes.c_uint()
             lp_buffer = ctypes.byref(read_buffer)
@@ -64,9 +63,8 @@ class LocProcess(Process):
             ReadWriteMemoryError(error)
 
     def write_bytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
-        """
-        Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
-        """
+        # Same as above, write a passed number of bytes instead of static 4 bytes.
+        # Default is 4 for reverse-compatibility
         try:
             write_buffer = ctypes.c_uint(value)
             lp_buffer = ctypes.byref(write_buffer)
@@ -100,9 +98,12 @@ class FFXMemory(ReadWriteMemory):
 
     def get_process_by_name(self, process_name: str | bytes) -> "Process":
         """
-        :description: Get the process by the process executabe\'s name and return a Process object.
+        :description:
+        Get the process by the process executabe\'s name and return a Process object.
 
-        :param process_name: The name of the executable file for the specified process for example, my_program.exe.
+        :param process_name:
+        The name of the executable file for
+        the specified process for example, my_program.exe.
 
         :return: A Process object containing the information from the requested Process.
         """
@@ -1434,7 +1435,8 @@ def open_menu():
     while not (user_control() and menu_open() and menu_number() == 5):
         if menu_open() and not user_control():
             logger.debug(
-                f"Post-Battle summary screen is open. Attempting close. menu_counter: {menu_counter}"
+                "Post-Battle summary screen is open. "
+                + f"Attempting close. menu_counter: {menu_counter}"
             )
             xbox.menu_b()
         elif user_control() and not menu_open():
@@ -1761,7 +1763,9 @@ def click_to_story_progress(destination):
             wait_frames(1)
         if counter % 100000 == 0:
             logger.debug(
-                f"Story goal: {destination} | Awaiting progress state: {current_state} | counter: {counter / 100000}"
+                f"Story goal: {destination} | "
+                + f"Awaiting progress state: {current_state} | "
+                + f"counter: {counter / 100000}"
             )
         counter += 1
         current_state = get_story_progress()
@@ -2661,8 +2665,13 @@ def get_zone():
 # 0x0 - ushort - name/group (?)
 # 0x3 - byte - wpn./arm. state
 # 0x4 - byte - owner char (basis for field below)
-# 0x5 - byte - equip type idx. (0 = cur. chara wpn., 1 = cur. chara arm., 2 = next chara wpn., etc.)
-# 0x6 - byte - equip icon shown? (purely visual- a character will still keep it equipped if his stat struct says so)
+# 0x5 - byte - equip type idx. (
+#              0 = cur. chara wpn.,
+#              1 = cur. chara arm.,
+#              2 = next chara wpn., etc.)
+# 0x6 - byte - equip icon shown?
+#              (purely visual - a character will still keep it equipped
+#              if his stat struct says so)
 # 0x8 - byte - atk. type
 # 0x9 - byte - dmg. constant
 # 0xA - byte - base crit rate (armor has one too!!!)
@@ -3676,7 +3685,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
         and diag_progress_flag() == ss_details[2]
     ):
         logger.debug(
-            f"Cursor test A: {get_story_progress()} | {diag_progress_flag()} | {get_map()} | {inc}"
+            f"Cursor test A: {get_story_progress()} | "
+            + f"{diag_progress_flag()} | {get_map()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -3685,7 +3695,8 @@ def touch_save_sphere(save_cursor_num: int = 0):
             xbox.tap_b()
     while not (save_menu_cursor() == 0 and save_menu_cursor_2() == 0):
         logger.debug(
-            f"Cursor test B: {save_menu_cursor()} | {save_menu_cursor_2()} | {diag_skip_possible()} | {inc}"
+            f"Cursor test B: {save_menu_cursor()} | "
+            + f"{save_menu_cursor_2()} | {diag_skip_possible()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -3694,7 +3705,9 @@ def touch_save_sphere(save_cursor_num: int = 0):
             xbox.tap_a()
     while save_menu_cursor() == 0 and save_menu_cursor_2() == 0:
         logger.debug(
-            f"Cursor test C: {save_menu_cursor()} | {save_menu_cursor_2()} | {diag_skip_possible()} | {get_story_progress()} | {inc}"
+            f"Cursor test C: {save_menu_cursor()} | "
+            + f"{save_menu_cursor_2()} | {diag_skip_possible()} | "
+            + f"{get_story_progress()} | {inc}"
         )
         inc += 1
         if save_menu_open():
@@ -4070,7 +4083,8 @@ def build_rng_array(index: int, array_size: int = 255):
 
 
 def next_crit(character: int, char_luck: int, enemy_luck: int) -> int:
-    # Returns the next time the character will critically strike, counting number of advances from present.
+    # Returns the next time the character will critically strike,
+    # counting number of advances from present.
     # If 255 is returned, there will not be a next crit in the foreseeable future.
     results = []
     rng_index = min(20 + character, 27)
@@ -4096,12 +4110,14 @@ def ambushes(advances: int = 12, extra: int = 0):
     for i in range(advances):
         rng_val = rng_array[(2 * i) + 2 + extra] & 255
         if rng_val >= 223:
-            # Append battle number from current (i.e. first or second battle), 1 == next battle.
+            # Append battle number from current
+            # (i.e. first or second battle), 1 == next battle.
             ret_array.append(i + 1)
         if home_check == 99:
             rng_val = rng_array[(2 * i) + 1 + extra] & 255
             if rng_val >= 223:
-                # Append battle number from current (i.e. first or second battle), 1 == next battle.
+                # Append battle number from current
+                # (i.e. first or second battle), 1 == next battle.
                 home_check = i + 1
 
     ret_array.append(
@@ -4177,7 +4193,10 @@ def next_chance_rng_01(version="white"):
         if (test_array[(i + 1) * 2] & 0x7FFFFFFF) % modulo == battle_index:
             even_array.append(i)
 
-    # logger.debug(f"Next event will appear on the odd array without manip. Area: {version}")
+    # logger.debug(
+    #     "Next event will appear on the odd array without manip. "
+    #     + f"Area: {version}"
+    # )
     # logger.debug(f"odd_array: {odd_array[0]}")
     # logger.debug(f"even_array: {even_array[0]}")
     return [odd_array, even_array]
@@ -4385,7 +4404,8 @@ def next_chance_rng_13() -> int:
     next_chance = 0
     test_array = rng_13_array()
     while next_chance == 0:
-        # logger.debug(f"RNG13 outcome: {outcomes[(((test_array[ptr] & 0x7fffffff) % 7) + 1)]}")
+        # logger.debug("RNG13 outcome: "
+        #              + f"{outcomes[(((test_array[ptr] & 0x7fffffff) % 7) + 1)]}")
         if outcomes[(((test_array[ptr] & 0x7FFFFFFF) % 7) + 1)] == 1:
             next_chance = ptr
         else:
@@ -4553,7 +4573,8 @@ def next_steal(steal_count: int = 0, pre_advance: int = 0):
     steal_threshold = 255 // steal_chance
     ret_val = steal_rng < steal_threshold
     logger.debug(
-        f"next_steal(): === {use_array[1]} === {steal_rng} < {steal_threshold} = {ret_val}"
+        f"next_steal(): === {use_array[1]} === {steal_rng} < "
+        + f"{steal_threshold} = {ret_val}"
     )
     return ret_val
 

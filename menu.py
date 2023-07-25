@@ -1734,7 +1734,8 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
                     255,
                     255,
                 ]:
-                    # Unmodified armor from the Kilika vendor. Prevents selling Rikku/Wakka armors if they have them.
+                    # Unmodified armor from the Kilika vendor.
+                    # Prevents selling Rikku/Wakka armors if they have them.
                     if full_array[memory.main.equip_sell_row()].owner() in [1, 2, 4, 6]:
                         sell_item = False
                 if not nea and full_array[memory.main.equip_sell_row()].has_ability(

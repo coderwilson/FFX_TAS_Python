@@ -21,7 +21,8 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
         logs.write_stats(str(total_time))
         logger.info(f"The game duration was: {total_time}")
         logger.info(
-            "This duration is intended for comparison reference only, not as a true timer."
+            "This duration is intended for comparison reference only, "
+            + "not as a true timer."
         )
         logger.info("Please do not use this as your submitted time.")
         memory.main.wait_frames(30)

@@ -18,7 +18,8 @@ def engage():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-            # elif checkpoint == 2 and memory.main.get_item_count_slot(p_down_slot) >= 10:
+            # elif (checkpoint == 2
+            #       and memory.main.get_item_count_slot(p_down_slot) >= 10):
             #    checkpoint = 4
             elif checkpoint in [2, 3]:
                 checkpoint = 4

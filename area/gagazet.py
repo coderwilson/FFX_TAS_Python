@@ -121,7 +121,7 @@ def defender_x():
     next_green()
 
 
-def to_the_ronso(checkpoint:int = 2):
+def to_the_ronso(checkpoint: int = 2):
     if checkpoint < 6:
         while memory.main.get_map() != 259:
             if memory.main.user_control():
@@ -150,7 +150,7 @@ def to_the_ronso(checkpoint:int = 2):
                 xbox.tap_b()
 
 
-def gagazet_gates(checkpoint:int = 0):
+def gagazet_gates(checkpoint: int = 0):
     # Should appear on the map just before the Ronso hymn
     end_ver = game_vars.end_game_version()
     logger.debug(f"Grid version: {end_ver}")
@@ -170,7 +170,7 @@ def gagazet_gates(checkpoint:int = 0):
     memory.main.close_menu()  # just in case
 
     logger.info("Gagazet path section")
-    
+
     while memory.main.get_map() != 285:
         if memory.main.user_control():
             if checkpoint == 22 and game_vars.nemesis():
@@ -479,7 +479,10 @@ def wrap_up():
                 logger.info("Move forward to next map. Final path before making camp.")
                 checkpoint = 7
             elif checkpoint == 3:
-                # Story progress - 2635 before hug, 2650 after hug, 2678 after the Mi'ihen scene
+                # Story progress:
+                # - 2635 before hug
+                # - 2650 after hug
+                # - 2678 after the Mi'ihen scene
                 while memory.main.get_story_progress() < 2651:
                     pathing.set_movement([786, -819])
                     xbox.tap_b()
@@ -536,7 +539,8 @@ def wrap_up():
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "First and most importantly, my wife for putting up with me for two years through this project.",
+            "First and most importantly, my wife for putting up with me "
+            + " for two years through this project.",
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info("My wife is the best!")
@@ -550,7 +554,8 @@ def wrap_up():
         logger.info("Shout out to DwangoAC and the TASbot Community. You guys rock!!!")
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "Specifically from the TASbot Community, Inverted wrote the pathing logic for the Egg Hunt section.",
+            "Specifically from the TASbot Community, Inverted "
+            + "wrote the pathing logic for the Egg Hunt section.",
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info("You will see Inverted's work right before the final bosses.")
@@ -558,25 +563,30 @@ def wrap_up():
         logger.info("Next, some people from the FFX speedrunning community.")
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "CrimsonInferno, current world record holder for this category. Dude knows everything about this run!"
+            "CrimsonInferno, current world record holder for this category. "
+            + "Dude knows everything about this run!"
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "Crimson re-wrote a great many boss fights for this project. From Spherimorph to Evrae Altana, and probably more."
+            "Crimson re-wrote a great many boss fights for this project. "
+            + "From Spherimorph to Evrae Altana, and probably more."
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "Also, 'Rossy__' from the same community. Rossy helped me find a great many things in memory."
+            "Also, 'Rossy__' from the same community. "
+            + "Rossy helped me find a great many things in memory."
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "He also taught me a number of things about memory scans, pointers, etc. Dude is super smart."
+            "He also taught me a number of things about memory scans, pointers, etc. "
+            + "Dude is super smart."
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info("Peppy too. He has found a few key things in memory too.")
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "And last, Mr Tyton from the FFX speedrun community has re-written many pieces of my code."
+            "And last, Mr Tyton from the FFX speedrun community "
+            + "has re-written many pieces of my code."
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
@@ -584,7 +594,8 @@ def wrap_up():
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info(
-            "Legitimately Tyton pushed this project from decent towards excellent when I was running out of steam."
+            "Legitimately Tyton pushed this project from decent towards "
+            + "excellent when I was running out of steam."
         )
         memory.main.wait_frames(30 * sleep_time)
         logger.info("OK that wraps it up for this bit. I'll catch you when it's done.")

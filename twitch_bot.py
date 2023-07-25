@@ -146,7 +146,9 @@ class Bot(commands.Bot):
     @commands.command(aliases=("stop", "quit", "terminate"))
     async def exit(self, ctx: commands.Context):
         # if not ctx.author.name in self.allowed_users:
-        #    await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        #    await ctx.send(
+        #        f"Sorry {ctx.author.name}, you don't have permissions to execute this."
+        #    )
         if self.process is not None:
             self.process.terminate()
             self.process.wait()
@@ -163,7 +165,7 @@ class Bot(commands.Bot):
         arg_array = []
         if ctx.author.name not in self.allowed_users:
             await ctx.send(
-                f"Sorry {ctx.author.name}, you don't have permissions to execute this command."
+                f"Sorry {ctx.author.name}, you don't have permissions to execute this."
             )
         elif self.csr is None:
             print(CSR_PATH)
@@ -180,7 +182,7 @@ class Bot(commands.Bot):
     async def stop_csr(self, ctx: commands.Context):
         if ctx.author.name not in self.allowed_users:
             await ctx.send(
-                f"Sorry {ctx.author.name}, you don't have permissions to execute this command."
+                f"Sorry {ctx.author.name}, you don't have permissions to execute this."
             )
         elif self.csr is not None:
             self.csr.terminate()
@@ -195,7 +197,9 @@ class Bot(commands.Bot):
     @commands.command(aliases=("game_start", "launch_game"))
     async def start_game(self, ctx: commands.Context):
         # if not ctx.author.name in self.allowed_users:
-        #    await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        #    await ctx.send(
+        #        f"Sorry {ctx.author.name}, you don't have permissions to execute this."
+        #    )
         if self.game is None:
             cwd = os.getcwd()
             print(cwd)
@@ -215,7 +219,9 @@ class Bot(commands.Bot):
     @commands.command(aliases=("game_stop", "halt_game"))
     async def stop_game(self, ctx: commands.Context):
         # if not ctx.author.name in self.allowed_users:
-        #    await ctx.send(f"Sorry {ctx.author.name}, you don't have permissions to execute this command.")
+        #    await ctx.send(
+        #        f"Sorry {ctx.author.name}, you don't have permissions to execute this."
+        #    )
         if self.game is not None:
             self.game.terminate()
             self.game.wait()
@@ -242,14 +248,15 @@ class Bot(commands.Bot):
                         raise Exception("Value must be True or False")
             except Exception:
                 await ctx.send(
-                    f"You must provide a csr value of True or False: {ctx.message.content}"
+                    "You must provide a CSR value of True or False: "
+                    + f"{ctx.message.content}"
                 )
 
         if csr_val is None:
             csr_val = "True"
         if ctx.author.name not in self.allowed_users:
             await ctx.send(
-                f"Sorry {ctx.author.name}, you don't have permissions to execute this command."
+                f"Sorry {ctx.author.name}, you don't have permissions to execute this."
             )
         elif self.timer is None:
             if csr_val == "False":
@@ -275,7 +282,7 @@ class Bot(commands.Bot):
     async def stop_timer(self, ctx: commands.Context):
         if ctx.author.name not in self.allowed_users:
             await ctx.send(
-                f"Sorry {ctx.author.name}, you don't have permissions to execute this command."
+                f"Sorry {ctx.author.name}, you don't have permissions to execute this."
             )
         elif self.timer is not None:
             self.timer.terminate()
@@ -291,10 +298,12 @@ class Bot(commands.Bot):
     @commands.command()
     async def help(self, ctx: commands.Context):
         await ctx.send(
-            "Available commands: !start, !race, or !blitz from the New Game screen, or !stop if already running."
+            "Available commands: !start, !race, or !blitz from the New Game screen, "
+            + "or !stop if already running."
         )
         await ctx.send(
-            "Other commands: !game_start, !game_stop, !csr_start, !csr_stop, !timer_start, !timer_stop"
+            "Other commands: !game_start, !game_stop, "
+            + "!csr_start, !csr_stop, !timer_start, !timer_stop"
         )
 
 

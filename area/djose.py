@@ -37,7 +37,7 @@ def path():
                 checkpoint = 49
             elif checkpoint == 49 and stone_breath == 0:
                 checkpoint = 47
-            # This is for the attempted Djose skip. It is not yet viable. Feel free to re-try this.
+            # This is for the fabled Djose skip and not yet viable. Feel free to re-try.
             elif checkpoint == 42 and game_vars.try_djose_skip():
                 FFXC.set_movement(-1, 1)
                 memory.main.wait_frames(2)

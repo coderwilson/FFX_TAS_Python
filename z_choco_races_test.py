@@ -1,13 +1,6 @@
 # Libraries and Core Files
 import logging
-
-# This needs to be before the other imports in case they decide to log things when imported
 import log_init
-
-# This sets up console and file logging (should only be called once)
-log_init.initialize_logging()
-
-logger = logging.getLogger(__name__)
 
 import area.baaj
 import area.besaid
@@ -38,6 +31,11 @@ import nemesis.arena_prep
 import nemesis.changes
 import xbox
 import reset
+
+# This sets up console and file logging (should only be called once)
+log_init.initialize_logging()
+
+logger = logging.getLogger(__name__)
 
 FFXC = xbox.controller_handle()
 while not memory.main.start():

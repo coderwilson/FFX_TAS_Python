@@ -1,11 +1,10 @@
 # This needs to be before import clr
 from pythonnet import load
 
-load("coreclr")
-
 import sys
-
 import clr
+
+load("coreclr")
 
 # Add path to dlls
 assemblydir = r"./fahrenheit"

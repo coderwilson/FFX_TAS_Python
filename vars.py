@@ -119,7 +119,7 @@ class AllVars:
             logger.debug("Dynamically using userprofile, default")
             self.save_path = (
                 os.environ.get("userprofile")
-                + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"
+                + "/Documents/SQUARE ENIX/FINAL FANTASY X&X-2 HD Remaster/FINAL FANTASY X/"  # noqa: E501
             )
         elif config_vars.get("save_path").find(":"):
             logger.debug("Full save path provided from config")

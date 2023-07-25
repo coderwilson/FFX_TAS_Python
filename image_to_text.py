@@ -48,7 +48,8 @@ class ImageToText(object):
 
     def _rgb(self, col):
         """
-        Get the console code for a given RGB color [R, G, B]. Colors are in the range 0-255
+        Get the console code for a given RGB color [R, G, B].
+        Colors are in the range 0-255
         """
         red = int(col[0])
         green = int(col[1])

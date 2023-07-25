@@ -54,12 +54,14 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
 
 def tap_targeting():
     logger.debug(
-        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+        f"In Tap Targeting. Not battle menu: {not memory.main.main_battle_menu()}, "
+        + f"Battle active: {memory.main.battle_active()}"
     )
     while (not memory.main.main_battle_menu()) and memory.main.battle_active():
         xbox.tap_b()
     logger.debug(
-        f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+        f"Done. Not battle menu: {not memory.main.main_battle_menu()}, "
+        + f"Battle active: {memory.main.battle_active()}"
     )
 
 
@@ -465,7 +467,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         CurrentPlayer().cast_black_magic_spell(1, direction="left")
                         screen.await_turn()
                         logger.manip(
-                            f"Valefor overdrive value: {Valefor.overdrive_percent(combat=True)}"
+                            "Valefor overdrive value: "
+                            + f"{Valefor.overdrive_percent(combat=True)}"
                         )
                         if Valefor.overdrive_percent(combat=True) < 18:
                             logger.debug("Extra attack for overdrive charging.")
@@ -491,7 +494,8 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                         CurrentPlayer().cast_black_magic_spell(1, direction="right")
                         screen.await_turn()
                         logger.manip(
-                            f"Valefor overdrive value: {Valefor.overdrive_percent(combat=True)}"
+                            "Valefor overdrive value: "
+                            + f"{Valefor.overdrive_percent(combat=True)}"
                         )
                         if Valefor.overdrive_percent(combat=True) < 18:
                             logger.debug("Extra attack for overdrive charging.")
@@ -714,16 +718,16 @@ def luca_workers_2(early_haste):
                     logger.debug(f"Tidus attacks: {tidus_attacks}")
                     logger.debug(f"Kimahri attacks: {kimahri_attacks}")
                     logger.debug(
-                        f"Tidus crit 1: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15)}"
+                        f"Tidus crit 1: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15)}"  # noqa: E501
                     )
                     logger.debug(
-                        f"Tidus crit 2: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, attack_index=1)}"
+                        f"Tidus crit 2: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, attack_index=1)}"  # noqa: E501
                     )
                     logger.debug(
-                        f"Kimahri crit 1: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15)}"
+                        f"Kimahri crit 1: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15)}"  # noqa: E501
                     )
                     logger.debug(
-                        f"Kimahri crit 2: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1)}"
+                        f"Kimahri crit 2: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=1)}"  # noqa: E501
                     )
                     logger.debug(f"Kimahri overdrive: {Kimahri.has_overdrive()}")
                     logger.debug("========================")
@@ -770,7 +774,7 @@ def luca_workers_2(early_haste):
                             f"=== Target HP: {memory.main.get_enemy_current_hp()[0]}"
                         )
                         logger.debug(
-                            f"=== Target Next Crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                            f"=== Target Next Crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"  # noqa: E501
                         )
                         if (
                             memory.main.next_crit(
@@ -985,7 +989,8 @@ def mrr_target():
 
 @battle.utils.speedup_decorator
 def mrr_battle(status):
-    # Yuna complete, Kimahri complete, Valefor overdrive, Battle counter, Yuna level up complete, Yuna grid, phase
+    # Yuna complete, Kimahri complete, Valefor overdrive,
+    # Battle counter, Yuna level up complete, Yuna grid, phase
     logger.info("------------------------------")
     logger.info("Fight start: MRR")
     encounter_id = memory.main.get_encounter_id()
@@ -1063,7 +1068,10 @@ def mrr_battle(status):
                     elif Tidus.is_turn():
                         buddy_swap(Kimahri)
                     elif Kimahri.is_turn():
-                        # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                        # if (
+                        #     next_crit_kim > 9 - status[3]
+                        #     and next_crit_kim < 23 - (status[3] * 2)
+                        # ):
                         #     next_crit_kim = mrr_target()
                         # else:
                         CurrentPlayer().defend()
@@ -1193,7 +1201,10 @@ def mrr_battle(status):
                         logger.debug("No petrify issues.")
                         if Tidus.is_turn():
                             buddy_swap(Kimahri)
-                            # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                            # if (
+                            #     next_crit_kim > 9 - status[3]
+                            #     and next_crit_kim < 23 - (status[3] * 2)
+                            # ):
                             #     next_crit_kim = mrr_target()
                             # else:
                             CurrentPlayer().defend()
@@ -1276,7 +1287,10 @@ def mrr_battle(status):
                         buddy_swap(Tidus)
                     elif Kimahri.is_turn():
                         if memory.main.get_kimahri_slvl() >= 6 and yuna_turn_count:
-                            # if next_crit_kim > 9 - status[3] and next_crit_kim < 23 - (status[3] * 2):
+                            # if (
+                            #     next_crit_kim > 9 - status[3]
+                            #     and next_crit_kim < 23 - (status[3] * 2)
+                            # ):
                             #     next_crit_kim = mrr_target()
                             # else:
                             flee_all()
@@ -2374,7 +2388,7 @@ def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
         if memory.main.get_throw_items_slot(7) < 255:
             revive_all()
         elif memory.main.get_throw_items_slot(6) < 255:
-            revive()  # This should technically target tidus but need to update this logic
+            revive()  # Should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
     elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
         logger.debug("Reviving tidus")
@@ -3531,16 +3545,19 @@ def oblitz_rng_wait():
                 duration = 1 + pos
                 victory = True
                 logger.debug(
-                    f"No result (preferred), loop. {[coming_seeds[i], duration, victory, pos]}"
+                    "No result (preferred), loop. "
+                    + f"{[coming_seeds[i], duration, victory, pos]}"
                 )
             else:
                 duration = 480 + pos
                 # 460-480 is about the maximum duration we desire.
                 victory = True
                 logger.debug(
-                    f"No result (undesirable), full. {[coming_seeds[i], duration, victory, pos]}"
+                    "No result (undesirable), full. "
+                    + f"{[coming_seeds[i], duration, victory, pos]}"
                 )
-            # Fill as first two RNG values, then test against previously set RNG values until we've exhausted tests.
+            # Fill as first two RNG values,
+            # then test against previously set RNG values until we've exhausted tests.
             if i == 0:
                 pass
             elif first_result[2] and not second_result[2]:
@@ -3588,7 +3605,8 @@ def oblitz_rng_wait():
         next_rng = memory.main.rng_from_index(index=2) & 0x7FFFFFFF
         if last_rng != next_rng:
             logger.debug(
-                f"{j} | {s32(next_rng)} | {s32(memory.main.rng_from_index(index=2))} | {s32(best[0])}"
+                f"{j} | {s32(next_rng)} | "
+                + f"{s32(memory.main.rng_from_index(index=2))} | {s32(best[0])}"
             )
             j += 1
             last_rng = next_rng
@@ -4627,7 +4645,8 @@ def calm_lands_manip():
                 and memory.main.get_encounter_id() in high_array
             ):
                 advance_rng_12()
-            else:  # If we can't advance on this battle, try to get the next "mid" level advance.
+            # If we can't advance on this one, try to get the next "mid" level advance.
+            else:
                 logger.debug("Can't drop off of this battle.")
                 advance_rng_10(rng_10_next_chance_mid)
         elif advance_post_x == 2:

@@ -140,19 +140,26 @@ class SphereNodeType(Enum):
 
 class SphereGridNode:
     _NODE_TYPE_OFFSET = 0  # 1 byte value, matches the SphereNodeType Enum
-    _ACTIVATED_BY_OFFSET = 1  # 1 byte value, bitfield where each bit indicates that a character has grabbed the node
+    _ACTIVATED_BY_OFFSET = 1  # 1 byte value, bitfield where each bit indicates
+    # that a character has grabbed the node
     # The bitfield should match the character IDs, so bit[0] = Tidus, bit[1] = Yuna etc.
 
     def __init__(self, offset: int) -> None:
         self.offset = offset
 
     def get_node_type(self) -> SphereNodeType:
-        """Return an enum of type SphereNodeType that can be compared, or printed with .name"""
+        """
+        Return an enum of type SphereNodeType that can be compared,
+        or printed with .name
+        """
         node_type = read_val(self.offset + self._NODE_TYPE_OFFSET, 1)  # 2
         return SphereNodeType(node_type)
 
     def get_activated_by(self) -> int:
-        """This returns a one byte bitfield, where each bit indicates that a character has activated this node."""
+        """
+        This returns a one byte bitfield,
+        where each bit indicates that a character has activated this node.
+        """
         return read_val(self.offset + self._ACTIVATED_BY_OFFSET, 1)
 
     def is_activated_by(self, player: Player) -> bool:

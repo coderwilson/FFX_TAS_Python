@@ -575,7 +575,8 @@ def chocobo_eater_old():
     # If chocobo doesn't take the second turn, that means it out-sped Tidus.
     if memory.main.get_next_turn() != 20:
         if memory.main.rng_from_index(44) == rng44Last:
-            # Eater did not take an attack, but did take first turn. Should register as true.
+            # Eater did not take an attack, but did take first turn.
+            # Should register as true.
             choco_next = True
     swapped_yuna = False
     while memory.main.battle_active():
@@ -632,7 +633,8 @@ def chocobo_eater_old():
                         battle.main.buddy_swap(Auron)
                 battle.main.revive()
             # elif not Tidus.active():
-            # Doesn't work - it still hits Tidus if he swapped out and back in (instead of Yuna).
+            # Doesn't work - it still hits Tidus if
+            # he swapped out and back in (instead of Yuna).
             #    buddy_swap(Tidus)
             elif (
                 swapped_yuna
@@ -668,7 +670,8 @@ def gui():
     xbox.click_to_battle()
     logger.info("Engaging Gui")
     logger.debug(
-        f"Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+        "Expecting crit: "
+        + f"{memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
     )
     wakka_turn = False
     yuna_turn = False
@@ -692,7 +695,7 @@ def gui():
                 else:
                     battle.main.buddy_swap(Kimahri)
                     logger.debug(
-                        f"Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"
+                        f"Expecting crit: {memory.main.next_crit(character=3, char_luck=18, enemy_luck=15)}"  # noqa: E501
                     )
             elif Kimahri.is_turn():
                 dmg_before = memory.main.get_enemy_current_hp()[0]
@@ -990,7 +993,8 @@ def spherimorph():
                     kim_turn = True
                 elif not kim_turn:
                     # logger.manip(
-                    #    f"RNG11 before Spherimorph: {memory.main.rng_array_from_index(index=11, array_len=30)}"
+                    #    "RNG11 before Spherimorph: "
+                    #    + f"{memory.main.rng_array_from_index(index=11, array_len=30)}"
                     # )
                     # logs.write_rng_track("RNG11 before Spherimorph")
                     # logs.write_rng_track(
@@ -1167,7 +1171,8 @@ def wendigo():
                 # If Yuna still needs AP:
                 if not yuna_ap:
                     logger.debug("Yuna still needs AP")
-                    # If both other characters are dead Mega-Phoenix if available, otherwise PD
+                    # If both other characters are dead
+                    # Mega-Phoenix if available, otherwise PD
                     if (
                         battle.main.wendigo_res_heal(
                             turn_char=Yuna,
@@ -1219,7 +1224,8 @@ def wendigo():
                 elif tidushealself:
                     if party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
                         logger.debug(
-                            "Tidus just used Phoenix Down / Mega Phoenix so needs to heal himself"
+                            "Tidus just used Phoenix Down / Mega Phoenix "
+                            + "so needs to heal himself"
                         )
                         if battle.main.fullheal(target=0, direction="l") == 0:
                             if screen.faint_check():
@@ -1267,7 +1273,10 @@ def wendigo():
                     ):
                         battle.main.steal()
                         guadosteal = True
-                    # elif memory.main.get_enemy_current_hp().count(0) == 2 and not 5 in memory.main.get_active_battle_formation():
+                    # elif (
+                    #    memory.main.get_enemy_current_hp().count(0) == 2
+                    #    and not 5 in memory.main.get_active_battle_formation()
+                    # ):
                     #    buddy_swap(Lulu)
                     else:
                         CurrentPlayer().defend()
@@ -1277,7 +1286,10 @@ def wendigo():
                     battle.main.use_skill(position=0, target=21)
                     powerbreakused = True
                     usepowerbreak = False
-                # elif memory.main.get_enemy_current_hp()[1] < stop_healing and memory.main.get_battle_hp()[tidus_slot] != 0:
+                # elif (
+                #    memory.main.get_enemy_current_hp()[1] < stop_healing
+                #    and memory.main.get_battle_hp()[tidus_slot] != 0
+                # ):
                 #    CurrentPlayer().defend()
                 elif (
                     battle.main.wendigo_res_heal(
@@ -1318,7 +1330,10 @@ def wendigo():
                 ):
                     logger.debug("Swapping to Auron to Power Break")
                     battle.main.buddy_swap(Auron)
-                # if memory.main.get_enemy_current_hp()[1] < stop_healing and memory.main.get_battle_hp()[tidus_slot] != 0:
+                # if (
+                #    memory.main.get_enemy_current_hp()[1] < stop_healing
+                #    and memory.main.get_battle_hp()[tidus_slot] != 0
+                # ):
                 #    logger.debug("End of battle, no need to heal.")
                 #    CurrentPlayer().defend()
                 elif (

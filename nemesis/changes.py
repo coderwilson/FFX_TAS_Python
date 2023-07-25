@@ -373,7 +373,9 @@ def choco_tame_4():
         memory.main.get_actor_coords(0)
         logger.debug("User control")
         """
-        if position[1] > -1360 and checkpoint == 0: #Start off aiming right to manip balls
+        if (
+            position[1] > -1360 and checkpoint == 0
+        ): #Start off aiming right to manip balls
             checkpoint += 1
             FFXC.set_value('d_pad', 8) #Right
             memory.wait_frames(5)
@@ -404,7 +406,7 @@ def choco_tame_4():
                 FFXC.set_value('d_pad', 4)#Left
             else:
                 FFXC.set_value('d_pad', 0)
-    """
+        """
     logger.debug("Race complete.")
     FFXC.set_neutral()
 
