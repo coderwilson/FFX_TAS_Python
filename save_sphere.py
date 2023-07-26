@@ -209,7 +209,8 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
         if save_num != 999 and save_pos == 999:
             save_files = load_game.get_saved_files()
             logger.debug(
-                f"File was expected as save number {save_num} but could not find this file."
+                f"File was expected as save number {save_num} "
+                + "but could not find this file."
             )
             logger.debug(f"Actual save file: {save_files[0]}")
             file_orig = game_vars.game_save_path() + save_files[0]

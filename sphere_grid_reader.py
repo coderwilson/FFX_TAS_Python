@@ -30,11 +30,20 @@ if __name__ == "__main__":
             node = sphere_grid.get_current_node()
             # Print the node indices of all the players
             print(
-                f"Positions: [Tidus={sphere_grid.get_player_node_idx(Tidus)}] [Yuna={sphere_grid.get_player_node_idx(Yuna)}] [Auron={sphere_grid.get_player_node_idx(Auron)}] [Kimahri={sphere_grid.get_player_node_idx(Kimahri)}] [Wakka={sphere_grid.get_player_node_idx(Wakka)}] [Lulu={sphere_grid.get_player_node_idx(Lulu)}] [Rikku={sphere_grid.get_player_node_idx(Rikku)}]"
+                "Positions: "
+                + f"[Tidus={sphere_grid.get_player_node_idx(Tidus)}] "
+                + f"[Yuna={sphere_grid.get_player_node_idx(Yuna)}] "
+                + f"[Auron={sphere_grid.get_player_node_idx(Auron)}] "
+                + f"[Kimahri={sphere_grid.get_player_node_idx(Kimahri)}] "
+                + f"[Wakka={sphere_grid.get_player_node_idx(Wakka)}] "
+                + f"[Lulu={sphere_grid.get_player_node_idx(Lulu)}] "
+                + f"[Rikku={sphere_grid.get_player_node_idx(Rikku)}]"
             )
-            # Print the currently selected node and a bitfield of what characters have activated it
+            # Print the currently selected node and
+            # a bitfield of what characters have activated it
             print(
-                f"New node: {cur_node}, type {node}, activation: {hex(node.get_activated_by())}"
+                f"New node: {cur_node}, type {node}, "
+                + f"activation: {hex(node.get_activated_by())}"
             )
 
             # Example check for activation by Yuna

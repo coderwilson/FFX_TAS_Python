@@ -448,7 +448,7 @@ def clear_save_popup(click_to_diag_num=0):
             return
         elif (
             memory.main.diag_progress_flag() != click_to_diag_num
-            and memory.main.diag_skip_possible()  # Was diag_skip_possible(True), seems to have been refactored
+            and memory.main.diag_skip_possible()
         ):
             tap_b()
 

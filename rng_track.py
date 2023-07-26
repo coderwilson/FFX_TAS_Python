@@ -1457,10 +1457,12 @@ def t_strike_tracking_not_working_yet(tros=False, report=False):
 
 
 def decide_skip_zan_luck() -> bool:
-    # This function tracks if we need to pick up the luck and fortune spheres in Zanarkand.
-    # This will track through from Yunalesca to BFA, the two fights with ~4% chance to miss.
-    # False == there will be a miss. True == no miss.
-    extra_xp = 1  # where is the variable for this? Somewhere in vars file? This is if we need to kill something in Dome for XP...
+    # This function tracks if we need to pick up the luck and
+    # fortune spheres in Zanarkand. This will track through from Yunalesca to BFA,
+    # the two fights with ~4% chance to miss.
+    # False == there will be a miss.
+    # True == no miss.
+    extra_xp = 1
     bahamut_luck = 17
     keeper_crit = memory.main.future_attack_will_crit(
         character=7, char_luck=bahamut_luck, enemy_luck=20, attack_index=extra_xp
@@ -1555,7 +1557,8 @@ def zombie_track(report=False):
     party_size = 7
 
     # "sanctuary_keeper"
-    # Check random encounters for best charge, plan for 1 encounter, 1 death if possible to charge.
+    # Check random encounters for best charge,
+    # plan for 1 encounter, 1 death if possible to charge.
     # "spectral_keeper"
     # "yunalesca"
 
@@ -1754,7 +1757,7 @@ def nea_track():
                 total_advance_post_x = int(pre_advance_12 / 4)
             if total_advance_pre_x == 999:
                 total_advance_pre_x = int((pre_advance_12 / 4) - 1)
-    # logger.debug(f"/// Pre-X: {total_advance_pre_x} /// Post-X {total_advance_post_x}")
+    # logger.debug(f"// Pre-X: {total_advance_pre_x} // Post-X {total_advance_post_x}")
     return total_advance_pre_x, total_advance_post_x
 
 
@@ -1763,7 +1766,8 @@ def print_manip_info():
     logger.manip("Upcoming RNGs:")
     logger.manip(f"Next drop: {post_x}")
     logger.manip(
-        f"RNG10: {memory.main.next_chance_rng_10()} | Adjusted for Defender X drop: {memory.main.next_chance_rng_10_calm()}"
+        f"RNG10: {memory.main.next_chance_rng_10()} | "
+        + f"Adjusted for Defender X drop: {memory.main.next_chance_rng_10_calm()}"
     )
 
 

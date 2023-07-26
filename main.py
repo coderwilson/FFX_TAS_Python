@@ -1,18 +1,11 @@
-blitz_threshold = 410
-
 # Libraries and Core Files
 import logging
 import random
 import sys
 import argparse
 
-# This needs to be before the other imports in case they decide to log things when imported
+# This needs to be before the other imports in case they log things when imported
 import log_init
-
-# This sets up console and file logging (should only be called once)
-log_init.initialize_logging()
-
-logger = logging.getLogger(__name__)
 
 import area.baaj
 import area.besaid
@@ -55,6 +48,10 @@ import vars
 import xbox
 from gamestate import game
 from image_to_text import maybe_show_image
+
+# This sets up console and file logging (should only be called once)
+log_init.initialize_logging()
+logger = logging.getLogger(__name__)
 
 FFXC = xbox.controller_handle()
 
@@ -134,7 +131,8 @@ def memory_setup():
 
 def rng_seed_setup():
     game_vars = vars.vars_handle()
-    # Using Rossy's FFX.exe fix, this allows us to choose the RNG seed we want. From 0-255
+    # Using Rossy's FFX.exe fix,
+    # this allows us to choose the RNG seed we want. From 0-255
     if game_vars.game_is_patched():
         memory.main.set_rng_seed(game_vars.rng_seed_num())
 
@@ -332,6 +330,7 @@ def perform_TAS():
                     game.step = 4
 
                 if game.step == 4:
+                    blitz_threshold = 410
                     logger.info("----- Blitz Start")
                     force_blitz_win = game_vars.get_force_blitz_win()
                     blitz_duration = blitz.blitz_main(force_blitz_win)
@@ -351,7 +350,7 @@ def perform_TAS():
                     elif game_vars.loop_blitz() and blitz_duration < blitz_threshold:
                         logger.manip("--------------")
                         logger.manip(
-                            "Good Blitz, worth completing the run. Blitz time in seconds:"
+                            "Good Blitz, worth completing. Duration in seconds:"
                         )
                         logger.manip(blitz_duration)
                         logger.manip("--------------")

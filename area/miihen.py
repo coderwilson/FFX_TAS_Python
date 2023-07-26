@@ -149,8 +149,8 @@ def arrival():
                         # Spear guy's position when we start moving.
                         if memory.main.miihen_guy_coords()[1] < 1380:
                             logger.info("Skip engaging!!! Good luck!")
-                            # Greater number for spear guy's position means we will start moving faster.
-                            # Smaller number means moving later.
+                            # Greater number for spear guy's position means we will
+                            # start moving faster. Smaller number means moving later.
                             FFXC.set_movement(0, 1)
                             if game_vars.use_pause():
                                 memory.main.wait_frames(2)
@@ -158,7 +158,7 @@ def arrival():
                                 memory.main.wait_frames(3)
                             # Walk into the guy mashing B (or X, or whatever the key is)
                             xbox.skip_dialog(0.3)
-                            FFXC.set_neutral()  # Stop trying to move. (recommended by Crimson)
+                            FFXC.set_neutral()  # Stop trying to move. (by Crimson)
                             logger.debug("Starting special skipping.")
                             xbox.skip_dialog_special(3)  # Mash two buttons
                             logger.debug("End special skipping.")

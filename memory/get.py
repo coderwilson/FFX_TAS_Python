@@ -17,8 +17,9 @@ class LocProcess(Process):
 
     def read_bytes(self, lp_base_address: int, size: int = 4):
         """
-        See the original ReadWriteMemory values for details on how this works. This version allows us to pass
-        the number of bytes to be retrieved instead of a static 4-byte size. Default is 4 for reverse-compatibility
+        See the original ReadWriteMemory values for details on how this works.
+        This version allows us to pass the number of bytes to be retrieved instead of a
+        static 4-byte size. Default is 4 for reverse-compatibility
         """
         try:
             read_buffer = ctypes.c_uint()
@@ -43,7 +44,8 @@ class LocProcess(Process):
 
     def write_bytes(self, lp_base_address: int, value: int, size: int = 4) -> bool:
         """
-        Same as above, write a passed number of bytes instead of static 4 bytes. Default is 4 for reverse-compatibility
+        Same as above, write a passed number of bytes instead of static 4 bytes.
+        Default is 4 for reverse-compatibility
         """
         try:
             write_buffer = ctypes.c_uint(value)
@@ -78,8 +80,10 @@ class FFXMemory(ReadWriteMemory):
 
     def get_process_by_name(self, process_name: str | bytes) -> "Process":
         """
-        :description: Get the process by the process executabe\'s name and return a Process object.
-        :param process_name: The name of the executable file for the specified process for example, my_program.exe.
+        :description: Get the process by the process executabe\'s name and
+        return a Process object.
+        :param process_name: The name of the executable file for the specified
+        process for example, my_program.exe.
         :return: A Process object containing the information from the requested Process.
         """
         if not process_name.endswith(".exe"):

@@ -455,7 +455,8 @@ def advanced_battle_logic() -> bool:
                     elif Rikku.is_turn():
                         if encounter_id in [377, 382]:
                             logger.debug(
-                                "Shining Gems for Gemini, better to save other items for other enemies."
+                                "Shining Gems for Gemini, "
+                                + "better to save other items for other enemies."
                             )
                             # Double Gemini, two different locations
                             if memory.main.get_use_items_slot(42) < 100:
@@ -875,7 +876,8 @@ def auto_phoenix():  # Calm Lands items
     nemesis.menu.lulu_bribe()
     memory.main.update_formation(Tidus, Wakka, Rikku)
     logger.debug(
-        f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+        "Sleeping powder count: "
+        + f"{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
     )
     while (
         memory.main.get_item_slot(37) > 200
@@ -888,7 +890,8 @@ def auto_phoenix():  # Calm Lands items
         nemesis.arena_select.arena_menu_select(4)
         memory.main.update_formation(Tidus, Wakka, Rikku)
         logger.debug(
-            f"Sleeping powder count:{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
+            "Sleeping powder count: "
+            + f"{memory.main.get_item_count_slot(memory.main.get_item_slot(37))}"
         )
 
     arena_npc()
@@ -1026,7 +1029,8 @@ def one_mp_ready():
     if memory.main.get_item_slot(41) > 200:
         return False
     logger.debug(
-        f"Count, Gambler:{memory.main.get_item_count_slot(memory.main.get_item_slot(41))}"
+        "Count, Gambler: "
+        + f"{memory.main.get_item_count_slot(memory.main.get_item_slot(41))}"
     )
     if memory.main.get_item_count_slot(memory.main.get_item_slot(41)) < 99:
         return False

@@ -1102,7 +1102,8 @@ def blitz_main(force_blitz_win):
                 FFXC.set_neutral()
                 xbox.menu_b()
             if memory.main.get_map() == 62:
-                # print(f"Clock: {active_clock()} | Menu: {memory.main.blitz_menu_num()}")
+                # print(f"Clock: {active_clock()} | "
+                #       + f"Menu: {memory.main.blitz_menu_num()}")
                 # Note that logs don't work if we load Blitzball directly.
                 if active_clock():
                     if last_state != 1:
@@ -1218,7 +1219,8 @@ def blitz_main(force_blitz_win):
     logger.info("Blitz game has completed.")
     # Set the blitz_win flag for the rest of the run.
     logger.info(
-        f"Final scores: Aurochs: {memory.main.blitz_own_score()}, Opponent score: {memory.main.blitz_opp_score()}"
+        f"Final scores: Aurochs: {memory.main.blitz_own_score()}, "
+        + f"Opponent score: {memory.main.blitz_opp_score()}"
     )
     FFXC.set_neutral()
     if memory.main.blitz_own_score() > memory.main.blitz_opp_score():

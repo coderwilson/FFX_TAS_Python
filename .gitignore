@@ -1,10 +1,19 @@
+# python
 __pycache__/
-logs/
 *.py[cod]
-none
-config.yaml
+
+# config files
 bot-config.yaml
-Save Backups/
-FFXCutsceneRemover.exe
-tas_saves/ffx_000
+config.yaml
 json_ai_files/current_seed.txt
+
+# saves
+Save Backups/
+tas_saves/ffx_000
+
+# local and log files
+CoreDump.dmp
+FFXCutsceneRemover.exe
+OUTPUT.TXT
+logs/
+none

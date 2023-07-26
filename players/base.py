@@ -163,7 +163,8 @@ class Player:
             skip_direction = True
         else:
             logger.debug(
-                f"Attacking a specific target with id {target_id}, direction hint is {direction_hint}"
+                f"Attacking a specific target with id {target_id}, "
+                + f"direction hint is {direction_hint}"
             )
         if not memory.main.turn_ready():
             logger.warning("Bad practice - should not attack when turn is not ready.")
@@ -207,7 +208,8 @@ class Player:
             logger.debug(f"Casting {spell_id}")
         else:
             logger.debug(
-                f"Casting {spell_id} on a specific target with id {target_id}, direction is {direction}"
+                f"Casting {spell_id} on a specific target with id {target_id}, "
+                + "direction is {direction}"
             )
         try:
             self.navigate_to_battle_menu(21)
@@ -318,14 +320,17 @@ class Player:
 
     def _tap_targeting(self):
         logger.debug(
-            f"In Tap Targeting, Class Edition. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+            "In Tap Targeting, Class Edition. "
+            + f"Not battle menu: {not memory.main.main_battle_menu()}, "
+            + f"Battle active: {memory.main.battle_active()}"
         )
         while (not memory.main.main_battle_menu()) and memory.main.battle_active():
             xbox.tap_b()
             # if not self.is_turn():
             #    return
         logger.debug(
-            f"Done. Not battle menu: {not memory.main.main_battle_menu()}, Battle active: {memory.main.battle_active()}"
+            f"Done. Not battle menu: {not memory.main.main_battle_menu()}, "
+            + "Battle active: {memory.main.battle_active()}"
         )
 
     def affection(self) -> int:
@@ -343,7 +348,8 @@ class Player:
                 xbox.tap_up()
 
     def next_crits(self, enemy_luck: int, length: int = 20) -> List[int]:
-        """Note that this says the number of increments, so the previous roll will be a hit, and this one will be the crit."""
+        # Note that this says the number of increments, so the previous roll
+        # will be a hit, and this one will be the crit.
         results = []
         cur_rng = memory.main.rng_from_index(self.char_rng)
         cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)

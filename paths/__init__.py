@@ -114,6 +114,7 @@ __all__ = [
     "MRRBattleSite",
     "MRRBattleSiteAftermath",
     "MRRMain",
+    "MRRSkip",
     "MRRStart",
     "MRRSkip",
     "NEApproach",
