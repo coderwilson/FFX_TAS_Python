@@ -46,7 +46,7 @@ class DeltaTimeFormatter(logging.Formatter):
         # Create the delta property, with the format 'HH:MM:SS'
         record.delta = duration.strftime("%H:%M:%S")
         # Create the delta_ms property, with the format 'HH:MM:SS.sss'
-        record.delta_ms = f"{duration.strftime('%H:%M:%S')}."
+        record.delta_ms = f"{duration.strftime('%H:%M:%S')}." \
         +f"{int(duration.strftime('%f')) // 1000:03d}"
         record.color = self.COLOR.get(record.levelno)
         record.color_reset = self.reset
@@ -71,7 +71,7 @@ def initialize_logging():
     file_log_formatter = DeltaTimeFormatter(fmt=file_log_fmt)
     # Get current time in order to create log file name
     time_now = datetime.datetime.now()
-    time_str = f"{time_now.year}{time_now.month:02d}{time_now.day:02d}_"
+    time_str = f"{time_now.year}{time_now.month:02d}{time_now.day:02d}_" \
     +f"{time_now.hour:02d}_{time_now.minute:02d}_{time_now.second:02d}"
 
     # Set up logging to file
