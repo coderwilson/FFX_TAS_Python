@@ -65,5 +65,20 @@
     },
     "139": {
         "ml_heals": "True"
+    },
+    "25": {
+        "kimahri_force_heal": "True"
+    },
+    "182": {
+        "kimahri_force_heal": "True"
+    },
+    "165": {
+        "kimahri_force_heal": "True"
+    },
+    "68": {
+        "zan_luck": "False"
+    },
+    "235": {
+        "kimahri_force_heal": "True"
     }
 }
