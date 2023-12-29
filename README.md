@@ -12,7 +12,8 @@ We strive to only include code that is not seed-specific which causes the codeba
   <https://www.youtube.com/watch?v=P0wDLfiLtOs>
 - Any% in `8:45:14`
   <https://www.youtube.com/watch?v=xc-ixb5rCFU>
-- Nemesis% _-Work in Progress-_
+- Nemesis% in 13:35:08
+  <https://www.youtube.com/playlist?list=PLIGp9aN2dv5tPDTB6uDKEybrAcD4ZP4zf>
 
 ## Showcases
 
