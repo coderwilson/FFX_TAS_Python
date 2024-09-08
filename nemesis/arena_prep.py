@@ -92,7 +92,8 @@ def air_ship_destination(dest_num=0, force_omega=False):
             xbox.tap_down()
         else:
             xbox.tap_up()
-    xbox.tap_b()
+    memory.main.wait_frames(2)
+    xbox.menu_b()
     memory.main.wait_frames(2)
     xbox.tap_b()
     while not memory.main.user_control():
@@ -104,8 +105,10 @@ def air_ship_destination(dest_num=0, force_omega=False):
         memory.main.set_game_speed(set_val=1)
 
 
-def unlock_omega():
+def unlock_omega(x:int = 72,y:int = -36):
     # Move away from save sphere. Prevents soft-lock (infinite saves)
+    
+    y = abs(y) * -1
     while memory.main.get_coords()[0] < -257:
         pathing.set_movement([-258, 345])
     while memory.main.get_map() not in [382, 999]:
@@ -123,25 +126,40 @@ def unlock_omega():
         xbox.tap_b()
 
     while memory.main.diag_progress_flag() == 0:
-        logger.debug(f"{memory.main.get_coords()}")
-        if memory.main.get_coords()[0] < 65:
+        step = "unknown"
+        if memory.main.get_coords()[0] < x-10:
             FFXC.set_value("d_pad", 8)
-        elif memory.main.get_coords()[0] < 70:
+            step = "big right"
+        elif memory.main.get_coords()[0] < x-2:
             nemesis.menu.grid_right()
-        elif memory.main.get_coords()[0] > 78:
+            step = "small right"
+        elif memory.main.get_coords()[0] > x+10:
             FFXC.set_value("d_pad", 4)
-        elif memory.main.get_coords()[0] > 73:
+            step = "big left"
+        elif memory.main.get_coords()[0] > x+2:
             nemesis.menu.grid_left()
-        elif memory.main.get_coords()[1] > -28:
+            step = "small left"
+        elif memory.main.get_coords()[1] > y+10:
             FFXC.set_value("d_pad", 2)
-        elif memory.main.get_coords()[1] > -34:
+            step = "big down"
+        elif memory.main.get_coords()[1] > y+2:
             nemesis.menu.grid_down()
-        elif memory.main.get_coords()[1] < -40:
+            step = "small down"
+            memory.main.wait_frames(30)
+        elif memory.main.get_coords()[1] < y-10:
             FFXC.set_value("d_pad", 1)
-        elif memory.main.get_coords()[1] < -37:
+            step = "big up"
+        elif memory.main.get_coords()[1] < y-2:
             nemesis.menu.grid_up()
+            step = "small up"
+            memory.main.wait_frames(30)
         else:
             xbox.menu_b()
+            step = "trigger"
+        x_val = round(memory.main.get_coords()[0])
+        y_val = round(memory.main.get_coords()[1])
+        logger.debug(f"[{x_val},{y_val}] | {step}")
+    FFXC.set_neutral()
     memory.main.wait_frames(30)
     xbox.menu_b()
     while memory.main.get_map() not in [194, 374]:
@@ -158,9 +176,13 @@ def return_to_airship():
         memory.main.set_game_speed(set_val=0)
 
     get_save_sphere_details()
-
+    
+    if memory.main.get_map() in [194,374]:
+        logger.debug("Exit return_to_airship function, we are already there.")
+        return
+    
     if memory.main.get_map() == 307:  # Monster arena
-        while not pathing.set_movement([-4, -3]):
+        while not pathing.set_movement([-6, -12]):
             pass
 
     save_sphere.approach_save_sphere()

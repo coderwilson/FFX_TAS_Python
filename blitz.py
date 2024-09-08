@@ -11,6 +11,7 @@ import vars
 import xbox
 import random
 from memory.main import BlitzActor
+from json_ai_files.write_seed import write_blitz_results
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -1225,8 +1226,10 @@ def blitz_main(force_blitz_win):
     FFXC.set_neutral()
     if memory.main.blitz_own_score() > memory.main.blitz_opp_score():
         game_vars.set_blitz_win(True)
+        write_blitz_results("Yes")
     else:
         game_vars.set_blitz_win(False)
+        write_blitz_results("No")
 
     end_time = logs.time_stamp()
     time_diff = end_time - start_time

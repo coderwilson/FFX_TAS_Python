@@ -18,6 +18,60 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 
+def recover_low_gil():
+    
+    while not memory.main.user_control():
+        if memory.main.menu_open():
+            xbox.tap_a()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
+    
+    logger.debug("Recovering from short-gil error.")
+    while not pathing.set_movement([-379,301]):
+        pass
+    memory.main.check_near_actors()
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+    
+    if memory.main.get_gil_value() < 3050: 
+        while not pathing.set_movement([-544,345]):
+            pass
+        memory.main.check_near_actors()
+        pathing.approach_actor_by_id(20482)
+        memory.main.click_to_control()
+    while not pathing.set_movement([-320,194]):
+        pass
+    
+    # Same logic as below, to get into O'aka's good graces.
+    pathing.approach_actor_by_id(actor_id=8410)
+    FFXC.set_neutral()
+    memory.main.click_to_diag_progress(11)  # Got any weapons?
+    logger.debug("Got any weapons?")
+    memory.main.wait_frames(9)
+    xbox.menu_b()
+    memory.main.wait_frames(30)
+    if memory.main.get_gil_value() < 3050: 
+        # Selling logic, should only be if we need to sell the spear.
+        xbox.menu_right()
+        xbox.menu_b()
+        memory.main.wait_frames(9)
+        xbox.tap_down()
+        xbox.tap_down()
+        xbox.tap_down()
+        xbox.tap_down()
+        xbox.tap_down()
+        xbox.tap_down()
+        xbox.tap_down()
+        xbox.tap_down()
+        logger.debug("Selling unneeded weapons.")
+        menu.sell_all(tstrike=False)
+        memory.main.wait_frames(9)
+        xbox.menu_a()  #Aligns with the last command before diverting.
+        memory.main.wait_frames(9)
+        xbox.menu_left()
+        xbox.menu_b()
+    
+
 def arrival():
     if not game_vars.csr():
         xbox.skip_stored_scene(2)
@@ -112,17 +166,19 @@ def arrival():
                 menu.sell_all(tstrike=False)
                 memory.main.wait_frames(9)
                 xbox.menu_a()
-                memory.main.wait_frames(9)
-                if memory.main.get_gil_value() >= 3050:
+                if memory.main.get_gil_value() < 3050:
+                    recover_low_gil()
+                else:
+                    memory.main.wait_frames(9)
                     xbox.menu_left()
                     xbox.menu_b()
-                    xbox.menu_b()  # Purchase
-                    xbox.menu_up()
-                    xbox.menu_b()  # Confirm
-                    xbox.menu_up()
-                    xbox.menu_b()  # Equip
-                    xbox.menu_a()
-                    memory.main.wait_frames(9)
+                xbox.menu_b()  # Purchase
+                xbox.menu_up()
+                xbox.menu_b()  # Confirm
+                xbox.menu_up()
+                xbox.menu_b()  # Equip
+                xbox.menu_a()
+                memory.main.wait_frames(9)
                 xbox.menu_a()
                 memory.main.wait_frames(9)
                 xbox.menu_a()

@@ -68,8 +68,9 @@ def configuration_setup():
     parser.add_argument("-state")
     parser.add_argument("-step")
     parser.add_argument("-train_blitz")
+    parser.add_argument("-godrng")
     args = parser.parse_args()
-
+    
     # gamestate
     try:
         # logger.warning(args)
@@ -96,6 +97,8 @@ def configuration_setup():
         twitch_seed = int(args.seed)
         game_vars.rng_seed_num_set(twitch_seed)
         game_length = "Seed set via Twitch chat"
+    if args.godrng is not None:
+        game_vars.activate_god_rng()
     elif game.state != "none":  # Loading a save file, no RNG manip here
         game_vars.rng_seed_num_set(255)
         game_length = "Loading mid point for testing."
@@ -660,16 +663,19 @@ def perform_TAS():
                             game.step = 2
                         else:
                             area.gagazet.to_the_ronso(checkpoint=7)
-                            area.gagazet.gagazet_gates()
                             game.step = 4
                     else:
-                        area.gagazet.gagazet_gates()
                         game.step = 4
+                    # maybe_create_save(save_num=45) # Placeholder.
+                    # This save is used for immediately before climbing Gagazet.
+                    # However, it does not properly save automatically.
+                    # Must be created manually.
 
                 if game.step == 4:
+                    area.gagazet.gagazet_gates()
                     area.gagazet.flux()
                     game.step = 5
-                    maybe_create_save(save_num=45)
+                    maybe_create_save(save_num=46)
 
                 if game.step == 5:
                     area.gagazet.dream()
@@ -680,7 +686,7 @@ def perform_TAS():
                     area.gagazet.wrap_up()
                     game.step = 1
                     game.state = "Zanarkand"
-                    maybe_create_save(save_num=46)
+                    maybe_create_save(save_num=47)
 
             # Zanarkand section
             if game.state == "Zanarkand":
@@ -695,7 +701,7 @@ def perform_TAS():
                 if game.step == 3:
                     area.zanarkand.sanctuary_keeper()
                     game.step = 4
-                    maybe_create_save(save_num=47)
+                    maybe_create_save(save_num=48)
 
                 if game.step == 4:
                     if area.zanarkand.yunalesca():
@@ -707,14 +713,13 @@ def perform_TAS():
                     area.zanarkand.post_yunalesca()
                     game.step = 1
                     game.state = "Sin"
-                    maybe_create_save(save_num=48)
+                    maybe_create_save(save_num=49)
 
             # Sin section
             if game.state == "Sin":
                 if game.step == 1:
                     area.sin.making_plans()
                     game.step = 2
-                    # maybe_create_save(save_num=49)
 
                 if game.step == 2:
                     logger.debug("Test 1")
@@ -960,6 +965,9 @@ def write_final_logs():
     #    pass
     area.chocobos.to_remiem()
     area.chocobos.remiem_races()
+    area.chocobos.leave_temple()
+    area.chocobos.butterflies()
+    
     reset.reset_no_battles()
 
     memory.main.end()

@@ -23,6 +23,8 @@ class YunaImpl(Player):
                 xbox.tap_up()
         while memory.main.interior_battle_menu():
             xbox.tap_b()
+            if memory.main.game_over():
+                return False
 
 
 Yuna = YunaImpl()

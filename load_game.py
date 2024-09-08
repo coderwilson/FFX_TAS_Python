@@ -37,6 +37,10 @@ def move_after_load(spec_move: str):
         mrr_crit()
     elif spec_move == "guado_start":
         guado_start()
+    elif spec_move == "calm_lands":
+        load_calm()
+    elif spec_move == "after_ronso":
+        load_gagazet_gates()
 
 
 def guado_start():
@@ -55,6 +59,11 @@ def load_into_game(gamestate: str, step_counter: str):
         reset.reset_to_main_menu()
     area.dream_zan.new_game(gamestate=gamestate)
 
+    if gamestate == "Showcase":
+        load_save_num(int(step_counter))
+        memory.main.await_control()
+        return
+
     # Now to get details for the load/save files
     filepath = os.path.join("json_ai_files", "save_load_details.json")
     with open(filepath, "r") as fp:
@@ -68,6 +77,9 @@ def load_into_game(gamestate: str, step_counter: str):
             logger.debug("Failure 1")
             load_into_game_old(gamestate=gamestate, step_counter=step_counter)
             return
+        
+        if gamestate == "Nem_Farm":
+            game_vars.nemesis_set(True)
 
         # Init variables so we don't crash later
         save_num_conf = 0
@@ -80,11 +92,12 @@ def load_into_game(gamestate: str, step_counter: str):
         logger.debug(results[gamestate][step_counter].keys())
         for key in results[gamestate][step_counter]:
             save_num = int(results[gamestate][step_counter][key]["save_num"])
+            logger.debug(f"Save number check for Nemesis {key} : {save_num}")
 
             if save_num > 200:
-                pass
+                pass  # FFX only allows 200 saves.
             elif key != str(game_vars.nemesis()):
-                pass
+                pass  # Wrong version of the run.
             else:
                 nemesis = key
                 logger.debug(f"Found save {save_num}")
@@ -101,7 +114,7 @@ def load_into_game(gamestate: str, step_counter: str):
                 logger.debug(f"Nemesis checkpoint {nem_ap}")
 
         if save_num_conf == 0:
-            logger.debug("Failure 2")
+            logger.debug(f"Failure 2 : {gamestate} : {step_counter} : {save_num}")
             load_into_game_old(gamestate=gamestate, step_counter=step_counter)
             return
         else:
@@ -218,6 +231,18 @@ def load_save_num(number):
     else:
         logger.error("That save file does not exist. Quitting program.")
         exit()
+
+
+def game_over_reload_autosave():
+    while not memory.main.save_menu_open():
+        if memory.main.get_map() != 23:
+            xbox.menu_b()
+        elif memory.main.save_menu_cursor() == 0:
+            xbox.menu_down()
+        else:
+            xbox.menu_b()
+    memory.main.wait_frames(3)
+    load_save_num(0)
 
 
 def load_first():
@@ -708,10 +733,12 @@ def load_calm():
 
 def load_gagazet_gates():
     FFXC.set_movement(1, 1)
-    memory.main.wait_frames(30 * 3)
+    memory.main.wait_frames(90)
     FFXC.set_movement(0, 1)
     memory.main.await_event()
     FFXC.set_neutral()
+    memory.main.await_control()
+    #memory.main.wait_frames(150)
 
 
 def zan_entrance():
