@@ -102,6 +102,19 @@ def beach():
     # logs.write_stats(str(good_battles))
 
 
+def night_scene():
+    memory.main.await_control()
+    while not pathing.set_movement([18,186]):
+        pass
+    memory.main.check_near_actors(False)
+    FFXC.set_movement(-1, -1)
+    memory.main.await_event()
+    memory.main.click_to_control()
+    pathing.approach_actor_by_id(5)
+    memory.main.click_to_control()
+    
+
+
 def trials():
     checkpoint = 0
 
@@ -146,6 +159,9 @@ def trials():
                     FFXC.set_movement(0, 1)
                 FFXC.set_neutral()
                 checkpoint += 1
+            elif memory.main.get_map() == 100:
+                night_scene()
+                checkpoint = 35
             elif checkpoint == 34:  # Night, talk to Yuna and Wakka
                 FFXC.set_movement(-1, -1)
                 memory.main.await_event()

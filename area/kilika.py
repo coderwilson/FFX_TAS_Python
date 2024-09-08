@@ -4,8 +4,10 @@ import battle.boss
 import battle.main
 import logs
 import memory.main
+from memory.main import check_near_actors
 import menu
 import pathing
+from pathing import approach_coords
 import save_sphere
 import vars
 import xbox
@@ -105,7 +107,7 @@ def forest_1():
         checkpoint = 0
     else:
         checkpoint = 2
-    while memory.main.get_map() != 108:  # All the way into the trials
+    while not memory.main.get_map() in [108,44]:  # All the way into the trials
         if checkpoint == 101:  # Into the trials
             if not memory.main.user_control():
                 FFXC.set_neutral()
@@ -205,6 +207,29 @@ def forest_1():
     # logs.write_stats(str(kilika_battles))
     # logs.write_stats("Kilika optimal battles (North):")
     # logs.write_stats(str(optimal_battles))
+    
+    if memory.main.get_map() != 108 and game_vars.csr():
+        while not pathing.set_movement([-1,-4]):
+            pass
+        FFXC.set_neutral()
+        xbox.tap_b()
+        xbox.tap_b()
+        xbox.tap_b()
+        xbox.tap_b()
+        if memory.main.user_control():
+            while memory.main.user_control():
+                xbox.tap_b()
+        memory.main.await_control()
+        while not pathing.set_movement([-1,100]):
+            pass
+    
+    while memory.main.get_map() != 108:
+        if memory.main.user_control():
+            if pathing.set_movement([-1,282]):
+                xbox.tap_b()
+        else:
+            FFXC.set_neutral()
+            xbox.tap_b()
 
 
 def trials():
@@ -215,48 +240,45 @@ def trials():
         if memory.main.user_control():
             # Spheres and glyphs
             if checkpoint == 2:  # First sphere
-                memory.main.click_to_event_temple(0)
+                approach_coords([-20,-200])
                 checkpoint += 1
             elif checkpoint == 5:  # Insert and remove, opens door
-                memory.main.click_to_event_temple(0)
-                memory.main.wait_frames(30 * 0.07)
-                memory.main.click_to_event_temple(0)
+                check_near_actors(False)
+                approach_coords([11,-177])
+                memory.main.wait_frames(3)
+                approach_coords([11,-177])
                 checkpoint += 1
             elif checkpoint == 9:  # Insert and remove, generate glyph
-                memory.main.click_to_event_temple(0)
-                memory.main.wait_frames(30 * 0.07)
-                memory.main.click_to_event_temple(0)
+                check_near_actors(False)
+                approach_coords([1,20])
+                memory.main.wait_frames(3)
+                approach_coords([1,20])
                 checkpoint += 1
             elif checkpoint == 11:  # Put the sphere out of the way
-                memory.main.click_to_event_temple(2)
+                approach_coords([40,-21])
                 checkpoint += 1
             elif checkpoint == 13:  # Touch glyph
-                memory.main.click_to_event_temple(0)
+                approach_coords([1,20])
                 checkpoint += 1
             elif checkpoint == 18:  # Kilika sphere (in the way)
-                memory.main.click_to_event_temple(1)
+                approach_coords([56,175])
                 checkpoint += 1
             elif checkpoint == 25:  # Kilika sphere (now out of the way)
-                memory.main.click_to_event_temple(6)
+                approach_coords([-40,-21])
                 checkpoint += 1
             elif checkpoint == 27:  # Glyph sphere
-                while not memory.main.diag_skip_possible():
-                    pathing.set_movement([-21, -30])
-                    if memory.main.user_control():
-                        xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                approach_coords([-20,-30])
                 checkpoint += 1
             elif checkpoint == 33:  # Insert Glyph sphere
-                memory.main.click_to_event_temple(1)
+                approach_coords([56,175])
                 checkpoint += 1
             elif checkpoint == 39:  # Pick up last Kilika sphere
-                memory.main.click_to_event_temple(2)
+                approach_coords([40,-21])
                 checkpoint += 1
             elif checkpoint == 50:  # Insert and remove, opens door
-                memory.main.click_to_event_temple(0)
-                memory.main.wait_frames(30 * 0.07)
-                memory.main.click_to_event_temple(0)
+                approach_coords([12,280])
+                memory.main.wait_frames(3)
+                approach_coords([12,280])
                 checkpoint += 1
             # elif checkpoint == 53 and game_vars.csr():
             #    memory.main.await_control()

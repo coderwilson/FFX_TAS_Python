@@ -315,7 +315,7 @@ def menu_b():
 
 def tap_a():
     FFXC.set_value("btn_a", 1)
-    memory.main.wait_frames(1)
+    memory.main.wait_frames(2)
     FFXC.set_value("btn_a", 0)
     memory.main.wait_frames(1)
     if game_vars.use_pause():
@@ -324,7 +324,7 @@ def tap_a():
 
 def tap_b():
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(1)
+    memory.main.wait_frames(2)
     FFXC.set_value("btn_b", 0)
     memory.main.wait_frames(1)
     if game_vars.use_pause():
@@ -356,7 +356,7 @@ def tap_x():
 
 def tap_y():
     FFXC.set_value("btn_y", 1)
-    memory.main.wait_frames(1)
+    memory.main.wait_frames(2)
     FFXC.set_value("btn_y", 0)
     memory.main.wait_frames(1)
     if game_vars.use_pause():
@@ -402,6 +402,13 @@ def tap_start():
     memory.main.wait_frames(1)
     FFXC.set_value("btn_start", 0)
     memory.main.wait_frames(2)
+
+
+def menu_start():
+    FFXC.set_value("btn_start", 1)  # Generate button to skip
+    memory.main.wait_frames(2)
+    FFXC.set_value("btn_start", 0)
+    memory.main.wait_frames(3)
 
 
 def weap_swap(position):
@@ -627,10 +634,11 @@ def name_aeon(character=""):
                 navigate_to_character(cur_character)
                 tap_b()
 
-    logger.info("Naming screen is up.")
-    while memory.main.equip_sell_row() != 1:
-        tap_start()
-    while memory.main.equip_sell_row() != 0:
-        tap_up()
-    while memory.main.name_confirm_open():
-        tap_b()
+    if memory.main.get_map() != 382:  # Ignore for airship password entry 
+        while memory.main.equip_sell_row() != 1:
+            tap_start()
+        logger.info("Naming screen is up.")
+        while memory.main.equip_sell_row() != 0:
+            tap_up()
+        while memory.main.name_confirm_open():
+            tap_b()

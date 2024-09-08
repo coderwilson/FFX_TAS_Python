@@ -201,6 +201,9 @@ def arrival():
     checkpoint = 0
     while memory.main.get_map() != 320:
         if memory.main.user_control():
+            if checkpoint == 11 and game_vars.end_game_version() != 4:
+                logger.debug("Do not need friend sphere. Skipping forward.")
+                checkpoint = 15
             if checkpoint == 13:  # Second chest
                 friend_slot = memory.main.get_item_slot(97)
                 if friend_slot == 255:
@@ -259,6 +262,17 @@ def arrival():
                 xbox.tap_b()
             elif memory.main.menu_open():
                 xbox.tap_b()
+    
+    ver = game_vars.end_game_version()
+    logger.info(f"Now prepping for Sanctuary Keeper fight. Version {ver}")
+    if ver == 4:
+        menu.sk_return()
+    elif ver == 3:
+        menu.sk_friend()
+    else:
+        menu.sk_mixed()
+    memory.main.update_formation(Tidus, Yuna, Auron)
+    memory.main.close_menu()
 
 
 def trials():
@@ -403,19 +417,6 @@ def s_keeper_print_bahamut_crit_chance():
 
 
 def sanctuary_keeper():
-    ver = game_vars.end_game_version()
-    logger.info("Now prepping for Sanctuary Keeper fight")
-
-    if ver == 4:
-        logger.info("Pattern for four return spheres off of the B&Y fight")
-        menu.sk_return()
-    elif ver == 3:
-        menu.sk_friend()
-    else:
-        menu.sk_mixed()
-    memory.main.update_formation(Tidus, Yuna, Auron)
-    memory.main.close_menu()
-
     while not pathing.set_movement([110, 20]):
         pass
     FFXC.set_movement(-1, 1)
@@ -449,6 +450,10 @@ def yunalesca():
     logger.info("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
 
     save_sphere.touch_and_go()
+    
+    if game_vars.god_mode():
+        rng_track.force_equip(equip_type = 0, character = 3)
+        rng_track.force_drop()
 
     checkpoint = 0
     # Gets us to Yunalesca battle through multiple rooms.

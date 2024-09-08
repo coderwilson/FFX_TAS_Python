@@ -4,6 +4,7 @@ import battle.main
 import memory.main
 import menu
 import pathing
+from pathing import approach_coords
 import vars
 import xbox
 from paths import DjoseDance, DjoseExit, DjosePath, DjoseTrials
@@ -140,31 +141,31 @@ def trials():
         if memory.main.user_control():
             if checkpoint == 1:  # First sphere
                 logger.info("First sphere")
-                memory.main.click_to_event_temple(7)
+                approach_coords([-34,-221])
                 checkpoint += 1
             elif checkpoint == 3:  # Sphere door
                 logger.info("Sphere door")
-                memory.main.click_to_event_temple(0)
+                approach_coords([-3,-185])
                 checkpoint += 1
             elif checkpoint == 5:  # Second sphere
                 logger.info("Second sphere")
-                memory.main.click_to_event_temple(3)
+                approach_coords([34,-221])
                 checkpoint += 1
             elif checkpoint == 7:  # Sphere door opens
                 logger.info("Sphere door opens")
-                memory.main.click_to_event_temple(0)
+                approach_coords([3,-185])
                 checkpoint += 1
             elif checkpoint == 13:  # Left Sphere
                 logger.info("Left sphere")
-                memory.main.click_to_event_temple(7)
+                approach_coords([-24,48])
                 checkpoint += 1
             elif checkpoint == 16:  # Insert Left Sphere
                 logger.info("Insert left sphere")
-                memory.main.click_to_event_temple(0)
+                approach_coords([68,36])
                 checkpoint += 1
             elif checkpoint == 19:  # Right Sphere
                 logger.info("Right sphere")
-                memory.main.click_to_event_temple(1)
+                approach_coords([24,48])
                 checkpoint += 1
             elif checkpoint == 22:
                 logger.info("Pushing pedestal")
@@ -177,17 +178,18 @@ def trials():
                 logger.info("Push complete.")
                 checkpoint += 1
                 logger.info("Insert right sphere")
-                memory.main.click_to_event_temple(0)
+                approach_coords([58,36])
                 FFXC.set_movement(-1, 1)
                 memory.main.wait_frames(30 * 0.2)
                 checkpoint += 1
             elif checkpoint == 24:  # Insert Right Sphere
-                logger.info("Insert right sphere")
-                memory.main.click_to_event_temple(1)
+                logger.info("Insert right sphere, left spot.")
+                approach_coords([58,36])
                 checkpoint = 27
             elif checkpoint == 28:
-                logger.info("Left sphere")
-                memory.main.click_to_event_temple(0)
+                logger.info("Pick up from left spot")
+                FFXC.set_neutral()
+                approach_coords([58,36])
                 checkpoint += 1
             elif checkpoint == 31 or checkpoint == 56:  # Reset switch event
                 logger.info("Reset switch")
@@ -195,129 +197,102 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 34:
                 logger.info("Insert left sphere")
-                memory.main.click_to_event_temple(2)
+                approach_coords([-4,24])
                 checkpoint += 1
             elif checkpoint == 38:
                 logger.info("Powered sphere")
-                memory.main.click_to_event_temple(6)
+                approach_coords([4,24])
                 checkpoint += 1
             elif checkpoint == 40:
                 logger.info("Insert powered sphere")
-                memory.main.click_to_event_temple(1)
+                approach_coords([24,48])
                 checkpoint += 1
             elif checkpoint == 43:
                 logger.info("Right sphere")
-                memory.main.click_to_event_temple(0)
+                approach_coords([68,36])
                 checkpoint += 1
             elif checkpoint == 45:
                 logger.info("Insert right sphere")
-                memory.main.click_to_event_temple(6)
+                approach_coords([4,24])
                 checkpoint += 1
             elif checkpoint == 48:  # All of the hidden room stuff at once
                 logger.info("Pushing pedestal")
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
-                memory.main.wait_frames(30 * 9)
+                memory.main.wait_frames(270)  # Nine seconds of pushing.
                 logger.info("Push complete.")
                 memory.main.await_control()
                 FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 0.4)
+                memory.main.wait_frames(15)
                 FFXC.set_neutral()
-                memory.main.wait_frames(30 * 0.5)
+                memory.main.wait_frames(30)  # Initiates the jump animation.
                 memory.main.await_control()
                 logger.info("Extra pedestal")
-                FFXC.set_movement(0, 1)
-                xbox.skip_dialog(2)
+                approach_coords([1,175])  # Pushes pedestol.
                 FFXC.set_neutral()
                 memory.main.await_control()
-                FFXC.set_movement(0, -1)
-                memory.main.wait_frames(30 * 0.8)
-                FFXC.set_neutral()
-                memory.main.wait_frames(30 * 0.5)
+                while not pathing.set_movement([1,74]):  # Jumps all the way back.
+                    pass
                 checkpoint += 1
             elif checkpoint == 51:
                 logger.info("Powered sphere")
-                memory.main.click_to_event_temple(1)
+                approach_coords([24,48])
                 checkpoint += 1
             elif checkpoint == 53:
                 logger.info("Insert powered sphere")
-                memory.main.click_to_event_temple(7)
+                approach_coords([-24,48])
                 checkpoint += 1
             elif checkpoint == 58:
                 logger.info("Left sphere")
-                while memory.main.user_control():
-                    pathing.set_movement([-5, 24])
-                    memory.main.wait_frames(3)
-                    FFXC.set_neutral()
-                    memory.main.wait_frames(3)
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                approach_coords([-4,24])
                 checkpoint += 1
             elif checkpoint == 63:
                 logger.info("Final insert Left sphere")
-                memory.main.click_to_event_temple(0)
+                approach_coords([-34,-221])
                 checkpoint += 1
             elif checkpoint == 68:
                 logger.info("Right sphere")
-                while memory.main.user_control():
-                    pathing.set_movement([5, 24])
-                    memory.main.wait_frames(3)
-                    FFXC.set_neutral()
-                    memory.main.wait_frames(3)
-                    xbox.tap_b()
-                    memory.main.wait_frames(3)
-                FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                approach_coords([4,24])
                 checkpoint += 1
             elif checkpoint == 73:
                 logger.info("Final insert Right sphere")
-                memory.main.click_to_event_temple(2)
+                approach_coords([34,-221])
                 checkpoint += 1
             elif checkpoint == 76:  # No longer doing Destruction Sphere stuff.
                 checkpoint = 85
             elif checkpoint == 80:
                 logger.info("Destruction Glyph")
-                while memory.main.user_control():
-                    pathing.set_movement([-58, 38])
-                    memory.main.wait_frames(3)
-                    FFXC.set_neutral()
-                    memory.main.wait_frames(4)
-                    xbox.tap_b()
-                    memory.main.wait_frames(3)
-                FFXC.set_neutral()
-                logger.info("Glyph touched.")
-                memory.main.click_to_control_3()
+                approach_coords([-60,333])
                 checkpoint += 1
             elif checkpoint == 82:
                 logger.info("Destruction sphere")
-                memory.main.click_to_event_temple(0)
+                approach_coords([-63,70])
                 checkpoint += 1
             elif checkpoint == 85:  # Lift
                 if pathing.set_movement([0, 30]):
                     FFXC.set_neutral()
-                    memory.main.wait_frames(30 * 0.2)
+                    memory.main.wait_frames(6)
                     checkpoint += 1
                     logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 88:
                 logger.info("Pedestal 1")
-                memory.main.click_to_event_temple(6)
+                approach_coords([-27,117])
                 checkpoint += 1
             elif checkpoint == 90:
                 logger.info("Pedestal 2")
-                memory.main.click_to_event_temple(7)
+                approach_coords([-23,148])
                 checkpoint += 1
             elif checkpoint == 92:
                 logger.info("Pedestal 3")
-                memory.main.click_to_event_temple(0)
+                approach_coords([0,162])
                 checkpoint += 1
             elif checkpoint == 94:
                 logger.info("Pedestal 4")
-                memory.main.click_to_event_temple(1)
+                approach_coords([23,148])
                 checkpoint += 1
             elif checkpoint == 96:
                 logger.info("Pedestal 5")
-                memory.main.click_to_event_temple(2)
+                approach_coords([27,117])
                 checkpoint += 1
             elif checkpoint == 100:
                 checkpoint += 2

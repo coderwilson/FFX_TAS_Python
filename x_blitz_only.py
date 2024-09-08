@@ -9,6 +9,7 @@ import reset
 import xbox
 import area.dream_zan
 import save_sphere
+from json_ai_files.write_seed import write_custom_message
 
 FFXC = xbox.controller_handle()
 
@@ -24,7 +25,7 @@ area.dream_zan.new_game("BlitzballTesting")
 load_game.load_save_num(1)
 memory.main.reset_battle_end()
 
-while attempts < 50:
+while attempts < 2:
     # ---------This is the actual movement/code/logic/etc---------------
 
     # area.luca.blitz_start()
@@ -33,6 +34,7 @@ while attempts < 50:
         xbox.menu_down()
     xbox.menu_b()
     time.sleep(3)
+    write_custom_message(f"Blitz game {attempts+1} of 2")
     result = blitz.blitz_main(False)
 
     attempts += 1

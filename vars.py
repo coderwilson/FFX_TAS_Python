@@ -25,7 +25,7 @@ class AllVars:
         self.blitz_loop = False
         self.battle_speedup = False
         # ----Overrides
-        if config_vars.get("game_mode") == "test":
+        if config_vars.get("game_mode") == "speed":
             self.perfect_aeon_kills = True
             self.force_blitz_win = True
             self.battle_speedup = True
@@ -61,7 +61,7 @@ class AllVars:
         self.csr_value = True
 
         # ----Blitzball
-        self.blitz_loss_force_reset = True
+        self.blitz_loss_force_reset = False
         self.blitz_win_value = True
         self.blitz_overtime = False
         self.blitz_first_shot_val = False
@@ -83,6 +83,7 @@ class AllVars:
         self.yellows = 0  # Not yet implemented. Part of thunderstrike weapon manip.
         self.confirmed_seed_num = 999
         self.skip_zan_luck = False
+        self.god_mode_val = config_vars.get("god_mode", False)
 
         # ----Other
         self.new_game = False
@@ -130,6 +131,21 @@ class AllVars:
         # at a lower rate of speed. Very rarely used.
         self.artificial_pauses = config_vars.get("artificial_pauses", False)
 
+    def god_mode(self):
+        if self.god_mode_val:
+            logger.warning("God RNG Mode is active.")
+        return self.god_mode_val
+    
+    def activate_god_rng(self):
+        logger.warning("== God RNG Mode is active. ==")
+        logger.warning("== God RNG Mode is active. ==")
+        logger.warning("== God RNG Mode is active. ==")
+        logger.warning("== God RNG Mode is active. ==")
+        logger.warning("== God RNG Mode is active. ==")
+        logger.warning("== God RNG Mode is active. ==")
+        logger.warning("== God RNG Mode is active. ==")
+        self.god_mode_val = True
+
     def create_saves(self):
         return self.generate_saves
 
@@ -164,6 +180,7 @@ class AllVars:
         return self.rng_seed
 
     def rng_seed_num_set(self, value):
+        self.rng_mode_val = "set"
         self.rng_seed = value
 
     def rng_preferred_array(self):
