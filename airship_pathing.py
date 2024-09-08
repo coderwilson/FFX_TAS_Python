@@ -14,12 +14,11 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 
-def air_ship_path(version):
+def air_ship_path(version, checkpoint:int = 0):
     memory.main.click_to_control()
     distiller_purchase = False
 
     complete = False
-    checkpoint = 0
     while not complete:
         if memory.main.user_control():
             # Map changes
@@ -30,7 +29,7 @@ def air_ship_path(version):
                 version == 1
                 and not distiller_purchase
                 and checkpoint == 5
-                and (memory.main.get_speed() < 9 or memory.main.get_power() < 23)
+                and (memory.main.get_speed() < 10 or memory.main.get_power() < 28)
             ):
                 # Tyton to update this with the actual purchase.
                 while memory.main.diag_progress_flag() != 44:
@@ -51,7 +50,7 @@ def air_ship_path(version):
                     xbox.tap_b()  # Click through until items menu comes up
                 while not memory.main.item_shop_menu() == 10:
                     xbox.tap_b()  # Select buy command
-                if memory.main.get_power() < 23:
+                if memory.main.get_power() < 28:
                     while memory.main.equip_buy_row() != 7:
                         if memory.main.equip_buy_row() < 7:
                             xbox.tap_down()
@@ -60,29 +59,29 @@ def air_ship_path(version):
                     while not memory.main.item_shop_menu() == 16:
                         xbox.tap_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((23 - memory.main.get_power()) / 2), 3
+                        math.ceil((28 - memory.main.get_power()) / 2), 3
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((23 - memory.main.get_power()) / 2), 3
+                            math.ceil((28 - memory.main.get_power()) / 2), 3
                         ):
                             xbox.tap_right()
                         else:
                             xbox.tap_left()
                     while not memory.main.item_shop_menu() == 10:
                         xbox.tap_b()
-                if memory.main.get_speed() < 9:
-                    while memory.main.equip_buy_row() != 9:
-                        if memory.main.equip_buy_row() < 9:
+                if memory.main.get_speed() < 10:
+                    while memory.main.equip_buy_row() != 10:
+                        if memory.main.equip_buy_row() < 10:
                             xbox.tap_down()
                         else:
                             xbox.tap_up()
                     while not memory.main.item_shop_menu() == 16:
                         xbox.tap_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((9 - memory.main.get_speed()) / 2), 2
+                        math.ceil((10 - memory.main.get_speed()) / 2), 2
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((9 - memory.main.get_speed()) / 2), 2
+                            math.ceil((10 - memory.main.get_speed()) / 2), 2
                         ):
                             xbox.tap_right()
                         else:
@@ -210,7 +209,7 @@ def air_ship_path(version):
     logger.info("End of section, Airship pathing")
 
 
-def air_ship_return():
+def air_ship_return():  # DO NOT USE THIS! FUNCTION IS BROKEN!!!
     logger.info("Conversation with Yuna/Kimahri.")
     memory.main.click_to_control()
 

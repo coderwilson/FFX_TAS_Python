@@ -42,18 +42,45 @@ while not memory.main.start():
     pass
 
 logger.warning("START CHOCO TEST")
+load_game.load_into_game(gamestate="Showcase", step_counter=199)
 
-load_game.load_into_game(gamestate="Nem_Farm", step_counter=1)
 nemesis.arena_prep.return_to_airship()
-nemesis.arena_prep.air_ship_destination(dest_num=12)
+godhand = 0
+baaj = 0
+
+area.chocobos.sun_crest(godhand=godhand, baaj=baaj)
+
 area.chocobos.all_races()
-# Use the following to go straight into remiem races.
-# while not pathing.set_movement([-637, -246]):
-#    pass
 area.chocobos.to_remiem()
 area.chocobos.remiem_races()
+area.chocobos.leave_temple()
+
+area.chocobos.butterflies()
+area.chocobos.upgrade_mirror()
+area.chocobos.spirit_lance()
+
+area.chocobos.rusty_sword()
+area.chocobos.saturn_crest()
+area.chocobos.masamune()
+
+area.chocobos.cactuars()
+area.chocobos.cactuars_finish()
+
+baaj = area.chocobos.onion_knight()
+area.chocobos.venus_crest(godhand=godhand, baaj=baaj)
+godhand = area.chocobos.godhand(baaj=baaj)
+area.chocobos.sun_sigil(godhand=godhand, baaj=baaj)
+
+# Wrap up
+area.chocobos.upgrade_celestials(godhand=godhand, baaj=baaj, Yuna=False, Wakka=False)
+
+
+
+
+# We aren't doing Yuna until we change the pre-dark-aeon logic in temples.
+#area.chocobos.moon_crest()
+#area.chocobos.belgemine()
 
 
 logger.warning("END CHOCO TEST")
-memory.main.wait_frames(60)
 reset.reset_no_battles()

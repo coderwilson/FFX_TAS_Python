@@ -1,12 +1,15 @@
 import logging
 from enum import IntEnum
 from typing import List, Optional
+from rng_track import area_formations, current_battle_formation, luck_check
 
 import memory.main
 import xbox
 
 logger = logging.getLogger(__name__)
 
+import vars
+game_vars = vars.vars_handle()
 
 class PlayerMagicNumbers(IntEnum):
     CHAR_STRUCT_SIZE = 0x94
@@ -178,13 +181,39 @@ class Player:
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
             logger.debug("Battle menu is up.")
-            xbox.tap_b()
+            xbox.menu_b()
             if not memory.main.battle_active():
                 logger.warning("Battle is complete! Possibly something is wrong.")
                 return
         if target_id is not None and not skip_direction:
             logger.debug(f"Targetting ID {target_id}")
             self._target_specific_id(target_id, direction_hint)
+        
+        # This logic is only for cheese runs! See var 'god_mode'.
+        if game_vars.god_mode():
+            logger.warning("Attempting to force a crit, per settings")
+            # Determine enemy name and luck stat
+            enemies = current_battle_formation()
+            if len(enemies) != 0:
+                try:
+                    if target_id is None:
+                        # In multi-enemy battles, the first enemy is almost always the boss.
+                        luck_value = luck_check(enemies[0])
+                    else:
+                        luck_value = luck_check(enemies[target_id-20])
+                except:
+                    luck_value = 15
+            else:
+                luck_value = 15
+            logger.warning(f"Player luck: {self.luck()} || Enemy luck: {luck_value}")
+                
+            # Force forward to the next crit.
+            memory.main.future_attack_will_crit(
+                character=self.id,
+                char_luck=self.luck(),
+                enemy_luck=luck_value
+            )
+        
         if record_results:
             logger.debug("First six hits logic")
             xbox.tap_b()
@@ -216,10 +245,10 @@ class Player:
         except Exception:
             return
         while memory.main.main_battle_menu():
-            xbox.tap_b()
+            xbox.menu_b()
         self._navigate_to_position(spell_id)
         while memory.main.other_battle_menu():
-            xbox.tap_b()
+            xbox.menu_b()
         if target_id is not None:
             self._target_specific_id(target_id, direction)
         elif direction:

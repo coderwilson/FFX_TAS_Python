@@ -167,7 +167,6 @@ def gagazet_gates(checkpoint: int = 0):
     else:
         memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
     menu.after_ronso()
-    memory.main.close_menu()  # just in case
 
     logger.info("Gagazet path section")
 
@@ -208,8 +207,11 @@ def gagazet_gates(checkpoint: int = 0):
 
 def flux():
     logger.info("Flux screen - ready for Seymour again.")
+    logger.info(f"REMINDER, VERSION: {game_vars.end_game_version()}")
     FFXC.set_neutral()
-    if game_vars.end_game_version() != 3:
+    if game_vars.end_game_version() == 3:
+        memory.main.update_formation(Tidus, Kimahri, Wakka)
+    else:
         memory.main.update_formation(Tidus, Yuna, Auron)
     checkpoint = 0
     while checkpoint < 8:
@@ -233,8 +235,9 @@ def flux():
                 battle.boss.seymour_flux()
                 # FFXC.set_movement(0,1)
                 memory.main.click_to_control_3()
-                if game_vars.end_game_version() != 3:
-                    menu.after_flux()
+                # Removed for Terra
+                #if game_vars.end_game_version() != 3:
+                #    menu.after_flux()
                 memory.main.update_formation(Tidus, Kimahri, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()

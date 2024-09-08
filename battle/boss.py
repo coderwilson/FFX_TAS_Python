@@ -24,8 +24,12 @@ from area.gagazet import check_gems
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
+from rng_track import drop_rare, force_equip, force_drop
 
 logger = logging.getLogger(__name__)
+import tts # Used to check Kimahri logic.
+
+import rng_track
 
 
 def ammes():
@@ -126,6 +130,8 @@ def kimahri():
         return False
     logger.info("Kimahri fight complete.")
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
     return True
 
 
@@ -166,11 +172,15 @@ def summon_tutorial():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             CurrentPlayer().cast_black_magic_spell(1)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
 def dark_attack_tutorial():
     battle.main.escape_all()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def tanker():
@@ -198,6 +208,9 @@ def tanker():
                     count_attacks += 1
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
+            
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -273,6 +286,8 @@ def klikk():
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
     memory.main.wait_frames(1)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -344,6 +359,12 @@ def tros():
                             Steals += 1
                         else:
                             grenade_slot = memory.main.get_use_items_slot(35)
+                            if game_vars.god_mode():
+                                memory.main.future_attack_will_crit(
+                                    character=6,
+                                    char_luck=17,
+                                    enemy_luck=15
+                                )
                             battle.main.use_item(grenade_slot, "none")
                             Grenades += 1
                 elif Tidus.is_turn():
@@ -361,7 +382,11 @@ def tros():
                         Attacks += 1
 
     logger.info("Tros battle complete.")
-    memory.main.click_to_control()
+    battle.main.wrap_up()
+    
+    #memory.main.click_to_control()
+    #if game_vars.god_mode():
+    #    rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -454,6 +479,8 @@ def echuilles():
     logs.write_rng_track("###########################")
     logs.write_rng_track("Echuilles end")
     logs.write_rng_track(memory.main.rng_10_array(array_len=1))
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -493,6 +520,8 @@ def geneaux():
             FFXC.set_neutral()
     logger.info("Battle with Sinspawn Geneaux Complete")
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -500,6 +529,11 @@ def oblitzerator(early_haste):
     logger.info("Fight start: Oblitzerator")
     xbox.click_to_battle()
     crane = 0
+    
+    
+    if game_vars.god_mode():
+        force_equip(equip_type=0, character=0,aeon_kill=False, party_size=3)
+        force_drop()
 
     if early_haste >= 1:
         # First turn is always Tidus. Haste Lulu if we've got the levels.
@@ -540,8 +574,8 @@ def oblitzerator(early_haste):
             xbox.tap_b()
     logger.info("End of fight, Oblitzerator")
     memory.main.click_to_control()
-    # logs.write_stats("RNG02 after battle:")
-    # logs.write_stats(memory.s32(memory.rng02()))
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def chocobo_eater():
@@ -560,6 +594,8 @@ def chocobo_eater():
             xbox.tap_b()
     logger.info("Chocobo Eater battle complete.")
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def chocobo_eater_old():
@@ -662,6 +698,8 @@ def chocobo_eater_old():
     logger.info("Chocobo Eater battle complete.")
     memory.main.click_to_control()
     logger.debug("Back in control.")
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -843,9 +881,6 @@ def extractor_mrr_skip():
             logger.debug(memory.main.get_actor_coords(3))
             if Tidus.is_turn():
                 if memory.main.get_actor_coords(3)[2] < -150:
-                    # if Tidus.has_overdrive():
-                    #    Tidus.overdrive()
-                    # else:
                     Tidus.attack()
                 elif cheer_count < 2:  # Dial in 2-4 cheers later
                     cheer_count += 1
@@ -867,6 +902,8 @@ def extractor_mrr_skip():
         elif memory.main.special_text_open():
             xbox.tap_b()
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 # @battle.utils.speedup_decorator
@@ -928,6 +965,8 @@ def extractor():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 # Process written by CrimsonInferno
@@ -1069,6 +1108,8 @@ def spherimorph():
 
     if not game_vars.csr():
         xbox.skip_dialog(5)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1120,7 +1161,7 @@ def crawler():
                 else:
                     battle.main.buddy_swap(Yuna)
                     if Rikku.is_dead():
-                        battle.main.revive_target(target=6)
+                        battle.main.revive(item_num=7)
                     else:
                         CurrentPlayer().defend()
             elif Yuna.is_turn():
@@ -1135,6 +1176,8 @@ def crawler():
             xbox.tap_b()
 
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1352,6 +1395,8 @@ def wendigo():
                 else:
                     CurrentPlayer().defend()
 
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 # Process written by CrimsonInferno
 @battle.utils.speedup_decorator
@@ -1475,6 +1520,8 @@ def evrae():
             if memory.main.menu_open():
                 xbox.tap_b()
         xbox.skip_scene_spec()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1495,9 +1542,15 @@ def isaaru():
                 CurrentPlayer().attack()  # Aeon turn
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
+    
+    if memory.main.game_over():
+        return False
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
     FFXC.set_value("btn_b", 0)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
+    return True
 
 
 @battle.utils.speedup_decorator
@@ -1530,6 +1583,8 @@ def evrae_altana():
                     battle.main.altana_heal()
 
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def evrae_altana_steal():
@@ -1548,6 +1603,8 @@ def evrae_altana_steal():
             else:
                 CurrentPlayer().defend()
     logger.debug("End of steal logic. Back to regular.")
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def highbridge_attack():
@@ -1660,6 +1717,8 @@ def seymour_natus():
     while not memory.main.user_control():
         if memory.main.menu_open() or memory.main.diag_skip_possible():
             xbox.tap_b()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
     return 0
 
 
@@ -1675,17 +1734,29 @@ def biran_yenke():
         battle.main.steal_right()
 
     screen.await_turn()
+    
+    if game_vars.god_mode():
+        # Leveraging this variable to force preferable results.
+        drop1 = drop_rare(drop_num=1)
+        drop2 = drop_rare(drop_num=2)
+        logger.debug(f"==== B&Y Drops: {drop1} : {drop2}")
+        while not (drop1 == True and drop2 == True):
+            memory.main.advance_rng_index(11)
+            drop1 = drop_rare(drop_num=1)
+            drop2 = drop_rare(drop_num=2)
+            logger.debug(f"==== B&Y Drops: {drop1} : {drop2}")
+    
     gem_slot = memory.main.get_use_items_slot(34)
     if gem_slot == 255:
         gem_slot = memory.main.get_use_items_slot(28)
     battle.main.use_item(gem_slot, "none")
-
+    
     xbox.click_to_battle()
     gem_slot = memory.main.get_use_items_slot(34)
     if gem_slot == 255:
         gem_slot = memory.main.get_use_items_slot(28)
     battle.main.use_item(gem_slot, "none")
-
+    
     while not memory.main.user_control():
         xbox.tap_b()
 
@@ -1703,6 +1774,8 @@ def biran_yenke():
         end_game_version = 1
 
     game_vars.end_game_version_set(end_game_version)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1745,12 +1818,32 @@ def seymour_flux():
                     else:
                         CurrentPlayer().attack()
                 elif screen.turn_aeon():
-                    if game_vars.get_blitz_win():
-                        CurrentPlayer().attack()
-                    else:
-                        Bahamut.unique()
+                    CurrentPlayer().attack()
                 elif screen.faint_check() >= 1:
                     battle.main.revive()
+                else:
+                    CurrentPlayer().defend()
+    elif game_vars.end_game_version() in [1,2]:
+        bahamut_summoned = False
+        while memory.main.battle_active():  # AKA end of battle screen
+            if memory.main.turn_ready():
+                if Yuna.is_turn():
+                    logger.debug(f"Yunas turn. Stage: {stage}")
+                    if stage == 1:
+                        CurrentPlayer().attack()
+                        stage += 1
+                    elif stage == 2:
+                        battle.main.aeon_summon(4)
+                        stage += 1
+                    else:
+                        CurrentPlayer().attack()
+                elif Tidus.is_turn():
+                    if stage <= 2:
+                        battle.main.tidus_haste("down", character=1)
+                    else:
+                        CurrentPlayer().attack()
+                elif screen.turn_aeon():
+                    Bahamut.unique()
                 else:
                     CurrentPlayer().defend()
     else:
@@ -1795,7 +1888,8 @@ def seymour_flux():
     logger.info(f"Flux Overkill: {game_vars.flux_overkill()}")
     logger.info("Seymour Flux battle complete.")
     logger.info("-----------------------------")
-    # time.sleep(60) #Testing only
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def s_keeper_bahamut_crit() -> int:
@@ -1849,6 +1943,8 @@ def s_keeper():
                 else:
                     CurrentPlayer().defend()
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1918,6 +2014,8 @@ def omnis():
     else:
         logger.debug("Should be done now.")
         memory.main.click_to_control()
+        if game_vars.god_mode():
+            rng_track.force_preempt()
         return True
 
 

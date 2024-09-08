@@ -5,6 +5,7 @@ import battle.main
 import memory.main
 import menu
 import pathing
+from pathing import approach_coords
 import save_sphere
 import screen
 import vars
@@ -217,44 +218,51 @@ def trials():
                 memory.main.wait_frames(30 * 1)
                 checkpoint += 1
             elif checkpoint == 13:  # Grab first Mac Sphere
-                memory.main.click_to_event_temple(1)
+                approach_coords([2,109])
                 checkpoint += 1
             elif checkpoint == 17:  # Place first Mac Sphere
-                memory.main.click_to_event_temple(2)
+                approach_coords([34,48])
                 checkpoint += 1
             elif checkpoint == 20:  # Push pedestal - 2
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 23:  # Grab glyph sphere
-                memory.main.click_to_event_temple(2)
+                approach_coords([1,10])
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 29:  # Push pedestal - 3
                 FFXC.set_movement(1, 0)
                 memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.wait_frames(30 * 1)
+                memory.main.wait_frames(30)
                 checkpoint += 1
             elif checkpoint == 32:  # Place Glyph sphere
-                memory.main.click_to_event_temple(7)
+                approach_coords([-14,-53])
                 checkpoint += 1
             elif checkpoint == 39:  # Grab second Mac sphere
-                memory.main.click_to_event_temple(7)
+                approach_coords([-24,-55])
                 checkpoint += 1
             elif checkpoint == 46:  # Place second Mac sphere
-                memory.main.click_to_event_temple(0)
+                approach_coords([0,-34])
                 checkpoint += 1
             elif checkpoint == 51:  # Grab third Mac sphere
-                memory.main.click_to_event_temple(1)
+                approach_coords([-80,59])
                 checkpoint += 1
             elif checkpoint == 53:  # Place third Mac sphere
-                memory.main.click_to_event_temple(2)
+                approach_coords([1,10])
                 checkpoint += 1
             elif checkpoint == 58:  # End of trials
-                memory.main.click_to_event_temple(0)
+                while memory.main.user_control():
+                    if memory.main.get_actor_coords(0)[0] < -2:
+                        FFXC.set_movement(0.5,1)
+                    else:
+                        FFXC.set_movement(0,1)
                 memory.main.await_control()
-                # Just to start the next set of dialog.
-                memory.main.click_to_event_temple(4)
+                
+                # Into/through foyer
+                FFXC.set_movement(0,-1)
+                memory.main.await_event()
+                FFXC.set_neutral()
 
             # General pathing
             elif pathing.set_movement(MacalaniaTempleTrials.execute(checkpoint)):

@@ -464,15 +464,26 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none",
+                "special_movement": "calm_lands",
+                "mrr_skip": true
+            }
+        },
+        "4": {
+            "False": {
+                "save_num": "45",
+                "blitz_win_value": "True",
+                "end_game_version_val": "3",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "after_ronso",
                 "mrr_skip": true
             }
         },
         "5": {
             "False": {
-                "save_num": "45",
+                "save_num": "46",
                 "blitz_win_value": "True",
-                "end_game_version_val": "1",
+                "end_game_version_val": "3",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
                 "special_movement": "none",
@@ -492,10 +503,10 @@
                 "mrr_skip": false
             },
             "False": {
-                "save_num": "47",
+                "save_num": "48",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
-                "nea_zone": "99",
+                "end_game_version_val": "3",
+                "nea_zone": "2",
                 "nem_ap_val": "1",
                 "special_movement": "none",
                 "mrr_skip": true
@@ -514,10 +525,10 @@
                 "mrr_skip": false
             },
             "False": {
-                "save_num": "48",
+                "save_num": "49",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
-                "nea_zone": "99",
+                "end_game_version_val": "3",
+                "nea_zone": "2",
                 "nem_ap_val": "1",
                 "special_movement": "none",
                 "mrr_skip": true
@@ -527,8 +538,8 @@
             "False": {
                 "save_num": "50",
                 "blitz_win_value": "True",
-                "end_game_version_val": "4",
-                "nea_zone": "99",
+                "end_game_version_val": "3",
+                "nea_zone": "2",
                 "nem_ap_val": "1",
                 "special_movement": "none",
                 "mrr_skip": true

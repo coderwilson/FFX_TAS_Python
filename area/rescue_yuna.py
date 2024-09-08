@@ -6,6 +6,7 @@ import battle.main
 import memory.main
 import menu
 import pathing
+from pathing import approach_coords
 import rng_track
 import save_sphere
 import screen
@@ -185,7 +186,7 @@ def trials():
                     logger.warning("Incorrect alcove. Recovering.")
             elif checkpoint == 7:  # First Bevelle sphere, and then more gliding.
                 logger.info("Bevelle sphere")
-                memory.main.click_to_event_temple(7)
+                approach_coords([-73,85],diag=1)
                 while memory.main.get_actor_coords(0)[0] < -25:
                     FFXC.set_movement(0, -1)
                     if not memory.main.user_control():
@@ -200,7 +201,7 @@ def trials():
                 FFXC.set_value("btn_b", 0)
                 checkpoint += 1
             elif checkpoint == 10:  # Insert Bevelle sphere. Activate lower areas.
-                memory.main.click_to_event_temple(0)
+                approach_coords([13,97],diag=8)
                 checkpoint += 1
             elif checkpoint == 13:  # Down to the lower areas.
                 FFXC.set_neutral()
@@ -242,13 +243,13 @@ def trials():
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 16:  # Take Glyph sphere from second alcove
-                memory.main.click_to_event_temple(0)
+                approach_coords([503,365],diag=1)
                 checkpoint += 1
             elif checkpoint == 18:  # To third alcove
                 FFXC.set_movement(1, -1)
-                memory.main.wait_frames(30 * 2)
+                memory.main.wait_frames(60)
                 FFXC.set_neutral()
-                memory.main.wait_frames(30 * 2)
+                memory.main.wait_frames(60)
                 while not memory.main.user_control():
                     if memory.main.get_actor_coords(0)[0] < 40:
                         if (
@@ -276,42 +277,36 @@ def trials():
                     else:
                         FFXC.set_value("btn_b", 0)
                 # Go ahead and insert Glyph sphere.
-                memory.main.click_to_event_temple(0)
+                approach_coords([355,525],diag=8)
                 checkpoint += 1
             elif checkpoint == 22:  # Remove Bevelle sphere
-                memory.main.click_to_event_temple(4)
+                # This takes special logic. Can't just smash face into the pedestol.
+                FFXC.set_neutral()
+                memory.main.wait_frames(9)
+                FFXC.set_movement(0,-1)
+                memory.main.wait_frames(15)
+                FFXC.set_neutral()
+                memory.main.wait_frames(9)
+                memory.main.click_to_event()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 24:  # Insert Bevelle sphere
-                memory.main.click_to_event_temple(5)
+                approach_coords([360,539],diag=8)
                 checkpoint += 1
             elif checkpoint == 28:  # Take Glyph sphere
-                FFXC.set_neutral()
-                memory.main.wait_frames(30 * 0.07)
-                memory.main.click_to_event()
-                memory.main.wait_frames(30 * 0.035)
-                memory.main.click_to_control_3()
+                approach_coords([355,525],diag=1)
                 checkpoint += 1
             elif checkpoint == 32:  # Insert Glyph sphere
-                while memory.main.user_control():
-                    pathing.set_movement([450, 525])
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                approach_coords([450,525],diag=8)
                 checkpoint += 1
             elif checkpoint == 34:  # Take Destro sphere
-                memory.main.click_to_event_temple(7)
+                approach_coords([505,525],diag=1)
                 checkpoint += 1
             elif checkpoint == 37:  # Insert Destro sphere
-                FFXC.set_neutral()
-                memory.main.wait_frames(30 * 0.1)
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 0.07)
-                FFXC.set_neutral()
-                xbox.skip_dialog(1)
-                memory.main.click_to_control_3()
+                approach_coords([365,525],diag=8)
                 checkpoint += 1
             elif checkpoint == 39:  # Take Bevelle sphere
-                memory.main.click_to_event_temple(5)
+                approach_coords([360,539],diag=1)
                 checkpoint += 1
             elif checkpoint == 41:  # back on the track.
                 FFXC.set_movement(0, -1)
@@ -352,17 +347,21 @@ def trials():
                 logger.info("Arriving in the second alcove again.")
                 checkpoint += 1
             elif checkpoint == 43:  # Place Bevelle sphere (second alcove)
-                memory.main.click_to_event_temple(7)
+                approach_coords([395,365],diag=8)
                 checkpoint += 1
             elif checkpoint == 47:  # Take Destro sphere
-                FFXC.set_movement(1, -1)
-                memory.main.wait_frames(30 * 0.1)
+                # This takes special logic. Can't just smash face into the pedestol.
                 FFXC.set_neutral()
-                xbox.skip_dialog(1)
-                memory.main.click_to_control_3()
+                memory.main.wait_frames(9)
+                FFXC.set_movement(1,-1)
+                memory.main.wait_frames(10)
+                FFXC.set_neutral()
+                memory.main.wait_frames(9)
+                memory.main.click_to_event()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 50:  # Insert Destro sphere
-                memory.main.click_to_event_temple(0)
+                approach_coords([505,365],diag=8)
                 checkpoint += 1
             elif checkpoint == 52:  # Back on track, to the exit
                 FFXC.set_movement(1, -1)
@@ -398,8 +397,9 @@ def trials():
                             FFXC.set_value("btn_b", 0)
                 FFXC.set_neutral()
                 memory.main.await_control()
+                memory.main.wait_frames(3)
                 FFXC.set_movement(0, -1)
-                memory.main.wait_frames(30 * 2)
+                memory.main.wait_frames(60)
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 58:
@@ -591,11 +591,11 @@ def seymour_natus():
     memory.main.click_to_control()
 
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
-    if memory.main.get_yuna_slvl() >= 14:
-        if game_vars.get_blitz_win():
-            menu.seymour_natus_blitz_win()
-        else:
-            menu.seymour_natus_blitz_loss()
+    #if memory.main.get_yuna_slvl() >= 14:
+    if game_vars.get_blitz_win():
+        menu.seymour_natus_blitz_win()
+    else:
+        menu.seymour_natus_blitz_loss()
     memory.main.close_menu()
 
     save_sphere.touch_and_go()

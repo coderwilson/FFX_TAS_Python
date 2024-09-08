@@ -204,7 +204,7 @@ def aeon_start():
 
 
 @battle.utils.speedup_decorator
-def yojimbo_battle():
+def yojimbo_battle(flee_available:bool=True, needed_amount:int = 263000):
     # zanmato_gil_needed()  # Just to report
     # Incomplete
     screen.await_turn()
@@ -218,24 +218,32 @@ def yojimbo_battle():
     if memory.main.battle_active():
         logger.debug("Yuna Overdrive to summon Yojimbo")
         Yuna.overdrive(aeon_num=5)
-        # needed_amount = min(round(zanmato_gil_needed(), -1) + 30, 263000)
-        needed_amount = 263000
+        if memory.main.game_over():
+            return False
+        
         logger.debug(f"Pay the man: {needed_amount}")
-        # battle.overdrive.yojimbo(gil_value=needed_amount) # still testing
-        battle.overdrive.yojimbo()  # Backup plan
+        battle.overdrive.yojimbo(gil_value=needed_amount)
         memory.main.wait_frames(90)
 
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
-                Tidus.flee()
+                if flee_available:
+                    Tidus.flee()
+                else:
+                    CurrentPlayer().defend()
             elif Yojimbo.is_turn():
                 # May still be able to get it?
                 # zanmato_gil_needed()  # For printing purposes
-                battle.overdrive.yojimbo(gil_value=1)
+                battle.overdrive.yojimbo(gil_value=needed_amount)
             else:
                 CurrentPlayer().defend()
-
+    
+        if memory.main.game_over():
+            return False
+    if memory.main.game_over():
+        return False
+    
     logger.debug("Yojimbo Battle is complete.")
     while not memory.main.battle_wrap_up_active():
         # Waiting for the summary screen to come up
@@ -245,7 +253,8 @@ def yojimbo_battle():
     logger.debug("Yojimbo wrap-up is complete.")
     memory.main.wait_frames(2)
     while not memory.main.diag_skip_possible():
-        pass
+        if memory.main.user_control():
+            return True
     logger.debug("Yojimbo - menu restored")
     memory.main.wait_frames(1)
 
