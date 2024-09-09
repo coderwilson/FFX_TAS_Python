@@ -19,6 +19,7 @@ vars:
   rng_mode            : "set"   # "set" runs the desired set seed
                                 # "random" runs any of the 256 possible seeds, chosen randomly
                                 # "preferred" runs a seed out of the preferred list (vars.py -> rng_preferred_seeds)
+                                # "truerng" runs assuming no manips and thus should be compatible with truerng
   rng_seed_num        : 31      # Set your desired seed for "set" mode.
 
   # Cosmetics / Other

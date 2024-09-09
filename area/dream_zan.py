@@ -11,7 +11,7 @@ import tts
 import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
-from players import Auron, CurrentPlayer
+from players import Auron, CurrentPlayer, Tidus
 from json_ai_files.write_seed import write_seed_num
 
 game_vars = vars.vars_handle()
@@ -54,7 +54,7 @@ def new_game(gamestate):
                 xbox.menu_b()
         memory.main.click_to_diag_progress(6)
         if game_vars.use_legacy_soundtrack():
-            tts.message("Setting original soundtrack")
+            # tts.message("Setting original soundtrack")
             memory.main.wait_frames(20)
             xbox.tap_down()
             memory.main.wait_frames(20)
@@ -173,7 +173,7 @@ def listen_story():
                     xbox.skip_dialog(3)
 
 
-def ammes_battle():
+def ammes_battle_truerng():
     logger.info("Starting ammes")
     xbox.click_to_battle()
     logger.debug("Auron Overdrive turn start")
@@ -215,7 +215,53 @@ def ammes_battle():
     Auron.overdrive()
 
 
-def after_ammes():
+def ammes_battle(tidus_total_attacks: int, tidus_potion: bool):
+    logger.info("Starting ammes")
+    xbox.click_to_battle()
+    logger.debug("Auron Overdrive turn start")
+    memory.main.last_hit_init()
+
+    auron_total_attacks = 6 - tidus_total_attacks
+    tidus_attacks = 0
+    auron_attacks = 0
+
+    if tidus_potion:
+        battle.main.use_potion_character(Tidus, "l")
+    else:
+        CurrentPlayer().defend()
+    # logs.write_stats("First Six Hits:")
+    hits_array = []
+
+    logger.info("Killing Sinspawn")
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if memory.main.get_current_turn() == 0:
+                if tidus_attacks < tidus_total_attacks:
+                    tidus_attacks += 1
+                    logging.debug(f"Tidus Attack {tidus_attacks}/{tidus_total_attacks}")
+                    CurrentPlayer().attack()
+                else:
+                    logging.debug(f"Tidus Defend because he has already filled his Attack quota")
+                    CurrentPlayer().defend()
+            else:
+                if auron_attacks < auron_total_attacks:
+                    auron_attacks += 1
+                    logging.debug(f"Auron Attack {auron_attacks}/{auron_total_attacks}")
+                    CurrentPlayer().attack()
+                else:
+                    logging.debug(f"Auron Defend because he has already filled his Attack quota")
+                    CurrentPlayer().defend()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
+    logger.debug("Clicking to battle.")
+    xbox.click_to_battle()
+    logger.debug("Waiting for Auron's Turn")
+    logger.debug("At Overdrive")
+    # Auron overdrive tutorial
+    Auron.overdrive()
+
+
+def after_ammes_truerng():
     memory.main.click_to_control()
     checkpoint = 0
     # memory.main.wait_frames(90)
@@ -257,6 +303,54 @@ def after_ammes():
             FFXC.set_neutral()
             if memory.main.turn_ready():
                 battle.boss.tanker()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+            elif memory.main.cutscene_skip_possible():
+                xbox.skip_stored_scene(3)
+
+
+def after_ammes(tanker_sinscale_kill: bool):
+    memory.main.click_to_control()
+    checkpoint = 0
+    # memory.main.wait_frames(90)
+    # logger.debug("MARK")
+    # memory.main.ammes_fix(actor_index=0)
+    # memory.main.wait_frames(90)
+
+    while memory.main.get_map() != 49:
+        if memory.main.user_control():
+            start_pos = memory.main.get_coords()
+            if int(start_pos[0]) in [866, 867, 868, 869, 870] and int(start_pos[1]) in [
+                -138,
+                -139,
+                -140,
+                -141,
+            ]:
+                logger.warning("Positioning error")
+                FFXC.set_neutral()
+                memory.main.wait_frames(20)
+                memory.main.ammes_fix(actor_index=0)
+                memory.main.wait_frames(20)
+            else:
+                # Map changes and events
+                if checkpoint == 6:  # Save sphere
+                    save_sphere.touch_and_go()
+                    checkpoint += 1
+                # Swim to Jecht
+                elif checkpoint < 9 and memory.main.get_story_progress() >= 20:
+                    checkpoint = 9
+                # Towards Baaj temple
+                elif checkpoint < 11 and memory.main.get_story_progress() >= 30:
+                    checkpoint = 11
+
+                # General pathing
+                elif pathing.set_movement(AllStartsHere.execute(checkpoint)):
+                    checkpoint += 1
+                    logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.turn_ready():
+                battle.boss.tanker(sinscale_kill=tanker_sinscale_kill)
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():

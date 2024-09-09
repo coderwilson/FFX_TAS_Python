@@ -49,11 +49,17 @@ import xbox
 from gamestate import game
 from image_to_text import maybe_show_image
 
+import manip_planning.rng
+import manip_planning.ammes
+import manip_planning.baaj_to_tros
+
 # This sets up console and file logging (should only be called once)
 log_init.initialize_logging()
 logger = logging.getLogger(__name__)
 
 FFXC = xbox.controller_handle()
+
+truerng = False
 
 
 def configuration_setup():
@@ -69,6 +75,8 @@ def configuration_setup():
     parser.add_argument("-step")
     parser.add_argument("-train_blitz")
     args = parser.parse_args()
+
+    global truerng
 
     # gamestate
     try:
@@ -104,6 +112,8 @@ def configuration_setup():
     elif game_vars.rng_mode() == "preferred":
         game_vars.rng_seed_num_set(random.choice(game_vars.rng_preferred_array()))
         game_length = f"Full Run, favored seed: {game_vars.rng_seed_num()}"
+    elif game_vars.rng_mode()=="truerng":
+        truerng = True
     # Full run starting from New Game, random seed
     else:
         game_vars.rng_seed_num_set(random.choice(range(256)))
@@ -179,6 +189,8 @@ def perform_TAS():
     blitz_loops = 0
     max_loops = 12  # TODO: Move into config.yaml?
 
+    seed_found = False
+
     while game.state != "End":
         try:
             if game_vars.rng_seed_num() >= 256:
@@ -212,17 +224,46 @@ def perform_TAS():
                     log_init.reset_logging_time_reference()
                     logger.info("Timer starts now.")
                     area.dream_zan.listen_story()
+
+                    # Find rng seed from memory
+                    rng_seed = manip_planning.rng.get_seed()
+                    if rng_seed != "Err_seed_not_found":
+                        game_vars.set_confirmed_seed(rng_seed)
+                    else:
+                        logging.error(f"Unable to derive seed")
+                    seed_found = True
+
+                    # Calculate manips for Sinscales and Ammes
+                    tidus_sinspawn_attacks, tidus_potion, tidus_spiral_cut_turn = manip_planning.ammes.plan_ammes()
+                    logger.debug(f"Tidus Sinspawn Attacks: {tidus_sinspawn_attacks}")
+                    logger.debug(f"Tidus Potion: {tidus_potion}")
+                    logger.debug(f"Spiral Cut Turn: {tidus_spiral_cut_turn}")
+
                     # game.state, game.step = reset.mid_run_reset()
                     # Start of the game, up through the start of Sinspawn Ammes fight
-                    area.dream_zan.ammes_battle()
+                    if truerng:
+                        area.dream_zan.ammes_battle_truerng()
+                    else:
+                        area.dream_zan.ammes_battle(tidus_total_attacks=tidus_sinspawn_attacks, tidus_potion=tidus_potion)
                     game.step = 2
 
                 if game.step == 2:
-                    battle.boss.ammes()
+                    if truerng:
+                        battle.boss.ammes_truerng()
+                    else:
+                        battle.boss.ammes(spiral_cut_turn=tidus_spiral_cut_turn)
                     game.step = 3
 
                 if game.step == 3:
-                    area.dream_zan.after_ammes()
+                    klikk_steals, tanker_sinscale_kill = manip_planning.baaj_to_tros.plan_klikk_steals()
+                    logger.debug(f"Steals: {klikk_steals}")
+                    logger.debug(f"Tanker Sinscale Kill: {tanker_sinscale_kill}")
+
+                    if truerng:
+                        area.dream_zan.after_ammes_truerng()
+                    else:
+                        area.dream_zan.after_ammes(tanker_sinscale_kill=tanker_sinscale_kill)
+
                     # Sin drops us near Baaj temple.
                     game.state = "Baaj"
                     game.step = 1
@@ -231,7 +272,13 @@ def perform_TAS():
             if game.state == "Baaj":
                 if game.step == 1:
                     logger.info("Starting Baaj temple section")
-                    area.baaj.entrance()
+                    # klikk_steals = 4
+                    sahagin_b_first, geos_potion, geos_attacks, tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, rikku_underwater_attacks = manip_planning.baaj_to_tros.plan_klikk(klikk_steals=klikk_steals)
+
+                    if truerng:
+                        area.baaj.entrance_truerng()
+                    else:
+                        area.baaj.entrance(sahagin_b_first=sahagin_b_first, geos_potion=geos_potion, geos_attacks=geos_attacks)
                     game.step = 2
 
                 if game.step == 2:
@@ -239,7 +286,11 @@ def perform_TAS():
                     game.step = 3
 
                 if game.step == 3:
-                    area.baaj.klikk_fight()
+                    if truerng:
+                        area.baaj.klikk_fight_truerng()
+                    else:
+                        area.baaj.klikk_fight(tidus_potion_klikk=tidus_potion_klikk, tidus_potion_turn=tidus_potion_turn,
+                                              rikku_potion_klikk=rikku_potion_klikk, klikk_steals=klikk_steals)
                     game.step = 4
                     maybe_create_save(save_num=21)
 
@@ -250,12 +301,18 @@ def perform_TAS():
                     game.step = 5
 
                 if game.step == 5:
-                    area.baaj.ab_swimming_1()
+                    if truerng:
+                        area.baaj.ab_swimming_1_truerng()
+                    else:
+                        rikku_attacks_left = area.baaj.ab_swimming_1(rikku_underwater_attacks=rikku_underwater_attacks)
                     game.step = 6
 
                 if game.step == 6:
                     logger.info("Underwater Airship section")
-                    area.baaj.ab_swimming_2()
+                    if truerng:
+                        area.baaj.ab_swimming_2_truerng()
+                    else:
+                        area.baaj.ab_swimming_2(rikku_attacks_left=rikku_attacks_left)
                     game.state = "Besaid"
                     game.step = 1
 
@@ -985,6 +1042,8 @@ if __name__ == "__main__":
         load_game_state()
 
     # Run the TAS itself
+    # game.state = "Baaj"
+    # game.step = 2
     perform_TAS()
 
     # Finalize writing to logs

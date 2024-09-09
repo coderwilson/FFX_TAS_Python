@@ -35,7 +35,8 @@ class BaajPuzzle(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [-71, 79],
         1: [-94, 120],
-        2: [-100, 139],
+        2: [-113, 119],
+        3: [-113, 119],
         # Save sphere
         4: [-113, 119],
         # Through first door
@@ -68,7 +69,7 @@ class BaajPuzzle(AreaMovementBase):
         # Back to main room
     }
     checkpoint_fallback = {
-        3: "Save sphere",
+        # 3: "Save sphere",
         5: "Through first door",
         6: "Flint obtained.",
         7: "Back to main room",
