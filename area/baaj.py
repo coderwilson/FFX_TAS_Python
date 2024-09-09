@@ -318,6 +318,7 @@ def ab_swimming_1(rikku_underwater_attacks: int):
     logger.info("Swimming towards airship")
     while memory.main.get_map() != 64:
         pos = memory.main.get_coords()
+        rikku_attacks_left = rikku_underwater_attacks
         if memory.main.user_control():
             if memory.main.get_map() == 71:
                 FFXC.set_movement(0, -1)

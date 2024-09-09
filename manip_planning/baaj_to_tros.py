@@ -898,6 +898,8 @@ def ruins_encounter_steals(grenades_needed: int) -> (int, int):
     rng10_array_drop_steal_chance = main.rng_array_from_index(index=10, array_len=200)
     rng11_array_rare_steal_chance = main.rng_array_from_index(index=11, array_len=200)
 
+    item_drop_chance = 205
+
     first_rare_steal = 0
     steal_first_turn = True
     steal_second_turn = True
@@ -924,6 +926,8 @@ def ruins_encounter_steals(grenades_needed: int) -> (int, int):
 
     second_steal_flip2 = (steal_roll < steal_chance)
 
+    logging.debug(f"Grenades Needed: {grenades_needed}")
+
     if grenades_needed < 1:
 
         ruins_steals = 0
@@ -944,8 +948,16 @@ def ruins_encounter_steals(grenades_needed: int) -> (int, int):
 
             elif first_rare_steal == 2:
 
-                steal_first_turn = False
-                ruins_steals = 1
+                item_drop_roll = rng10_array_drop_steal_chance[rng_rolls[10] + 1] % 255
+
+                if item_drop_roll < item_drop_chance:
+
+                    steal_first_turn = False
+                    ruins_steals = 1
+
+                else:
+
+                    ruins_steals = 2
 
             else:
 

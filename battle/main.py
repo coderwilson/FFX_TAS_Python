@@ -3775,11 +3775,7 @@ def ruins_encounter(ruins_steals: int, steal_first_turn: bool, steal_second_turn
 
             if Rikku.is_turn():
                 rikku_turn += 1
-                if grenades_needed < 3 and steals_performed < ruins_steals:
-                    steals_performed += 1
-                    logging.debug(f"Stealing {steals_performed}/{ruins_steals}")
-                    steal()
-                elif rikku_turn == 1 and steal_first_turn and steals_performed < ruins_steals:
+                if rikku_turn == 1 and steal_first_turn and steals_performed < ruins_steals:
                     steals_performed += 1
                     logging.debug(f"Stealing {steals_performed}/{ruins_steals}")
                     steal()
@@ -3790,7 +3786,7 @@ def ruins_encounter(ruins_steals: int, steal_first_turn: bool, steal_second_turn
                         steal()
                     else:
                         logging.debug(f"Stealing from Piranha B {steals_performed}/{ruins_steals}")
-                        _steal("u")
+                        steal_up()
                 elif rikku_turn == 3 and steal_twice_second and steals_performed < ruins_steals:
                     steals_performed += 1
                     logging.debug(f"Stealing again from Piranha B {steals_performed}/{ruins_steals}")
