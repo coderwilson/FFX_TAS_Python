@@ -140,6 +140,9 @@ def auto_sort_equipment(manual="n"):
 def short_aeons():
     memory.main.print_memory_log()
     memory.main.open_menu()
+    while memory.main.get_hp()[0] < memory.main.get_max_hp()[0]:
+        xbox.tap_b()
+    memory.main.back_to_main_menu()
     cursor_target = 4
     logger.debug(f"Aiming at {cursor_target}")
     while memory.main.get_menu_cursor_pos() != cursor_target:

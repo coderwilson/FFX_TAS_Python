@@ -4178,34 +4178,23 @@ def rikku_mix_damage() -> List[int]:
 
 
 def future_attack_will_crit(
-    character: int, char_luck: int, enemy_luck: int, attack_index: int = 1
+    character: int, char_luck: int, enemy_luck: int, equipment_bonus: int = 0, attack_index: int = 1, burn_rolls: int = 0
 ) -> bool:
     # Returns if a specific attack in the future will crit.
     # Attack Index 1 represents the next attack.
     # Assumes no escape attempts, primarily this is used for Aeons anyway.
     rng_index = min(20 + character, 27)
     rng_array = rng_array_from_index(index=rng_index, array_len=200)
-    # del rng_array[0]
-    # del rng_array[0]
+
+
+    for i in range(burn_rolls):
+        del rng_array[0]
+
     if attack_index > 90:
         return False
     crit_roll = rng_array[attack_index * 2] % 101
-    crit_chance = char_luck - enemy_luck
-    
-    if attack_index == 1 and game_vars.god_mode():
-        logger.debug(f"|| {character} for index {rng_index} || Roll: {crit_roll} less than Chance: {crit_chance} ||")
-        if char_luck <= enemy_luck:
-            logger.debug("Crit is not possible.")
-            return crit_roll < crit_chance
-        if crit_roll >= crit_chance:
-            advance_rng_index(rng_index)
-            return future_attack_will_crit(
-                character=character,
-                char_luck=char_luck,
-                enemy_luck=enemy_luck
-            )
-        #logger.debug(f"CONF || {character} for index {rng_index} || Roll: {crit_roll} less than Chance: {crit_chance} ||")
-        #wait_frames(30)
+    crit_chance = char_luck - enemy_luck + equipment_bonus
+
     return crit_roll < crit_chance
 
 

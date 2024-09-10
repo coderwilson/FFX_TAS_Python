@@ -2,6 +2,7 @@ import logging
 
 import battle.boss
 import battle.main
+import manip_planning.baaj_to_tros
 import memory.main
 import menu
 import pathing
@@ -10,7 +11,7 @@ import screen
 import vars
 import xbox
 from paths import BaajHallway, BaajPuzzle, BaajRamp
-from players import CurrentPlayer, Rikku
+from players import CurrentPlayer, Rikku, Tidus
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +19,10 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def entrance(checkpoint: int = 0):
+def entrance_truerng(checkpoint: int = 0):
     memory.main.await_control()
     logger.info("Starting Baaj exterior area")
     FFXC.set_neutral()
-    menu.short_aeons()
 
     # Now back into the water
 
@@ -55,7 +55,78 @@ def entrance(checkpoint: int = 0):
     memory.main.click_to_control()
     logger.info("Hallway before main puzzle.")
     checkpoint = 0
+    menu.short_aeons()
     while memory.main.get_map() != 63:
+        if memory.main.user_control():
+            if checkpoint == 9:
+                FFXC.set_movement(-1, 1)
+                memory.main.await_event()
+                FFXC.set_neutral()
+            # General pathing
+            elif pathing.set_movement(BaajHallway.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+
+
+def entrance(sahagin_b_first: bool, geos_potion: bool, geos_attacks: int, checkpoint: int = 0):
+    memory.main.await_control()
+    logger.info("Starting Baaj exterior area")
+    FFXC.set_neutral()
+
+    # Now back into the water
+
+    while not memory.main.battle_active():
+        if memory.main.user_control():
+            if checkpoint == 6:
+                memory.main.click_to_event_temple(0)
+                checkpoint += 1
+
+            # General pathing
+            elif pathing.set_movement(BaajRamp.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+
+    FFXC.set_neutral()
+
+    # Battles
+    potion_count = 0
+    attack_count = 0
+
+    while memory.main.get_story_progress() < 48:
+        if screen.battle_screen():
+            if memory.main.get_encounter_id() == 2:
+                if sahagin_b_first:
+                    CurrentPlayer().attack(target_id=21, direction_hint="u")
+                else:
+                    CurrentPlayer().attack()
+            else:
+                if geos_potion and potion_count == 0:
+                    battle.main.use_potion_character(Tidus, "l")
+                    potion_count += 1
+                elif attack_count < geos_attacks:
+                    CurrentPlayer().attack()
+                    attack_count += 1
+                else:
+                    CurrentPlayer().defend()
+        elif memory.main.diag_skip_possible():
+            xbox.menu_b()
+
+    # Out of the frying pan, into the furnace
+    memory.main.click_to_control()
+    logger.info("Hallway before main puzzle.")
+    checkpoint = 0
+    menu_complete = False
+    while memory.main.get_map() != 63:
+        if checkpoint == 5 and not menu_complete:
+            menu.short_aeons()
+            menu_complete = True
+
         if memory.main.user_control():
             if checkpoint == 9:
                 FFXC.set_movement(-1, 1)
@@ -78,11 +149,12 @@ def baaj_puzzle():
     while not memory.main.battle_active():
         if memory.main.user_control():
             # Events
-            if checkpoint == 3:
-                save_sphere.touch_and_go()
-                checkpoint += 1
-            elif checkpoint == 5:  # Flint room
-                memory.main.click_to_event_temple(0)
+            # if checkpoint == 3:
+            #     save_sphere.touch_and_go()
+            #     checkpoint += 1
+            # el
+            if checkpoint == 5:  # Flint room
+                memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 6:  # Obtain Flint
                 memory.main.click_to_event_temple(0)
@@ -113,7 +185,7 @@ def baaj_puzzle():
                 xbox.tap_b()
 
 
-def klikk_fight():
+def klikk_fight_truerng():
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
     while not Rikku.is_turn():
@@ -123,6 +195,17 @@ def klikk_fight():
     battle.main.use_item(0, "none")  # Tidus self-potion
     screen.await_turn()
     battle.boss.klikk()
+
+
+def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
+    # Before Rikku shows up, we're just going to spam the B button. Simple.
+    FFXC.set_neutral()
+    while not Rikku.is_turn():
+        Tidus.attack()
+
+    xbox.click_to_battle()
+    screen.await_turn()
+    battle.boss.klikk(tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, klikk_steals)
 
 
 def distance(n1, n2):
@@ -172,7 +255,7 @@ def ab_boat_1():
             xbox.tap_b()
 
 
-def ab_swimming_1():
+def ab_swimming_1_truerng():
     logger.info("Swimming down from the boat")
     while memory.main.get_map() != 288:
         if memory.main.user_control():
@@ -215,7 +298,61 @@ def ab_swimming_1():
                 xbox.menu_b()
 
 
-def ab_swimming_2():
+def ab_swimming_1(rikku_underwater_attacks: int):
+    logger.info("Swimming down from the boat")
+    while memory.main.get_map() != 288:
+        if memory.main.user_control():
+            pathing.set_movement([-300, -300])
+            FFXC.set_value("btn_a", 1)
+        else:
+            FFXC.set_neutral()
+            if screen.battle_screen():
+                logger.info("Battle Start (Al Bhed swimming section)")
+                battle.main.steal_and_attack()
+                logger.info("Battle End (Al Bhed swimming section)")
+            elif memory.main.menu_open():
+                logger.info("Battle Complete screen")
+                xbox.menu_b()
+
+    FFXC.set_neutral()
+    logger.info("Swimming towards airship")
+    while memory.main.get_map() != 64:
+        pos = memory.main.get_coords()
+        rikku_attacks_left = rikku_underwater_attacks
+        if memory.main.user_control():
+            if memory.main.get_map() == 71:
+                FFXC.set_movement(0, -1)
+                FFXC.set_value("btn_a", 1)
+            else:
+                FFXC.set_value("btn_a", 0)
+                if pos[1] > -230:
+                    pathing.set_movement([-343, -284])
+                elif pos[1] > -410:
+                    pathing.set_movement([-421, -463])
+                else:
+                    FFXC.set_movement(0, 1)
+        else:
+            FFXC.set_neutral()
+            if screen.battle_screen():
+                logger.info("Battle Start (Al Bhed swimming section)")
+                grenade_count = memory.main.get_item_count_slot(memory.main.get_item_slot(35))
+                grenades_needed = 6 - grenade_count
+                chain_steals, steal_first_turn, enemy_formation = manip_planning.baaj_to_tros.chain_encounter_steals(grenades_needed=grenades_needed)
+                rikku_attacks_performed = battle.main.chain_encounter(chain_steals=chain_steals,
+                                                                      steal_first_turn=steal_first_turn,
+                                                                      grenades_needed=grenades_needed,
+                                                                      rikku_underwater_attacks=rikku_underwater_attacks,
+                                                                      enemy_formation=enemy_formation)
+                rikku_attacks_left = rikku_underwater_attacks - rikku_attacks_performed
+                logger.info("Battle End (Al Bhed swimming section)")
+            elif memory.main.menu_open():
+                logger.info("Battle Complete screen")
+                xbox.menu_b()
+
+    return rikku_attacks_left
+
+
+def ab_swimming_2_truerng():
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)
@@ -258,6 +395,99 @@ def ab_swimming_2():
     # Tros fight
     xbox.click_to_battle()
     battle.boss.tros()
+
+    FFXC.set_neutral()
+    while memory.main.get_story_progress() < 111:
+        if memory.main.user_control():
+            if (
+                memory.main.diag_progress_flag() == 109
+                and not memory.main.user_control()
+            ):
+                FFXC.set_neutral()
+                if memory.main.save_menu_cursor_2() == 0:
+                    xbox.tap_a()
+                else:
+                    xbox.tap_b()
+                memory.main.wait_frames(4)
+            elif memory.main.get_map() == 64:
+                if memory.main.get_coords()[0] < -4:
+                    pathing.set_movement([-2, 47])
+                else:
+                    pathing.set_movement([73, 1])
+            elif memory.main.get_map() == 380:
+                pathing.set_movement([700, 300])
+            elif memory.main.get_map() == 71:
+                rikku_num = memory.main.actor_index(actor_num=41)
+                pathing.set_movement(memory.main.get_actor_coords(rikku_num))
+                if distance(0, rikku_num) < 30:
+                    xbox.tap_b()
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_progress_flag() == 109:
+                memory.main.csr_baaj_save_clear()
+            elif memory.main.diag_skip_possible() and not game_vars.csr():
+                xbox.tap_b()
+
+    logger.info("Should now be ready for Besaid")
+
+    if not game_vars.csr():
+        xbox.clear_save_popup(0)
+
+
+def ab_swimming_2(rikku_attacks_left: int):
+    # Quick heal-up to make sure we're full HP on Rikku
+    memory.main.await_control()
+    FFXC.set_movement(1, -1)
+    FFXC.set_value("btn_a", 1)
+    memory.main.touch_save_sphere()
+    # TODO: adapt save_sphere.touch_and_go() to handle this save sphere
+
+    memory.main.clear_save_menu_cursor_2()
+    # Now to get to it
+    FFXC.set_movement(0, 1)
+    memory.main.wait_frames(30 * 1)
+    memory.main.click_to_event()
+    memory.main.wait_frames(30 * 0.2)
+    memory.main.await_control()
+
+    pos = memory.main.get_coords()
+    while memory.main.user_control():
+        if pos[1] < 135:
+            FFXC.set_movement(1, 1)
+        else:
+            FFXC.set_movement(0, 1)
+
+        pos = memory.main.get_coords()
+    FFXC.set_neutral()
+
+    screen.await_turn()
+    # Final group of Piranhas
+    grenade_count = memory.main.get_item_count_slot(memory.main.get_item_slot(35))
+    grenades_needed = 6 - grenade_count
+    ruins_steals, steal_first_turn, steal_second_turn, steal_twice_first, steal_twice_second = manip_planning.baaj_to_tros.ruins_encounter_steals(grenades_needed=grenades_needed)
+    battle.main.ruins_encounter(ruins_steals=ruins_steals, steal_first_turn=steal_first_turn,
+                                steal_second_turn=steal_second_turn, steal_twice_first=steal_twice_first,
+                                steal_twice_second=steal_twice_second, grenades_needed=grenades_needed,
+                                rikku_underwater_attacks=rikku_attacks_left)
+    memory.main.click_to_control()
+    memory.main.await_control()
+    FFXC.set_movement(0, 1)
+    logger.info("Technical Support Tidus")
+    xbox.skip_dialog(2)
+    FFXC.set_movement(0, 0)
+    memory.main.click_to_control()
+    rng01_array_enemy_formation = memory.main.rng_array_from_index(index=1, array_len=10)
+    preempt_roll = rng01_array_enemy_formation[1] % 256
+    tros_preempt = (preempt_roll < 32)
+    logging.debug(f"Tros pre-empt roll: {rng01_array_enemy_formation[1] % 256} / Pre-empt: {tros_preempt}")
+    while not memory.main.battle_active():
+        FFXC.set_movement(0, -1)
+    logger.info("Engaging Tros")
+    FFXC.set_neutral()
+
+    # Tros fight
+    xbox.click_to_battle()
+    battle.boss.tros(preempt=tros_preempt)
 
     FFXC.set_neutral()
     while memory.main.get_story_progress() < 111:

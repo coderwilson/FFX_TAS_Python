@@ -2,7 +2,9 @@ import logging
 
 import battle.main
 import battle.utils
+import damage
 import logs
+import manip_planning.rng
 import memory.main
 import screen
 import vars
@@ -32,7 +34,7 @@ import tts # Used to check Kimahri logic.
 import rng_track
 
 
-def ammes():
+def ammes_truerng():
     battle_complete = 0
     count_attacks = 0
 
@@ -51,6 +53,31 @@ def ammes():
                 else:
                     logger.manip("Attack. Maybe a crit later?")
                     CurrentPlayer().attack()
+            else:
+                CurrentPlayer().attack()
+                count_attacks += 1
+        if memory.main.user_control():
+            battle_complete = 1
+            logger.info("Ammes battle complete")
+
+
+# Spiral Cut turn is relative to the first turn he could use it, i.e. his second turn in the fight is Spiral Cut turn 1
+def ammes(spiral_cut_turn: int):
+    battle_complete = 0
+    count_attacks = 0
+    tidus_turn = 0
+
+    while battle_complete != 1:
+        if memory.main.turn_ready():
+            logger.info("Attacking Sinspawn Ammes")
+            if Tidus.is_turn():
+                tidus_turn += 1
+                if tidus_turn == spiral_cut_turn + 1:
+                    Tidus.overdrive()
+                    logger.debug(f"Spiral Cut Turn on turn {tidus_turn}")
+                else:
+                    CurrentPlayer().attack()
+                    logger.debug(f"Not Spiral Cut Turn so just Attack on turn {tidus_turn}")
             else:
                 CurrentPlayer().attack()
                 count_attacks += 1
@@ -183,7 +210,7 @@ def dark_attack_tutorial():
         rng_track.force_preempt()
 
 
-def tanker():
+def tanker(sinscale_kill: bool):
     logger.info("Fight start: Tanker")
     count_attacks = 0
     tidus_count = 0
@@ -202,7 +229,10 @@ def tanker():
             elif Auron.is_turn():
                 auron_count += 1
                 if auron_count < 2:
-                    Auron.attack(Auron)
+                    if sinscale_kill:
+                        Auron.attack()
+                    else:
+                        Auron.attack(Auron)
                 else:
                     Auron.attack()
                     count_attacks += 1
@@ -214,7 +244,7 @@ def tanker():
 
 
 @battle.utils.speedup_decorator
-def klikk():
+def klikk_truerng():
     logger.info("Fight start: Klikk")
     heal_used = False
     klikk_attacks = 0
@@ -291,7 +321,51 @@ def klikk():
 
 
 @battle.utils.speedup_decorator
-def tros():
+def klikk(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
+    logger.info("Fight start: Klikk")
+    tidus_turn = 0
+    rikku_turn = 0
+
+    while memory.main.battle_active():  # AKA end of battle screen
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                tidus_turn += 1
+                if tidus_potion_klikk and tidus_turn == tidus_potion_turn:
+                    battle.main.use_potion_character(Tidus, "l")
+                else:
+                    Tidus.attack()
+            elif Rikku.is_turn():
+                rikku_turn += 1
+                if rikku_turn == 1:
+                    grenade_slot = memory.main.get_use_items_slot(35)
+                    battle.main.use_item(slot=grenade_slot)
+                elif rikku_turn == 2 and rikku_potion_klikk:
+                    battle.main.use_potion_character(Tidus, "l")
+                elif rikku_turn <= klikk_steals + 1 + (1 if rikku_potion_klikk else 0):
+                    battle.main.steal()
+                else:
+                    Rikku.attack()
+        else:
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+    logger.info("Klikk fight complete")
+    logger.debug(f"map: {memory.main.get_map()}")
+    while not (
+        memory.main.get_map() == 71
+        and memory.main.user_control()
+        and memory.main.get_coords()[1] < 15
+    ):
+        # logger.debug(memory.main.get_map())
+        if game_vars.csr():
+            FFXC.set_value("btn_b", 1)
+        else:
+            xbox.tap_b()  # Maybe not skippable dialog, but whatever.
+    FFXC.set_neutral()
+    memory.main.wait_frames(1)
+
+
+@battle.utils.speedup_decorator
+def tros_truerng():
     logs.open_rng_track()
     logger.info("Fight start: Tros")
     FFXC.set_neutral()
@@ -387,6 +461,100 @@ def tros():
     #memory.main.click_to_control()
     #if game_vars.god_mode():
     #    rng_track.force_preempt()
+
+
+def tros(preempt: bool):
+    logs.open_rng_track()
+    logger.info("Fight start: Tros")
+    FFXC.set_neutral()
+
+    rikku_turn = 0
+    tidus_turn = 0
+
+    rng26_rolls = 0
+
+    total_damage = 0
+    low_roll = False
+
+    rng20_array_tidus = memory.main.rng_array_from_index(index=20, array_len=200)
+    rng26_array_rikku = memory.main.rng_array_from_index(index=26, array_len=200)
+
+    for i in range(6):
+        base_damage = 350
+        var_damage = manip_planning.rng.get_rng_damage(base_damage=base_damage, rng_array=rng26_array_rikku,
+                                                       rng_rolls=2 * i, user_luck=18, target_luck=15)
+        if i == 0 and not preempt:
+
+            low_roll = var_damage < 350
+            logging.debug(f"Normal 1st Attack Low Roll: {low_roll}")
+
+        elif i == 4 and preempt:
+
+            low_roll = var_damage < 350
+            logging.debug(f"Pre-empt 5th Attack Low Roll: {low_roll}")
+
+        logging.debug(f"Grenade Damage: {var_damage}")
+
+        total_damage += var_damage
+
+    base_damage = damage.calculate_base_damage(formula=damage.Formula.STR_VS_DEF, user_stat=15, target_stat=1)
+    var_damage = manip_planning.rng.get_rng_damage(base_damage=base_damage, rng_array=rng20_array_tidus,
+                                                   rng_rolls=0, user_luck=18, target_luck=15)
+
+    total_damage += var_damage
+
+    if total_damage > 2200:
+        tidus_attacks = 1
+    else:
+        tidus_attacks = 2
+
+    while not memory.main.turn_ready():
+        pass
+
+    while memory.main.battle_active():  # AKA end of battle screen
+        if memory.main.diag_skip_possible():
+            xbox.tap_b()
+        elif memory.main.turn_ready():
+            if Rikku.is_turn():
+                rikku_turn += 1
+                grenade_slot = memory.main.get_use_items_slot(35)
+                battle.main.use_item(slot=grenade_slot)
+            elif Tidus.is_turn():
+                tidus_turn += 1
+                if tidus_turn == 1 and low_roll and not preempt:
+                    Tidus.defend()
+                elif rikku_turn == 5 and low_roll and preempt:
+                    Tidus.defend()
+                elif tros_position() == 1:
+                    Tidus.defend()
+                elif tidus_attacks > 0:
+                    tidus_attacks -= 1
+                    Tidus.attack()
+                else:
+                    Tidus.defend()
+
+
+
+    logger.info("Tros battle complete.")
+    memory.main.click_to_control()
+
+
+def tros_position():
+    camera = memory.main.get_camera()
+    logger.debug(f"Camera position: {camera[0]}")
+
+    # First, determine position of Tros
+    if camera[0] > 2:
+        tros_pos = 1  # One for cannot attack.
+        logger.debug("Tros is long-range. Cannot attack.")
+    elif camera[0] < -2:
+        tros_pos = 1  # One for cannot attack.
+        logger.debug("Tros is long-range. Cannot attack.")
+    else:
+        tros_pos = 0  # Zero for "Close range, can be attacked.
+        logger.debug("Tros is short-range.")
+
+    return tros_pos
 
 
 @battle.utils.speedup_decorator

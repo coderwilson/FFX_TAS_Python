@@ -5,6 +5,7 @@ from tqdm.contrib.logging import logging_redirect_tqdm
 
 import battle.utils
 import logs
+import manip_planning.baaj_to_tros
 import memory.main
 import rng_track
 import screen
@@ -717,16 +718,16 @@ def luca_workers_2(early_haste):
                     logger.debug(f"Tidus attacks: {tidus_attacks}")
                     logger.debug(f"Kimahri attacks: {kimahri_attacks}")
                     logger.debug(
-                        f"Tidus crit 1: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15)}"  # noqa: E501
+                        f"Tidus crit 1: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, equipment_bonus=6)}"  # noqa: E501
                     )
                     logger.debug(
-                        f"Tidus crit 2: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, attack_index=2)}"  # noqa: E501
+                        f"Tidus crit 2: {future_attack_will_crit(character=0, char_luck=18, enemy_luck=15, equipment_bonus=6, attack_index=1)}"  # noqa: E501
                     )
                     logger.debug(
-                        f"Kimahri crit 1: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15)}"  # noqa: E501
+                        f"Kimahri crit 1: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, equipment_bonus=3)}"  # noqa: E501
                     )
                     logger.debug(
-                        f"Kimahri crit 2: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, attack_index=2)}"  # noqa: E501
+                        f"Kimahri crit 2: {future_attack_will_crit(character=3, char_luck=18, enemy_luck=15, equipment_bonus=3, attack_index=1)}"  # noqa: E501
                     )
                     logger.debug(f"Kimahri overdrive: {Kimahri.has_overdrive()}")
                     logger.debug("========================")
@@ -735,16 +736,16 @@ def luca_workers_2(early_haste):
                     and kimahri_attacks == 2
                     and not Kimahri.has_overdrive()
                     and not future_attack_will_crit(
-                        character=0, char_luck=18, enemy_luck=15
+                        character=0, char_luck=18, enemy_luck=15, equipment_bonus=6
                     )
                     and not future_attack_will_crit(
-                        character=0, char_luck=18, enemy_luck=15, attack_index=2
+                        character=0, char_luck=18, enemy_luck=15, equipment_bonus=6, attack_index=1
                     )
                     and not future_attack_will_crit(
-                        character=3, char_luck=18, enemy_luck=15
+                        character=3, char_luck=18, enemy_luck=15, equipment_bonus=3
                     )
                     and not future_attack_will_crit(
-                        character=3, char_luck=18, enemy_luck=15, attack_index=2
+                        character=3, char_luck=18, enemy_luck=15, equipment_bonus=3, attack_index=1
                     )
                 ):
                     logger.warning("No crits coming up. Lulu only.")
@@ -3736,6 +3737,77 @@ def steal_left():
     _steal("left")
 
 
+def chain_encounter(chain_steals: int, steal_first_turn: int, grenades_needed: int, rikku_underwater_attacks: int, enemy_formation: int):
+
+    steals_performed = 0
+    rikku_attacks_performed = 0
+    rikku_turn = 0
+
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                if rikku_turn == 1 and steal_first_turn and steals_performed == chain_steals and enemy_formation == 0:
+                    Tidus.attack(target_id=21, direction_hint="l")
+                else:
+                    Tidus.attack()
+
+            if Rikku.is_turn():
+                rikku_turn += 1
+                if rikku_turn == 1 and not steal_first_turn:
+                    Rikku.defend()
+                elif steals_performed < chain_steals:
+                    steals_performed += 1
+                    logging.debug(f"Stealing {steals_performed}/{chain_steals}")
+                    steal()
+                elif grenades_needed < 3 and rikku_underwater_attacks < 3:
+                    Rikku.defend()
+                else:
+                    rikku_attacks_performed += 1
+                    logging.debug("Not stealing first turn" if chain_steals > steals_performed else "Done Stealing")
+                    Rikku.attack()
+
+    return rikku_attacks_performed
+
+
+def ruins_encounter(ruins_steals: int, steal_first_turn: bool, steal_second_turn: bool, steal_twice_first: bool,
+                    steal_twice_second: bool, grenades_needed: int, rikku_underwater_attacks: int):
+
+    steals_performed = 0
+    rikku_attacks_performed = 0
+    rikku_turn = 0
+
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                Tidus.attack()
+
+            if Rikku.is_turn():
+                rikku_turn += 1
+                if rikku_turn == 1 and steal_first_turn and steals_performed < ruins_steals:
+                    steals_performed += 1
+                    logging.debug(f"Stealing {steals_performed}/{ruins_steals}")
+                    steal()
+                elif rikku_turn == 2 and steal_second_turn and steals_performed < ruins_steals:
+                    steals_performed += 1
+                    if steal_twice_first:
+                        logging.debug(f"Stealing again from Piranha A {steals_performed}/{ruins_steals}")
+                        steal()
+                    else:
+                        logging.debug(f"Stealing from Piranha B {steals_performed}/{ruins_steals}")
+                        steal_up()
+                elif rikku_turn == 3 and steal_twice_second and steals_performed < ruins_steals:
+                    steals_performed += 1
+                    logging.debug(f"Stealing again from Piranha B {steals_performed}/{ruins_steals}")
+                    steal()
+                elif rikku_attacks_performed < rikku_underwater_attacks:
+                    rikku_attacks_performed += 1
+                    logging.debug(f"Done Stealing")
+                    Rikku.attack()
+                else:
+                    logging.debug(f"Defending because no more rikku Attacks are desirable")
+                    Rikku.defend()
+
+
 def steal_and_attack():
     logger.debug("Steal/Attack function")
     FFXC.set_neutral()
@@ -3754,7 +3826,6 @@ def steal_and_attack():
         elif memory.main.other_battle_menu():
             xbox.tap_b()
     memory.main.click_to_control()
-
 
 @battle.utils.speedup_decorator
 def steal_and_attack_pre_tros():

@@ -2049,7 +2049,7 @@ def record_blitz_results(duration, test_mode=False):
         json.dump(records, fp, indent=4)
 
 
-def hits_to_seed(hits_array: int):
+def hits_to_seed(hits_array):
     with open("csv\\hits_to_seed.csv", "r", newline="") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:
