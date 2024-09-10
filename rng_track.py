@@ -12,6 +12,96 @@ logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 
+def current_battle_formation() -> []:
+    battle_num = str(memory.main.get_encounter_id())
+    f = open("json_ai_files/battle_id_to_formation.json")
+    all_formations = json.load(f)
+    f.close()
+    if not battle_num in all_formations.keys():
+        return []
+    else:
+        return all_formations[battle_num]
+
+def luck_check(fiend_name:str):
+    library_check = MONSTERS[fiend_name].stats["luck"]
+    logger.debug("== Dict Check: {library_check}")
+    logger.debug("== Dict Check: {library_check}")
+    logger.debug("== Dict Check: {library_check}")
+    logger.debug("== Dict Check: {library_check}")
+    if fiend_name in ["arm","cid","circle","crane","dummy","gate_lock","gate_lock_2","gemini"]:
+        return 0
+    if fiend_name in ["geneauxs_tentacle","head","kimahri_weapon","mortiphasm","mortiphasm_3"]:
+        return 0
+    if fiend_name in ["mortiphasm_4","mortiphasm_5","negator","nemesis","oblitzerator"]:
+        return 0
+    if fiend_name.find("possessed") != -1:
+        return 0
+    if fiend_name.find("sinscale") != -1:
+        return 0
+    if fiend_name in ["pupu","sahagin_4","sahagin_chief"]:
+        return 0
+    if fiend_name in ["sinspawn_ammes","tentacle","vouivre_2","yu_yevon"]:
+        return 10
+    if fiend_name in ["stratoavis"]:
+        return 18
+    if fiend_name in ["anima","lord_ochu","mortibody","mortiphasm_2","neslug","ornitholestes"]:
+        return 20
+    if fiend_name in ["seymour_omnis","yunalesca"]:
+        return 20
+    if fiend_name in ["kottos"]:
+        return 25
+    if fiend_name in ["fenrir"]:
+        return 30
+    if fiend_name in ["hornet"]:
+        return 30
+    return 15
+
+
+def force_drop(drop_chance:int = 255):
+    values = memory.main.rng_array_from_index(index=10, array_len=100)
+    if drop_chance <= 0:
+        return
+    if values[1] & 0x7FFFFFFF % 255 >= drop_chance:
+        memory.main.advance_rng_index(index=10)
+        force_drop(drop_chance=drop_chance)
+    
+
+def force_equip(equip_type:int = 0, character:int = 0, aeon_kill:bool=True, party_size:int = 7):
+    get_item, _ = item_to_be_dropped(
+        enemy = "yunalesca",
+        party_size=party_size,
+    )
+    
+    logger.debug("==== Equip check ====")
+    logger.debug(f"Raw: {get_item}")
+    logger.debug(f"Char kill: {get_item.owner()}")
+    logger.debug(f"Aeon kill: {get_item.owner_alt()}")
+    logger.debug(f"Type (0 for weap): {get_item.equipment_type()}")
+    logger.debug(f"Abilities: {get_item.abilities()}")
+    logger.debug("=====================")
+    
+    
+    if (
+        (aeon_kill and get_item.owner_alt() != character) or
+        (not aeon_kill and get_item.owner() != character) or
+        (equip_type != get_item.equipment_type())
+    ):
+        memory.main.advance_rng_index(index=12)
+        force_equip(
+            equip_type=equip_type,
+            character=character,
+            aeon_kill=aeon_kill,
+            party_size=party_size
+        )
+
+
+def force_preempt():
+    values = memory.main.rng_array_from_index(index=1, array_len=100)
+    if (values[2] & 0x7FFFFFFF) & 255 >= 32:
+        memory.main.advance_rng_index(index=1)
+        force_preempt()
+
+
 def area_formations(area: str):
     f = open("tracker/data/formations.json")
     all_formations = json.load(f)
@@ -79,6 +169,10 @@ def singles_battles(
 def drop_chance(enemy: str = "ghost"):
     return MONSTERS[enemy].equipment["drop_chance"]
 
+
+def drop_rare(drop_num:int = 1):
+    return memory.main.next_steal_rare(drop_num - 1)
+    
 
 def drop_slots(enemy: str = "ghost"):
     return MONSTERS[enemy].equipment["slots_range"]
@@ -149,14 +243,14 @@ def item_to_be_dropped(
     pre_advance_13: int = 0,
     party_size: int = 7,
 ):
-    test_mode = False  # Doesn't functionally change, but prints more stuff.
+    test_mode = False # Doesn't functionally change, but prints more stuff.
     slot_mod = slot_modifier(enemy=enemy)
     ability_mod = ability_modifier(enemy=enemy)
 
     if party_size == 2:
         party_chars = [0, 4]
-    elif party_size == 3:
-        party_chars = [0, 4, 6]
+    elif party_size == 3:  # Oblitzerator
+        party_chars = [0, 3, 5]
     elif party_size == 4:
         party_chars = [0, 1, 4, 5]
     elif party_size == 5:
@@ -207,6 +301,8 @@ def item_to_be_dropped(
     pre_advance_13 += new_abilities[1]
     if test_mode:
         logger.debug(f"New Abilities: {ability_list}")
+        logger.debug(f"OWNER CHECK 1: {user_1}")
+        logger.debug(f"OWNER CHECK 2: {user_2}")
 
     final_item = memory.main.Equipment(equip_num=0)
     final_item.create_custom(

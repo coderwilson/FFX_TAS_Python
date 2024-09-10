@@ -654,5 +654,18 @@ def sel_sphere(s_type, shift):
         grid_right()
         grid_down()
         grid_down()
+    if shift == "left_up":
+        grid_left()
+        grid_up()
+    if shift == "left_down":
+        grid_left()
+        grid_down()
+    if shift == "tidusver2":
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_right()
+        grid_right()
     while memory.main.sphere_grid_placement_open():
         xbox.menu_b()

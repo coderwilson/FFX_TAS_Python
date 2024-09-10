@@ -4,6 +4,7 @@ import memory.main
 import vars
 import xbox
 from players.base import Player
+from rng_track import current_battle_formation, luck_check
 
 game_vars = vars.vars_handle()
 
@@ -15,6 +16,27 @@ class TidusImpl(Player):
         super().__init__("Tidus", 0, [0, 19, 20, 22, 1])
 
     def overdrive(self, direction=None, version: int = 0, character=99):
+        if game_vars.god_mode():
+            logger.warning("Attempting to force a crit, per settings")
+            # Determine enemy name and luck stat
+            enemies = current_battle_formation()
+            if len(enemies) != 0:
+                try:
+                    if target_id is None:
+                        # In multi-enemy battles, the first enemy is almost always the boss.
+                        luck_value = luck_check(enemies[0])
+                    else:
+                        luck_value = luck_check(enemies[target_id-20])
+                except:
+                    luck_value = 15
+            else:
+                luck_value = 15
+            # Force forward to the next crit.
+            memory.main.future_attack_will_crit(
+                character=self.id,
+                char_luck=self.luck(),
+                enemy_luck=luck_value
+            )
         while not memory.main.other_battle_menu():
             xbox.tap_left()
         while not memory.main.interior_battle_menu():

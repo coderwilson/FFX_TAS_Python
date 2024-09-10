@@ -5,7 +5,7 @@ import os.path
 import struct
 import time
 from collections import Counter
-from math import cos, sin
+from math import cos, sin, copysign, sqrt
 from typing import List
 
 from ReadWriteMemory import Process, ReadWriteMemory, ReadWriteMemoryError
@@ -170,6 +170,14 @@ def start():
 def float_from_integer(integer):
     return struct.unpack("!f", struct.pack("!I", integer))[0]
 
+
+def check_near_actors(wait_results:bool = False):
+    for i in range(get_actor_array_size()):
+        if get_actor_id(i) != 52685 and pathing.distance(i) < 200:
+            logger.debug(f"Actor {i}: {get_actor_id(i)}, {pathing.distance(i)}")
+    if wait_results:
+        FFXC.set_neutral()
+        wait_frames(300)
 
 def wait_frames(frames: int):
     frames = max(round(frames), 1)
@@ -841,6 +849,8 @@ def get_encounter_id():
 
     return formation
 
+def get_enemy_formation():
+    base_id = get_encounter_id()
 
 def clear_encounter_id():
     global base_value
@@ -1822,7 +1832,7 @@ def update_formation(first_char, second_char, third_char, *, full_menu_close=Tru
             if game_vars.use_pause():
                 wait_frames(1)
         while menu_number() != 14:
-            xbox.tap_b()
+            xbox.menu_b()
         start_pos = 0
         while Counter(order[:3]) != Counter(order_final[:3]):
             # Select target in the wrong spot.
@@ -2023,12 +2033,25 @@ def miihen_guy_coords():
     return get_actor_coords(spear_guy)
 
 
+def distance(actor_index: int, alt_index:int = 0):
+    # Assume index is passed in.
+    actor_coords = get_actor_coords(actor_index=actor_index)
+    player_coords = get_actor_coords(actor_index=alt_index)
+    distance = sqrt(
+        ((player_coords[0] - actor_coords[0]) ** 2)
+        + ((player_coords[1] - actor_coords[1]) ** 2)
+    )
+    return int(distance)
+
+
 def actor_index(actor_num: int = 41):
+    # If non-unique, choose the closest one.
     actor_index = 255
     for x in range(get_actor_array_size()):
         actor_mem = get_actor_id(x)
         if actor_num == actor_mem:
-            actor_index = x
+            if actor_index == 255 or distance(actor_index) > distance(x):
+                actor_index = x
     return actor_index
 
 
@@ -2145,9 +2168,15 @@ def dodge_lightning(l_dodge_num):
     global base_value
 
     if l_strike_count() != l_dodge_num or (l_strike_count() == 1 and l_dodge_num == 0):
-        wait_frames(3)
+        if get_game_speed() >= 1:
+            wait_frames(1)
+        else:
+            wait_frames(4)
         xbox.tap_b()
-        wait_frames(5)
+        if get_game_speed() >= 1:
+            wait_frames(3)
+        else:
+            wait_frames(5)
         return True
     else:
         return False
@@ -2165,6 +2194,12 @@ def l_dodge_count():
 
     key = base_value + 0x00D2CE8E
     return process.read_bytes(key, 2)
+
+
+def cactuar_stone_4():
+    global base_value
+
+    return process.read_bytes(base_value + 0x92CF00,1)
 
 
 def save_popup_cursor():
@@ -2797,6 +2832,9 @@ class Equipment:
 
     def owner(self):
         return self.equip_owner
+
+    def owner_alt(self):
+        return self.equip_owner_alt
 
     def abilities(self):
         return self.equip_abilities
@@ -4148,6 +4186,7 @@ def future_attack_will_crit(
     rng_index = min(20 + character, 27)
     rng_array = rng_array_from_index(index=rng_index, array_len=200)
 
+
     for i in range(burn_rolls):
         del rng_array[0]
 
@@ -4155,6 +4194,7 @@ def future_attack_will_crit(
         return False
     crit_roll = rng_array[attack_index * 2] % 101
     crit_chance = char_luck - enemy_luck + equipment_bonus
+
     return crit_roll < crit_chance
 
 

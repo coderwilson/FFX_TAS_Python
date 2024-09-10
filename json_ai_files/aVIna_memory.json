@@ -80,5 +80,20 @@
     },
     "235": {
         "kimahri_force_heal": "True"
+    },
+    "255": {
+        "zan_luck": "False"
+    },
+    "31": {
+        "zan_luck": "False"
+    },
+    "65": {
+        "zan_luck": "False"
+    },
+    "232": {
+        "zan_luck": "False"
+    },
+    "145": {
+        "zan_luck": "False"
     }
 }

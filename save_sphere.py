@@ -96,7 +96,10 @@ def approach_save_sphere():
             if memory.main.user_control():
                 pathing.set_movement([target_coords[0], target_coords[1]])
                 if distance(save_index=target_actor) < 15:
-                    xbox.tap_b()
+                    xbox.menu_b()
+                    #memory.main.wait_frames(3)  # To avoid overzealous touching.
+                    if memory.main.user_control():
+                        memory.main.wait_frames(6)
             else:
                 FFXC.set_neutral()
                 if memory.main.get_map() == 347:
@@ -119,11 +122,6 @@ def approach_save_sphere():
                     memory.main.wait_frames(2)
                     memory.main.clear_save_menu_cursor()
                     memory.main.clear_save_menu_cursor_2()
-                    # while memory.main.user_control():
-                    #     pathing.set_movement([target_coords[0], target_coords[1]])
-                    #     xbox.tap_b()
-                    #     memory.main.wait_frames(6)
-                    # memory.main.wait_frames(20)
                     target_details = get_save_sphere_settings(target_actor)
                 else:
                     FFXC.set_neutral()
@@ -137,7 +135,11 @@ def approach_save_sphere():
                         logger.debug(f"Updating actor: {target_actor}")
                     elif memory.main.diag_skip_possible():
                         logger.debug(f"Mark 3 {memory.main.diag_progress_flag()}")
-                        xbox.tap_b()
+                        if not (
+                            memory.main.diag_progress_flag() == target_details[2]
+                            and memory.main.diag_skip_possible()
+                        ):
+                            xbox.tap_b()  # Causes over-zealous touching.
     FFXC.set_neutral()
     return True
 
@@ -146,6 +148,8 @@ def disengage_save_sphere():
     while memory.main.save_menu_cursor() == 0 and memory.main.save_menu_cursor_2() == 0:
         logger.debug("Cursor")
         xbox.tap_a()
+        if memory.main.user_control():
+            return
     while not memory.main.user_control():
         xbox.tap_b()
 

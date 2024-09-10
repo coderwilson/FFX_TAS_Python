@@ -51,10 +51,19 @@ def set_movement(target) -> bool:
 def distance(actor_index: int):
     # Assume index is passed in.
     actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
-    player_coords = memory.main.get_coords()
+    player_coords = memory.main.get_actor_coords(actor_index=0)
     distance = sqrt(
         ((player_coords[0] - actor_coords[0]) ** 2)
         + ((player_coords[1] - actor_coords[1]) ** 2)
+    )
+    return int(distance)
+
+def distance_coords(target_coords):
+    # Assume x/y coords are passed as array.
+    player_coords = memory.main.get_actor_coords(actor_index=0)
+    distance = sqrt(
+        ((player_coords[0] - target_coords[0]) ** 2)
+        + ((player_coords[1] - target_coords[1]) ** 2)
     )
     return int(distance)
 
@@ -83,12 +92,37 @@ def _approach_actor(actor_index: int = 999, talk: bool = True):
     target_coords = [actor_coords[0], actor_coords[1]]
     logger.debug(f"Actor's coordinates: {target_coords}")
 
-    while memory.main.user_control():
+    while (
+        memory.main.user_control() and
+        not memory.main.name_aeon_ready()
+    ):
         set_movement(target_coords)
         if talk and distance(actor_index) < 15:
             xbox.tap_b()
+        actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
+        target_coords = [actor_coords[0], actor_coords[1]]
     return True
 
+
+def approach_coords(target_coords, diag:int = 999, click_through:bool = True):
+    if diag != 999:
+        logger.debug(f"Moving until dialog value achieved: {diag}")
+        while memory.main.diag_progress_flag() != diag:
+            if memory.main.user_control():
+                set_movement(target_coords)
+                if distance_coords(target_coords) < 20:
+                    xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
+                
+    else:
+        while memory.main.user_control():
+            set_movement(target_coords)
+            if distance_coords(target_coords) < 20:
+                xbox.tap_b()
+    if click_through:
+        FFXC.set_neutral()
+        memory.main.click_to_control()
 
 # TODO: Doesn't appear to be used, but left for historical purposes
 def seymour_natus():  # First checkpoint ever written. :D
@@ -97,7 +131,7 @@ def seymour_natus():  # First checkpoint ever written. :D
     return [x, y]
 
 
-# TODO: This appears to be unused
+# TODO: This appears to be unused. Was for a showcase in 2021.
 def t_plains_dodging(checkpoint):
     x = 999
     y = 999

@@ -32,8 +32,8 @@ def wait_for_rng2_weakness(valid_weakness: List[int]):
         current_weakness = cur_next_rng2 % 4
         logger.manip(
             f"Next RNG2: {cur_next_rng2}, "
-            + "Valid Weakness: {valid_weakness}, "
-            + "Current Weakness: {current_weakness}"
+            + f"Valid Weakness: {valid_weakness}, "
+            + f"Current Weakness: {current_weakness}"
         )
         if current_weakness in valid_weakness:
             logger.info("Weakness has lined up.")

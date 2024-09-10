@@ -4,6 +4,7 @@ import battle.boss
 import battle.main
 import logs
 import memory.main
+from memory.main import check_near_actors
 import pathing
 import rng_track
 import save_sphere
@@ -12,7 +13,7 @@ import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
 from players import Auron, CurrentPlayer, Tidus
-from json_ai_files.write_seed import write_seed_num
+from json_ai_files.write_seed import write_seed_num, write_seed_err
 
 game_vars = vars.vars_handle()
 
@@ -113,12 +114,16 @@ def listen_story():
         if memory.main.user_control():
             # Events
             if checkpoint == 5:
-                FFXC.set_movement(-1, -1)
+                #while not pathing.set_movement([15,9]):
+                #    pass
+                check_near_actors(False)
+                pathing.approach_actor_by_id(8544)
+                #FFXC.set_movement(-1, -1)
                 while not memory.main.name_aeon_ready():
-                    xbox.tap_b()
+                    pass
                 logger.info("Ready to name Tidus")
                 FFXC.set_neutral()
-                memory.main.wait_frames(1)
+                memory.main.wait_frames(6)
 
                 # Name Tidus
                 xbox.name_aeon("Tidus")
@@ -128,12 +133,13 @@ def listen_story():
             # elif checkpoint == 7 and game_vars.csr():
             #    checkpoint = 9
             elif checkpoint == 8:
-                while memory.main.user_control():
-                    FFXC.set_movement(1, 0)
-                    xbox.tap_b()
+                check_near_actors(False)
+                #while memory.main.user_control():
+                #    FFXC.set_movement(1, 0)
+                #    xbox.tap_b()
+                pathing.approach_actor_by_id(8201)
                 FFXC.set_neutral()
-                memory.main.await_control()
-                logger.debug("Done clicking")
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint < 11 and memory.main.get_story_progress() >= 5:
                 checkpoint = 11
@@ -201,10 +207,11 @@ def ammes_battle_truerng():
     logger.debug(f"Corrected RNG seed: {correct_seed}")
     if correct_seed != "Err_seed_not_found":
         game_vars.set_confirmed_seed(correct_seed)
+        write_seed_num(seed=memory.main.rng_seed())
     else:
         logging.error(f"Unable to derive seed from recorded hits: {hits_array}")
+        write_seed_err()
     logger.info(f"Confirmed RNG seed: {memory.main.rng_seed()}")
-    write_seed_num(seed=memory.main.rng_seed())
     logger.info("Done Killing Sinspawn")
     memory.main.wait_frames(6)  # Just for no overlap
     logger.debug("Clicking to battle.")

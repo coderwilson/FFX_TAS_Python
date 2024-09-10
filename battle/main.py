@@ -285,7 +285,6 @@ def revive_all():
 
 
 def get_advances(tros=True, report=False):
-    import rng_track
 
     t_strike_results, yellows = rng_track.t_strike_tracking(tros=tros, report=report)
     if t_strike_results[0] >= 1 and not yellows[0]:
@@ -888,9 +887,8 @@ def after_blitz_3(early_haste):
             xbox.await_save(index=1)
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
-    # if not game_vars.csr():
-    #    xbox.await_save(index=1)
-    # wrap_up()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -951,6 +949,8 @@ def after_blitz_3_late_haste(early_haste):
                 xbox.await_save(index=1)
         elif memory.main.diag_skip_possible() or memory.main.menu_open():
             xbox.tap_b()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1490,6 +1490,8 @@ def mix_tutorial():
     xbox.click_to_battle()
     rikku_full_od("tutorial")
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -1935,7 +1937,7 @@ def seymour_guado_blitz_win():
                     tidushaste = True
                 elif animahits < 4:
                     old_hp = memory.main.get_enemy_current_hp()[3]
-                    attack()
+                    CurrentPlayer().attack()
                     if memory.main.battle_active():
                         new_hp = memory.main.get_enemy_current_hp()[3]
                         if new_hp < old_hp:
@@ -1945,7 +1947,7 @@ def seymour_guado_blitz_win():
                             logger.debug("Miss Anima")
                             animamiss += 1
                 else:
-                    attack()
+                    CurrentPlayer().attack()
                 tidus_turns += 1
                 logger.debug(f"Tidus turns: {tidus_turns}")
             elif Yuna.is_turn():
@@ -1975,19 +1977,7 @@ def seymour_guado_blitz_win():
                 elif kimahriturns == 0:
                     Kimahri.overdrive(2)
                 elif kimahriturns == 1:
-                    logs.write_rng_track("RNG11 on Seymour steal command")
-                    logs.write_rng_track(
-                        memory.main.rng_array_from_index(index=11, array_len=2)
-                    )
-                    if not memory.main.next_steal_rare(pre_advance=0):
-                        steal()
-                    elif memory.main.next_steal(steal_count=1, pre_advance=1):
-                        if not memory.main.next_steal_rare(pre_advance=1):
-                            steal()
-                        else:
-                            CurrentPlayer().defend()
-                    else:
-                        CurrentPlayer().defend()
+                    CurrentPlayer().defend()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
                     CurrentPlayer().swap_battle_weapon()
                 else:
@@ -1997,8 +1987,10 @@ def seymour_guado_blitz_win():
                         buddy_swap(Tidus)
                     elif rikkuposition >= 3:
                         buddy_swap(Rikku)
-                    else:
+                    elif not memory.main.next_steal_rare(pre_advance=0):
                         steal()
+                    else:
+                        CurrentPlayer().defend()
                 kimahriturns += 1
                 logger.debug("Kimahri turn, complete")
             elif Auron.is_turn():
@@ -2020,7 +2012,7 @@ def seymour_guado_blitz_win():
                     if kimahridead and rikku_turns == 0:
                         buddy_swap(Rikku)
                     else:
-                        xbox.weap_swap(1)
+                        CurrentPlayer().defend()
                 else:
                     tidusposition = memory.main.get_battle_char_slot(0)
                     rikkuposition = memory.main.get_battle_char_slot(6)
@@ -2435,6 +2427,8 @@ def zu():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Skip Dialog
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -2604,6 +2598,8 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
             else:
                 logger.debug("Flee all battles, nothing more to do.")
                 flee_all()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def update_steal_items_desert():
@@ -2693,6 +2689,8 @@ def home_1():
                 CurrentPlayer().defend()
     logger.debug("Home 1 shows as fight complete.")
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -2715,6 +2713,8 @@ def home_2():
     logger.debug("Home 2 shows as fight complete.")
     FFXC.set_neutral()
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
     return learn_OD
 
 
@@ -2753,6 +2753,8 @@ def home_3():
                 CurrentPlayer().defend()
     FFXC.set_neutral()
     logger.debug("Home 3 shows as fight complete.")
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def home_3_item():
@@ -2788,6 +2790,8 @@ def home_4(learned_OD: bool):
                 CurrentPlayer().defend()
     logger.debug("Home 4 shows as fight complete.")
     memory.main.click_to_control()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -3105,6 +3109,8 @@ def highbridge_drops():
                     Bahamut.unique()
                 else:
                     buddy_swap(Yuna)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def calm_impulse():
@@ -3176,6 +3182,8 @@ def gagazet_path():
                     steal()
                 else:
                     escape_one()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -4283,6 +4291,8 @@ def wrap_up():
     FFXC.set_value("btn_b", 0)
     logger.debug("Wrap up complete.")
     memory.main.wait_frames(1)
+    if game_vars.god_mode():
+        rng_track.force_preempt()
     return True
 
 
@@ -4341,6 +4351,8 @@ def sin_arms():
             xbox.tap_b()
         elif memory.main.cutscene_skip_possible():
             xbox.skip_scene()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
     logger.info("Done with Sin's Arms section")
 
 
@@ -4373,6 +4385,8 @@ def sin_face():
         xbox.skip_scene(fast_mode=True)
         while not memory.main.user_control():
             xbox.tap_b()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 @battle.utils.speedup_decorator
@@ -4480,16 +4494,19 @@ def rikku_full_od(battle):
         logger.debug(f"Ability sphere in slot: {item1}")
         item2 = item1
     elif battle == "Evrae":
+        # No longer viable with Terra skip
+        '''
         if game_vars.skip_kilika_luck():
             item1 = memory.main.get_item_slot(81)
             logger.debug(f"Lv1 sphere in slot: {item1}")
             item2 = memory.main.get_item_slot(84)
             logger.debug(f"Lv4 sphere in slot: {item2}")
         else:
-            item1 = memory.main.get_item_slot(94)
-            logger.debug(f"Luck sphere in slot: {item1}")
-            item2 = memory.main.get_item_slot(100)
-            logger.debug(f"Map in slot: {item2}")
+        '''
+        item1 = memory.main.get_item_slot(94)
+        logger.debug(f"Luck sphere in slot: {item1}")
+        item2 = memory.main.get_item_slot(100)
+        logger.debug(f"Map in slot: {item2}")
     elif battle == "Flux":
         item1 = memory.main.get_item_slot(35)
         logger.debug(f"Grenade in slot: {item1}")
@@ -4502,8 +4519,8 @@ def rikku_full_od(battle):
     elif battle == "crawler":
         item1 = memory.main.get_item_slot(30)
         logger.debug(f"Lightning Marble in slot: {item1}")
-        item2 = memory.main.get_item_slot(85)
-        logger.debug(f"Mdef Sphere in slot: {item2}")
+        item2 = memory.main.get_item_slot(82)
+        logger.debug(f"Lv2 Sphere in slot: {item2}")
     elif battle == "spherimorph1":
         item1 = memory.main.get_item_slot(24)
         logger.debug(f"Arctic Wind in slot: {item1}")
@@ -4596,15 +4613,19 @@ def get_digit(number, n):
 def calculate_spare_change_movement(gil_amount):
     if gil_amount > memory.main.get_gil_value():
         gil_amount = memory.main.get_gil_value()
+    gil_amount = min(gil_amount, 999999)
     # gil_amount = min(gil_amount, 100000)
     position = {}
     gil_copy = gil_amount
     for index in range(0, 7):
         amount = get_digit(gil_amount, index)
-        if amount > 5:
-            gil_amount += 10 ** (index + 1)
+        if gil_copy * 10 > memory.main.get_gil_value():
+            if amount > 5:
+                gil_amount += 10 ** (index + 1)
         position[index] = amount
+    logger.debug(f"Amt1: {gil_amount} | Amt2: {amount} | Copy: {gil_copy}")
     logger.debug(position)
+    
     for cur in range(6, -1, -1):
         if not position[cur]:
             continue
@@ -4966,7 +4987,6 @@ def advance_rng_12():
 
 @battle.utils.speedup_decorator
 def ghost_kill():
-    import rng_track
 
     next_drop, _ = rng_track.item_to_be_dropped()
     owner1 = next_drop.equip_owner
@@ -5001,6 +5021,8 @@ def ghost_kill():
         ghost_kill_aeon()
 
     memory.main.click_to_control_3()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
@@ -5059,6 +5081,8 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                 else:
                     CurrentPlayer().defend()
     logger.debug("RNG10 is now aligned.")
+    if game_vars.god_mode():
+        rng_track.force_preempt()
     return tidus_hasted
 
 
@@ -5098,6 +5122,8 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                 CurrentPlayer().attack()
             else:
                 CurrentPlayer().defend()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def ghost_kill_any(silence_slot: int, self_haste: bool):
@@ -5143,6 +5169,8 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                 CurrentPlayer().attack()
             else:
                 CurrentPlayer().defend()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
 
 
 def ghost_kill_aeon():
@@ -5156,3 +5184,5 @@ def ghost_kill_aeon():
                 aeon_summon(4)
             else:
                 CurrentPlayer().defend()
+    if game_vars.god_mode():
+        rng_track.force_preempt()
