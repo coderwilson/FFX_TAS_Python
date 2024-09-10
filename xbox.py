@@ -25,9 +25,9 @@ class VgTranslator:
         elif x_key == "btn_start" and value == 1:
             self.gamepad.press_button(button=0x0010)
         elif x_key == "btn_a" and value == 1:
-            self.gamepad.press_button(button=0x2000)
-        elif x_key == "btn_b" and value == 1:
             self.gamepad.press_button(button=0x1000)
+        elif x_key == "btn_b" and value == 1:
+            self.gamepad.press_button(button=0x2000)
         elif x_key == "btn_x" and value == 1:
             self.gamepad.press_button(button=0x4000)
         elif x_key == "btn_y" and value == 1:
@@ -55,9 +55,9 @@ class VgTranslator:
         elif x_key == "btn_start" and value == 0:
             self.gamepad.release_button(button=0x0010)
         elif x_key == "btn_a" and value == 0:
-            self.gamepad.release_button(button=0x2000)
-        elif x_key == "btn_b" and value == 0:
             self.gamepad.release_button(button=0x1000)
+        elif x_key == "btn_b" and value == 0:
+            self.gamepad.release_button(button=0x2000)
         elif x_key == "btn_x" and value == 0:
             self.gamepad.release_button(button=0x4000)
         elif x_key == "btn_y" and value == 0:

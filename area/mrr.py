@@ -34,6 +34,8 @@ def arrival():
                 checkpoint = 4
                 logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 6 and not game_vars.csr():
+                return 1  # Indicates we are attempting Terra skip.
+                '''
                 skip_prep()
                 if attempt_skip():
                     advance_to_aftermath()
@@ -41,6 +43,7 @@ def arrival():
                     return 1
                 else:
                     return 2
+                '''
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -85,7 +88,9 @@ def arrival():
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle.main.flee_all()
-                memory.main.click_to_control_3()
+                if memory.main.game_over():
+                    return 999
+                memory.main.click_to_control()
                 if memory.main.get_hp()[0] < 520:
                     battle.main.heal_up(full_menu_close=False)
                 elif 1 in memory.main.ambushes():
@@ -95,8 +100,9 @@ def arrival():
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     FFXC.set_neutral()
+    '''
     if game_vars.csr():
-        # Logic for CSR mode
+        # Logic for Terra Skip. Moved to area.mrr_skip file
         memory.main.await_control()
         FFXC.set_movement(1, -1)
         memory.main.await_event()
@@ -108,7 +114,8 @@ def arrival():
         game_vars.mrr_skip_set(True)
         return True
     logger.info("Done with prelim MRR area, now for the real deal.")
-    return 0
+    '''
+    return True
 
 
 def log_mrr_kimahri_crit_chance():

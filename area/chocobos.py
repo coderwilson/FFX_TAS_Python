@@ -20,6 +20,7 @@ from menu import equip_armor
 from save_sphere import touch_and_go
 import tts
 from players import CurrentPlayer
+import reset
 from json_ai_files.write_seed import write_custom_message
 
 FFXC = xbox.controller_handle()
@@ -2592,15 +2593,9 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
         success = yojimbo_battle(flee_available=False, needed_amount=cur_gil)
         logger.debug(f"Yojimbo results: {success}")
         if not success:
-            while not memory.main.save_menu_open():
-                if memory.main.get_map() != 23:
-                    xbox.menu_b()
-                elif memory.main.save_menu_cursor() == 0:
-                    xbox.menu_down()
-                else:
-                    xbox.menu_b()
+            reset.reset_to_main_menu()
             #xbox.menu_b()
-            memory.main.wait_frames(3)
+            area.dream_zan.new_game(gamestate="reload_autosave")
             load_game.load_save_num(0)
     
     memory.main.await_control()
