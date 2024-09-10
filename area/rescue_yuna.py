@@ -481,9 +481,12 @@ def via_purifico():
                 FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.isaaru()
+            if memory.main.game_over():
+                return False
         else:
             FFXC.set_neutral()
             xbox.tap_b()
+    return True
 
 
 # TODO: Switch to using pathing instead, if possible

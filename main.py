@@ -23,6 +23,7 @@ import area.mac_woods
 import area.miihen
 import area.moonflow
 import area.mrr
+from area.mrr_skip import skip_prep, attempt_skip, advance_to_aftermath
 import area.ne_armor
 import area.rescue_yuna
 import area.sin
@@ -446,6 +447,7 @@ def perform_TAS():
 
             # Just to make sure we set this variable somewhere.
             if game.state == "Miihen":
+                return_array = [False, 0, False, False]
                 if game.step == 1:
                     return_array = area.miihen.arrival()
                     if return_array[2] is False:
@@ -476,7 +478,31 @@ def perform_TAS():
 
             if game.state == "MRR":
                 if game.step == 1:
-                    result = area.mrr.arrival()
+                    if area.mrr.arrival() == 1:  # Perform section before Terra skip attempt.
+                        game_vars.mrr_skip_set(True)
+                        game.step = 2
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
+                        
+                if game.step == 2:
+                    # These three steps are all performed on the same map.
+                    # i.e. they reload to the same autosave.
+                    skip_prep()
+                    if attempt_skip():  # i.e. if this step is successful
+                        if advance_to_aftermath():  # i.e. if this step is successful
+                            game.step = 4  # There is no 3 since Terra Skip found.
+                    
+                    # Cathall for all the Else statements
+                    if game.step == 2:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
+
+                    '''
                     if result == 1:
                         game.step = 4
                     elif result == 2:
@@ -484,15 +510,18 @@ def perform_TAS():
                     else:
                         game.step = 2
                         maybe_create_save(save_num=27)
+                    '''
 
-                if game.step == 2:
+                if game.step == 12:
+                    # Formerly step 2, this was the section leading up to battle site.
                     area.mrr.main_path()
                     if memory.main.game_over():
                         game.state = "game_over_error"
                     game.step = 3
                     maybe_create_save(save_num=88)
 
-                if game.step == 3:
+                if game.step == 13:
+                    # Formerly step 3, this was the entire battle site logic.
                     area.mrr.battle_site()
                     game.step = 4
                 if game.step == 4:
@@ -564,7 +593,11 @@ def perform_TAS():
                 if game.step == 1:
                     plains_battles = area.thunder_plains.south_pathing()
                     if plains_battles == 999:
-                        game.state, game.step = reset.mid_run_reset()
+                        #game.state, game.step = reset.mid_run_reset()
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
                     else:
                         game.step = 2
                         # maybe_create_save(save_num=33)
@@ -580,12 +613,22 @@ def perform_TAS():
                         game.step = 1
                         maybe_create_save(save_num=34)
                     else:
-                        game.state, game.step = reset.mid_run_reset()
+                        #game.state, game.step = reset.mid_run_reset()
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
             if game.state == "Macalania":
                 if game.step == 1:
-                    area.mac_woods.arrival(False)
-                    game.step = 2
+                    if area.mac_woods.arrival(False):
+                        # Successful completion of this area.
+                        game.step = 2
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
                     maybe_create_save(save_num=35)
 
                 if game.step == 2:
@@ -650,9 +693,14 @@ def perform_TAS():
                     game.step = 3
 
                 if game.step == 3:
-                    area.rescue_yuna.via_purifico()
-                    game.step = 4
-                    maybe_create_save(save_num=42)
+                    if area.rescue_yuna.via_purifico():
+                        game.step = 4
+                        maybe_create_save(save_num=42)
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
                 if game.step == 4:
                     area.rescue_yuna.evrae_altana()
@@ -1023,6 +1071,7 @@ def write_final_logs():
     area.chocobos.to_remiem()
     area.chocobos.remiem_races()
     area.chocobos.leave_temple()
+    area.chocobos.sun_crest(godhand=0, baaj=0)
     area.chocobos.butterflies()
     
     reset.reset_no_battles()

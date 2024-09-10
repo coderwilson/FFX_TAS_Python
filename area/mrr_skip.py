@@ -9,6 +9,7 @@ from paths import MRRSkip
 import vars
 import xbox
 from players import Auron, Kimahri, Tidus, Wakka
+import time
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -48,6 +49,11 @@ def movements(target, stutter: bool = False, buffer: int = 10):
 
 def skip_prep():
     logger.info("Attempting MRR Skip")
+    memory.main.await_control()
+    FFXC.set_movement(1, -1)
+    memory.main.await_event()
+    FFXC.set_neutral()
+    memory.main.await_control()
 
     # Get near the spot, but out of the way of the runner.
     logger.info("Near but away from the runner")
@@ -61,18 +67,19 @@ def skip_prep():
 
     target = [-18, -400]
     movements(target)
-    logger.info("Moving to position.")
 
+
+def attempt_skip():
+    logger.info("Moving to position.")
     target = [-14.7, -400]
     movements(target, stutter=True, buffer=0.5)
+    wait_frames(15)
     FFXC.set_movement(0, -1)
     wait_frames(1)
     FFXC.set_neutral()
     wait_frames(3)
     logger.info("In position.")
 
-
-def attempt_skip():
     logger.info("Waiting for the guy to come back")
     part_1_done = False
     part_2_done = False
@@ -91,6 +98,8 @@ def attempt_skip():
                 attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
                 battle.main.wrap_up()
                 if _distance(position, tidus_coords) >= 15:
                     if memory.main.get_hp()[0] < 520:
@@ -118,11 +127,28 @@ def attempt_skip():
             battle.main.heal_up()
             memory.main.update_formation(Tidus, Wakka, Auron)
         logger.info("First barrier passed.")
-        # FFXC.set_movement(1,1)
-        # wait_frames(60)
-        # FFXC.set_neutral()
-        # wait_frames(6)
+        
+        logger.info("It's possible to get stuck in this section.")
+        logger.info("We will set a time limit of 600 seconds to get through this.")
+        logger.info("If we exceed the limit, reset and try again.")
+        # Now to wait for the skip to happen, or 60 second maximum limit
+        start_time = time.time()
+        # Max number of seconds that we will wait for the skip to occur.
+        time_limit = 600
+        max_time = start_time + time_limit
+        last_count = 0
+
         while not part_2_done:
+            # Time-related items and infinite loop protection
+            current_time = time.time()
+            if current_time > max_time:
+                logger.warning("Skip seemingly failed. Resetting.")
+                return False
+            elif int(current_time - start_time) > int(last_count):
+                logger.debug(f"Wait incrementer: {int(current_time - start_time)}")
+                last_count = int(current_time - start_time)
+            
+            # Skip logic
             if get_coords()[1] != 0:
                 runner_index = actor_index(8323)
                 position = get_actor_coords(runner_index)
@@ -135,6 +161,8 @@ def attempt_skip():
                 attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
                 battle.main.wrap_up()
                 if _distance(position, tidus_coords) >= 15:
                     if memory.main.get_hp()[0] < 520:
@@ -168,8 +196,10 @@ def attempt_skip():
             battle.main.heal_up()
         memory.main.update_formation(Tidus, Kimahri, Auron)
         logger.info("Success!")
+        return True
     except Exception as e:
         logger.warning(e)
+        return False
 
 
 def advance_to_aftermath():
