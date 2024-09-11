@@ -95,5 +95,8 @@
     },
     "145": {
         "zan_luck": "False"
+    },
+    "150": {
+        "kimahri_force_heal": "True"
     }
 }

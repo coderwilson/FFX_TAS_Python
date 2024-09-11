@@ -1,6 +1,6 @@
 def write_seed_num(seed: int):
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write(f"Seed num: {seed}\nBlitz Win: TBD")
+    f.write(f"Seed num: {seed}\nBlitz Win: TBD\nReturn spheres: none")
     f.close()
 
 
@@ -12,10 +12,18 @@ def write_blitz_results(results:str):
     f.write(new_str)
     f.close()
 
+def write_returns(results:int):
+    f = open("json_ai_files\current_seed.txt")
+    new_str = f.read().replace("none", str(results))
+    f.close()
+    f = open("json_ai_files\current_seed.txt", "w")
+    f.write(new_str)
+    f.close()
+
 
 def write_seed_err():
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write(f"Non-standard run active!\nBlitz Win: TBD")
+    f.write(f"TrueRNG run active!\nBlitz Win: TBD\nReturn spheres: none")
     f.close()
 
 

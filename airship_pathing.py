@@ -70,8 +70,8 @@ def air_ship_path(version, checkpoint:int = 0):
                     while not memory.main.item_shop_menu() == 10:
                         xbox.tap_b()
                 if memory.main.get_speed() < 10:
-                    while memory.main.equip_buy_row() != 10:
-                        if memory.main.equip_buy_row() < 10:
+                    while memory.main.equip_buy_row() != 9:
+                        if memory.main.equip_buy_row() < 9:
                             xbox.tap_down()
                         else:
                             xbox.tap_up()

@@ -446,6 +446,7 @@ def perform_TAS():
 
             # Just to make sure we set this variable somewhere.
             if game.state == "Miihen":
+                return_array = [False, 0, False, False]
                 if game.step == 1:
                     return_array = area.miihen.arrival()
                     if return_array[2] is False:

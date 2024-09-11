@@ -192,7 +192,7 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none",
+                "special_movement": "moonflow_north",
                 "mrr_skip": false
             },
             "False": {
@@ -201,7 +201,7 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none",
+                "special_movement": "moonflow_north",
                 "mrr_skip": true
             }
         }
@@ -223,7 +223,7 @@
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
-                "special_movement": "none",
+                "special_movement": "guado_start",
                 "mrr_skip": true
             }
         }

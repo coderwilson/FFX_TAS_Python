@@ -95,11 +95,11 @@ def approach_save_sphere():
             # Touch sphere logic
             if memory.main.user_control():
                 pathing.set_movement([target_coords[0], target_coords[1]])
-                if distance(save_index=target_actor) < 15:
-                    xbox.menu_b()
+                if distance(save_index=target_actor) < 20:
+                    xbox.tap_b()
                     #memory.main.wait_frames(3)  # To avoid overzealous touching.
                     if memory.main.user_control():
-                        memory.main.wait_frames(6)
+                        memory.main.wait_frames(1)
             else:
                 FFXC.set_neutral()
                 if memory.main.get_map() == 347:
