@@ -78,16 +78,16 @@ def new_game(gamestate):
 def new_game_2():
     # New game selected. Next, select options.
     time_buffer = 15
-    logger.info("====================================")
+    #logger.info("====================================")
     #logger.info("Starting in")
     #logger.info("3")
     #memory.main.wait_frames(time_buffer)
     #logger.info("2")
     #memory.main.wait_frames(time_buffer)
-    #logger.info("1")
+    ##logger.info("1")
     #memory.main.wait_frames(time_buffer)
-    #logger.info("GO!!! Good fortune!")
-    #logger.info("====================================")
+    logger.info("GO!!! Good fortune!")
+    logger.info("====================================")
     #logger.info(f"Set seed: {memory.main.rng_seed()}")
     xbox.menu_b()
     xbox.menu_b()

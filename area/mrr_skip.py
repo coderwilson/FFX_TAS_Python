@@ -9,6 +9,7 @@ from paths import MRRSkip
 import vars
 import xbox
 from players import Auron, Kimahri, Tidus, Wakka
+import time
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -50,6 +51,11 @@ def movements(target, stutter: bool = False, buffer: int = 10, report=False):
 
 def skip_prep():
     logger.info("Attempting MRR Skip")
+    memory.main.await_control()
+    FFXC.set_movement(1, -1)
+    memory.main.await_event()
+    FFXC.set_neutral()
+    memory.main.await_control()
 
     # Get near the spot, but out of the way of the runner.
     logger.info("Near but away from the runner")
@@ -82,7 +88,6 @@ def skip_prep():
     FFXC.set_neutral()
     wait_frames(3)
     logger.info("In position.")
-
 
 def attempt_skip():
     logger.info("Waiting for the guy to come back")
@@ -126,6 +131,8 @@ def attempt_skip():
                 attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
                 battle.main.wrap_up()
                 if _distance(position, tidus_coords) >= 15:
                     if memory.main.get_hp()[0] < 520:
@@ -153,6 +160,7 @@ def attempt_skip():
             battle.main.heal_up()
             memory.main.update_formation(Tidus, Wakka, Auron)
         logger.info("First barrier passed.")
+        
         '''
         logger.info("It's possible to get stuck in this section.")
         logger.info("We will set a time limit of 600 seconds to get through this.")
@@ -212,6 +220,8 @@ def attempt_skip():
             #    attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
                 battle.main.wrap_up()
                 if _distance(position, tidus_coords) >= 15:
                     if memory.main.get_hp()[0] < 520:
@@ -245,8 +255,10 @@ def attempt_skip():
             battle.main.heal_up()
         memory.main.update_formation(Tidus, Kimahri, Auron)
         logger.info("Success!")
+        return True
     except Exception as e:
         logger.warning(e)
+        return False
 
 
 def advance_to_aftermath():

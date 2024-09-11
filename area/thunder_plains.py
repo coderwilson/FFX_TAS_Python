@@ -85,7 +85,7 @@ def south_pathing():
                         and not memory.main.battle_active()
                     ):
                         xbox.menu_b()
-                    elif screen.battle_screen():
+                    elif memory.main.battle_active():
                         result = battle.main.thunder_plains(
                             1, battle_count=battle_count
                         )

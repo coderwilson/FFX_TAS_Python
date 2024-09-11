@@ -35,21 +35,21 @@ def air_ship_path(version, checkpoint:int = 0):
                 while memory.main.diag_progress_flag() != 44:
                     if memory.main.user_control():
                         pathing.set_movement([-6, 6])
-                        xbox.tap_b()
+                        xbox.menu_b()
                     else:
                         FFXC.set_neutral()
                         if memory.main.battle_active():
                             battle.main.flee_all()
                         elif memory.main.menu_open():
-                            xbox.tap_b()
+                            xbox.menu_b()
                 FFXC.set_neutral()
                 memory.main.click_to_diag_progress(48)
                 while memory.main.airship_shop_dialogue_row() != 1:
                     xbox.tap_down()
                 while not memory.main.item_shop_menu() == 7:
-                    xbox.tap_b()  # Click through until items menu comes up
+                    xbox.menu_b()  # Click through until items menu comes up
                 while not memory.main.item_shop_menu() == 10:
-                    xbox.tap_b()  # Select buy command
+                    xbox.menu_b()  # Select buy command
                 if memory.main.get_power() < 28:
                     while memory.main.equip_buy_row() != 7:
                         if memory.main.equip_buy_row() < 7:
@@ -57,7 +57,7 @@ def air_ship_path(version, checkpoint:int = 0):
                         else:
                             xbox.tap_up()
                     while not memory.main.item_shop_menu() == 16:
-                        xbox.tap_b()
+                        xbox.menu_b()
                     while memory.main.purchasing_amount_items() != min(
                         math.ceil((28 - memory.main.get_power()) / 2), 3
                     ):
@@ -67,8 +67,8 @@ def air_ship_path(version, checkpoint:int = 0):
                             xbox.tap_right()
                         else:
                             xbox.tap_left()
-                    while not memory.main.item_shop_menu() == 10:
-                        xbox.tap_b()
+                    while not memory.main.item_shop_menu() == 9:
+                        xbox.menu_b()
                 if memory.main.get_speed() < 10:
                     while memory.main.equip_buy_row() != 9:
                         if memory.main.equip_buy_row() < 9:
@@ -87,7 +87,7 @@ def air_ship_path(version, checkpoint:int = 0):
                         else:
                             xbox.tap_left()
                     while not memory.main.item_shop_menu() == 10:
-                        xbox.tap_b()
+                        xbox.menu_b()
                 memory.main.close_menu()
                 memory.main.click_to_control_3()
                 distiller_purchase = True
