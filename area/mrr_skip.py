@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
+import time
 
 
 def _distance(n1, n2):
@@ -27,11 +28,13 @@ def _distance(n1, n2):
         return 999
 
 
-def movements(target, stutter: bool = False, buffer: int = 10):
+def movements(target, stutter: bool = False, buffer: int = 10, report=False):
     while _distance(get_coords(), target) > buffer:
         if memory.main.user_control():
             pathing.set_movement(target)
             if stutter:
+                if report:
+                    logger.debug(get_coords())
                 wait_frames(2)
                 FFXC.set_neutral()
                 wait_frames(3)
@@ -39,12 +42,11 @@ def movements(target, stutter: bool = False, buffer: int = 10):
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.flee_all()
-            elif (
-                memory.main.battle_wrap_up_active() or memory.main.diag_skip_possible()
-            ):
-                xbox.tap_b()
+                battle.main.wrap_up()
+                return False
     FFXC.set_neutral()
     wait_frames(9)
+    return True
 
 
 def skip_prep():
@@ -65,14 +67,21 @@ def skip_prep():
             xbox.tap_b()
     logger.info("Runner seems in a good spot. Let's go.")
 
-    target = [-18, -400]
-    movements(target)
-
-
-def attempt_skip():
-    logger.info("Moving to position.")
-    target = [-14.7, -400]
-    movements(target, stutter=True, buffer=0.5)
+    align_complete = False
+    while not align_complete:
+        logger.info("Moving to position.")
+        target = [-17.2, -400]
+        if movements(target):
+            logger.info("Stutter step to position.")
+            target = [-14.7, -400]
+            if movements(target, stutter=True, buffer=0.5):
+                align_complete = True
+            else:
+                # If fail, move away and try again.
+                movements([-22, -440])
+        else:
+            # If fail, move away and try again.
+            movements([-22, -440])
     wait_frames(15)
     FFXC.set_movement(0, -1)
     wait_frames(1)
@@ -80,15 +89,39 @@ def attempt_skip():
     wait_frames(3)
     logger.info("In position.")
 
+def attempt_skip():
     logger.info("Waiting for the guy to come back")
     part_1_done = False
     part_2_done = False
     attempt = True
     try:
+        
+        logger.info("It's possible to get stuck in this section.")
+        logger.info("We will set a time limit of 600 seconds to get through this.")
+        logger.info("If we exceed the limit, reset and try again.")
+        start_time = time.time()
+        # Max number of seconds that we will wait for the skip to occur.
+        time_limit = 180
+        max_time = start_time + time_limit
+        last_count = 0
+
         while not part_1_done:
+            # Time-related items and infinite loop protection
+            current_time = time.time()
+            pos = memory.main.get_coords()
+            if pos != [0,0]:
+                tidus_coords = [round(pos[0],2),round(pos[1],2)]
+            if current_time > max_time:
+                logger.warning("Skip seemingly failed. Resetting.")
+                return False
+            elif int(current_time - start_time) > int(last_count):
+                logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
+                last_count = int(current_time - start_time)
+            
+            # Skip logic
             runner_index = actor_index(8323)
             position = get_actor_coords(runner_index)
-            tidus_coords = get_coords()
+            #tidus_coords = get_coords()
 
             if attempt and position[1] > tidus_coords[1] + 15:
                 logger.debug(" - Runner too far. Wait for him to come back.")
@@ -117,17 +150,18 @@ def attempt_skip():
                     wait_frames(1)
                     FFXC.set_value("btn_b", 0)
                     wait_frames(1)
-                elif (
-                    -380 > tidus_coords[1] > -400
-                    and _distance(position, tidus_coords) < 60
-                ):
-                    part_1_done = True
+            if (
+                tidus_coords[1] > -398
+                and _distance(position, tidus_coords) > 60
+            ):
+                part_1_done = True
 
         if memory.main.get_hp()[0] < 520:
             battle.main.heal_up()
             memory.main.update_formation(Tidus, Wakka, Auron)
         logger.info("First barrier passed.")
         
+        '''
         logger.info("It's possible to get stuck in this section.")
         logger.info("We will set a time limit of 600 seconds to get through this.")
         logger.info("If we exceed the limit, reset and try again.")
@@ -138,27 +172,52 @@ def attempt_skip():
         max_time = start_time + time_limit
         last_count = 0
 
+        #while not movements([-10,-386], stutter=True, buffer=0.5, report=True):
+        #    logger.debug("Let's try that again.")
+        logger.debug("Now waiting for the runner to pass.")
+        runner_index = actor_index(8323)
+        position = get_actor_coords(runner_index)
+        pos = memory.main.get_coords()
+        if pos != [0,0]:
+            tidus_coords = [round(pos[0],2),round(pos[1],2)]
+        while position[1] < tidus_coords[1]:
+            current_time = time.time()
+            pos = memory.main.get_coords()
+            if pos != [0,0]:
+                tidus_coords = [round(pos[0],2),round(pos[1],2)]
+            runner_index = actor_index(8323)
+            position = get_actor_coords(runner_index)
+            pos = memory.main.get_coords()
+            if pos != [0,0]:
+                tidus_coords = [round(pos[0],2),round(pos[1],2)]
+            if int(current_time - start_time) > int(last_count):
+                logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
+                last_count = int(current_time - start_time)
+
+        '''
+        attempt = True
+
         while not part_2_done:
             # Time-related items and infinite loop protection
             current_time = time.time()
+            pos = memory.main.get_coords()
+            if pos != [0,0]:
+                tidus_coords = [round(pos[0],2),round(pos[1],2)]
             if current_time > max_time:
                 logger.warning("Skip seemingly failed. Resetting.")
                 return False
             elif int(current_time - start_time) > int(last_count):
-                logger.debug(f"Wait incrementer: {int(current_time - start_time)}")
+                logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
                 last_count = int(current_time - start_time)
             
             # Skip logic
             if get_coords()[1] != 0:
                 runner_index = actor_index(8323)
                 position = get_actor_coords(runner_index)
-                tidus_coords = get_coords()
-            if attempt and position[1] > tidus_coords[1] + 25:
-                logger.debug(" - Runner too far. Wait for him to come back.")
-                attempt = False
-            if not attempt and position[1] < tidus_coords[1] - 15:
-                logger.debug(" - Runner is lining up. Prepare for skip.")
-                attempt = True
+                #tidus_coords = get_coords()
+            #if not attempt and position[1] < tidus_coords[1] - 15:
+            #    logger.debug(" - Runner is lining up. Prepare for skip.")
+            #    attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
                 if memory.main.game_over():

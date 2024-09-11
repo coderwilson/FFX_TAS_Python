@@ -275,12 +275,11 @@ def trials():
 def escape():
     memory.main.click_to_control()
     logger.info("First, some menuing")
-    menu_done = False
+    menu_done = game_vars.get_blitz_win()
     if game_vars.nemesis():
         memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
     else:
         menu.after_seymour()
-        menu_done = True
         memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
     menu.equip_sonic_steel(full_menu_close=True)
 
@@ -290,7 +289,7 @@ def escape():
         chance = 1  # Testing where 139 does the extra battle.
     else:
         chance = 99  # For now, don't use randomness.
-    if chance < 20:
+    if chance < 20 or not game_vars.get_blitz_win():
         force_battle = True
     else:
         force_battle = False
@@ -324,7 +323,7 @@ def escape():
                     force_battle = False
                 elif not menu_done:
                     battle.main.escape_with_xp()
-                    menu.after_seymour()
+                    menu.home_grid()
                     menu_done = True
                     memory.main.update_formation(Tidus, Yuna, Rikku)
                 elif memory.main.get_encounter_id() == 195:

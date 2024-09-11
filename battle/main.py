@@ -45,12 +45,14 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
                 xbox.tap_right()
             else:
                 xbox.tap_left()
+            memory.main.wait_frames(1)
         while battle_cursor() != position:
             logger.debug(f"Battle_cursor: {battle_cursor()}")
             if battle_cursor() > position:
                 xbox.tap_up()
             else:
                 xbox.tap_down()
+            memory.main.wait_frames(1)
 
 
 def tap_targeting():
@@ -2144,8 +2146,6 @@ def seymour_guado_blitz_loss():
                     tidus_haste("none")
                     tidushaste = True
                 elif tidus_turns == 1:
-                    cheer()
-                elif tidus_turns == 2:
                     logger.debug("Talk to Seymour")
                     while not memory.main.other_battle_menu():
                         xbox.tap_left()
@@ -2155,18 +2155,18 @@ def seymour_guado_blitz_loss():
                         xbox.tap_b()
                     xbox.tap_left()
                     tap_targeting()
+                elif tidus_turns == 2:
+                    cheer()
                 elif tidus_turns == 3:
-                    logger.debug("Swap to Brotherhood")
-                    Tidus.swap_battle_weapon(named_equip="brotherhood")
+                    Tidus.attack()
+                    #logger.debug("Swap to Brotherhood")
+                    #Tidus.swap_battle_weapon(named_equip="brotherhood")
                 elif tidus_turns == 4:
-                    logger.debug("Tidus overdrive activating")
-                    screen.await_turn()
-                    Tidus.overdrive("left")
-                elif tidus_turns == 5:
                     buddy_swap(Wakka)
                 elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
                     buddy_swap(Lulu)
-                    CurrentPlayer().defend()
+                    memory.main.await_turn()
+                    revive()
                     missbackup = True
                 elif not tidushaste:
                     logger.debug("Tidus Haste self")
@@ -2192,27 +2192,18 @@ def seymour_guado_blitz_loss():
                 if yunaturns == 0:
                     CurrentPlayer().swap_battle_weapon()
                 else:
-                    buddy_swap(Lulu)
+                    buddy_swap(Auron)
                     screen.await_turn()
                     _print_confused_state()
                     if memory.main.state_confused(3):
                         remedy(character=Kimahri, direction="l")
                         kimahriconfused = True
                     else:
-                        CurrentPlayer().swap_battle_weapon()
+                        CurrentPlayer().defend()
                 yunaturns += 1
                 logger.debug("Yuna turn, complete")
-            elif Lulu.is_turn():
-                if animahits == 0:
-                    _print_confused_state()
-                    buddy_swap(Rikku)
-                    if memory.main.state_confused(0):
-                        remedy(character=Tidus, direction="l")
-                    elif memory.main.state_confused(3):
-                        remedy(character=Kimahri, direction="l")
-                else:
-                    buddy_swap(Tidus)
-                    attack()
+            elif Auron.is_turn():
+                buddy_swap(Rikku)
             elif Kimahri.is_turn():
                 if kimahriconfused:
                     tidusposition = memory.main.get_battle_char_slot(0)
@@ -2224,15 +2215,7 @@ def seymour_guado_blitz_loss():
                     else:
                         CurrentPlayer().defend()
                 elif kimahriturns == 0:
-                    _print_confused_state()
-                    if memory.main.state_confused(0):
-                        remedy(character=Tidus, direction="l")
-                    elif memory.main.state_confused(1):
-                        remedy(character=1, direction="l")
-                    elif memory.main.state_confused(5):
-                        remedy(character=5, direction="l")
-                    else:
-                        CurrentPlayer().defend()
+                    Kimahri.overdrive(2)
                 elif thrown_items < 2:
                     item_slot = get_anima_item_slot()
                     if item_slot != 255:
@@ -2253,6 +2236,18 @@ def seymour_guado_blitz_loss():
                         steal()
                 kimahriturns += 1
                 logger.debug("Kimahri turn, complete")
+            elif Lulu.is_turn():
+                tidusposition = memory.main.get_battle_char_slot(0)
+                rikkuposition = memory.main.get_battle_char_slot(6)
+                kimahriposition = memory.main.get_battle_char_slot(3)
+                if tidusposition >= 3:
+                    buddy_swap(Tidus)
+                elif rikkuposition >= 3:
+                    buddy_swap(Rikku)
+                elif kimahriposition >= 3:
+                    buddy_swap(Kimahri)
+                else:
+                    CurrentPlayer.defend()
             elif Wakka.is_turn():
                 if wakka_turns == 0:
                     CurrentPlayer().swap_battle_weapon()
@@ -2381,7 +2376,7 @@ def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
         if memory.main.get_throw_items_slot(7) < 255:
             revive_all()
         elif memory.main.get_throw_items_slot(6) < 255:
-            revive()  # Should technically target tidus but need to update this logic
+            revive_target(target=0)  # Should technically target tidus but need to update this logic
     # If just Tidus is dead revive him
     elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
         logger.debug("Reviving tidus")
@@ -3747,7 +3742,10 @@ def chain_encounter(chain_steals: int, steal_first_turn: int, grenades_needed: i
         if memory.main.turn_ready():
             if Tidus.is_turn():
                 if rikku_turn == 1 and steal_first_turn and steals_performed == chain_steals and enemy_formation == 0:
-                    Tidus.attack(target_id=21, direction_hint="l")
+                    if len(memory.main.get_enemy_current_hp()) == 1:
+                        Tidus.attack()
+                    else:
+                        Tidus.attack(target_id=21, direction_hint="l")
                 else:
                     Tidus.attack()
 

@@ -657,6 +657,9 @@ def sel_sphere(s_type, shift):
     if shift == "left_up":
         grid_left()
         grid_up()
+    if shift == "up_left":
+        grid_up()
+        grid_left()
     if shift == "left_down":
         grid_left()
         grid_down()
