@@ -302,7 +302,7 @@ def ab_swimming_1_truerng():
                 xbox.menu_b()
 
 
-def ab_swimming_1(rikku_underwater_attacks: int):
+def ab_swimming_1(chain_encounter_strat: int):
     logger.info("Swimming down from the boat")
     while memory.main.get_map() != 288:
         if memory.main.user_control():
@@ -320,9 +320,21 @@ def ab_swimming_1(rikku_underwater_attacks: int):
 
     FFXC.set_neutral()
     logger.info("Swimming towards airship")
+
+    enemy_formation = memory.main.rng_array_from_index(index=1)[1] % 2
+    logging.debug(f"Chain Encounter Formation Expected: {enemy_formation}")
+
+    if manip_planning.baaj_to_tros.chain_encounter():
+        if Rikku.hp() < 100:
+            if Tidus.hp() < 100:
+                battle.main.heal_up_2(0, 6, single_item=True)
+            else:
+                battle.main.heal_up_2(6, single_item=True)
+        elif Tidus.hp() < 100:
+            battle.main.heal_up_2(0, single_item=True)
+
     while memory.main.get_map() != 64:
         pos = memory.main.get_coords()
-        rikku_attacks_left = rikku_underwater_attacks
         if memory.main.user_control():
             if memory.main.get_map() == 71:
                 FFXC.set_movement(0, -1)
@@ -339,21 +351,13 @@ def ab_swimming_1(rikku_underwater_attacks: int):
             FFXC.set_neutral()
             if screen.battle_screen():
                 logger.info("Battle Start (Al Bhed swimming section)")
-                grenade_count = memory.main.get_item_count_slot(memory.main.get_item_slot(35))
-                grenades_needed = 6 - grenade_count
-                chain_steals, steal_first_turn, enemy_formation = manip_planning.baaj_to_tros.chain_encounter_steals(grenades_needed=grenades_needed)
-                rikku_attacks_performed = battle.main.chain_encounter(chain_steals=chain_steals,
-                                                                      steal_first_turn=steal_first_turn,
-                                                                      grenades_needed=grenades_needed,
-                                                                      rikku_underwater_attacks=rikku_underwater_attacks,
-                                                                      enemy_formation=enemy_formation)
-                rikku_attacks_left = rikku_underwater_attacks - rikku_attacks_performed
+                battle.main.chain_encounter(strat=chain_encounter_strat, enemy_formation=enemy_formation)
                 logger.info("Battle End (Al Bhed swimming section)")
             elif memory.main.menu_open():
                 logger.info("Battle Complete screen")
                 xbox.menu_b()
 
-    return rikku_attacks_left
+    return
 
 
 def ab_swimming_2_truerng():
@@ -438,7 +442,7 @@ def ab_swimming_2_truerng():
         xbox.clear_save_popup(0)
 
 
-def ab_swimming_2(rikku_attacks_left: int):
+def ab_swimming_2(ruins_encounter_strat: int):
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)
@@ -466,13 +470,7 @@ def ab_swimming_2(rikku_attacks_left: int):
 
     screen.await_turn()
     # Final group of Piranhas
-    grenade_count = memory.main.get_item_count_slot(memory.main.get_item_slot(35))
-    grenades_needed = 6 - grenade_count
-    ruins_steals, steal_first_turn, steal_second_turn, steal_twice_first, steal_twice_second = manip_planning.baaj_to_tros.ruins_encounter_steals(grenades_needed=grenades_needed)
-    battle.main.ruins_encounter(ruins_steals=ruins_steals, steal_first_turn=steal_first_turn,
-                                steal_second_turn=steal_second_turn, steal_twice_first=steal_twice_first,
-                                steal_twice_second=steal_twice_second, grenades_needed=grenades_needed,
-                                rikku_underwater_attacks=rikku_attacks_left)
+    battle.main.ruins_encounter(strat=ruins_encounter_strat)
     memory.main.click_to_control()
     memory.main.await_control()
     FFXC.set_movement(0, 1)
@@ -480,10 +478,20 @@ def ab_swimming_2(rikku_attacks_left: int):
     xbox.skip_dialog(2)
     FFXC.set_movement(0, 0)
     memory.main.click_to_control()
+
     rng01_array_enemy_formation = memory.main.rng_array_from_index(index=1, array_len=10)
     preempt_roll = rng01_array_enemy_formation[1] % 256
     tros_preempt = (preempt_roll < 32)
     logging.debug(f"Tros pre-empt roll: {rng01_array_enemy_formation[1] % 256} / Pre-empt: {tros_preempt}")
+
+    logging.debug(f"Rikku HP: {Rikku.hp()}")
+    rikku_damage_on_tros = manip_planning.baaj_to_tros.rikku_damage_taken_tros()
+    logging.debug(f"Rikku damage taken on Tros: {rikku_damage_on_tros}")
+
+    if rikku_damage_on_tros > Rikku.hp():
+        logger.debug(f"Healing Rikku so she doesn't die on tros")
+        battle.main.heal_up_2(6)
+
     while not memory.main.battle_active():
         FFXC.set_movement(0, -1)
     logger.info("Engaging Tros")

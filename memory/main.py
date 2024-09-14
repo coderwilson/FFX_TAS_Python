@@ -849,8 +849,10 @@ def get_encounter_id():
 
     return formation
 
+
 def get_enemy_formation():
     base_id = get_encounter_id()
+
 
 def clear_encounter_id():
     global base_value
@@ -1529,6 +1531,18 @@ def get_menu_cursor_pos():
     pos = process.read_bytes(key, 1)
 
     return pos
+
+
+def get_item_menu_cursor_pos() -> (int, int):
+    global base_value
+
+    row_key = base_value + 0x01440A38
+    row_pos = process.read_bytes(row_key, 1)
+
+    column_key = base_value + 0x01440A48
+    column_pos = process.read_bytes(column_key, 1)
+
+    return row_pos, column_pos
 
 
 def get_menu_2_char_num():
@@ -2232,6 +2246,7 @@ def click_to_diag_progress(num):
         else:
             # if not auditory_dialog_playing():
             xbox.tap_b()
+            logger.debug("Tapping Confirm")
             if diag_progress_flag() != last_num:
                 last_num = diag_progress_flag()
                 logger.debug(
@@ -3248,6 +3263,12 @@ def assign_ability_to_equip_cursor():
     return ret_val
 
 
+def item_heal_character_cursor():
+    global base_value
+    key = base_value + 0x01440B68
+    ret_val = process.read_bytes(key, 1)
+    return ret_val
+
 # ------------------------------
 # Shopping related stuff
 
@@ -3266,7 +3287,7 @@ def equip_shop_menu():
     return ret_val
 
 
-def cure_menu_open():
+def heal_menu_open():
     global base_value
     key = base_value + 0x01440A35
     ret_val = process.read_bytes(key, 1)

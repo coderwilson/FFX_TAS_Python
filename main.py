@@ -266,7 +266,8 @@ def perform_TAS():
                     if truerng:
                         area.dream_zan.after_ammes_truerng()
                     else:
-                        area.dream_zan.after_ammes(tanker_sinscale_kill=tanker_sinscale_kill)
+                        strats = area.dream_zan.after_ammes(tanker_sinscale_kill=tanker_sinscale_kill,
+                                                            klikk_steals=klikk_steals)
 
                     # Sin drops us near Baaj temple.
                     game.state = "Baaj"
@@ -277,12 +278,13 @@ def perform_TAS():
                 if game.step == 1:
                     logger.info("Starting Baaj temple section")
                     # klikk_steals = 4
-                    sahagin_b_first, geos_potion, geos_attacks, tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, rikku_underwater_attacks = manip_planning.baaj_to_tros.plan_klikk(klikk_steals=klikk_steals)
+                    # strats = manip_planning.baaj_to_tros.plan_manips(klikk_steals=klikk_steals)
 
                     if truerng:
                         area.baaj.entrance_truerng()
                     else:
-                        area.baaj.entrance(sahagin_b_first=sahagin_b_first, geos_potion=geos_potion, geos_attacks=geos_attacks)
+                        area.baaj.entrance(sahagin_b_first=strats["sahagin_b_first"], geos_potion=strats["geos_potion"],
+                                           geos_attacks=strats["geos_attacks"])
                     game.step = 2
 
                 if game.step == 2:
@@ -293,8 +295,10 @@ def perform_TAS():
                     if truerng:
                         area.baaj.klikk_fight_truerng()
                     else:
-                        area.baaj.klikk_fight(tidus_potion_klikk=tidus_potion_klikk, tidus_potion_turn=tidus_potion_turn,
-                                              rikku_potion_klikk=rikku_potion_klikk, klikk_steals=klikk_steals)
+                        area.baaj.klikk_fight(tidus_potion_klikk=strats["tidus_potion_klikk"],
+                                              tidus_potion_turn=strats["tidus_potion_turn"],
+                                              rikku_potion_klikk=strats["rikku_potion_klikk"],
+                                              klikk_steals=klikk_steals)
                     game.step = 4
                     maybe_create_save(save_num=21)
 
@@ -308,7 +312,7 @@ def perform_TAS():
                     if truerng:
                         area.baaj.ab_swimming_1_truerng()
                     else:
-                        rikku_attacks_left = area.baaj.ab_swimming_1(rikku_underwater_attacks=rikku_underwater_attacks)
+                        rikku_attacks_left = area.baaj.ab_swimming_1(chain_encounter_strat=strats["chain_encounter_strat"])
                     game.step = 6
 
                 if game.step == 6:
@@ -316,7 +320,7 @@ def perform_TAS():
                     if truerng:
                         area.baaj.ab_swimming_2_truerng()
                     else:
-                        area.baaj.ab_swimming_2(rikku_attacks_left=rikku_attacks_left)
+                        area.baaj.ab_swimming_2(ruins_encounter_strat=strats["ruins_encounter_strat"])
                     game.state = "Besaid"
                     game.step = 1
 
@@ -1107,7 +1111,7 @@ if __name__ == "__main__":
 
     # Run the TAS itself
     # game.state = "Baaj"
-    # game.step = 2
+    # game.step = 1
     perform_TAS()
 
     # Finalize writing to logs

@@ -11,11 +11,17 @@ def get_rng_damage(
                    rng_rolls: int,
                    user_luck: int,
                    target_luck: int,
-                   equipment_bonus: int = 0
+                   equipment_bonus: int = 0,
+                   can_crit: bool = True
                    ) -> (int, bool):
 
     damage_roll = rng_array[rng_rolls + 1] % 32
-    crit = calculate_crit(rng_array=rng_array, rng_rolls=rng_rolls, user_luck=user_luck, target_luck=target_luck, equipment_bonus=equipment_bonus)
+
+    if can_crit:
+        crit = calculate_crit(rng_array=rng_array, rng_rolls=rng_rolls, user_luck=user_luck, target_luck=target_luck,
+                              equipment_bonus=equipment_bonus)
+    else:
+        crit = 0
 
     return math.floor(base_damage * (240 + damage_roll) / 256) * (2 if crit else 1)
 

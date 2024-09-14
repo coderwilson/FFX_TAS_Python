@@ -3732,46 +3732,61 @@ def steal_left():
     _steal("left")
 
 
-def chain_encounter(chain_steals: int, steal_first_turn: int, grenades_needed: int, rikku_underwater_attacks: int, enemy_formation: int):
+def chain_encounter(strat: int, enemy_formation: int):
 
-    steals_performed = 0
-    rikku_attacks_performed = 0
+    tidus_turn = 0
     rikku_turn = 0
 
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
-                if rikku_turn == 1 and steal_first_turn and steals_performed == chain_steals and enemy_formation == 0:
-                    if len(memory.main.get_enemy_current_hp()) == 1:
-                        Tidus.attack()
-                    else:
+                tidus_turn += 1
+
+                if strat == 0:
+
+                    Tidus.attack()
+
+                elif strat == 1:
+
+                    if enemy_formation == 0:
+
                         Tidus.attack(target_id=21, direction_hint="l")
-                else:
+
+                    else:
+
+                        Tidus.attack()
+
+                elif strat == 2:
+
                     Tidus.attack()
 
             if Rikku.is_turn():
                 rikku_turn += 1
-                if rikku_turn == 1 and not steal_first_turn:
-                    Rikku.defend()
-                elif steals_performed < chain_steals:
-                    steals_performed += 1
-                    logging.debug(f"Stealing {steals_performed}/{chain_steals}")
-                    steal()
-                elif grenades_needed < 3 and rikku_underwater_attacks < 3:
-                    Rikku.defend()
-                else:
-                    rikku_attacks_performed += 1
-                    logging.debug("Not stealing first turn" if chain_steals > steals_performed else "Done Stealing")
+
+                if strat == 0:
+
                     Rikku.attack()
 
-    return rikku_attacks_performed
+                elif strat == 1:
+
+                    if rikku_turn == 1:
+
+                        steal()
+
+                    else:
+
+                        Rikku.attack()
+
+                elif strat == 2:
+
+                    steal()
+
+    return
 
 
-def ruins_encounter(ruins_steals: int, steal_first_turn: bool, steal_second_turn: bool, steal_twice_first: bool,
-                    steal_twice_second: bool, grenades_needed: int, rikku_underwater_attacks: int):
+def ruins_encounter(strat: int):
 
-    steals_performed = 0
-    rikku_attacks_performed = 0
+    tidus_turn = 0
     rikku_turn = 0
 
     while memory.main.battle_active():
@@ -3781,29 +3796,54 @@ def ruins_encounter(ruins_steals: int, steal_first_turn: bool, steal_second_turn
 
             if Rikku.is_turn():
                 rikku_turn += 1
-                if rikku_turn == 1 and steal_first_turn and steals_performed < ruins_steals:
-                    steals_performed += 1
-                    logging.debug(f"Stealing {steals_performed}/{ruins_steals}")
-                    steal()
-                elif rikku_turn == 2 and steal_second_turn and steals_performed < ruins_steals:
-                    steals_performed += 1
-                    if steal_twice_first:
-                        logging.debug(f"Stealing again from Piranha A {steals_performed}/{ruins_steals}")
-                        steal()
-                    else:
-                        logging.debug(f"Stealing from Piranha B {steals_performed}/{ruins_steals}")
-                        steal_up()
-                elif rikku_turn == 3 and steal_twice_second and steals_performed < ruins_steals:
-                    steals_performed += 1
-                    logging.debug(f"Stealing again from Piranha B {steals_performed}/{ruins_steals}")
-                    steal()
-                elif rikku_attacks_performed < rikku_underwater_attacks:
-                    rikku_attacks_performed += 1
-                    logging.debug(f"Done Stealing")
+
+                # Rikku Attack > Tidus Attack > Rikku Attack > Tidus Attack
+                if strat == 0:
+
                     Rikku.attack()
-                else:
-                    logging.debug(f"Defending because no more rikku Attacks are desirable")
-                    Rikku.defend()
+
+                # Rikku Attack > Tidus Attack > Rikku Steal > Tidus Attack > Rikku Attack
+                elif strat == 1:
+
+                    if rikku_turn == 2:
+
+                        steal()
+
+                    else:
+
+                        Rikku.attack()
+
+                # Rikku Attack > Tidus Attack > Rikku Steal > Tidus Attack > Rikku Defend > Tidus Attack
+                elif strat == 2:
+
+                    if rikku_turn == 1:
+
+                        Rikku.attack()
+
+                    elif rikku_turn == 2:
+
+                        steal()
+
+                    else:
+
+                        Rikku.defend()
+
+                # Rikku Steal > Tidus Attack > Rikku Steal > Tidus Attack > Rikku Attack > Tidus Attack
+                elif strat == 3:
+
+                    if rikku_turn == 1:
+
+                        steal()
+
+                    elif rikku_turn == 2:
+
+                        steal_up()
+
+                    else:
+
+                        Rikku.attack()
+
+    return
 
 
 def steal_and_attack():
@@ -3934,7 +3974,7 @@ def heal_up(chars=3, *, full_menu_close=True):
             xbox.tap_b()
         else:
             xbox.tap_down()
-    while not memory.main.cure_menu_open():
+    while not memory.main.heal_menu_open():
         xbox.tap_b()
     character_positions = {
         0: memory.main.get_char_formation_slot(0),  # Tidus
@@ -3970,6 +4010,154 @@ def heal_up(chars=3, *, full_menu_close=True):
             break
     logger.debug("Healing complete. Exiting menu.")
     logger.debug(memory.main.menu_number())
+    if full_menu_close:
+        memory.main.close_menu()
+    else:
+        memory.main.back_to_main_menu()
+
+
+# Heal methods
+# 1 = Heal with items
+# 2 = Heal with cure
+
+# Heal Items
+# 0 = Potion
+# 1 = Hi-Potion
+# 2 = X-Potion
+# 3 = Mega-Potion
+# 8 = Elixir
+# 9 = Megalixir
+
+def heal_up_2(*chars, heal_method: int = 1, item_index: int = 0, single_item: bool = False, full_menu_close=True):
+    logger.info(f"Menuing, healing characters: {chars}")
+
+    if not heal_method in [1, 2]:
+        logger.debug("Invalid heal method selected. Value of 1 or 2 is expected. Please review code.")
+
+    # Check if healing is needed for each character
+    healing_necessary = False
+    for char in chars:
+        if memory.main.get_hp() == memory.main.get_max_hp():
+            logger.debug(f"{char} has full HP")
+        else:
+            healing_necessary = True
+
+    # If we're not on the main menu return to or open the main menu
+    memory.main.back_to_main_menu()
+
+    FFXC.set_neutral()
+
+    main_menu_target_pos = heal_method
+
+    # Move to position in main menu for Items / Abilities
+    while memory.main.get_menu_cursor_pos() != main_menu_target_pos:
+        logger.debug(f"Selecting Ability command - {memory.main.get_menu_cursor_pos()}")
+        memory.main.menu_direction(memory.main.get_menu_cursor_pos(), target_menu_position=main_menu_target_pos, menu_size=11)
+
+    # Select the menu option
+    while memory.main.menu_number() == 5:
+        logger.debug(f"Select Ability - {memory.main.menu_number()}")
+        xbox.tap_b()
+    logger.debug("Mark 1")
+
+    if heal_method == 1:
+
+        item_menu_position = memory.main.get_item_slot(item_num=item_index)
+        item_menu_target_row = item_menu_position // 2
+        item_menu_target_column = item_menu_position % 2
+
+        item_menu_row, item_menu_column = memory.main.get_item_menu_cursor_pos()
+
+        # Navigate to the target item in the menu
+        while item_menu_row < item_menu_target_row:
+            xbox.tap_down()
+            item_menu_row, item_menu_column = memory.main.get_item_menu_cursor_pos()
+
+        while item_menu_column < item_menu_target_column:
+            xbox.tap_down()
+            item_menu_row, item_menu_column = memory.main.get_item_menu_cursor_pos()
+
+    else:
+
+        yuna_menu_pos = Yuna.main_menu_index()
+        logger.debug(f"Target pos: {yuna_menu_pos}")
+
+        # Move to Yuna in the menu
+        while memory.main.get_char_cursor_pos() != yuna_menu_pos:
+            memory.main.menu_direction(
+                memory.main.get_char_cursor_pos(),
+                yuna_menu_pos,
+                len(memory.main.get_order_seven()),
+            )
+        logger.debug("Mark 2")
+
+    # Open heal menu
+    while not memory.main.heal_menu_open():
+        xbox.tap_b()
+
+    # Get the character position for each character
+    character_positions = {
+        0: memory.main.get_char_formation_slot(0),  # Tidus
+        1: memory.main.get_char_formation_slot(1),  # Yuna
+        2: memory.main.get_char_formation_slot(2),  # Auron
+        3: memory.main.get_char_formation_slot(3),  # Kimahri
+        4: memory.main.get_char_formation_slot(4),  # Wakka
+        5: memory.main.get_char_formation_slot(5),  # Lulu
+        6: memory.main.get_char_formation_slot(6),  # Rikku
+    }
+    logger.debug(f"Character positions: {character_positions}")
+
+    # Get the character that sits in each position
+    positions_to_characters = {
+        val: key for key, val in character_positions.items() if val != 255
+    }
+    logger.debug(f"Positions to characters: {positions_to_characters}")
+
+    maximal_hp = memory.main.get_max_hp()
+    logger.debug(f"Max HP: {maximal_hp}")
+    current_hp = memory.main.get_hp()
+
+    for cur_position in range(len(positions_to_characters)):
+        character_index = positions_to_characters[cur_position]
+        if character_index not in chars:
+            continue
+        else:
+            logger.debug(f"Healing {character_index}")
+
+        starting_hp = current_hp[character_index]
+
+        while current_hp[character_index] < maximal_hp[character_index]:
+            logger.debug(f"Current hp: {current_hp}")
+
+            if heal_method == 1:
+                while memory.main.item_heal_character_cursor() != cur_position:
+                    if memory.main.item_heal_character_cursor() < cur_position:
+                        xbox.tap_down()
+                    else:
+                        xbox.tap_up()
+            else:
+                while memory.main.assign_ability_to_equip_cursor() != cur_position:
+                    if memory.main.assign_ability_to_equip_cursor() < cur_position:
+                        xbox.tap_down()
+                    else:
+                        xbox.tap_up()
+            xbox.tap_b()
+            current_hp = memory.main.get_hp()
+            if heal_method == 1 and memory.main.get_item_count_slot(item_menu_position) == 0:
+                break
+            if heal_method == 2 and memory.main.get_yuna_mp() < 4:
+                break
+            if heal_method == 1 and single_item and current_hp[character_index] > starting_hp:
+                break
+        if current_hp == maximal_hp:
+            break
+        if heal_method==1 and memory.main.get_item_count_slot(item_menu_position)==0:
+            break
+        if heal_method==2 and memory.main.get_yuna_mp() < 4:
+            break
+    logger.debug("Healing complete. Exiting menu.")
+    logger.debug(memory.main.menu_number())
+
     if full_menu_close:
         memory.main.close_menu()
     else:
@@ -4637,7 +4825,7 @@ def calculate_spare_change_movement(gil_amount):
         position[index] = amount
     logger.debug(f"Amt1: {gil_amount} | Amt2: {amount} | Copy: {gil_copy}")
     logger.debug(position)
-    
+
     for cur in range(6, -1, -1):
         if not position[cur]:
             continue
