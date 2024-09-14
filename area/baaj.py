@@ -202,6 +202,10 @@ def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_k
     FFXC.set_neutral()
     while not Rikku.is_turn():
         Tidus.attack()
+    # Possibly replace with the following, for less error messages.
+    #while not Rikku.is_turn():
+    #    if memory.main.battle_active() and Tidus.is_turn():
+    #        Tidus.attack()
 
     xbox.click_to_battle()
     screen.await_turn()

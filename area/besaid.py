@@ -109,8 +109,10 @@ def night_scene():
     memory.main.check_near_actors(False)
     FFXC.set_movement(-1, -1)
     memory.main.await_event()
+    FFXC.set_neutral()
     memory.main.click_to_control()
     pathing.approach_actor_by_id(5)
+    FFXC.set_neutral()
     memory.main.click_to_control()
     
 

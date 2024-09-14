@@ -689,6 +689,7 @@ def m_woods():
             xbox.menu_a()
             memory.main.wait_frames(10)
             xbox.menu_left()
+            memory.main.wait_frames(2)
     buy_weapon(0, equip=True)
     buy_weapon(3, equip=True)
     memory.main.close_menu()
@@ -1886,8 +1887,16 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
     with logging_redirect_tqdm():
         with tqdm(total=len(full_array)) as pbar:
             while memory.main.equip_sell_row() + 1 < len(full_array):
-                xbox.tap_down()
-                #memory.main.wait_frames(1)
+                last_row = memory.main.equip_sell_row()
+                while last_row == memory.main.equip_sell_row():
+                    #if memory.main.equip_sell_row() > 8:
+                    #    xbox.menu_down()
+                    #    memory.main.wait_frames(15)
+                    #else:
+                    xbox.tap_down()
+                    #memory.main.wait_frames(1)
+                if memory.main.equip_sell_row() > 8:
+                    memory.main.wait_frames(9)
                 if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
                     # Currently equipped
                     sell_item = False
@@ -1935,13 +1944,11 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
                     sell_item = False
 
                 if sell_item:
-                    if memory.main.equip_sell_row() > 8:
-                        memory.main.wait_frames(12)
                     xbox.menu_b()
                     memory.main.wait_frames(3)
                     xbox.tap_up()
                     xbox.menu_b()
-                    memory.main.wait_frames(3)
+                    memory.main.wait_frames(6)
                     if game_vars.use_pause():
                         memory.main.wait_frames(2)
                 else:

@@ -288,12 +288,14 @@ def find_summoners():
                 checkpoint = 12
             elif checkpoint < 18 and memory.main.get_map() == 280:
                 checkpoint = 19
+            elif checkpoint < 25 and memory.main.get_coords()[0] < -100:
+                checkpoint = 25
             elif checkpoint == 34:
                 checkpoint = 60
             elif checkpoint == 63:
                 memory.main.click_to_event_temple(6)
                 checkpoint = 35
-            # Bonus room, blitz loss only
+            # Bonus room
             elif checkpoint in [81, 82, 83] and memory.main.get_map() == 286:
                 checkpoint = 84
             elif checkpoint == 86:
