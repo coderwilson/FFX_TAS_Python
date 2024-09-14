@@ -1802,7 +1802,7 @@ def add_ability(
                 xbox.trigger_l()
             else:
                 xbox.tap_up()
-    while not memory.main.cure_menu_open():
+    while not memory.main.heal_menu_open():
         xbox.tap_b()
     while not ability_to_customize_ref(ability_index):  # Find the right ability
         xbox.tap_down()
@@ -1817,7 +1817,7 @@ def add_ability(
     while not memory.main.information_active():
         xbox.tap_b()
     if exit_out_of_current_weapon:
-        while memory.main.cure_menu_open():
+        while memory.main.heal_menu_open():
             xbox.menu_a()
             memory.main.wait_frames(1)
     if close_menu:

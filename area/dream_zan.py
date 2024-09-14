@@ -5,6 +5,7 @@ import battle.main
 import logs
 import memory.main
 from memory.main import check_near_actors
+import manip_planning.baaj_to_tros
 import pathing
 import rng_track
 import save_sphere
@@ -316,15 +317,21 @@ def after_ammes_truerng():
                 xbox.skip_stored_scene(3)
 
 
-def after_ammes(tanker_sinscale_kill: bool):
+def after_ammes(tanker_sinscale_kill: bool, klikk_steals: int):
     memory.main.click_to_control()
     checkpoint = 0
+    strats_calculated = False
     # memory.main.wait_frames(90)
     # logger.debug("MARK")
     # memory.main.ammes_fix(actor_index=0)
     # memory.main.wait_frames(90)
 
     while memory.main.get_map() != 49:
+
+        if memory.main.get_story_progress() == 20 and not strats_calculated:
+            strats = manip_planning.baaj_to_tros.plan_manips(klikk_steals=klikk_steals)
+            strats_calculated = True
+
         if memory.main.user_control():
             start_pos = memory.main.get_coords()
             if int(start_pos[0]) in [866, 867, 868, 869, 870] and int(start_pos[1]) in [
@@ -362,6 +369,8 @@ def after_ammes(tanker_sinscale_kill: bool):
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 xbox.skip_stored_scene(3)
+
+    return strats
 
 
 def swim_to_jecht():

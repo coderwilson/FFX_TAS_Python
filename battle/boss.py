@@ -476,6 +476,8 @@ def tros(preempt: bool):
     total_damage = 0
     low_roll = False
 
+    done_stealing = False
+
     rng20_array_tidus = memory.main.rng_array_from_index(index=20, array_len=200)
     rng26_array_rikku = memory.main.rng_array_from_index(index=26, array_len=200)
 
@@ -493,9 +495,14 @@ def tros(preempt: bool):
             low_roll = var_damage < 350
             logging.debug(f"Pre-empt 5th Attack Low Roll: {low_roll}")
 
-        logging.debug(f"Grenade Damage: {var_damage}")
-
         total_damage += var_damage
+        logging.debug(f"Grenade Damage: {var_damage} / Total Damage: {total_damage}")
+
+        if total_damage > (6 * 328):
+
+            grenades_required = i + 1
+            logger.debug(f"Grenades Required: {grenades_required}")
+            break
 
     base_damage = damage.calculate_base_damage(formula=damage.Formula.STR_VS_DEF, user_stat=15, target_stat=1)
     var_damage = manip_planning.rng.get_rng_damage(base_damage=base_damage, rng_array=rng20_array_tidus,
@@ -508,29 +515,56 @@ def tros(preempt: bool):
     else:
         tidus_attacks = 2
 
-    while not memory.main.turn_ready():
-        pass
+    # while not memory.main.turn_ready():
+    #     pass
 
     while memory.main.battle_active():  # AKA end of battle screen
+
         if memory.main.diag_skip_possible():
+
             xbox.tap_b()
+
         elif memory.main.turn_ready():
+
             if Rikku.is_turn():
+
                 rikku_turn += 1
-                grenade_slot = memory.main.get_use_items_slot(35)
-                battle.main.use_item(slot=grenade_slot)
+                grenade_count = memory.main.get_item_count_slot(memory.main.get_item_slot(35))
+                logger.debug(f"Grenade Count: {grenade_count} / {grenades_required}")
+                if grenade_count < grenades_required and not done_stealing:
+
+                    battle.main.steal()
+
+                else:
+
+                    logger.debug("Done Stealing")
+                    done_stealing = True
+                    grenade_slot = memory.main.get_use_items_slot(35)
+                    battle.main.use_item(slot=grenade_slot)
+
             elif Tidus.is_turn():
+
                 tidus_turn += 1
+
                 if tidus_turn == 1 and low_roll and not preempt:
+
                     Tidus.defend()
+
                 elif rikku_turn == 5 and low_roll and preempt:
+
                     Tidus.defend()
+
                 elif tros_position() == 1:
+
                     Tidus.defend()
+
                 elif tidus_attacks > 0:
+
                     tidus_attacks -= 1
                     Tidus.attack()
+
                 else:
+
                     Tidus.defend()
 
 

@@ -82,7 +82,7 @@ class Player:
         return self.name
 
     def _read_char_offset_address(self, address):
-        return memory.main.read_val(address + self.struct_offset)
+        return memory.main.read_val(address=address + self.struct_offset, bytes=4)
 
     def _read_char_battle_offset_address(self, address, offset):
         return memory.main.read_val(
