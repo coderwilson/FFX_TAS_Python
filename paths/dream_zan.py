@@ -8,7 +8,7 @@ class TidusHomeMovement(AreaMovementBase):
         2: [115, 1],
         3: [60, 6],
         4: [28, 5],
-        6: [13, 3],
+        5: [28, 5],
         7: [10, -5],
         9: [6, -1],
         # Finish the first section

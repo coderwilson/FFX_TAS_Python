@@ -29,7 +29,23 @@ def _distance(n1, n2):
 
 
 def movements(target, stutter: bool = False, buffer: int = 10, report=False):
+    start_time = time.time()
+    # Max number of seconds that we will wait for the skip to occur.
+    max_time = start_time + 15
+    last_count = 0
     while _distance(get_coords(), target) > buffer:
+        # Time-related items and infinite loop protection
+        current_time = time.time()
+        pos = memory.main.get_coords()
+        if pos != [0,0]:
+            tidus_coords = [round(pos[0],2),round(pos[1],2)]
+        if current_time > max_time:
+            logger.warning("Skip seemingly failed. Resetting.")
+            return False
+        elif int(current_time - start_time) > int(last_count):
+            logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
+            last_count = int(current_time - start_time)
+        
         if memory.main.user_control():
             pathing.set_movement(target)
             if stutter:
@@ -51,21 +67,21 @@ def movements(target, stutter: bool = False, buffer: int = 10, report=False):
 
 def skip_prep():
     logger.info("Attempting MRR Skip")
-    memory.main.await_control()
-    FFXC.set_movement(1, -1)
-    memory.main.await_event()
-    FFXC.set_neutral()
-    memory.main.await_control()
+    if memory.main.get_map() == 92:
+        memory.main.await_control()
+        FFXC.set_movement(1, -1)
+        memory.main.await_event()
+        FFXC.set_neutral()
+        memory.main.await_control()
 
     # Get near the spot, but out of the way of the runner.
-    logger.info("Near but away from the runner")
     runner_index = actor_index(8323)
     while get_actor_coords(runner_index)[1] > get_coords()[1] - 100:
         target = [-20, -400]
         movements(target, buffer=2)
         if memory.main.diag_skip_possible():
             xbox.tap_b()
-    logger.info("Runner seems in a good spot. Let's go.")
+    logger.info("Near skip, but away from the runner")
 
     align_complete = False
     while not align_complete:
@@ -93,7 +109,7 @@ def attempt_skip():
     logger.info("Waiting for the guy to come back")
     part_1_done = False
     part_2_done = False
-    attempt = True
+    attempt = 0
     try:
         
         logger.info("It's possible to get stuck in this section.")
@@ -123,12 +139,6 @@ def attempt_skip():
             position = get_actor_coords(runner_index)
             #tidus_coords = get_coords()
 
-            if attempt and position[1] > tidus_coords[1] + 15:
-                logger.debug(" - Runner too far. Wait for him to come back.")
-                attempt = False
-            if not attempt and position[1] < tidus_coords[1] - 15:
-                logger.debug(" - Runner is lining up. Prepare for skip.")
-                attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
                 if memory.main.game_over():
@@ -138,67 +148,96 @@ def attempt_skip():
                     if memory.main.get_hp()[0] < 520:
                         battle.main.heal_up()
                     memory.main.update_formation(Tidus, Wakka, Auron)
-            elif (
-                memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active()
-            ):
-                xbox.tap_b()
-
-            if attempt:
-                if _distance(position, tidus_coords) < 15:
+            if _distance(position, tidus_coords) < 15:
+                if attempt % 2 == 1 and tidus_coords[1] < -392:
                     # Attempting skip / talking
                     FFXC.set_value("btn_b", 1)
                     wait_frames(1)
                     FFXC.set_value("btn_b", 0)
                     wait_frames(1)
-            if (
-                tidus_coords[1] > -398
-                and _distance(position, tidus_coords) > 60
-            ):
-                part_1_done = True
+            elif tidus_coords[1] > -398:
+                if _distance(position, tidus_coords) > 15:
+                    part_1_done = True
+                    attempt += 1
+            elif attempt % 2 == 1 and position[1] > tidus_coords[1] + 15:
+                logger.debug(" - Runner too far North. Wait for him to come back.")
+                skip_prep()  # Resets us to starting position.
+                attempt += 1
+            elif attempt % 2 == 0 and position[1] < tidus_coords[1] - 20:
+                logger.debug(" - Runner is lining up. Prepare for skip.")
+                skip_prep()
+                attempt += 1
+            elif (
+                    memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active()
+                ):
+                    xbox.tap_b()
 
         if memory.main.get_hp()[0] < 520:
             battle.main.heal_up()
             memory.main.update_formation(Tidus, Wakka, Auron)
         logger.info("First barrier passed.")
+        attempt += 1
         
-        '''
-        logger.info("It's possible to get stuck in this section.")
-        logger.info("We will set a time limit of 600 seconds to get through this.")
-        logger.info("If we exceed the limit, reset and try again.")
-        # Now to wait for the skip to happen, or 60 second maximum limit
-        start_time = time.time()
-        # Max number of seconds that we will wait for the skip to occur.
-        time_limit = 600
-        max_time = start_time + time_limit
-        last_count = 0
-
-        #while not movements([-10,-386], stutter=True, buffer=0.5, report=True):
-        #    logger.debug("Let's try that again.")
-        logger.debug("Now waiting for the runner to pass.")
-        runner_index = actor_index(8323)
-        position = get_actor_coords(runner_index)
-        pos = memory.main.get_coords()
-        if pos != [0,0]:
-            tidus_coords = [round(pos[0],2),round(pos[1],2)]
-        while position[1] < tidus_coords[1]:
+        while not part_2_done:
+            # Time-related items and infinite loop protection
             current_time = time.time()
             pos = memory.main.get_coords()
             if pos != [0,0]:
                 tidus_coords = [round(pos[0],2),round(pos[1],2)]
-            runner_index = actor_index(8323)
-            position = get_actor_coords(runner_index)
-            pos = memory.main.get_coords()
-            if pos != [0,0]:
-                tidus_coords = [round(pos[0],2),round(pos[1],2)]
-            if int(current_time - start_time) > int(last_count):
+            if current_time > max_time:
+                logger.warning("Skip seemingly failed. Resetting.")
+                return False
+            elif int(current_time - start_time) > int(last_count):
                 logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
                 last_count = int(current_time - start_time)
+            
+            # Skip logic
+            runner_index = actor_index(8323)
+            position = get_actor_coords(runner_index)
 
-        '''
-        attempt = True
+            if memory.main.battle_active():
+                battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
+                battle.main.wrap_up()
+                if _distance(position, tidus_coords) >= 15:
+                    if memory.main.get_hp()[0] < 520:
+                        battle.main.heal_up()
+                    memory.main.update_formation(Tidus, Wakka, Auron)
+            target = [-17, -380.2]
+            if tidus_coords[1] > -360:
+                #if _distance(position, tidus_coords) > 15:
+                part_2_done = True
+                attempt += 1
+            elif _distance(position, tidus_coords) < 15:
+                if attempt % 2 == 1:
+                    # Attempting skip / talking
+                    FFXC.set_value("btn_b", 1)
+                    wait_frames(1)
+                    FFXC.set_value("btn_b", 0)
+                    wait_frames(1)
+            elif attempt % 2 == 1 and position[1] > tidus_coords[1] + 15:
+                logger.debug(" - Runner too far North. Wait for him to come back.")
+                attempt += 1
+            elif attempt % 2 == 0 and position[1] < tidus_coords[1] - 20:
+                logger.debug(" - Runner is lining up. Prepare for skip.")
+                attempt += 1
+            elif attempt % 2 == 0 and _distance(tidus_coords, target) > 5:
+                if not movements(target, stutter=True, buffer=0.5):
+                    if memory.main.game_over():
+                        return False
+                else:
+                    wait_frames(15)
+                    FFXC.set_movement(-1, -1)
+                    wait_frames(1)
+                    FFXC.set_neutral()
+                    wait_frames(3)
+            elif (
+                    memory.main.diag_skip_possible() or memory.main.battle_wrap_up_active()
+                ):
+                    xbox.tap_b()
 
-        while not part_2_done:
-            # Time-related items and infinite loop protection
+            '''
             current_time = time.time()
             pos = memory.main.get_coords()
             if pos != [0,0]:
@@ -214,10 +253,6 @@ def attempt_skip():
             if get_coords()[1] != 0:
                 runner_index = actor_index(8323)
                 position = get_actor_coords(runner_index)
-                #tidus_coords = get_coords()
-            #if not attempt and position[1] < tidus_coords[1] - 15:
-            #    logger.debug(" - Runner is lining up. Prepare for skip.")
-            #    attempt = True
             if memory.main.battle_active():
                 battle.main.flee_all()
                 if memory.main.game_over():
@@ -230,25 +265,39 @@ def attempt_skip():
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
 
-            elif attempt:
-                if tidus_coords[1] > -360:
-                    part_2_done = True
-                    logger.info("Part 2 complete, we should be able to continue.")
-                elif _distance(position, tidus_coords) < 15:
-                    # Attempting skip / talking
-                    FFXC.set_value("btn_b", 1)
-                    wait_frames(1)
-                    FFXC.set_value("btn_b", 0)
-                    wait_frames(1)
-                else:
-                    target = [-17, -380.2]
-                    if _distance(tidus_coords, target) > 2:
-                        movements(target, stutter=True, buffer=0.5)
-                        FFXC.set_movement(-1, -1)
-                        wait_frames(1)
-                        FFXC.set_neutral()
-                        wait_frames(3)
-                        logger.info("In position.")
+            target = [-17, -380.2]
+            if attempt % 2 == 1 and position[1] > tidus_coords[1] + 15:
+                logger.debug(" - Runner too far North. Wait for him to come back.")
+                attempt += 1
+            elif attempt % 2 == 0 and position[1] < tidus_coords[1] - 20:
+                logger.debug(" - Runner is lining up. Prepare for skip.")
+                attempt += 1
+            if tidus_coords[1] > -360:
+                part_2_done = True
+                logger.info("Part 2 complete, we should be able to continue.")
+            elif attempt % 2 == 1 and _distance(position, tidus_coords) < 10:
+                # Attempting skip / talking
+                FFXC.set_value("btn_b", 1)
+                wait_frames(1)
+                FFXC.set_value("btn_b", 0)
+                wait_frames(1)
+            elif (
+                tidus_coords[1] < -355 and
+                tidus_coords[1] < -397 and
+                tidus_coords[0] < -18.5
+            ):
+                # This should not trigger during the push.
+                logger.warning("Push failed, returning for (hopefully) a reattempt.")
+                FFXC.set_neutral()
+                return False
+            elif attempt % 2 == 0 and _distance(tidus_coords, target) > 20:
+                movements(target, stutter=True, buffer=0.5, report=True)
+                FFXC.set_movement(-1, -1)
+                wait_frames(1)
+                FFXC.set_neutral()
+                wait_frames(3)
+                logger.info("In position.")
+            '''
 
         FFXC.set_neutral()
         if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():

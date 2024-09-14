@@ -116,9 +116,9 @@ class BikanelHome(AreaMovementBase):
         21: [-2, 236],
         22: [-5, 310],
         23: [-13, 330],
-        24: [-70, 359],  # Right next to door
-        25: [-168, 275],
-        26: [-184, 253],
+        24: [-66, 359],  # Right next to door
+        25: [-168, 275],  # Into the door. Load into same map.
+        26: [-168, 275],
         27: [-184, 253],  # Screen change before next battle
         28: [-174, 223],
         29: [-184, 210],

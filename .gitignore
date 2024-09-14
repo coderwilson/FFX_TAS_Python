@@ -6,6 +6,7 @@ __pycache__/
 bot-config.yaml
 config.yaml
 json_ai_files/current_seed.txt
+json_ai_files/oblitz_results.txt
 
 # saves
 Save Backups/
@@ -17,3 +18,5 @@ FFXCutsceneRemover.exe
 OUTPUT.TXT
 logs/
 none
+character_names.json
+*.json

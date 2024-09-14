@@ -21,6 +21,7 @@ from save_sphere import touch_and_go
 import tts
 from players import CurrentPlayer
 import reset
+from area.dream_zan import new_game
 from json_ai_files.write_seed import write_custom_message
 
 FFXC = xbox.controller_handle()
@@ -2040,13 +2041,26 @@ def godhand(baaj:int=0):
     memory.main.wait_frames(30)
     xbox.menu_b()
     memory.main.wait_frames(30)
-    xbox.menu_a()
+    xbox.menu_up()
     xbox.menu_b()
-    memory.main.wait_frames(30)
-    xbox.menu_a()
+    
+    # Borrowed from airship destination logic
+    # logger.debug("Destination select on screen now.")
+    dest_num = 5 + baaj
+    while memory.main.map_cursor() != dest_num:
+        if dest_num < 8:
+            xbox.tap_down()
+        else:
+            xbox.tap_up()
+    memory.main.wait_frames(2)
     xbox.menu_b()
-    memory.main.wait_frames(60)
-    air_ship_destination(5+baaj)
+    memory.main.wait_frames(2)
+    xbox.tap_b()
+    while not memory.main.user_control():
+        if memory.main.cutscene_skip_possible():
+            xbox.skip_scene()
+        elif memory.main.diag_skip_possible():
+            xbox.tap_b()
     
     path = [
         [-29,-98],
@@ -2160,10 +2174,8 @@ def sun_sigil(godhand:int = 1, baaj:int = 1):
             pass
     FFXC.set_neutral()
     memory.main.set_game_speed(0)
-    xbox.menu_b()  # Use celestial mirror
-    xbox.menu_b()  # Use celestial mirror
-    memory.main.click_to_event()
-    xbox.menu_b()  # Use celestial mirror
+    pathing.approach_coords([-851,720])
+    
     
     memory.main.click_to_control()
     memory.main.set_game_speed(2)
@@ -2507,6 +2519,7 @@ def venus_crest(godhand:int = 1, baaj:int = 1):
 
 def sun_crest(godhand:int = 1, baaj:int = 1):
     # Assumes Yuna has overdrive.
+    write_custom_message("Showcase!")
     air_ship_destination(dest_num=(15+godhand+baaj))
     memory.main.update_formation(0, 3, 5)
     memory.main.check_nea_armor()
@@ -2588,14 +2601,16 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
     
         xbox.click_to_battle()
         memory.main.set_game_speed(2)
-        cur_gil = min(memory.main.get_gil_value(),990000)
+        cur_gil = min(memory.main.get_gil_value(),9999999)
         cur_gil = memory.main.get_gil_value()
         success = yojimbo_battle(flee_available=False, needed_amount=cur_gil)
         logger.debug(f"Yojimbo results: {success}")
         if not success:
+            logger.debug("Starting reset process.")
             reset.reset_to_main_menu()
-            #xbox.menu_b()
-            area.dream_zan.new_game(gamestate="reload_autosave")
+            logger.debug("Intro screen - load game")
+            new_game(gamestate="reload_autosave")
+            logger.debug("Selecting save number.")
             load_game.load_save_num(0)
     
     memory.main.await_control()

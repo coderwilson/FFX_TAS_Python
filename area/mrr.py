@@ -52,7 +52,7 @@ def arrival():
                 FFXC.set_movement(1, -1)
                 memory.main.wait_frames(30 * 0.035)
                 FFXC.set_neutral()
-                memory.main.wait_frames(30 * 2.3)
+                memory.main.wait_frames(30 * 2.0)
                 if not memory.main.user_control():
                     battle.main.flee_all()
                     battle.main.wrap_up()
@@ -80,6 +80,9 @@ def arrival():
                         break
                 memory.main.click_to_control()
                 FFXC.set_neutral()
+                memory.main.wait_frames(3)
+                game_vars.mrr_skip_set(1)
+                return 1
                 checkpoint += 1
             elif pathing.set_movement(MRRStart.execute(checkpoint)):
                 checkpoint += 1
@@ -115,7 +118,7 @@ def arrival():
         return True
     logger.info("Done with prelim MRR area, now for the real deal.")
     '''
-    return True
+    return 1
 
 
 def log_mrr_kimahri_crit_chance():

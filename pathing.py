@@ -92,15 +92,20 @@ def _approach_actor(actor_index: int = 999, talk: bool = True):
     target_coords = [actor_coords[0], actor_coords[1]]
     logger.debug(f"Actor's coordinates: {target_coords}")
 
+    logger.debug(f"Control: {memory.main.user_control()} | Naming: {memory.main.name_aeon_ready()}")
     while (
-        memory.main.user_control() and
-        not memory.main.name_aeon_ready()
+        memory.main.user_control()# or
+        #not memory.main.name_aeon_ready()
     ):
         set_movement(target_coords)
         if talk and distance(actor_index) < 15:
             xbox.tap_b()
         actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
         target_coords = [actor_coords[0], actor_coords[1]]
+        if memory.main.get_story_progress() < 20 and memory.main.name_aeon_ready():
+            FFXC.set_neutral()
+            return True
+    FFXC.set_neutral()
     return True
 
 
