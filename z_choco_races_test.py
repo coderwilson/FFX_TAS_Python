@@ -71,7 +71,6 @@ area.chocobos.venus_crest(godhand=godhand, baaj=baaj)
 godhand = area.chocobos.godhand(baaj=baaj)
 area.chocobos.sun_sigil(godhand=godhand, baaj=baaj)
 
-# Wrap up
 area.chocobos.upgrade_celestials(godhand=godhand, baaj=baaj, Yuna=False, Wakka=False)
 
 

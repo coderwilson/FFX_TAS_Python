@@ -480,7 +480,14 @@ def perform_TAS():
                 if game.step == 1:
                     if area.mrr.arrival() == 1:  # Perform section before Terra skip attempt.
                         game_vars.mrr_skip_set(True)
-                        game.step = 2
+                        if not game_vars.csr():
+                            skip_prep()
+                            if attempt_skip():  # i.e. if this step is successful
+                                if advance_to_aftermath():  # i.e. if this step is successful
+                                    game.step = 4  # There is no 3 since Terra Skip found.
+                        
+                        else:
+                            game.step = 2
                     else:
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
@@ -1072,7 +1079,7 @@ def write_final_logs():
     area.chocobos.remiem_races()
     area.chocobos.leave_temple()
     area.chocobos.sun_crest(godhand=0, baaj=0)
-    area.chocobos.butterflies()
+    #area.chocobos.butterflies()
     
     reset.reset_no_battles()
 

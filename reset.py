@@ -144,6 +144,9 @@ def reset_to_main_menu():
     FFXC.set_neutral()
     if memory.main.get_story_progress() <= 8:
         _attempt_reset()
+    elif memory.main.game_over():
+        while not memory.main.get_map() in [21,23]:
+            xbox.menu_b()
     elif memory.main.battle_active():
         logger.info("Battle is active. Forcing battle to end so we can soft reset.")
         while not memory.main.turn_ready():

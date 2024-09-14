@@ -326,6 +326,8 @@ def klikk(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: 
     logger.info("Fight start: Klikk")
     tidus_turn = 0
     rikku_turn = 0
+    
+    xbox.click_to_battle()
 
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
@@ -509,8 +511,9 @@ def tros(preempt: bool):
     else:
         tidus_attacks = 2
 
-    while not memory.main.turn_ready():
-        pass
+    xbox.click_to_battle()
+    #while not memory.main.turn_ready():
+    #    pass
 
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.diag_skip_possible():

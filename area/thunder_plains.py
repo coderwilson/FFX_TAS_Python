@@ -46,6 +46,8 @@ def south_pathing():
                     elif checkpoint == 3 and not save_touched:
                         while not memory.main.touch_save_sphere():
                             battle.main.flee_all()
+                            if memory.main.game_over():
+                                return 999
                             battle.main.wrap_up()
                         save_touched = True
                     #elif checkpoint == 2 and not game_vars.get_blitz_win():
@@ -128,9 +130,9 @@ def agency_shop():
     while memory.main.shop_menu_dialogue_row() != 2:
         xbox.tap_down()  # Select "Got any items?"
     while not memory.main.item_shop_menu() == 7:
-        xbox.tap_b()  # Click through until items menu comes up
+        xbox.menu_b()  # Click through until items menu comes up
     while not memory.main.item_shop_menu() == 10:
-        xbox.tap_b()  # Select buy command
+        xbox.menu_b()  # Select buy command
 
     # For safety (Wendigo is the worst), buying extra phoenix downs first.
     while memory.main.equip_buy_row() != 1:  # Buy some phoenix downs first

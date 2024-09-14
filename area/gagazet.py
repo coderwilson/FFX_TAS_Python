@@ -243,16 +243,21 @@ def flux():
                 xbox.tap_b()
             elif memory.main.menu_open():
                 xbox.tap_b()
-    if not game_vars.csr():
-        while not memory.main.cutscene_skip_possible():
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
-        xbox.skip_scene()
 
 
 def dream(checkpoint: int = 0):
-    while memory.main.get_map() != 309:
-        FFXC.set_movement(1, 1)
+    if game_vars.csr():
+        while memory.main.get_map() != 309:
+            FFXC.set_movement(1, 1)
+    else:
+        while not memory.main.cutscene_skip_possible():
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
+            elif memory.main.user_control():
+                FFXC.set_movement(1, 1)
+        xbox.skip_scene()
+    
+    FFXC.set_neutral()
     memory.main.click_to_control()
     logger.info("Dream sequence")
     memory.main.wait_frames(3)

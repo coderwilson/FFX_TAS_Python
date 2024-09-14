@@ -2280,10 +2280,10 @@ def seymour_guado_blitz_loss():
                         steal()
                     thrown_items += 1
                 else:
-                    tidusposition = memory.main.get_battle_char_slot(0)
-                    if tidusposition >= 3:
-                        buddy_swap(Tidus)
-                    elif animamiss > 0 and (
+                    #tidusposition = memory.main.get_battle_char_slot(0)
+                    #if tidusposition >= 3:
+                    #    buddy_swap(Tidus)
+                    if animamiss > 0 and (
                         not missbackup or screen.faint_check() == 0
                     ):
                         steal()
@@ -4609,8 +4609,22 @@ def get_digit(number, n):
 
 
 def calculate_spare_change_movement(gil_amount):
+    max_gil_check = False
     if gil_amount > memory.main.get_gil_value():
         gil_amount = memory.main.get_gil_value()
+        max_gil_check = True
+        
+    if max_gil_check:
+        # If we snap to max, the original logic will not work.
+        xbox.menu_right()
+        for _ in range(9):
+            xbox.tap_up()
+        memory.main.wait_frames(30)
+        xbox.tap_b()
+        xbox.tap_b()
+        xbox.tap_b()
+        xbox.tap_b()
+        return
     gil_amount = min(gil_amount, 999999)
     # gil_amount = min(gil_amount, 100000)
     position = {}
