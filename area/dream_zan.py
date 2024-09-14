@@ -79,13 +79,13 @@ def new_game(gamestate):
 def new_game_2():
     # New game selected. Next, select options.
     time_buffer = 15
-    logger.info("====================================")
+    #logger.info("====================================")
     #logger.info("Starting in")
     #logger.info("3")
     #memory.main.wait_frames(time_buffer)
     #logger.info("2")
     #memory.main.wait_frames(time_buffer)
-    #logger.info("1")
+    ##logger.info("1")
     #memory.main.wait_frames(time_buffer)
     logger.info("GO!!! Good fortune!")
     logger.info("====================================")
@@ -226,6 +226,7 @@ def ammes_battle_truerng():
 def ammes_battle(tidus_total_attacks: int, tidus_potion: bool):
     logger.info("Starting ammes")
     xbox.click_to_battle()
+    write_seed_num(seed=memory.main.rng_seed())
     logger.debug("Auron Overdrive turn start")
     memory.main.last_hit_init()
 
@@ -237,8 +238,6 @@ def ammes_battle(tidus_total_attacks: int, tidus_potion: bool):
         battle.main.use_potion_character(Tidus, "l")
     else:
         CurrentPlayer().defend()
-    # logs.write_stats("First Six Hits:")
-    hits_array = []
 
     logger.info("Killing Sinspawn")
     while memory.main.battle_active():

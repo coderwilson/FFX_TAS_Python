@@ -48,8 +48,8 @@ def south_pathing():
                             battle.main.flee_all()
                             battle.main.wrap_up()
                         save_touched = True
-                    elif checkpoint == 2 and not game_vars.get_blitz_win():
-                        checkpoint = 20
+                    #elif checkpoint == 2 and not game_vars.get_blitz_win():
+                    #    checkpoint = 20
                     elif checkpoint == 21:
                         memory.main.touch_save_sphere()
                         save_touched = True
@@ -211,8 +211,8 @@ def agency_shop_part_2():  # We'll grab Auron's weapon from O'aka, Macalania Woo
             menu.sell_weapon(loc)
             if memory.main.get_gil_value() >= 9550:
                 break
-    # if not game_vars.get_blitz_win(): # This may come back later.
-    #    menu.buy_weapon(0, equip=False)
+    if not game_vars.get_blitz_win():
+        menu.buy_weapon(0, equip=False)
     menu.buy_weapon(5, equip=False)
     memory.main.close_menu()
 
@@ -255,7 +255,7 @@ def agency():
                     pathing.set_movement([3, -52])
                     xbox.tap_b()
                 memory.main.click_to_control()
-                if game_vars.nemesis() or not game_vars.get_blitz_win():
+                if game_vars.nemesis():# or not game_vars.get_blitz_win():
                     # Back in and out to spawn the chest
                     FFXC.set_movement(-1, 1)
                     while memory.main.get_map() != 263:
@@ -270,13 +270,13 @@ def agency():
                 checkpoint += 1
             elif (
                 checkpoint == 9
-                and (game_vars.nemesis() or not game_vars.get_blitz_win())
+                and game_vars.nemesis()# or not game_vars.get_blitz_win())
                 and str_count < 3
             ):
                 pathing.set_movement([-73, 45])
                 xbox.tap_b()
             elif checkpoint == 11:
-                game_vars.set_blitz_win(value=True)
+                #game_vars.set_blitz_win(value=True)
                 FFXC.set_movement(0, 1)
                 memory.main.click_to_event()
 

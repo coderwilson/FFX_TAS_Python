@@ -2045,7 +2045,7 @@ def godhand(baaj:int=0):
     memory.main.wait_frames(30)
     xbox.menu_a()
     xbox.menu_b()
-    memory.main.wait_frames(90)
+    memory.main.wait_frames(60)
     air_ship_destination(5+baaj)
     
     path = [

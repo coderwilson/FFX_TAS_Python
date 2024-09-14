@@ -271,7 +271,8 @@ def desert():
 
 def find_summoners():
     logger.info("Desert complete. Starting Home section")
-    menu.home_grid()
+    if game_vars.get_blitz_win():
+        menu.home_grid()
     learn_first_OD = False
 
     checkpoint = 7

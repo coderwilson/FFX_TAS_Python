@@ -23,6 +23,7 @@ from players import (
 )
 from battle import avina_memory
 from area.gagazet import check_gems
+from json_ai_files.write_seed import write_returns
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -1967,12 +1968,15 @@ def biran_yenke():
 
     if friend_slot == 255:  # Four return sphere method.
         logger.debug("Double return sphere drops.")
+        write_returns(4)
         end_game_version = 4
     elif ret_slot == 255:
         logger.warning("Double friend sphere, effective game over. :( ")
+        write_returns(0)
         end_game_version = 3
     else:
         logger.debug("Split items between friend and return spheres.")
+        write_returns(2)
         end_game_version = 1
 
     game_vars.end_game_version_set(end_game_version)

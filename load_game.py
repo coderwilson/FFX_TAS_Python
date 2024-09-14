@@ -31,6 +31,8 @@ def move_after_load(spec_move: str):
         load_miihen_start()
     elif spec_move == "MRR":
         load_mrr()
+    elif spec_move == "moonflow_north":
+        moonflow_2()
     elif spec_move == "Kilika_rng_manip":
         kilika_rng_manip()
     elif spec_move == "MRR_crit_manip":
@@ -120,6 +122,8 @@ def load_into_game(gamestate: str, step_counter: str):
         else:
             # Perform the load
             load_save_num(int(save_num_conf))
+            logger.debug("Save has been loaded.")
+            memory.main.await_control()
             game_vars.set_blitz_win(value=(blitz_win == "True"))
             game_vars.end_game_version_set(value=int(end_ver))
             if nemesis == str(game_vars.nemesis()):
@@ -221,7 +225,7 @@ def load_save_num(number):
             else:
                 xbox.tap_up()
 
-        for _ in range(20):
+        for _ in range(5):
             xbox.tap_b()
         FFXC.set_neutral()
         memory.main.await_control()
