@@ -315,18 +315,18 @@ def menu_b():
 
 def tap_a():
     FFXC.set_value("btn_a", 1)
-    memory.main.wait_frames(2)
-    FFXC.set_value("btn_a", 0)
     memory.main.wait_frames(1)
+    FFXC.set_value("btn_a", 0)
+    memory.main.wait_frames(2)
     if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
 def tap_b():
     FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(2)
-    FFXC.set_value("btn_b", 0)
     memory.main.wait_frames(1)
+    FFXC.set_value("btn_b", 0)
+    memory.main.wait_frames(2)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
 
@@ -347,18 +347,18 @@ def menu_y():
 
 def tap_x():
     FFXC.set_value("btn_x", 1)
-    memory.main.wait_frames(2)
-    FFXC.set_value("btn_x", 0)
     memory.main.wait_frames(1)
+    FFXC.set_value("btn_x", 0)
+    memory.main.wait_frames(2)
     if game_vars.use_pause():
         memory.main.wait_frames(2)
 
 
 def tap_y():
     FFXC.set_value("btn_y", 1)
-    memory.main.wait_frames(2)
-    FFXC.set_value("btn_y", 0)
     memory.main.wait_frames(1)
+    FFXC.set_value("btn_y", 0)
+    memory.main.wait_frames(2)
     if game_vars.use_pause():
         memory.main.wait_frames(2)
 
@@ -374,7 +374,7 @@ def l_bumper():
     FFXC.set_value("btn_shoulder_l", 1)
     memory.main.wait_frames(1)
     FFXC.set_value("btn_shoulder_l", 0)
-    memory.main.wait_frames(1)
+    memory.main.wait_frames(2)
     if game_vars.use_pause():
         memory.main.wait_frames(2)
 

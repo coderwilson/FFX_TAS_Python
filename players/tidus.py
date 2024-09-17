@@ -55,10 +55,7 @@ class TidusImpl(Player):
                 xbox.tap_left()
         while not self.overdrive_active():
             xbox.tap_b()
-        if game_vars.use_pause():
-            memory.main.wait_frames(10)
-        else:
-            memory.main.wait_frames(12)
+        memory.main.wait_frames(12)
         xbox.tap_b()  # First try pog
         logger.info("Hit Overdrive")
 

@@ -114,11 +114,12 @@ def listen_story():
     while memory.main.get_encounter_id() != 414:  # First Sinspawn
         if memory.main.user_control():
             # Events
-            if checkpoint == 5:
+            if checkpoint == 6:
                 #while not pathing.set_movement([15,9]):
                 #    pass
                 check_near_actors(False)
                 pathing.approach_actor_by_id(8544)
+                FFXC.set_neutral()
                 #FFXC.set_movement(-1, -1)
                 while not memory.main.name_aeon_ready():
                     pass

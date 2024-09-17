@@ -98,5 +98,11 @@
     },
     "150": {
         "kimahri_force_heal": "True"
+    },
+    "60": {
+        "kimahri_force_heal": "True"
+    },
+    "91": {
+        "kimahri_force_heal": "True"
     }
 }
