@@ -228,6 +228,8 @@ def plan_manips(klikk_steals: int):
             best_klikk_hits = klikk_hits
             best_sahagin_b_first = target_sahagin_b_first
 
+    fastest_strats["sahagin_b_first"] = best_sahagin_b_first
+
     rng_rolls[44] = best_sahagin_b_first
 
     rng_memory = []
