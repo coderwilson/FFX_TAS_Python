@@ -318,10 +318,7 @@ def escape():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 screen.await_turn()
-                if checkpoint < 19:
-                    battle.main.flee_all()
-                    force_battle = False
-                elif not menu_done:
+                if not menu_done:
                     battle.main.escape_with_xp()
                     menu.home_grid()
                     menu_done = True

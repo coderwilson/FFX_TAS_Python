@@ -67,8 +67,8 @@ def air_ship_path(version, checkpoint:int = 0):
                             xbox.tap_right()
                         else:
                             xbox.tap_left()
-                    while not memory.main.item_shop_menu() == 9:
-                        xbox.menu_b()
+                    #while not memory.main.item_shop_menu() == 9:
+                    xbox.menu_b()
                 if memory.main.get_speed() < 10:
                     while memory.main.equip_buy_row() != 9:
                         if memory.main.equip_buy_row() < 9:
@@ -86,8 +86,8 @@ def air_ship_path(version, checkpoint:int = 0):
                             xbox.tap_right()
                         else:
                             xbox.tap_left()
-                    while not memory.main.item_shop_menu() == 10:
-                        xbox.menu_b()
+                    #while not memory.main.item_shop_menu() == 10:
+                    xbox.menu_b()
                 memory.main.close_menu()
                 memory.main.click_to_control_3()
                 distiller_purchase = True

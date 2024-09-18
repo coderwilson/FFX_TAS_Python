@@ -87,6 +87,9 @@ def _approach_actor(actor_index: int = 999, talk: bool = True):
     # The actor ID is not the same as their usual character ID like 0-6 for the party,
     # but rather the ID used for the actor information in the game files.
     logger.debug(f"Actor index {actor_index}")
+    speed_val = memory.main.get_game_speed()
+    if speed_val != 0:
+        memory.main.set_game_speed(0)
 
     actor_coords = memory.main.get_actor_coords(actor_index=actor_index)
     target_coords = [actor_coords[0], actor_coords[1]]
@@ -106,10 +109,15 @@ def _approach_actor(actor_index: int = 999, talk: bool = True):
             FFXC.set_neutral()
             return True
     FFXC.set_neutral()
+    if speed_val != 0:
+        memory.main.set_game_speed(speed_val)
     return True
 
 
 def approach_coords(target_coords, diag:int = 999, click_through:bool = True):
+    speed_val = memory.main.get_game_speed()
+    if speed_val != 0:
+        memory.main.set_game_speed(0)
     if diag != 999:
         logger.debug(f"Moving until dialog value achieved: {diag}")
         while memory.main.diag_progress_flag() != diag:
@@ -125,6 +133,8 @@ def approach_coords(target_coords, diag:int = 999, click_through:bool = True):
             set_movement(target_coords)
             if distance_coords(target_coords) < 20:
                 xbox.tap_b()
+    if speed_val != 0:
+        memory.main.set_game_speed(speed_val)
     if click_through:
         FFXC.set_neutral()
         memory.main.click_to_control()
