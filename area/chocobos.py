@@ -1091,7 +1091,7 @@ def spirit_lance():
     logger.debug("Ready to dodge.")
     #memory.main.set_game_speed(1)
     run_count = 0
-    while dodge_count < start_count + 200:
+    while dodge_count < start_count + 5:
         if run_count % 3 == 0:
             if pathing.set_movement([-95,-1000]):
                 run_count = random.choice(range(0, 1000))
@@ -1202,6 +1202,7 @@ def spirit_lance():
     
     item_index = memory.main.get_item_slot(9)
     item_count = 0
+    '''
     if item_index == 255:
         while memory.main.get_item_slot(9) == 255:
             logger.debug(f"A - Index: {item_index} | Count: {item_count}")
@@ -1222,6 +1223,7 @@ def spirit_lance():
     FFXC.set_neutral()
     logger.debug("Got it. Let's get going!")
     memory.main.click_to_control()
+    '''
     
     while not pathing.set_movement([-79,28]):
         pass
@@ -2711,8 +2713,9 @@ def upgrade_celestials(godhand:int=1, baaj:int=1, Yuna:bool=False, Wakka:bool=Fa
             pass
     while memory.main.user_control():
         FFXC.set_movement(0,1)
+        xbox.tap_b()
     FFXC.set_neutral()
-    click_to_diag_progress(33)
+    memory.main.click_to_diag_progress(33)
     
     for i in range(7):
         if i == 1 and not Yuna:
@@ -2731,11 +2734,11 @@ def upgrade_engage(menu_id:int):
             xbox.menu_down()
         xbox.menu_b()
         xbox.menu_b()
-        if i % 2 == 1 and menu_id==7:
-            click_to_diag_progress(62)
+        if i % 2 == 1 and menu_id==6:
+            memory.main.click_to_diag_progress(62)
             memory.main.wait_frames(15)
-            xbox.menu_down()
+            xbox.menu_a()
             xbox.menu_b()
         else:
-            click_to_diag_progress(33)
+            memory.main.click_to_diag_progress(33)
     
