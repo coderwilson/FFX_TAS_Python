@@ -228,6 +228,8 @@ def plan_manips(klikk_steals: int):
             best_klikk_hits = klikk_hits
             best_sahagin_b_first = target_sahagin_b_first
 
+    fastest_strats["sahagin_b_first"] = best_sahagin_b_first
+
     rng_rolls[44] = best_sahagin_b_first
 
     rng_memory = []
@@ -249,7 +251,7 @@ def plan_manips(klikk_steals: int):
 
             rng_rolls[20] = rng_rolls[20] + tidus_potion_geos + 2 * tidus_attacks_geos
 
-            logging.debug(f"==============Potion on Geos: {tidus_potion_geos} / Attacks on Geos: {tidus_attacks_geos}==========================")
+            # logging.debug(f"==============Potion on Geos: {tidus_potion_geos} / Attacks on Geos: {tidus_attacks_geos}==========================")
 
             klikk_tros_time_value, tidus_potion, tidus_potion_turn, rikku_potion, chain_strat, ruins_strat = simulate_klikk_to_tros(rng_rolls=rng_rolls, klikk_steals=klikk_steals)
 
@@ -288,8 +290,6 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
 
     tidus_potion_turn = best_tidus_potion_turn(rng20_rolls=rng_rolls[20])
 
-    logging.debug(f"Tidus Potion Turn: {tidus_potion_turn}")
-
     active_strats["tidus_potion_turn"] = tidus_potion_turn
 
     rng_memory = [0] * 68
@@ -312,7 +312,7 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
         active_strats["tidus_potion_klikk"] = tidus_potion
         active_strats["rikku_potion_klikk"] = rikku_potion
 
-        logging.debug(f"=======================Potion: {'Tidus' if tidus_potion else ('Rikku' if rikku_potion else 'None')}======================================")
+        # logging.debug(f"=======================Potion: {'Tidus' if tidus_potion else ('Rikku' if rikku_potion else 'None')}======================================")
 
         klikk2_time_value = simulate_klikk2(rng_rolls=rng_rolls, klikk_steals=klikk_steals, hp_tidus=hp_tidus,
                                             tidus_potion=tidus_potion, tidus_potion_turn=tidus_potion_turn,
@@ -335,7 +335,7 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
                 active_strats["chain_encounter_strat"] = chain_strat
                 active_strats["ruins_encounter_strat"] = ruins_strat
 
-                logging.debug(f"==================Chain Strat: {chain_strat} / Ruins Strat: {ruins_strat}=====================")
+                # logging.debug(f"==================Chain Strat: {chain_strat} / Ruins Strat: {ruins_strat}=====================")
 
                 if chain_encounter_happens:
 
@@ -349,7 +349,7 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
                 tros_time_value = simulate_tros_encounter(rng_rolls=rng_rolls)
 
                 klikk_to_tros_time_value = klikk1_time_value + klikk2_time_value + chain_time_value + ruins_time_value + tros_time_value
-                logging.debug(f"Klikk 1 Time: {klikk1_time_value} / Klikk 2 Time: {klikk2_time_value} / Chain Time: {chain_time_value} / Ruins Time: {ruins_time_value} / Tros Time: {tros_time_value} / Total Time: {klikk_to_tros_time_value}")
+                # logging.debug(f"Klikk 1 Time: {klikk1_time_value} / Klikk 2 Time: {klikk2_time_value} / Chain Time: {chain_time_value} / Ruins Time: {ruins_time_value} / Tros Time: {tros_time_value} / Total Time: {klikk_to_tros_time_value}")
 
                 if best_klikk_to_tros_time_value == 0 or klikk_to_tros_time_value < best_klikk_to_tros_time_value:
 
@@ -409,8 +409,6 @@ def best_tidus_potion_turn(rng20_rolls):
 
                 crits += potion_crits[attack]
 
-        logging.debug(f"Potion Turn: {potion + 1} / Crits: {crits}")
-
         if crits > max_crits:
 
             max_crits = crits
@@ -440,8 +438,6 @@ def simulate_klikk1(rng_rolls):
 
     tidus_ctb = 3 * tidus_base_ctb - tidus_ctb_roll
     klikk_ctb = (300 * klikk_base_ctb) // klikk_ctb_roll
-
-    logging.debug(f"Tidus CTB: {tidus_ctb} / Klikk CTB: {klikk_ctb}")
 
     # Battle Simulation
 
@@ -512,8 +508,6 @@ def simulate_klikk2(rng_rolls, hp_tidus: int, klikk_steals: int, tidus_potion: b
     rikku_ctb = 3 * rikku_base_ctb - rikku_ctb_roll
     klikk_ctb = 300 * klikk_base_ctb // klikk_ctb_roll
 
-    logging.debug(f"Tidus CTB: {tidus_ctb} / Rikku CTB: {rikku_ctb} / Klikk CTB: {klikk_ctb}")
-
     tidus_turn = 0
     rikku_turn = 0
 
@@ -553,8 +547,6 @@ def simulate_klikk2(rng_rolls, hp_tidus: int, klikk_steals: int, tidus_potion: b
                 hp_klikk -= var_damage
 
                 time_value += tidus_attack_time
-
-                logging.debug(f"Tidus Damage Klikk: {var_damage}")
 
             if hp_klikk <= 0:
                 break
@@ -663,11 +655,7 @@ def simulate_chain_encounter(rng_rolls, strat: int):
     ambush_preempt_roll = rng01_array_enemy_formation[rng_rolls[1] + 2] % 256
     rng_rolls[1] += 2
 
-    logging.debug(f"Chain Encounter Roll: {enemy_formation}")
-    logging.debug(f"Chain Ambush Roll: {ambush_preempt_roll}")
-
     if 32 <= ambush_preempt_roll < 223:
-        logging.debug("Roll ICVs")
         rng_rolls[20] += 1
         rng_rolls[26] += 1
 
@@ -752,8 +740,6 @@ def simulate_ruins_encounter(rng_rolls, strat: int):
     ambush_preempt_roll = rng01_array_enemy_formation[rng_rolls[1] + 1] % 256
     rng_rolls[1] += 1
 
-    logging.debug(f"Ruins Ambush Roll: {ambush_preempt_roll}")
-
     if 32 <= ambush_preempt_roll < 223:
 
         rng_rolls[20] += 1
@@ -830,8 +816,6 @@ def simulate_tros_encounter(rng_rolls):
     ambush_preempt_roll = rng01_array_enemy_formation[rng_rolls[1] + 1] % 256
     rng_rolls[1] += 1
 
-    logging.debug(f"Tros Ambush Roll: {ambush_preempt_roll}")
-
     if 32 <= ambush_preempt_roll < 223:
 
         rng_rolls[20] += 1
@@ -862,7 +846,6 @@ def simulate_tros_encounter(rng_rolls):
                                         user_luck=rikku_luck, target_luck=15)
         total_damage += var_damage
         rng_rolls[26] += 2
-        logging.debug(f"Rikku Grenade Tros: {var_damage}")
 
     for attack in range(2):
 
@@ -871,13 +854,10 @@ def simulate_tros_encounter(rng_rolls):
                                         user_luck=tidus_luck, target_luck=15, equipment_bonus=equipment_bonus)
         total_damage += var_damage
         rng_rolls[20] += 2
-        logging.debug(f"Tidus Attack Tros: {var_damage}")
 
     # if we don't have enough grenades to kill Tros then this strat line is non-viable
     if total_damage < 2200:
         time_value += 999
-
-    logging.debug(f"Total Tros Damage: {total_damage}")
 
     return time_value
 
@@ -924,8 +904,6 @@ def roll_steal(rng_rolls, steal_successes) -> (bool, int):
     steal_chance = 255 // (2 ** steal_successes)
     steal_roll = rng10_array_drop_steal_chance[rng_rolls[10] + 1] % 255
     rng_rolls[10] += 1
-
-    logging.debug(f"Steal Roll: {steal_roll} / Steal Chance: {steal_chance}")
 
     steal_success = (steal_roll < steal_chance)
 
@@ -1085,7 +1063,16 @@ def rikku_damage_taken_tros():
     rng26_array_rikku = main.rng_array_from_index(index=26, array_len=200)
     rng28_array_enemy1 = main.rng_array_from_index(index=28, array_len=200)
 
+    rng_rolls = [0] * 68
+
     rikku_damage_taken = 0
+
+    preempt_ambush_roll = rng01_array_enemy_formation[1] % 256
+
+    if 32 <= preempt_ambush_roll < 223:
+
+        rng_rolls[26] += 1
+        rng_rolls[28] += 1
 
     tentacles_base_damage = damage.calculate_base_damage(formula=damage.Formula.STR_VS_DEF,
                                                          user_stat=10, target_stat=8, ability_power=24)
@@ -1093,9 +1080,11 @@ def rikku_damage_taken_tros():
     nautilus_charge_base_damage = damage.calculate_base_damage(formula=damage.Formula.STR_VS_DEF,
                                                                user_stat=10, target_stat=8, ability_power=48)
 
-    first_rikku_damage = manip_planning.rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=0,
+    first_rikku_damage = manip_planning.rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku,
+                                                           rng_rolls=rng_rolls[26],
                                                            user_luck=rikku_luck, target_luck=15)
-    fifth_rikku_damage = manip_planning.rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=8,
+    fifth_rikku_damage = manip_planning.rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku,
+                                                           rng_rolls=rng_rolls[26] + 8,
                                                            user_luck=rikku_luck, target_luck=15)
 
     tros_first_target = rng04_array_enemy_targeting[1] % 2
@@ -1104,48 +1093,52 @@ def rikku_damage_taken_tros():
     logging.debug(f"Tros first target: {tros_first_target}")
     logging.debug(f"Tros second target: {tros_second_target}")
 
-    preempt_ambush_roll = rng01_array_enemy_formation[1] % 256
-
-    rng28_rolls = 0
-
     # preempt fight
     if preempt_ambush_roll < 32:
 
-        rng28_rolls += 1  # tidus gets hit by Nautilus Charge first
+        rng_rolls[28] += 1  # tidus gets hit by Nautilus Charge first
         var_damage = manip_planning.rng.get_rng_damage(base_damage=nautilus_charge_base_damage,
                                                        rng_array=rng28_array_enemy1,
-                                                       rng_rolls=rng28_rolls, user_luck=15,
+                                                       rng_rolls=rng_rolls[28], user_luck=15,
                                                        target_luck=rikku_luck, can_crit=False)
         logging.debug(f"Nautilus Charge deals {var_damage} damage to Rikku")
         rikku_damage_taken += var_damage
-        rng28_rolls += 1
+        rng_rolls[28] += 1
 
-        if fifth_rikku_damage < 350 and tros_first_target == 1:
+        if fifth_rikku_damage < 350:
 
-            var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
-                                                           rng_array=rng28_array_enemy1,
-                                                           rng_rolls=rng28_rolls, user_luck=15,
-                                                           target_luck=rikku_luck, can_crit=False)
+            if tros_first_target == 1:
 
-            logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
-            rikku_damage_taken += var_damage
+                var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
+                                                               rng_array=rng28_array_enemy1,
+                                                               rng_rolls=rng_rolls[28], user_luck=15,
+                                                               target_luck=rikku_luck, can_crit=False)
+
+                logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
+                rikku_damage_taken += var_damage
+
+            rng_rolls[28] += 1
 
     elif preempt_ambush_roll < 223:
 
-        if first_rikku_damage < 350 and tros_first_target == 1:
+        if first_rikku_damage < 350:
 
-            var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
-                                                           rng_array=rng28_array_enemy1,
-                                                           rng_rolls=rng28_rolls, user_luck=15,
-                                                           target_luck=rikku_luck, can_crit=False)
-            logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
-            rikku_damage_taken += var_damage
-            rng28_rolls += 1
+            if tros_first_target == 1:
 
-        rng28_rolls += 1  # tidus gets hit by Nautilus Charge first
+                var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
+                                                               rng_array=rng28_array_enemy1,
+                                                               rng_rolls=rng_rolls[28], user_luck=15,
+                                                               target_luck=rikku_luck, can_crit=False)
+                logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
+
+                rikku_damage_taken += var_damage
+
+            rng_rolls[28] += 1
+
+        rng_rolls[28] += 1  # tidus gets hit by Nautilus Charge first
         var_damage = manip_planning.rng.get_rng_damage(base_damage=nautilus_charge_base_damage,
                                                        rng_array=rng28_array_enemy1,
-                                                       rng_rolls=rng28_rolls, user_luck=15,
+                                                       rng_rolls=rng_rolls[28], user_luck=15,
                                                        target_luck=rikku_luck, can_crit=False)
         logging.debug(f"Nautilus Charge deals {var_damage} damage to Rikku")
         rikku_damage_taken += var_damage
@@ -1156,26 +1149,29 @@ def rikku_damage_taken_tros():
 
             var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
                                                            rng_array=rng28_array_enemy1,
-                                                           rng_rolls=rng28_rolls, user_luck=15,
+                                                           rng_rolls=rng_rolls[28], user_luck=15,
                                                            target_luck=rikku_luck, can_crit=False)
             logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
             rikku_damage_taken += var_damage
-            rng28_rolls += 1
+            rng_rolls[28] += 1
 
-        if first_rikku_damage < 350 and tros_second_target == 1:
+        if first_rikku_damage < 350:
 
-            var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
-                                                           rng_array=rng28_array_enemy1,
-                                                           rng_rolls=rng28_rolls, user_luck=15,
-                                                           target_luck=rikku_luck, can_crit=False)
-            logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
-            rikku_damage_taken += var_damage
-            rng28_rolls += 1
+            if tros_second_target == 1:
 
-        rng28_rolls += 1  # tidus gets hit by Nautilus Charge first
+                var_damage = manip_planning.rng.get_rng_damage(base_damage=tentacles_base_damage,
+                                                               rng_array=rng28_array_enemy1,
+                                                               rng_rolls=rng_rolls[28], user_luck=15,
+                                                               target_luck=rikku_luck, can_crit=False)
+                logging.debug(f"Tentacles deals {var_damage} damage to Rikku")
+                rikku_damage_taken += var_damage
+
+            rng_rolls[28] += 1
+
+        rng_rolls[28] += 1  # tidus gets hit by Nautilus Charge first
         var_damage = manip_planning.rng.get_rng_damage(base_damage=nautilus_charge_base_damage,
                                                        rng_array=rng28_array_enemy1,
-                                                       rng_rolls=rng28_rolls, user_luck=15,
+                                                       rng_rolls=rng_rolls[28], user_luck=15,
                                                        target_luck=rikku_luck, can_crit=False)
         logging.debug(f"Nautilus Charge deals {var_damage} damage to Rikku")
         rikku_damage_taken += var_damage

@@ -23,7 +23,7 @@ def get_rng_damage(
     else:
         crit = 0
 
-    return math.floor(base_damage * (240 + damage_roll) / 256) * (2 if crit else 1)
+    return math.floor(base_damage * (240 + damage_roll) // 256) * (2 if crit else 1)
 
 
 def calculate_crit(rng_array, rng_rolls, user_luck: int, target_luck: int, equipment_bonus: int = 0) -> bool:

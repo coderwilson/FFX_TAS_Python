@@ -27,13 +27,13 @@ def calculate_base_damage(
     match formula:
         case Formula.STR_VS_DEF | Formula.STR_IGNORE_DEF:
             stat_base = math.floor(pow(user_stat + user_cheer_focus, 3) / 32) + 30
-            base_damage = math.floor(ability_power * stat_base / 16)
-            base_damage = math.floor(base_damage * defense_mod / 730)
+            base_damage = math.floor(stat_base * defense_mod / 730)
             base_damage = math.floor(base_damage * (15 - target_cheer_focus) / 15)
+            base_damage = math.floor(ability_power * base_damage / 16)
 
         case Formula.MAG_VS_MDF | Formula.MAG_IGNORE_MDF:
-            stat_base = math.floor(pow(user_stat + user_cheer_focus, 2) / 6) + ability_power
-            base_damage = math.floor(ability_power * stat_base * 4 / 16)
+            stat_base = (math.floor(pow(user_stat + user_cheer_focus, 2) / 6) + ability_power)
+            base_damage = math.floor(ability_power * stat_base / 4)
             base_damage = math.floor(base_damage * defense_mod / 730)
             base_damage = math.floor(base_damage * (15 - target_cheer_focus) / 15)
 
