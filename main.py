@@ -742,7 +742,7 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
                         logger.info(f"Straight to NEA area: {advance_post_x}")
                         game.step = 2
@@ -772,7 +772,7 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    _, loop_back = rng_track.nea_track()
+                    _, loop_back, _ = rng_track.nea_track()
                     if game_vars.ne_armor() == 255:
                         if loop_back <= 5:
                             area.ne_armor.loop_back_from_ronso()
@@ -889,7 +889,7 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
                         logger.info(f"Straight to NEA area: {advance_post_x}")
                         game.step = 2

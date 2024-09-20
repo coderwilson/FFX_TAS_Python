@@ -200,12 +200,12 @@ def klikk_fight_truerng():
 def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
-    while not Rikku.is_turn():
-        Tidus.attack()
-    # Possibly replace with the following, for less error messages.
     #while not Rikku.is_turn():
-    #    if memory.main.battle_active() and Tidus.is_turn():
-    #        Tidus.attack()
+    #    Tidus.attack()
+    # Possibly replace with the following, for less error messages.
+    while not Rikku.is_turn():
+        if memory.main.battle_active() and Tidus.is_turn():
+            Tidus.attack()
 
     xbox.click_to_battle()
     screen.await_turn()

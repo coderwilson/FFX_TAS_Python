@@ -2318,10 +2318,11 @@ def seymour_guado():
 def escape_with_xp():
     rikku_item = False
     item_to_use = 255
-    if memory.main.get_item_slot(49) < 200:
-        item_to_use = 49
-    elif memory.main.get_item_slot(39) < 200:
-        item_to_use = 39
+    # Guide says to only use silence grenade. Unsure if we even want petrify.
+    if memory.main.get_item_slot(39) < 200:
+        item_to_use = 39  # Silence grenade
+    elif memory.main.get_item_slot(49) < 200:
+        item_to_use = 49  # Petrify grenade
     
     if item_to_use == 255:
         flee_all()
@@ -2665,7 +2666,7 @@ def sandragora(version):
                 flee_all()
                 memory.main.click_to_control()
                 FFXC.set_movement(0, 1)
-                screen.await_event()
+                memory.main.await_event()
                 FFXC.set_neutral()
                 screen.await_turn()
         else:
@@ -2810,6 +2811,9 @@ def home_4(learned_OD: bool):
 
 @battle.utils.speedup_decorator
 def guards(group_num, sleeping_powders):
+    logger.manip(
+        f"Equipment Drop counts: {memory.main.guards_to_calm_equip_drop_count(group_num)}"
+    )
     xbox.click_to_battle()
     throw_distiller = (
         memory.main.get_item_slot(16) != 255 or memory.main.get_item_slot(18) != 255
@@ -3141,7 +3145,7 @@ def calm_impulse():
 
 
 def calm_lands_gems():
-    advance_pre_x, advance_post_x = rng_track.nea_track()
+    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
     while not memory.main.turn_ready():
         pass
     steal_complete = False
@@ -4938,7 +4942,7 @@ def calm_lands_manip():
     mid_array = [277, 279, 285, 287, 289, 290]
     rng_10_next_chance_high = memory.main.next_chance_rng_10(128)
     high_array = [278, 286, 288]
-    advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
+    advance_pre_x, advance_post_x, _ = rng_track.nea_track()  # returns integers
     if check_gems() < 2:
         logger.debug(f"Gems: {check_gems()}")
         logger.debug("Calm Lands battle, need gems.")
@@ -5155,7 +5159,7 @@ def advance_rng_12():
             logger.debug("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
-            pre_x, post_x = rng_track.nea_track()
+            pre_x, post_x, _ = rng_track.nea_track()
             if post_x == 1:
                 advances = 1
             elif memory.main.get_map() == 223:

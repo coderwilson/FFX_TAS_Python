@@ -78,10 +78,10 @@ def air_ship_path(version, checkpoint:int = 0):
                     while not memory.main.item_shop_menu() == 16:
                         xbox.tap_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((10 - memory.main.get_speed()) / 2), 2
+                        math.ceil((10 - memory.main.get_speed()) / 2), 3
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((10 - memory.main.get_speed()) / 2), 2
+                            math.ceil((10 - memory.main.get_speed()) / 2), 3
                         ):
                             xbox.tap_right()
                         else:

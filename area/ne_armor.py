@@ -59,7 +59,7 @@ def to_hidden_cave():
             if checkpoint == 7 and not first_save:
                 save_sphere.touch_and_go()
                 first_save = True
-            _, next_drop = rng_track.nea_track()
+            _, next_drop, _ = rng_track.nea_track()
             if checkpoint == 8 and (
                 next_drop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
@@ -84,7 +84,7 @@ def to_hidden_cave():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                _, next_drop = rng_track.nea_track()
+                _, next_drop, _ = rng_track.nea_track()
                 last_report = False
                 logger.info("### Starting manip battle")
                 rng_track.print_manip_info()

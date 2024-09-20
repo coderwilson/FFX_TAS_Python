@@ -1834,33 +1834,32 @@ def nea_track():
 
     total_advance_pre_x = 999
     total_advance_post_x = 999
+    total_advance_array = []
 
     # If already aligned for NEA, we want X to drop nothing.
     next_item, pre_advance_13 = item_to_be_dropped(enemy="ghost")
     if next_item.equipment_type() == 1 and next_item.has_ability(0x801D):
         total_advance_post_x = 0
-    while (
-        total_advance_pre_x == 999
-        or total_advance_post_x == 999
-        and pre_advance_12 < 100
-    ):
+    while pre_advance_12 < 200:
         pre_advance_12 += 4
         next_item, pre_advance_13 = item_to_be_dropped(
             enemy="ghost", pre_advance_12=pre_advance_12, pre_advance_13=pre_advance_13
         )
         if next_item.equipment_type() == 1 and 0x801D in next_item.abilities():
+            total_advance_array.append(int(pre_advance_12 / 4))
             if total_advance_post_x == 999:
                 total_advance_post_x = int(pre_advance_12 / 4)
             if total_advance_pre_x == 999:
                 total_advance_pre_x = int((pre_advance_12 / 4) - 1)
     # logger.debug(f"// Pre-X: {total_advance_pre_x} // Post-X {total_advance_post_x}")
-    return total_advance_pre_x, total_advance_post_x
+    return total_advance_pre_x, total_advance_post_x, total_advance_array
 
 
 def print_manip_info():
-    pre_x, post_x = nea_track()
+    pre_x, post_x, drop_array = nea_track()
     logger.manip("Upcoming RNGs:")
     logger.manip(f"Next drop: {post_x}")
+    logger.manip(f"Next 50 drops: {drop_array}")
     logger.manip(
         f"RNG10: {memory.main.next_chance_rng_10()} | "
         + f"Adjusted for Defender X drop: {memory.main.next_chance_rng_10_calm()}"

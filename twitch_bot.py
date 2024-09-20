@@ -315,9 +315,11 @@ class Bot(commands.Bot):
     @commands.command(aliases=("begin_all", "all"))
     async def start_all(self, ctx: commands.Context):
         if self.is_valid_user(ctx):
-            await self.start_csr(ctx)
             await self.start_timer(ctx)
             await self.start_game(ctx)
+            time.sleep(3)
+            await self.start_csr(ctx)
+            time.sleep(3)
             await self.start(ctx)
     
     # Kill All
