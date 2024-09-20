@@ -9,6 +9,7 @@ import save_sphere
 import vars
 import xbox
 import random
+import rng_track
 from paths import BikanelDesert, BikanelHome
 from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu
 
@@ -85,6 +86,9 @@ def desert():
 
     menu.equip_sonic_steel()
     memory.main.close_menu()
+    
+    rng_track.print_manip_info()
+    logger.manip(f"Drop counts to Evrae: {memory.main.desert_to_evrae_equip_drop_count()}")
 
     checkpoint = 0
     first_format = False
@@ -253,9 +257,13 @@ def desert():
                 need_speed, need_power = check_spheres()
                 logger.debug("Flag statuses")
                 logger.debug(f"Rikku is charged up: {charge_state}")
-                logger.debug(f"Need more Speed spheres: {need_speed}")
-                logger.debug(f"Need more Power spheres: {need_power}")
+                #logger.debug(f"Need more Speed spheres: {need_speed}")
+                #logger.debug(f"Need more Power spheres: {need_power}")
                 logger.debug(f"Additional items needed before Home: {items_needed}")
+                rng_track.print_manip_info()
+                logger.manip(
+                    f"Drop counts to Evrae: {memory.main.desert_to_evrae_equip_drop_count()}"
+                )
                 if checkpoint == 60:
                     checkpoint = 58
             elif memory.main.diag_skip_possible():
@@ -371,6 +379,7 @@ def find_summoners():
                 else:
                     logger.debug(f"Flee from battle: {memory.main.get_encounter_id()}")
                     battle.main.flee_all()
+                rng_track.print_manip_info()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     logger.info("Let's go get that airship!")

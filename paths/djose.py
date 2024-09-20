@@ -134,7 +134,7 @@ class DjoseTrials(AreaMovementBase):
         64: [-1, -185],
         65: [3, -9],
         66: [6, 5],
-        67: [9, 19],  # Dial in
+        67: [14, 16],  # Dial in
         # Right sphere
         69: [6, 5],
         70: [3, -9],

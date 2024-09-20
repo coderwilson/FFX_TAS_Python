@@ -25,6 +25,7 @@ def pre_evrae():
     FFXC.set_neutral()
     memory.main.click_to_control()
     logger.info("Starting first Airship section")
+    rng_track.print_manip_info()
     checkpoint = 0
     while checkpoint < 19:
         if memory.main.user_control():
@@ -56,6 +57,7 @@ def pre_evrae():
 
 def guards():
     logger.info("Start, Guards")
+    rng_track.print_manip_info()
     memory.main.click_to_control()
 
     if not game_vars.get_blitz_win():
@@ -96,6 +98,7 @@ def guards():
                     pass
                 else:
                     memory.main.update_formation(Tidus, Kimahri, Rikku)
+                rng_track.print_manip_info()
                 guard_num += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -563,8 +566,8 @@ def evrae_altana():
 
 
 def natus_formation(battles: int = 0, full_menu_close: bool = True):
-    logger.warning(
-        f"NEA drops as equipment drop number {rng_track.nea_track()[1]} from now."
+    logger.manip(
+        f"NEA drops coming up: {rng_track.nea_track()[2]}"
     )
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
     """

@@ -284,11 +284,11 @@ def escape():
     menu.equip_sonic_steel(full_menu_close=True)
 
     logger.info("Now to escape the Guado")
-    chance = random.choice(range(0, 100))
-    if game_vars.rng_seed_num() == 139:
-        chance = 1  # Testing where 139 does the extra battle.
-    else:
-        chance = 99  # For now, don't use randomness.
+    chance = 99 #random.choice(range(0, 100))
+    #if game_vars.rng_seed_num() == 139:
+    #    chance = 1  # Testing where 139 does the extra battle.
+    #else:
+    #    chance = 99  # For now, don't use randomness.
     if chance < 20 or not game_vars.get_blitz_win():
         force_battle = True
     else:
@@ -318,10 +318,7 @@ def escape():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 screen.await_turn()
-                if checkpoint < 19:
-                    battle.main.flee_all()
-                    force_battle = False
-                elif not menu_done:
+                if not menu_done:
                     battle.main.escape_with_xp()
                     menu.home_grid()
                     menu_done = True
@@ -330,6 +327,7 @@ def escape():
                     break
                 else:
                     battle.main.flee_all()
+                force_battle = False
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():

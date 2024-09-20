@@ -1538,7 +1538,8 @@ def thunder_plains(section, battle_count: int = 0):
 
     tidus_turns = 0
     while not memory.main.turn_ready():
-        pass
+        if memory.main.game_over():
+            return False
 
     # Petrify check is not working. Requires review.
     if check_petrify():
@@ -1659,15 +1660,16 @@ def thunder_plains(section, battle_count: int = 0):
                         flee_all()
     else:  # Nothing useful this battle. Moving on.
         flee_all()
-
-    if memory.main.game_over():
-        seed_str = str(memory.main.rng_seed())
-        avina_memory.add_battle_to_memory(
-            seed=seed_str, area="t_plains_heals", battle_num=battle_count - 1
-        )
-        return False
     logger.info("Battle is ended - Thunder Plains")
-    wrap_up()
+    while not memory.main.user_control():
+        if memory.main.game_over():
+            seed_str = str(memory.main.rng_seed())
+            avina_memory.add_battle_to_memory(
+                seed=seed_str, area="t_plains_heals", battle_num=battle_count - 1
+            )
+            return False
+        elif memory.main.battle_wrap_up_active():
+            wrap_up()
     memory.main.wait_frames(2)  # Allow lightning to attemt a strike
     if memory.main.dodge_lightning(game_vars.get_l_strike()):
         logger.debug("Dodge")
@@ -2165,7 +2167,7 @@ def seymour_guado_blitz_loss():
                     buddy_swap(Wakka)
                 elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
                     buddy_swap(Lulu)
-                    memory.main.await_turn()
+                    screen.await_turn()
                     revive()
                     missbackup = True
                 elif not tidushaste:
@@ -2315,31 +2317,44 @@ def seymour_guado():
 
 def escape_with_xp():
     rikku_item = False
-    if memory.main.get_item_slot(39) > 200:
+    item_to_use = 255
+    # Guide says to only use silence grenade. Unsure if we even want petrify.
+    if memory.main.get_item_slot(39) < 200:
+        item_to_use = 39  # Silence grenade
+    elif memory.main.get_item_slot(49) < 200:
+        item_to_use = 49  # Petrify grenade
+    
+    if item_to_use == 255:
         flee_all()
+        wrap_up()
     else:
         while not memory.main.turn_ready():
             pass
         while memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
-                    if not rikku_item:
-                        Tidus.swap_battle_armor(ability=[0x8028])
-                        screen.await_turn()
-                        buddy_swap(Rikku)
-                    else:
-                        CurrentPlayer().attack()
+                    #if not rikku_item:
+                    #    Tidus.swap_battle_armor(ability=[0x8028])
+                    #    screen.await_turn()
+                    #    buddy_swap(Rikku)
+                    #else:
+                    CurrentPlayer().attack()
                 elif Rikku.is_turn():
                     if not rikku_item:
-                        use_item(memory.main.get_use_items_slot(39))
+                        use_item(memory.main.get_use_items_slot(item_to_use))
                         rikku_item = True
                     else:
                         CurrentPlayer().defend()
-                elif Auron.is_turn():
-                    CurrentPlayer().attack()
                 else:
-                    buddy_swap(Tidus)
-    wrap_up()
+                    if memory.main.get_battle_char_slot(0) >= 3:
+                        buddy_swap(Tidus)
+                    elif memory.main.get_battle_char_slot(6) >= 3:
+                        buddy_swap(Rikku)
+                    elif memory.main.get_battle_char_slot(1) >= 3:
+                        buddy_swap(Yuna)
+                    else:
+                        CurrentPlayer().defend()
+        wrap_up()
 
 
 def fullheal(target: int, direction: str):
@@ -2437,6 +2452,11 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     throw_speed = False
     steal_direction = "none"
     logger.debug(f"Starting desert battle: {encounter_id}")
+    if memory.main.get_battle_char_slot(3) == 255:
+        logger.warning("Kimahri not in party yet. Fleeing and returning.")
+        flee_all()
+        wrap_up()
+        return
 
     # First, determine what the best case scenario is for each battle.
     if encounter_id == 199:
@@ -2791,6 +2811,9 @@ def home_4(learned_OD: bool):
 
 @battle.utils.speedup_decorator
 def guards(group_num, sleeping_powders):
+    logger.manip(
+        f"Equipment Drop counts: {memory.main.guards_to_calm_equip_drop_count(group_num)}"
+    )
     xbox.click_to_battle()
     throw_distiller = (
         memory.main.get_item_slot(16) != 255 or memory.main.get_item_slot(18) != 255
@@ -3122,7 +3145,7 @@ def calm_impulse():
 
 
 def calm_lands_gems():
-    advance_pre_x, advance_post_x = rng_track.nea_track()
+    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
     while not memory.main.turn_ready():
         pass
     steal_complete = False
@@ -4222,40 +4245,42 @@ def lancet_target(target, direction):
     if memory.main.get_enemy_current_hp()[target - 20] != 0:
         # Only lancet living targets.
         while memory.main.battle_target_id() != target:
-            if direction == "l":
-                if retry > 5:
-                    retry = 0
-                    logger.debug("Wrong battle line targeted.")
-                    xbox.tap_right()
-                    direction = "u"
-                    retry = 0
-                else:
-                    xbox.tap_left()
-            elif direction == "r":
-                if retry > 5:
-                    retry = 0
-                    logger.debug("Wrong character targeted.")
-                    xbox.tap_left()
-                    direction = "d"
-                else:
-                    xbox.tap_right()
-            elif direction == "u":
-                if retry > 5:
-                    retry = 0
-                    logger.debug("Wrong character targeted.")
-                    xbox.tap_down()
-                    direction = "l"
-                else:
-                    xbox.tap_up()
-            elif direction == "d":
-                if retry > 5:
-                    retry = 0
-                    logger.debug("Wrong character targeted.")
-                    xbox.tap_up()
-                    direction = "r"
-                else:
-                    xbox.tap_down()
-            retry += 1
+            while memory.main.battle_target_id() != target:
+                if direction == "l":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong battle line targeted.")
+                        xbox.tap_right()
+                        direction = "u"
+                        retry = 0
+                    else:
+                        xbox.tap_left()
+                elif direction == "r":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_left()
+                        direction = "d"
+                    else:
+                        xbox.tap_right()
+                elif direction == "u":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_down()
+                        direction = "l"
+                    else:
+                        xbox.tap_up()
+                elif direction == "d":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_up()
+                        direction = "r"
+                    else:
+                        xbox.tap_down()
+                retry += 1
+            memory.main.wait_frames(1)
 
     tap_targeting()
 
@@ -4291,8 +4316,10 @@ def flee_all(exclude: int = 99):
     logger.debug("Attempting escape (all party members and end screen)")
     if memory.main.battle_active():
         while memory.main.battle_active():
+            if memory.main.game_over():
+                return False
             if memory.main.user_control():
-                return
+                return True
             if memory.main.turn_ready():
                 tidus_position = memory.main.get_battle_char_slot(0)
                 logger.debug(f"Tidus Position: {tidus_position}")
@@ -4308,7 +4335,10 @@ def flee_all(exclude: int = 99):
                     escape_one(exclude=exclude)
                 else:
                     CurrentPlayer().defend()
+    if memory.main.game_over():
+        return False
     logger.info("Flee complete")
+    return True
 
 
 def escape_all():
@@ -4912,7 +4942,7 @@ def calm_lands_manip():
     mid_array = [277, 279, 285, 287, 289, 290]
     rng_10_next_chance_high = memory.main.next_chance_rng_10(128)
     high_array = [278, 286, 288]
-    advance_pre_x, advance_post_x = rng_track.nea_track()  # returns integers
+    advance_pre_x, advance_post_x, _ = rng_track.nea_track()  # returns integers
     if check_gems() < 2:
         logger.debug(f"Gems: {check_gems()}")
         logger.debug("Calm Lands battle, need gems.")
@@ -5129,7 +5159,7 @@ def advance_rng_12():
             logger.debug("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
-            pre_x, post_x = rng_track.nea_track()
+            pre_x, post_x, _ = rng_track.nea_track()
             if post_x == 1:
                 advances = 1
             elif memory.main.get_map() == 223:

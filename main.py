@@ -742,7 +742,7 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
                         logger.info(f"Straight to NEA area: {advance_post_x}")
                         game.step = 2
@@ -772,7 +772,7 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    _, loop_back = rng_track.nea_track()
+                    _, loop_back, _ = rng_track.nea_track()
                     if game_vars.ne_armor() == 255:
                         if loop_back <= 5:
                             area.ne_armor.loop_back_from_ronso()
@@ -889,7 +889,7 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    advance_pre_x, advance_post_x = rng_track.nea_track()
+                    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
                     if advance_post_x in [0, 1]:
                         logger.info(f"Straight to NEA area: {advance_post_x}")
                         game.step = 2
@@ -1072,20 +1072,20 @@ def write_final_logs():
     xbox.tap_a()
     memory.main.wait_frames(90)
 
-    load_game.load_into_game(gamestate="Nem_Farm", step_counter=1)
-    nemesis.arena_prep.return_to_airship()
-    nemesis.arena_prep.air_ship_destination(dest_num=12)
-    area.chocobos.all_races()
+    #load_game.load_into_game(gamestate="Nem_Farm", step_counter=1)
+    #nemesis.arena_prep.return_to_airship()
+    #nemesis.arena_prep.air_ship_destination(dest_num=12)
+    #area.chocobos.all_races()
     # Use the following to go straight into remiem races.
     # while not pathing.set_movement([-637, -246]):
     #    pass
-    area.chocobos.to_remiem()
-    area.chocobos.remiem_races()
-    area.chocobos.leave_temple()
-    area.chocobos.sun_crest(godhand=0, baaj=0)
+    #area.chocobos.to_remiem()
+    #area.chocobos.remiem_races()
+    #area.chocobos.leave_temple()
+    #area.chocobos.sun_crest(godhand=0, baaj=0)
     #area.chocobos.butterflies()
     
-    reset.reset_no_battles()
+    #reset.reset_no_battles()
 
     memory.main.end()
     logger.info("Automation complete. Shutting down. Have a great day!")
