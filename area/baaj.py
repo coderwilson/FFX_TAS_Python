@@ -200,6 +200,9 @@ def klikk_fight_truerng():
 def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
+    while not memory.main.turn_ready():
+        xbox.tap_b()
+
     while not Rikku.is_turn():
         Tidus.attack()
     # Possibly replace with the following, for less error messages.
@@ -324,7 +327,7 @@ def ab_swimming_1(chain_encounter_strat: int):
     enemy_formation = memory.main.rng_array_from_index(index=1)[1] % 2
     logging.debug(f"Chain Encounter Formation Expected: {enemy_formation}")
 
-    if manip_planning.baaj_to_tros.chain_encounter():
+    if manip_planning.baaj_to_tros.chain_encounter()[0]:
         if Rikku.hp() < 100:
             if Tidus.hp() < 100:
                 battle.main.heal_up_2(0, 6, single_item=True)
@@ -340,7 +343,7 @@ def ab_swimming_1(chain_encounter_strat: int):
                 FFXC.set_movement(0, -1)
                 FFXC.set_value("btn_a", 1)
             else:
-                FFXC.set_value("btn_a", 0)
+                FFXC.set_value("btn_a", 1)
                 if pos[1] > -230:
                     pathing.set_movement([-343, -284])
                 elif pos[1] > -410:

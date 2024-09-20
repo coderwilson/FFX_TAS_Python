@@ -40,6 +40,7 @@ equipment_bonus = 6
 tidus_base_ctb = 14
 rikku_base_ctb = 12
 klikk_base_ctb = 20
+tros_base_ctb = 13
 tidus_icv_variance = 1
 rikku_icv_variance = 2
 klikk_icv_variance = 1
@@ -257,6 +258,16 @@ def plan_manips(klikk_steals: int):
 
             time_value = klikk_tros_time_value + underwater_potion_time * tidus_potion_geos + 2 * tidus_attacks_geos
 
+            log_string = f"Sahagin B First: {best_sahagin_b_first}"
+            log_string += f" / Potion on Geos: {tidus_potion_geos}"
+            log_string += f" / Attacks on Geos: {tidus_attacks_geos}"
+            log_string += f" / Potion: {'Tidus' if tidus_potion else ('Rikku' if rikku_potion else 'None')}"
+            log_string += f" / Chain Strat: {chain_strat}"
+            log_string += f" / Ruins Strat: {ruins_strat}"
+            log_string += f" / Time: {time_value}"
+
+            logging.debug(log_string)
+
             if best_time_value == -99 or time_value < best_time_value:
                 best_time_value = time_value
                 fastest_strats["geos_potion"] = tidus_potion_geos
@@ -285,6 +296,7 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
     global grenade_count
 
     best_klikk_to_tros_time_value = 0
+    best_tros_time_value = 0
 
     klikk1_time_value, hp_tidus = simulate_klikk1(rng_rolls=rng_rolls)
 
@@ -295,7 +307,7 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
     rng_memory = [0] * 68
     rng_memory2 = [0] * 68
 
-    chain_encounter_happens = chain_encounter()
+    chain_encounter_happens, rng_rolls[0] = chain_encounter()
 
     for i in range(68):
         rng_memory[i] = rng_rolls[i]
@@ -354,10 +366,13 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
                 if best_klikk_to_tros_time_value == 0 or klikk_to_tros_time_value < best_klikk_to_tros_time_value:
 
                     best_klikk_to_tros_time_value = klikk_to_tros_time_value
+                    best_tros_time_value = tros_time_value
                     best_tidus_potion = tidus_potion
                     best_rikku_potion = rikku_potion
                     best_chain_strat = chain_strat
                     best_ruins_strat = ruins_strat
+
+    logging.debug(f"Best Strat Tros Time: {best_tros_time_value}")
 
     return best_klikk_to_tros_time_value, best_tidus_potion, tidus_potion_turn, best_rikku_potion, best_chain_strat, best_ruins_strat
 
@@ -816,21 +831,37 @@ def simulate_tros_encounter(rng_rolls):
     ambush_preempt_roll = rng01_array_enemy_formation[rng_rolls[1] + 1] % 256
     rng_rolls[1] += 1
 
-    if 32 <= ambush_preempt_roll < 223:
-
-        rng_rolls[20] += 1
-        rng_rolls[26] += 1
-
     # If pre-empt, advance rng 8 times for the purpose of the calculating low roll as fifth attack is the relevant roll
     if ambush_preempt_roll < 32:
 
         low_roll_damage = rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=rng_rolls[26] + 8,
                                              user_luck=rikku_luck, target_luck=15)
 
+        tidus_ctb = 0
+        tros_ctb = 39
+
+    elif ambush_preempt_roll < 223:
+
+        low_roll_damage = rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=rng_rolls[26],
+                                             user_luck=rikku_luck, target_luck=15)
+
+        tidus_ctb_roll = rng20_array_tidus[rng_rolls[20] + 1] % (tidus_icv_variance + 1)
+        tros_ctb_roll = 100 - (rng28_array_enemy1[rng_rolls[28] + 1] % 11)
+
+        tidus_ctb = 3 * tidus_base_ctb - tidus_ctb_roll
+        tros_ctb = 300 * tros_base_ctb // tros_ctb_roll
+
+        rng_rolls[20] += 1
+        rng_rolls[26] += 1
+        rng_rolls[28] += 1
+
     else:
 
         low_roll_damage = rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=rng_rolls[26],
                                              user_luck=rikku_luck, target_luck=15)
+
+        tidus_ctb = 42
+        tros_ctb = 39
 
     if low_roll_damage < 350:
 
@@ -854,6 +885,10 @@ def simulate_tros_encounter(rng_rolls):
                                         user_luck=tidus_luck, target_luck=15, equipment_bonus=equipment_bonus)
         total_damage += var_damage
         rng_rolls[20] += 2
+
+        if attack == 1 and low_roll_damage > 350 and tidus_ctb > tros_ctb and total_damage < 2200:
+
+            time_value += 6
 
     # if we don't have enough grenades to kill Tros then this strat line is non-viable
     if total_damage < 2200:
@@ -919,17 +954,17 @@ def roll_steal(rng_rolls, steal_successes) -> (bool, int):
     return steal_success, grenade_steals
 
 
-def chain_encounter() -> bool:
+def chain_encounter() -> (bool, int):
 
     rng00_array = main.rng_array_from_index(index=0, array_len=200)
     rng00_rolls = 0
 
     danger_value = 60
     grace_period = danger_value // 2
-    steps = 62
+    total_steps = 64
     current_distance = 0
 
-    for step in range(steps):
+    for step in range(total_steps):
         current_distance += 1
         if current_distance > grace_period:
             encounter_chance = (current_distance - grace_period) * 256 // (4 * danger_value)
@@ -937,9 +972,9 @@ def chain_encounter() -> bool:
             rng00_rolls += 1
             if encounter_roll < encounter_chance:
                 logging.debug(f"Chain encounter on step: {step}")
-                return True
+                return True, rng00_rolls
 
-    return False
+    return False, total_steps
 
 
 def ruins_encounter_steals(grenades_needed: int) -> (int, int):
