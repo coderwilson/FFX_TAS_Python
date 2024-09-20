@@ -1037,11 +1037,13 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
 
         target_pos = memory.main.get_character_index_in_main_menu(character)
         while memory.main.get_char_cursor_pos() != target_pos:
-            memory.main.menu_direction(
-                memory.main.get_char_cursor_pos(),
-                target_pos,
-                len(memory.main.get_order_seven()),
-            )
+            while memory.main.get_char_cursor_pos() != target_pos:
+                memory.main.menu_direction(
+                    memory.main.get_char_cursor_pos(),
+                    target_pos,
+                    len(memory.main.get_order_seven()),
+                )
+            memory.main.wait_frames(1)
         while memory.main.menu_number() != 26:
             xbox.menu_b()
     while not memory.main.equip_menu_open_from_char():
@@ -1073,6 +1075,8 @@ def equip_scout(full_menu_close=True):
 
 def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     logger.debug(f"Equipping Armor with ability {ability}")
+    if character == 255:
+        return
     memory.main.await_control()
 
     armor_handles = memory.main.armor_array_character(character)
@@ -1119,13 +1123,15 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
 
         target_pos = memory.main.get_character_index_in_main_menu(character)
         while memory.main.get_char_cursor_pos() != target_pos:
-            memory.main.menu_direction(
-                memory.main.get_char_cursor_pos(),
-                target_pos,
-                len(memory.main.get_order_seven()),
-            )
+            while memory.main.get_char_cursor_pos() != target_pos:
+                memory.main.menu_direction(
+                    memory.main.get_char_cursor_pos(),
+                    target_pos,
+                    len(memory.main.get_order_seven()),
+                )
+            memory.main.wait_frames(1)
         memory.main.wait_frames(1)
-        xbox.tap_b()
+        xbox.menu_b()
         memory.main.wait_frames(19)
         xbox.tap_down()
         while memory.main.menu_number() != 26:
@@ -2311,17 +2317,19 @@ def open_grid(character):
             logger.debug("Selecting party member")
             target_pos = memory.main.get_character_index_in_main_menu(character)
             while memory.main.get_char_cursor_pos() != target_pos:
-                # After B&Y, party size is evaluated weird.
-                if memory.main.get_story_progress() == 2528:
-                    memory.main.menu_direction(
-                        memory.main.get_char_cursor_pos(), target_pos, 7
-                    )
-                elif memory.main.party_size() < 3:
-                    xbox.menu_down()
-                else:
-                    memory.main.menu_direction(
-                        memory.main.get_char_cursor_pos(), target_pos, 7
-                    )
+                while memory.main.get_char_cursor_pos() != target_pos:
+                    # After B&Y, party size is evaluated weird.
+                    if memory.main.get_story_progress() == 2528:
+                        memory.main.menu_direction(
+                            memory.main.get_char_cursor_pos(), target_pos, 7
+                        )
+                    elif memory.main.party_size() < 3:
+                        xbox.menu_down()
+                    else:
+                        memory.main.menu_direction(
+                            memory.main.get_char_cursor_pos(), target_pos, 7
+                        )
+                memory.main.wait_frames(1)
             while memory.main.menu_number() == 7:
                 xbox.menu_b()
             try:
