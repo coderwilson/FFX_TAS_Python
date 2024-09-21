@@ -307,7 +307,7 @@ def get_advances(tros=True, report=False):
 
 
 @battle.utils.speedup_decorator
-def piranhas():
+def piranhas_truerng():
     encounter_id = memory.main.get_encounter_id()
     logger.debug("Seed: {memory.main.rng_seed()}")
     # 11 = two piranhas
@@ -325,6 +325,41 @@ def piranhas():
                 CurrentPlayer().attack()
             else:
                 escape_all()
+    wrap_up()
+
+
+def piranhas(strat):
+
+    # 11 = two piranhas
+    # 12 = three piranhas with one being a triple formation (takes two hits)
+    # 13 = four piranhas
+    encounter_id = memory.main.get_encounter_id()
+
+    pc_turn = 0
+
+    while not memory.main.turn_ready():
+
+        pass
+
+    while memory.main.battle_active():
+
+        if memory.main.turn_ready():
+
+            pc_turn += 1
+            if strat == 0:
+
+                escape_one()
+
+            else:
+
+                if encounter_id == 12 and pc_turn == 1:
+
+                    CurrentPlayer().attack(target_id=21, direction_hint="l")
+
+                else:
+
+                    CurrentPlayer().attack()
+
     wrap_up()
 
 

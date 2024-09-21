@@ -19,8 +19,11 @@ game_vars = vars.vars_handle()
 logger = logging.getLogger(__name__)
 
 
-def beach():
+def beach(lagoon_strats):
     logger.info("Starting Besaid section. Beach")
+
+    lagoon_encounter = 0
+
     if game_vars.csr():
         FFXC.set_neutral()
         memory.main.await_control()
@@ -87,7 +90,9 @@ def beach():
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                battle.main.piranhas()
+                logging.debug(f"Lagoon Encounter: {lagoon_encounter} / Strat: {lagoon_strats[lagoon_encounter]}")
+                battle.main.piranhas(strat=lagoon_strats[lagoon_encounter])
+                lagoon_encounter += 1
                 besaid_battles += 1
                 encounter_id = memory.main.get_encounter_id()
                 if encounter_id == 11 or (
