@@ -173,6 +173,8 @@ def start_seymour_fight():
 def seymour_fight():
     logger.info("Fighting Seymour Guado")
     battle.main.seymour_guado()
+    if memory.main.game_over():
+        return
 
     # Name for Shiva
     xbox.name_aeon("Shiva")

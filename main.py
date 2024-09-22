@@ -654,10 +654,17 @@ def perform_TAS():
                     maybe_create_save(save_num=36)
 
                 if game.step == 4:
-                    area.mac_temple.arrival()
+                    if memory.main.get_map() != 80:
+                        area.mac_temple.arrival()
                     area.mac_temple.start_seymour_fight()
                     area.mac_temple.seymour_fight()
-                    game.step = 5
+                    if memory.main.game_over():
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
+                    else:
+                        game.step = 5
 
                 if game.step == 5:
                     area.mac_temple.trials()
@@ -742,12 +749,12 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
-                    if advance_post_x in [0, 1]:
-                        logger.info(f"Straight to NEA area: {advance_post_x}")
+                    extra_drops, _ = rng_track.nea_track()
+                    if extra_drops in [0, 1]:
+                        logger.info(f"Straight to NEA area: {extra_drops}")
                         game.step = 2
                     else:
-                        logger.info(f"B&Y battle before NEA: {advance_post_x}")
+                        logger.info(f"B&Y battle before NEA: {extra_drops}")
                         game.step = 3
 
                 if game.step == 2:
@@ -772,9 +779,9 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    _, loop_back, _ = rng_track.nea_track()
+                    extra_drops, _ = rng_track.nea_track()
                     if game_vars.ne_armor() == 255:
-                        if loop_back <= 5:
+                        if extra_drops <= 5:
                             area.ne_armor.loop_back_from_ronso()
                             game.step = 2
                         else:
@@ -889,12 +896,12 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
-                    if advance_post_x in [0, 1]:
-                        logger.info(f"Straight to NEA area: {advance_post_x}")
+                    extra_drops, _ = rng_track.nea_track()
+                    if extra_drops in [0, 1]:
+                        logger.info(f"Straight to NEA area: {extra_drops}")
                         game.step = 2
                     else:
-                        logger.info(f"B&Y battle before NEA: {advance_post_x}")
+                        logger.info(f"B&Y battle before NEA: {extra_drops}")
                         game.step = 3
 
             # Nemesis farming section

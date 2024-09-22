@@ -35,6 +35,9 @@ def set_movement(target) -> bool:
     elif abs(Ly) > abs(Lx):
         Lx = copysign(Lx / Ly if Ly else 0, Lx)
         Ly = copysign(1, Ly)
+    else:  # Only occurs on perfect diagonals.
+        Lx = copysign(1, Lx)
+        Ly = copysign(1, Ly)
 
     FFXC.set_movement(Lx, Ly)
     if memory.main.get_actor_id(0) == 20531:

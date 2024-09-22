@@ -88,7 +88,7 @@ def desert():
     memory.main.close_menu()
     
     rng_track.print_manip_info()
-    logger.manip(f"Drop counts to Evrae: {memory.main.desert_to_evrae_equip_drop_count()}")
+    logger.manip(f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}")
 
     checkpoint = 0
     first_format = False
@@ -262,7 +262,7 @@ def desert():
                 logger.debug(f"Additional items needed before Home: {items_needed}")
                 rng_track.print_manip_info()
                 logger.manip(
-                    f"Drop counts to Evrae: {memory.main.desert_to_evrae_equip_drop_count()}"
+                    f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}"
                 )
                 if checkpoint == 60:
                     checkpoint = 58
