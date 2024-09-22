@@ -53,8 +53,8 @@ def calm_lands():
     memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
     battle.main.heal_up(full_menu_close=True)
 
-    rng_track.print_manip_info()
-    next_green()
+    rng_track.print_manip_info(pre_x= True)
+    #next_green()
     logger.debug(f"RNG10: {memory.main.rng_10()}")
     logger.debug(f"RNG12: {memory.main.rng_12()}")
     logger.debug(f"RNG13: {memory.main.rng_13()}")
@@ -88,8 +88,8 @@ def calm_lands():
                 memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
-                rng_track.print_manip_info()
-                next_green()
+                rng_track.print_manip_info(pre_x= True)
+                #next_green()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():

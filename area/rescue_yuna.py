@@ -25,7 +25,8 @@ def pre_evrae():
     FFXC.set_neutral()
     memory.main.click_to_control()
     logger.info("Starting first Airship section")
-    rng_track.print_manip_info()
+    #rng_track.print_manip_info()
+    logger.manip(f"Evrae attack prediction: {rng_track.evrae_targets()}")
     checkpoint = 0
     while checkpoint < 19:
         if memory.main.user_control():
@@ -52,12 +53,13 @@ def pre_evrae():
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
 
+    logger.manip(f"Evrae attack prediction: {rng_track.evrae_targets()}")
     airship_pathing.air_ship_path(1)
 
 
 def guards():
     logger.info("Start, Guards")
-    rng_track.print_manip_info()
+    #rng_track.print_manip_info()
     memory.main.click_to_control()
 
     if not game_vars.get_blitz_win():
@@ -98,7 +100,7 @@ def guards():
                     pass
                 else:
                     memory.main.update_formation(Tidus, Kimahri, Rikku)
-                rng_track.print_manip_info()
+                #rng_track.print_manip_info()
                 guard_num += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -445,8 +447,9 @@ def trials_end():
         xbox.await_save(index=29)
 
 
-# TODO: Switch to using pathing instead, if possible
 def via_purifico():
+    # Print RNG info
+    rng_track.guards_to_calm_equip_drop_count(guard_battle_num=6,report_num=0)
     memory.main.click_to_control()
 
     # New logic
@@ -474,15 +477,21 @@ def via_purifico():
     # End logic replacement
     memory.main.click_to_control()
     menu.via_purifico()
+    larvae_count = 0
 
     while memory.main.get_map() != 209:  # Map number for Altana
         if memory.main.user_control():
             if memory.main.get_slvl_yuna() < 15 and memory.main.get_coords()[1] > 1460:
                 FFXC.set_movement(0, -1)
-                memory.main.wait_frames(30 * 2)
+                memory.main.wait_frames(60)
+            elif larvae_count < 3 and memory.main.get_coords()[1] > 1460:
+                FFXC.set_movement(0, -1)
+                memory.main.wait_frames(60)
             else:
                 FFXC.set_movement(0, 1)
         elif screen.battle_screen():
+            if memory.main.get_encounter_id() < 258:
+                larvae_count += 1
             battle.boss.isaaru()
             if memory.main.game_over():
                 return False
@@ -494,9 +503,11 @@ def via_purifico():
 
 # TODO: Switch to using pathing instead, if possible
 def evrae_altana():
+    # Print RNG info
+    rng_track.guards_to_calm_equip_drop_count(guard_battle_num=7,report_num=0)
     memory.main.click_to_control()
     FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 2)
+    memory.main.wait_frames(60)
     FFXC.set_neutral()
 
     checkpoint = 0
@@ -555,7 +566,7 @@ def evrae_altana():
                     FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.evrae_altana()
-            rng_track.print_manip_info()
+            #rng_track.print_manip_info()
         elif memory.main.battle_wrap_up_active():
             xbox.menu_b()
         else:
@@ -566,9 +577,6 @@ def evrae_altana():
 
 
 def natus_formation(battles: int = 0, full_menu_close: bool = True):
-    logger.manip(
-        f"NEA drops coming up: {rng_track.nea_track()[2]}"
-    )
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=full_menu_close)
     """
     if memory.main.get_yuna_slvl() <= 13:
@@ -632,7 +640,7 @@ def seymour_natus():
                     else:
                         menu.seymour_natus_blitz_loss()
                 memory.main.close_menu()
-                rng_track.print_manip_info()
+                #rng_track.print_manip_info()
 
     # Movement for make-out scene
     memory.main.click_to_control()

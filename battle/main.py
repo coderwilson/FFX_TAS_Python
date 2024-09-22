@@ -2108,6 +2108,8 @@ def seymour_guado_blitz_win():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
+    if memory.main.game_over():
+        return
     wrap_up()
 
 
@@ -2305,6 +2307,8 @@ def seymour_guado_blitz_loss():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
+    if memory.main.game_over():
+        return
     wrap_up()
 
 
@@ -2811,9 +2815,33 @@ def home_4(learned_OD: bool):
 
 @battle.utils.speedup_decorator
 def guards(group_num, sleeping_powders):
-    logger.manip(
-        f"Equipment Drop counts: {memory.main.guards_to_calm_equip_drop_count(group_num)}"
+    nea_drop_counts = rng_track.guards_to_calm_equip_drop_count(
+        guard_battle_num=group_num
     )
+    
+    # Now to determine best number of steals
+    remaining_steals = 99
+    if group_num in [1,3]:
+        max_steals = 2
+    else:
+        max_steals = 1
+    if (
+        nea_drop_counts[0] <= nea_drop_counts[1] and
+        nea_drop_counts[0] <= nea_drop_counts[2]
+    ):
+        remaining_steals = 0
+    elif nea_drop_counts[1] <= nea_drop_counts[2]:
+        remaining_steals = 1
+    else:
+        remaining_steals = 2
+    remaining_steals = min(remaining_steals, max_steals)
+    
+    nea_drop_counts = rng_track.guards_to_calm_equip_drop_count(
+        guard_battle_num=group_num,
+        report_num=remaining_steals
+    )
+    logger.debug(f"0-2 Steals result in extras needed: {nea_drop_counts}")
+    logger.manip(f"Expected steals this fight: {remaining_steals}/{max_steals}")
     xbox.click_to_battle()
     throw_distiller = (
         memory.main.get_item_slot(16) != 255 or memory.main.get_item_slot(18) != 255
@@ -2824,6 +2852,7 @@ def guards(group_num, sleeping_powders):
     if sleeping_powders:  # We have sleeping powders
         while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():
+                logger.manip(memory.main.get_enemy_current_hp())
                 if group_num in [1, 3]:
                     if Tidus.is_turn():
                         CurrentPlayer().attack()
@@ -2833,6 +2862,16 @@ def guards(group_num, sleeping_powders):
                         else:
                             _use_healing_item(item_id=16)
                         throw_distiller = False
+                    elif remaining_steals != 0 and (Rikku.is_turn() or Kimahri.is_turn()):
+                        steal()
+                        remaining_steals -= 1
+                    elif remaining_steals != 0 and Lulu.is_turn():
+                        if 6 not in memory.main.get_active_battle_formation():
+                            buddy_swap(Rikku)
+                        elif 3 not in memory.main.get_active_battle_formation():
+                            buddy_swap(Kimahri)
+                        else:
+                            CurrentPlayer.defend()
                     elif (
                         Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
                     ):
@@ -2845,8 +2884,15 @@ def guards(group_num, sleeping_powders):
                     else:
                         CurrentPlayer().defend()
                 elif group_num in [2, 4]:
-                    if Tidus.is_turn():
+                    if Tidus.is_turn() and memory.main.get_enemy_current_hp()[0] >= 1:
                         CurrentPlayer().attack()
+                    elif (
+                        (Rikku.is_turn() or Kimahri.is_turn()) and 
+                        num_throws == 1 and
+                        remaining_steals == 1
+                    ):
+                        steal()
+                        remaining_steals -= 1
                     elif (Rikku.is_turn() or Kimahri.is_turn()) and num_throws < 2:
                         silence_slot = memory.main.get_item_slot(39)
                         if num_throws == 0 and memory.main.get_use_items_slot(37) < 200:
@@ -2901,6 +2947,10 @@ def guards(group_num, sleeping_powders):
                             else:
                                 CurrentPlayer().defend()
                             num_throws += 1
+                            
+                        elif remaining_steals == 1:
+                            steal()
+                            remaining_steals -= 1
                         else:
                             CurrentPlayer().defend()
     else:  # We do not have sleeping powders
@@ -3145,7 +3195,8 @@ def calm_impulse():
 
 
 def calm_lands_gems():
-    advance_pre_x, advance_post_x, _ = rng_track.nea_track()
+    #advance_pre_x, advance_post_x, _ = rng_track.nea_track()
+    extra_drops, advances = rng_track.nea_track(pre_defender_x=True)
     while not memory.main.turn_ready():
         pass
     steal_complete = False
@@ -3159,10 +3210,10 @@ def calm_lands_gems():
                 if not Kimahri.active():
                     buddy_swap(Kimahri)
                 elif steal_complete:
-                    if memory.main.next_chance_rng_10(60) in [0, 2]:
-                        advances = advance_pre_x
-                    else:
-                        advances = advance_post_x
+                    #if memory.main.next_chance_rng_10(60) in [0, 2]:
+                    #    advances = advance_pre_x
+                    #else:
+                    #    advances = advance_post_x
                     advance_rng_10(advances)
                 elif Kimahri.is_turn():
                     # Red element in center slot, with machina and dog
@@ -4942,14 +4993,15 @@ def calm_lands_manip():
     mid_array = [277, 279, 285, 287, 289, 290]
     rng_10_next_chance_high = memory.main.next_chance_rng_10(128)
     high_array = [278, 286, 288]
-    advance_pre_x, advance_post_x, _ = rng_track.nea_track()  # returns integers
+    #advance_pre_x, advance_post_x, _ = rng_track.nea_track()  # returns integers
+    extra_drops, advances = rng_track.nea_track(pre_defender_x=True)
     if check_gems() < 2:
         logger.debug(f"Gems: {check_gems()}")
         logger.debug("Calm Lands battle, need gems.")
         calm_lands_gems()
     else:
         logger.debug("Gems good. NEA manip logic.")
-        if advance_pre_x not in [0, 2] and advance_post_x not in [0, 2]:
+        if advances not in [0, 2]:
             # Non-zero for both
             logger.debug("Not lined up for NEA")
             if (
@@ -4971,35 +5023,13 @@ def calm_lands_manip():
             else:
                 logger.debug("Can't drop off of this battle.")
                 advance_rng_10(rng_10_next_chance_mid)
-        elif advance_post_x == 2:
-            # Lined up for non-drop defender X + drops on B&Y drops.
-            if memory.main.next_chance_rng_10() == 0:
-                advance_rng_10(1)
-                # Don't want to have Defender X drop an item
-            else:
-                flee_all()
-        elif advance_post_x == 0:  # Lined up for next drop NEA before defender X.
-            logger.debug("The next equipment to drop will be NEA")
-            # if memory.main.get_coords()[0] > 1300:
-            #    logger.debug("Near Gagazet, just get off RNG10 equipment drop.")
-            if memory.main.next_chance_rng_10() == 0:
-                advance_rng_10(1)
-                # Gets us off of a drop on defender X - probably. :D
-                # Don't want to have Defender X drop an item
-            #    else:
-            #        flee_all()
-            # elif memory.main.next_chance_rng_10_calm():
-            #    advance_rng_10(memory.main.next_chance_rng_10_calm())
-            else:
-                logger.debug("Lined up OK, ready for NEA. Just flee.")
-                flee_all()
-        elif advance_pre_x == 2:  # Lined up for drops on defender X + B&Y drops.
+        elif advances == 2:  # Lined up for drops on defender X + B&Y drops.
             if memory.main.next_chance_rng_10() != 0:
                 advance_rng_10(memory.main.next_chance_rng_10())
             else:
                 logger.debug("Perfectly lined up pre-X + B&Y. Just flee.")
                 flee_all()
-        elif advance_pre_x == 0:
+        elif advances == 0:
             logger.debug("The second equipment drop from now will be NEA.")
             if memory.main.next_chance_rng_10() != 0:
                 advance_rng_10(memory.main.next_chance_rng_10())
@@ -5159,13 +5189,14 @@ def advance_rng_12():
             logger.debug("Aw hell naw, we want nothing to do with this guy!")
             flee_all()
         elif memory.main.turn_ready():
-            pre_x, post_x, _ = rng_track.nea_track()
-            if post_x == 1:
-                advances = 1
-            elif memory.main.get_map() == 223:
-                advances = pre_x
-            else:
-                advances = post_x
+            #pre_x, post_x, _ = rng_track.nea_track()
+            extra_drops, advances = rng_track.nea_track()
+            #if post_x == 1:
+            #    advances = 1
+            #elif memory.main.get_map() == 223:
+            #    advances = pre_x
+            #else:
+            #    advances = post_x
             if Yuna.is_turn():
                 if aeon_turn:
                     flee_all()
@@ -5190,10 +5221,10 @@ def advance_rng_12():
                     if memory.main.get_encounter_id() in [314]:
                         Bahamut.unique()
                         attack_count = True
-                    elif advances >= 2:
+                    elif extra_drops >= 2:
                         Bahamut.unique()
                         attack_count = True
-                    elif advances == 1:
+                    elif extra_drops == 1:
                         if use_impulse and not double_drop:
                             Bahamut.unique()
                             attack_count = True

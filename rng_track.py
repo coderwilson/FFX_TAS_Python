@@ -255,8 +255,8 @@ def item_to_be_dropped(
         party_chars = [0, 1, 4, 5]
     elif party_size == 5:
         party_chars = [0, 1, 3, 4, 5]
-    elif party_size == 6:
-        party_chars = [0, 1, 2, 3, 4, 5]
+    elif party_size == 6:  # rescue_yuna section
+        party_chars = [0, 2, 3, 4, 5, 6]
     elif party_size == 7:
         party_chars = [0, 1, 2, 3, 4, 5, 6]
     else:
@@ -1828,7 +1828,43 @@ def zombie_track(report=False):
     return zombie_results
 
 
-def nea_track():
+def nea_track(pre_defender_x:bool = False, report=False):
+    test1 = ["ghost"]
+    test2 = ["defender_x","ghost"]
+    result1 = False
+    result2 = False
+    extras = 0
+    
+    while not result1 and not result2:
+        result1 = rng_alignment_before_nea(
+            enemies=test1,
+            steals=0,
+            report=0)
+        if pre_defender_x:
+            result2 = rng_alignment_before_nea(
+                enemies=test2,
+                steals=0,
+                report=0)
+        else:
+            result2 = False
+        if not result1 and not result2:
+            test1 = ["epaaj"] + test1
+            test2 = ["epaaj"] + test2
+            extras += 1
+    
+    if report:
+        logger.manip(f"Without-X: {result1} | With-X: {result2} | Extras: {extras} | {pre_defender_x}")
+    # Return align (int, zero is aligned) and advances (int)
+    if pre_defender_x:
+        if result1 and not result2:
+            return (extras, memory.main.next_chance_rng_10_calm())
+        else:
+            return (extras, memory.main.next_chance_rng_10())
+    else:
+        return (extras, memory.main.next_chance_rng_10())
+    
+
+def nea_track_old():
     pre_advance_12 = 0
     pre_advance_13 = 0
 
@@ -1855,15 +1891,389 @@ def nea_track():
     return total_advance_pre_x, total_advance_post_x, total_advance_array
 
 
-def print_manip_info():
-    pre_x, post_x, drop_array = nea_track()
-    logger.manip("Upcoming RNGs:")
-    logger.manip(f"Next drop: {post_x}")
-    logger.manip(f"Next 50 drops: {drop_array}")
-    logger.manip(
-        f"RNG10: {memory.main.next_chance_rng_10()} | "
-        + f"Adjusted for Defender X drop: {memory.main.next_chance_rng_10_calm()}"
-    )
+def print_manip_info(pre_x=False):
+    #pre_x, post_x, drop_array = nea_track()
+    next_drop, advances = nea_track(pre_defender_x=pre_x, report=True)
+    logger.manip("Setting up for No-Encounters Armor (NEA):")
+    logger.manip(f"We need {next_drop} extra equipment drops.")
+    logger.manip(f"We need {advances} extra advances for next equipment drop.")
+    logger.manip(f"(One advance per steal, three per player or enemy death)")
+    
+
+def desert_to_evrae_equip_drop_count() -> []:
+    drop_count = [1,1,1]  # Evrae will always drop one equipment.
+    test_array = memory.main.rng_10_array()
+    ptr = 3 # Ignore first two rolls, we don't care about item drops.
+
+    # Guado guardian and three bombs
+    chance = 12
+    for i in range(3):  # Guado
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    for i in range(3):  # Bomb
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    for i in range(3):  # Bomb
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    for i in range(3):  # Bomb
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+
+    # Dual horns and guado guardian
+    for i in range(3):  # Dual Horn
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    for i in range(3):  # Dual Horn
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    chance = 60
+    for i in range(3):  # Guado
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+
+    # Chimeras and guado
+    chance = 12
+    for i in range(3):  # Guado
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    for i in range(3):  # Guado
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+    chance = 60
+    for i in range(3):  # Guado
+        if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+            drop_count[i] += 1
+    ptr += 3
+
+    return drop_count
+
+
+def evrae_targets() -> []:
+    rolls = memory.main.rng_array_from_index(index=4, array_len=5)
+    results = [9,9]
+    results[0] = (rolls[1] & 0x7FFFFFFF) % 3
+    
+    if results[0] == 0:
+        results[1] = (rolls[2] & 0x7FFFFFFF) % 3
+    else:
+        results[1] = (rolls[2] & 0x7FFFFFFF) % 2
+        if results[0] == results[1]:  # Can only occur if both == 1
+            results[1] = 2
+    return results
+
+
+def guards_to_calm_equip_drop_count(
+    guard_battle_num:int, 
+    ptr:int = 3, 
+    pre_Evrae:bool = False,
+    report_num = 9
+) -> []:
+    drop_count = [[],[],[]]  # Count for Altana, Natus, and NEA.
+    test_array = memory.main.rng_10_array()
+    #for x in range(ptr+10):
+    #    logger.debug(f"{ptr}: {x}: {test_array[x]}")
+
+    # Three warrior monks
+    chance = 12
+    if guard_battle_num <= 1:
+        for i in range(3):  # Monk
+            if guard_battle_num == 1:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 1 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 1 drops equipment")
+        ptr += 6  # Accounting for firearm 'death'
+        for i in range(3):  # Monk
+            if guard_battle_num == 1:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk_2")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 1 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk_2")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 1 drops equipment")
+        ptr += 6  # Accounting for firearm 'death'
+        for i in range(3):  # Monk
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("warrior_monk")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 1 drops equipment")
+        ptr += 6  # Accounting for firearm 'death'
+
+    # YKT-63 and two monks. If second battle, assumes Tidus killed the bot.
+    if guard_battle_num <= 2:
+        chance = 30
+        for i in range(3):  # YKT-63 dies first.
+            if guard_battle_num == 2:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("ykt-63")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 2 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("ykt-63")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 2 drops equipment")
+        ptr += 3
+        chance = 12
+        for i in range(3):  # Monk
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("warrior_monk")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 2 drops equipment")
+        ptr += 3
+        for i in range(3):  # Monk
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("warrior_monk")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 2 drops equipment")
+        ptr += 9  # Accounting for firearm 'deaths'
+
+    # Three MORE monks
+    if guard_battle_num <= 3:
+        # Figure out later a way to count remaining enemies in this battle.
+        for i in range(3):  # Monk
+            if guard_battle_num == 3:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 3 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 3 drops equipment")
+        ptr += 6  # Accounting for firearm 'death'
+        for i in range(3):  # Monk
+            if guard_battle_num == 3:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk_2")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 3 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:  # Tidus kills these first
+                    drop_count[i].append("warrior_monk_2")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 3 drops equipment")
+        ptr += 6  # Accounting for firearm 'death'
+        for i in range(3):  # Monk
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("warrior_monk")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 3 drops equipment")
+        ptr += 6  # Accounting for firearm 'death'
+        
+    # YKT-63 and two monks, again. If fourth battle, assumes Tidus killed the bot.
+    if guard_battle_num <= 4:
+        chance = 30
+        for i in range(3):  # YKT-63 dies first.
+            if guard_battle_num == 4:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("ykt-63")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 4 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("ykt-63")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 4 drops equipment")
+        ptr += 3
+        chance = 12
+        for i in range(3):  # Monk
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("warrior_monk")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 4 drops equipment")
+        ptr += 3
+        for i in range(3):  # Monk
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("warrior_monk")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 4 drops equipment")
+        ptr += 9  # Accounting for firearm 'deaths'
+ 
+    # Final battle
+    if guard_battle_num <= 5:
+        for i in range(3):  # Monk dies first
+            if guard_battle_num == 5:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 5 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 5 drops equipment")
+        ptr += 3
+        for i in range(3):  # Monk dies first
+            if guard_battle_num == 5:
+                if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 5 drops equipment")
+            else:
+                if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                    drop_count[i].append("warrior_monk")
+                    if i == report_num:
+                        logger.manip(f"{i}: Battle 5 drops equipment")
+        ptr += 9  # Accounting for firearm 'deaths'
+        chance = 30
+        for i in range(3):  # YAT-99 dies last.
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("yat-99")
+                if i == report_num:
+                    logger.manip(f"{i}: Battle 5 drops equipment")
+        ptr += 3
+    
+    if guard_battle_num <= 6:  # Start of Via Purifico section
+        # Assume three maze larvae for Yuna.
+        chance = 60
+        for i in range(3):  # Maze Larvae
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("maze_larva")
+                if i == report_num:
+                    logger.manip(f"{i}: Maze Larva 1 drops equipment")
+        ptr += 3
+        for i in range(3):  # Maze Larvae
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("maze_larva")
+                if i == report_num:
+                    logger.manip(f"{i}: Maze Larva 2 drops equipment")
+        ptr += 3
+        
+        # This encounter may or may not occur. Need a way to predict this.
+        for i in range(3):  # Maze Larvae
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("maze_larva")
+                if i == report_num:
+                    logger.manip(f"{i}: Maze Larva 3 drops equipment")
+        ptr += 3
+        # Add Altana so we can predict Highbridge stuff after.
+        for i in range(3):  # Evrae Altana
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("evrae_altana")
+        ptr += 3
+        # YKT-63
+        for i in range(3):  # Final kill for 
+            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
+                drop_count[i].append("ykt-63")
+                if i == report_num:
+                    logger.manip(f"{i}: YKT-63 drops equipment")
+        ptr += 3
+
+    # Aeons do not drop equipment.
+    # Altana and Natus always drop equipment, already accounted for.
+    extra_needed = [99,99,99]
+    for i in range(3):
+        drop_count[i].append("seymour_natus")
+        if pre_Evrae:
+            drop_count[i] = ["evrae"] + drop_count[i]
+        
+        # Now we consider possibilities with and without Defender X dropping equipment.
+        result_found = False
+        j = 0
+        while not result_found:
+            if not result_found:
+                test = drop_count[i] + ["ghost"]
+                result_found = rng_alignment_before_nea(
+                    enemies=test,
+                    steals=i,
+                    report=(i==report_num))
+                if result_found:
+                    extra_needed[i] = j
+            if not result_found:
+                test = drop_count[i] + ["defender_x","ghost"]
+                result_found = rng_alignment_before_nea(
+                    enemies=test,
+                    steals=i,
+                    report=(i==report_num))
+                if result_found:
+                    extra_needed[i] = j
+            if not result_found:
+                drop_count[i].append("epaaj")
+                j += 1
+                if j == 9:
+                    result_found = True
+        
+    return extra_needed
+
+
+def party_size_rng_alignment(enemy_name) -> int:
+    if enemy_name in [
+        "evrae",
+        "warrior_monk",
+        "warrior_monk_2",
+        "ykt-63",
+        "yat-99"
+    ]:
+        return 6
+    if enemy_name == "evrae_altana":
+        return 3
+    if enemy_name == "maze_larva":
+        return 2
+    return 7
+        
+
+
+def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False) -> int:
+    ptr12 = 0
+    ptr13 = 0
+    advances = 0
+    extras = 0
+    
+    for i in range(len(enemies)):
+        party_size = party_size_rng_alignment(enemies[i])
+        if enemies[i] == "epaaj":
+            extras += 1
+    
+        equipment, advances = item_to_be_dropped(
+            enemy = enemies[i],
+            pre_advance_12 = ptr12,
+            pre_advance_13 = ptr13,
+            party_size = party_size
+        )
+        if equipment.equipment_type() == 0:
+            e_type = "weapon"
+        else:
+            e_type = "armor"
+        if enemies[i] in ["seymour_natus","maze_larva"]:
+            # aka killed by Aeon
+            e_owner = memory.main.name_from_number(equipment.owner_alt())
+        else:
+            e_owner = memory.main.name_from_number(equipment.owner())
+        e_ab_count = len([i for i in equipment.abilities() if i != 255])
+        #if report:
+            #logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
+        condition = "without"
+        if "defender_x" in enemies[i]:
+            condition = "with"
+        if enemies[i] == "ghost" and equipment.has_ability(32797):
+            if report:
+                logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
+            if equipment.has_ability(32797):
+                return True
+        ptr12 += 4
+        ptr13 += advances
+    
+    return False
 
 
 def next_action_escape(character: int = 0):

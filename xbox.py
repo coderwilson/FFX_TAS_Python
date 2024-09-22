@@ -632,7 +632,7 @@ def name_aeon(character=""):
                 tap_a()
             for cur_character in custom_name:
                 navigate_to_character(cur_character)
-                tap_b()
+                menu_b()
 
     if memory.main.get_map() != 382:  # Ignore for airship password entry 
         while memory.main.equip_sell_row() != 1:

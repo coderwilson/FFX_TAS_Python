@@ -1603,9 +1603,155 @@ def wendigo():
     if game_vars.god_mode():
         rng_track.force_preempt()
 
+
+def evrae():
+    # First to determine Evrae's target attacks, and if we want to steal.
+    ptr = 6
+    max_steals = 2
+    remaining_steals = 99
+    targets = rng_track.evrae_targets()
+    if targets[0] != 0:
+        ptr += 3
+    if targets[1] != 0:
+        ptr += 3
+    if 2 in targets:
+        max_steals -= 1
+        if targets[0] == 1:
+            max_steals -= 1
+        elif 0 in targets:
+            max_steals += 1
+    elif targets[0] == 1:
+        max_steals -= 1
+    nea_drop_counts = rng_track.guards_to_calm_equip_drop_count(
+        guard_battle_num=0,
+        ptr=ptr,
+        pre_Evrae=True
+    )
+    
+    # Now to determine best number of steals
+    if (
+        max_steals == 2 and
+        nea_drop_counts[2] <= nea_drop_counts[1] and
+        nea_drop_counts[2] <= nea_drop_counts[0]
+    ):
+        remaining_steals = 2
+    elif max_steals == 1 and nea_drop_counts[1] <= nea_drop_counts[0]:
+        remaining_steals = 1
+    else:
+        remaining_steals = 0
+    rng_track.guards_to_calm_equip_drop_count(
+        guard_battle_num=0,
+        ptr=ptr,
+        pre_Evrae=True,
+        report_num=remaining_steals
+    )
+    logger.manip(
+        "Evrae target order, where 0 is Tidus, 1 is Kimahri, and 2 is Rikku:"
+    )
+    logger.manip(targets)
+    logger.manip(f"Steals - Max:{max_steals} - Best drops: {remaining_steals}")
+    logger.manip(f"Drops from here to calm lands (includes Evrae): {nea_drop_counts}")
+        
+    # With decisions out of the way, time to start the battle.
+    logger.info("Starting battle: Evrae")
+    tidus_prep = 0
+    tidus_attacks = 0
+    rikku_turns = 0
+    kimahri_turns = 0
+    lunar_curtain = False
+    FFXC.set_neutral()
+    # This gets us past the tutorial and all the dialog.
+    xbox.click_to_battle()
+    
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            logger.debug(f"Tidus prep turns: {tidus_prep}")
+            logger.manip(memory.main.get_enemy_current_hp())
+            if Tidus.is_turn():  # Terra skip strat
+                logger.debug("Registering Tidus' turn")
+                if tidus_prep == 0:
+                    tidus_prep = 1
+                    battle.main.tidus_haste("none")
+                elif tidus_prep == 1:
+                    tidus_prep += 1
+                    battle.main.cheer()
+                elif tidus_prep == 2 and memory.main.get_next_turn() == 0:
+                    Tidus.swap_battle_armor(ability=[0x8028])
+                elif tidus_prep == 4:
+                    tidus_prep += 1
+                    battle.main.cheer()
+                elif memory.main.get_enemy_current_hp()[0] <= 9999:
+                    tidus_attacks += 1
+                    Tidus.overdrive()
+                else:
+                    tidus_prep += 1
+                    tidus_attacks += 1
+                    CurrentPlayer().attack()
+            elif Rikku.is_turn():
+                logger.debug("Registering Rikkus turn")
+                if rikku_turns == 0:
+                    rikku_turns += 1
+                    logger.debug("Rikku overdrive")
+                    battle.main.rikku_full_od("Evrae")
+                elif not game_vars.get_blitz_win() and not lunar_curtain:
+                    logger.debug("Use Lunar Curtain")
+                    lunar_slot = memory.main.get_use_items_slot(56)
+                    battle.main.use_item(lunar_slot, direction="l", target=0)
+                    lunar_curtain = True
+                elif (
+                    memory.main.get_battle_hp()[memory.main.get_battle_char_slot(0)] < 1520 and 
+                    targets[1] == 0 and
+                    targets[0] == 0 and
+                    tidus_attacks < 3
+                ):
+                    logger.debug("Rikku should attempt to heal a character.")
+                    kimahri_turns += 1
+                    if battle.main.fullheal(target=0, direction="d") == 0:
+                        logger.debug("Restorative item not found.")
+                        battle.main.use_item(memory.main.get_use_items_slot(20))
+                    else:
+                        logger.debug("Heal should be successful.")
+                elif remaining_steals != 0:
+                    remaining_steals -= 1
+                    logger.manip(f"Remaining steals: {remaining_steals}")
+                    battle.main.steal()
+                else:
+                    CurrentPlayer().defend()
+                    logger.manip(f"Remaining steals: {remaining_steals}")
+            elif Kimahri.is_turn():
+                logger.debug("Registering Kimahri's turn")
+                if not game_vars.get_blitz_win() and not lunar_curtain:
+                    logger.debug("Use Lunar Curtain")
+                    lunar_slot = memory.main.get_use_items_slot(56)
+                    battle.main.use_item(lunar_slot, direction="l", target=0)
+                    lunar_curtain = True
+                elif (
+                    memory.main.get_battle_hp()[memory.main.get_battle_char_slot(0)] < 1520 and 
+                    targets[1] == 0 and
+                    targets[0] == 0 and
+                    tidus_attacks < 3
+                ):
+                    logger.debug("Kimahri should attempt to heal a character.")
+                    kimahri_turns += 1
+                    if battle.main.fullheal(target=0, direction="d") == 0:
+                        logger.debug("Restorative item not found.")
+                        battle.main.use_item(memory.main.get_use_items_slot(20))
+                    else:
+                        logger.debug("Heal should be successful.")
+                elif remaining_steals != 0:
+                    remaining_steals -= 1
+                    logger.manip(f"Remaining steals: {remaining_steals}")
+                    battle.main.steal()
+                elif 1 in targets:
+                    CurrentPlayer().attack(target_id=3)
+                    logger.manip(f"Remaining steals: {remaining_steals}")
+                else:
+                    CurrentPlayer().defend()
+                    logger.manip(f"Remaining steals: {remaining_steals}")
+
 # Process written by CrimsonInferno
 @battle.utils.speedup_decorator
-def evrae():
+def evrae_trueRNG():
     logger.info("Starting battle: Evrae")
     tidus_prep = 0
     tidus_attacks = 0
