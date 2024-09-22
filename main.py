@@ -326,7 +326,7 @@ def perform_TAS():
 
             if game.state == "Besaid":
                 if game.step == 1:
-                    area.besaid.beach()
+                    area.besaid.beach(lagoon_strats=strats["lagoon_strats"])
                     game.step = 2
                     # maybe_create_save(save_num=22)
 

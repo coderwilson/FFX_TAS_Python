@@ -7,11 +7,13 @@ from memory import main
 from manip_planning import rng
 from players import CurrentPlayer, Rikku, Tidus
 
+rng00_array_encounter = []
 rng01_array_enemy_formation = []
 rng04_array_enemy_targeting = []
 rng10_array_drop_steal_chance = []
 rng11_array_rare_steal_chance = []
 rng20_array_tidus = []
+rng24_array_wakka = []
 rng26_array_rikku = []
 rng28_array_enemy1 = []
 rng29_array_enemy2 = []
@@ -40,6 +42,7 @@ equipment_bonus = 6
 tidus_base_ctb = 14
 rikku_base_ctb = 12
 klikk_base_ctb = 20
+tros_base_ctb = 13
 tidus_icv_variance = 1
 rikku_icv_variance = 2
 klikk_icv_variance = 1
@@ -56,8 +59,10 @@ single_piranha_attack_time = 2
 multi_piranha_gnaw_time = 3
 
 grenade_count = 0
+
 rare_steal_chance = 32
 piranha_item_drop_chance = 205
+escape_chance = 191
 
 active_strats = {
     "sahagin_b_first": False,
@@ -78,7 +83,8 @@ fastest_strats = {
     "tidus_potion_turn": 0,
     "rikku_potion_klikk": 0,
     "chain_encounter_strat": 0,
-    "ruins_encounter_strat": 0
+    "ruins_encounter_strat": 0,
+    "lagoon_strats": [0, 0, 0]
 }
 
 
@@ -122,20 +128,24 @@ def plan_manips(klikk_steals: int):
 
     global active_strats
 
+    global rng00_array_encounter
     global rng01_array_enemy_formation
     global rng04_array_enemy_targeting
     global rng10_array_drop_steal_chance
     global rng11_array_rare_steal_chance
     global rng20_array_tidus
+    global rng24_array_wakka
     global rng26_array_rikku
     global rng28_array_enemy1
     global rng44_array_enemy1_hit
 
+    rng00_array_encounter = main.rng_array_from_index(index=0, array_len=200)
     rng01_array_enemy_formation = main.rng_array_from_index(index=1, array_len=200)
     rng04_array_enemy_targeting = main.rng_array_from_index(index=4, array_len=200)
     rng10_array_drop_steal_chance = main.rng_array_from_index(index=10, array_len=200)
     rng11_array_rare_steal_chance = main.rng_array_from_index(index=11, array_len=200)
     rng20_array_tidus = main.rng_array_from_index(index=20, array_len=200)
+    rng24_array_wakka = main.rng_array_from_index(index=24, array_len=200)
     rng26_array_rikku = main.rng_array_from_index(index=26, array_len=200)
     rng28_array_enemy1 = main.rng_array_from_index(index=28, array_len=200)
     rng44_array_enemy1_hit = main.rng_array_from_index(index=44, array_len=200)
@@ -143,13 +153,6 @@ def plan_manips(klikk_steals: int):
     logging.debug(rng04_array_enemy_targeting)
 
     rng_rolls = [0] * 68
-
-    # rng01_rolls = 0
-    # rng04_rolls = 0
-    # rng20_rolls = 0
-    # rng26_rolls = 0
-    # rng28_rolls = 0
-    # rng44_rolls = 0
 
     sahagins_ambush = 0
     sahagins_preempt = 0
@@ -253,9 +256,20 @@ def plan_manips(klikk_steals: int):
 
             # logging.debug(f"==============Potion on Geos: {tidus_potion_geos} / Attacks on Geos: {tidus_attacks_geos}==========================")
 
-            klikk_tros_time_value, tidus_potion, tidus_potion_turn, rikku_potion, chain_strat, ruins_strat = simulate_klikk_to_tros(rng_rolls=rng_rolls, klikk_steals=klikk_steals)
+            klikk_tros_time_value, tidus_potion, tidus_potion_turn, rikku_potion, chain_strat, ruins_strat, lagoon_strats = simulate_klikk_to_tros(rng_rolls=rng_rolls, klikk_steals=klikk_steals)
 
             time_value = klikk_tros_time_value + underwater_potion_time * tidus_potion_geos + 2 * tidus_attacks_geos
+
+            log_string = f"Sahagin B First: {best_sahagin_b_first}"
+            log_string += f" / Potion on Geos: {tidus_potion_geos}"
+            log_string += f" / Attacks on Geos: {tidus_attacks_geos}"
+            log_string += f" / Potion: {'Tidus' if tidus_potion else ('Rikku' if rikku_potion else 'None')}"
+            log_string += f" / Chain Strat: {chain_strat}"
+            log_string += f" / Ruins Strat: {ruins_strat}"
+            log_string += f" / Lagoon Strats: {lagoon_strats}"
+            log_string += f" / Time: {time_value}"
+
+            logging.debug(log_string)
 
             if best_time_value == -99 or time_value < best_time_value:
                 best_time_value = time_value
@@ -266,6 +280,7 @@ def plan_manips(klikk_steals: int):
                 fastest_strats["rikku_potion_klikk"] = rikku_potion
                 fastest_strats["chain_encounter_strat"] = chain_strat
                 fastest_strats["ruins_encounter_strat"] = ruins_strat
+                fastest_strats["lagoon_strats"] = lagoon_strats
 
     log_string = f"Sahagin B First: {best_sahagin_b_first}"
     log_string += f" / Potion on Geos: {fastest_strats['geos_potion']}"
@@ -273,6 +288,7 @@ def plan_manips(klikk_steals: int):
     log_string += f" / Potion: {'Tidus' if fastest_strats['tidus_potion_klikk'] else ('Rikku' if fastest_strats['rikku_potion_klikk'] else 'None')}"
     log_string += f" / Chain Strat: {fastest_strats['chain_encounter_strat']}"
     log_string += f" / Ruins Strat: {fastest_strats['ruins_encounter_strat']}"
+    log_string += f" / Lagoon Strats: {fastest_strats['lagoon_strats']}"
     log_string += f" / Time: {best_time_value}"
 
     logging.debug(log_string)
@@ -285,6 +301,7 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
     global grenade_count
 
     best_klikk_to_tros_time_value = 0
+    best_tros_time_value = 0
 
     klikk1_time_value, hp_tidus = simulate_klikk1(rng_rolls=rng_rolls)
 
@@ -294,8 +311,12 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
 
     rng_memory = [0] * 68
     rng_memory2 = [0] * 68
+    rng_memory3 = [0] * 68
 
-    chain_encounter_happens = chain_encounter()
+    chain_encounter_happens, rng_rolls[0] = chain_encounter()
+    lagoon_encounters = calculate_lagoon_encounters(rng_rolls=rng_rolls)
+    lagoon_strat_combinations = len(lagoon_encounters) ** 2
+    logging.debug(f"Lagoon Encounters: {lagoon_encounters}")
 
     for i in range(68):
         rng_memory[i] = rng_rolls[i]
@@ -348,18 +369,38 @@ def simulate_klikk_to_tros(rng_rolls, klikk_steals):
                 ruins_time_value = simulate_ruins_encounter(rng_rolls=rng_rolls, strat=ruins_strat)
                 tros_time_value = simulate_tros_encounter(rng_rolls=rng_rolls)
 
-                klikk_to_tros_time_value = klikk1_time_value + klikk2_time_value + chain_time_value + ruins_time_value + tros_time_value
-                # logging.debug(f"Klikk 1 Time: {klikk1_time_value} / Klikk 2 Time: {klikk2_time_value} / Chain Time: {chain_time_value} / Ruins Time: {ruins_time_value} / Tros Time: {tros_time_value} / Total Time: {klikk_to_tros_time_value}")
+                for i in range(68):
+                    rng_memory3[i] = rng_rolls[i]
 
-                if best_klikk_to_tros_time_value == 0 or klikk_to_tros_time_value < best_klikk_to_tros_time_value:
+                for i in range(lagoon_strat_combinations):
 
-                    best_klikk_to_tros_time_value = klikk_to_tros_time_value
-                    best_tidus_potion = tidus_potion
-                    best_rikku_potion = rikku_potion
-                    best_chain_strat = chain_strat
-                    best_ruins_strat = ruins_strat
+                    lagoon_strats = [i % 2, 1 if i % 4 > 1 else 0, 1 if i > 3 else 0]
+                    lagoon_time_value = 0
 
-    return best_klikk_to_tros_time_value, best_tidus_potion, tidus_potion_turn, best_rikku_potion, best_chain_strat, best_ruins_strat
+                    for j in range(len(lagoon_encounters)):
+
+                        lagoon_time_value += simulate_lagoon_encounters(rng_rolls=rng_rolls, strat=lagoon_strats[j],
+                                                                        encounter_formation=lagoon_encounters[j][0],
+                                                                        ambush_preempt_roll=lagoon_encounters[j][1])
+
+                    klikk_to_tros_time_value = klikk1_time_value + klikk2_time_value + chain_time_value + ruins_time_value + tros_time_value + lagoon_time_value
+                    # logging.debug(f"Klikk 1 Time: {klikk1_time_value} / Klikk 2 Time: {klikk2_time_value} / Chain Time: {chain_time_value} / Ruins Time: {ruins_time_value} / Tros Time: {tros_time_value} / Total Time: {klikk_to_tros_time_value}")
+
+                    if best_klikk_to_tros_time_value == 0 or klikk_to_tros_time_value < best_klikk_to_tros_time_value:
+
+                        best_klikk_to_tros_time_value = klikk_to_tros_time_value
+                        best_tros_time_value = tros_time_value
+                        best_lagoon_time_value = lagoon_time_value
+                        best_tidus_potion = tidus_potion
+                        best_rikku_potion = rikku_potion
+                        best_chain_strat = chain_strat
+                        best_ruins_strat = ruins_strat
+                        best_lagoon_strats = lagoon_strats
+
+    logging.debug(f"Best Strat Tros Time: {best_tros_time_value}")
+    logging.debug(f"Lagoon Strats: {best_lagoon_strats} / Time: {best_lagoon_time_value}")
+
+    return best_klikk_to_tros_time_value, best_tidus_potion, tidus_potion_turn, best_rikku_potion, best_chain_strat, best_ruins_strat, best_lagoon_strats
 
 
 def best_tidus_potion_turn(rng20_rolls):
@@ -816,21 +857,37 @@ def simulate_tros_encounter(rng_rolls):
     ambush_preempt_roll = rng01_array_enemy_formation[rng_rolls[1] + 1] % 256
     rng_rolls[1] += 1
 
-    if 32 <= ambush_preempt_roll < 223:
-
-        rng_rolls[20] += 1
-        rng_rolls[26] += 1
-
     # If pre-empt, advance rng 8 times for the purpose of the calculating low roll as fifth attack is the relevant roll
     if ambush_preempt_roll < 32:
 
         low_roll_damage = rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=rng_rolls[26] + 8,
                                              user_luck=rikku_luck, target_luck=15)
 
+        tidus_ctb = 0
+        tros_ctb = 39
+
+    elif ambush_preempt_roll < 223:
+
+        low_roll_damage = rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=rng_rolls[26],
+                                             user_luck=rikku_luck, target_luck=15)
+
+        tidus_ctb_roll = rng20_array_tidus[rng_rolls[20] + 1] % (tidus_icv_variance + 1)
+        tros_ctb_roll = 100 - (rng28_array_enemy1[rng_rolls[28] + 1] % 11)
+
+        tidus_ctb = 3 * tidus_base_ctb - tidus_ctb_roll
+        tros_ctb = 300 * tros_base_ctb // tros_ctb_roll
+
+        rng_rolls[20] += 1
+        rng_rolls[26] += 1
+        rng_rolls[28] += 1
+
     else:
 
         low_roll_damage = rng.get_rng_damage(base_damage=350, rng_array=rng26_array_rikku, rng_rolls=rng_rolls[26],
                                              user_luck=rikku_luck, target_luck=15)
+
+        tidus_ctb = 42
+        tros_ctb = 39
 
     if low_roll_damage < 350:
 
@@ -855,9 +912,103 @@ def simulate_tros_encounter(rng_rolls):
         total_damage += var_damage
         rng_rolls[20] += 2
 
+        if attack == 1 and low_roll_damage > 350 and tidus_ctb > tros_ctb and total_damage < 2200:
+
+            time_value += 6
+
     # if we don't have enough grenades to kill Tros then this strat line is non-viable
     if total_damage < 2200:
         time_value += 999
+
+    return time_value
+
+
+def simulate_lagoon_encounters(rng_rolls, strat, encounter_formation, ambush_preempt_roll):
+
+    tidus_escaped = False
+    wakka_escaped = False
+
+    tidus_escape_attempts = 0
+    wakka_escape_attempts = 0
+
+    time_value = 0
+
+    if 32 <= ambush_preempt_roll < 223:
+
+        rng_rolls[20] += 1
+        rng_rolls[24] += 1
+
+    # Escaping
+    if strat == 0:
+
+        while not tidus_escaped:
+
+            tidus_escape_roll = rng20_array_tidus[rng_rolls[20] + 1] % 256
+            tidus_escape_attempts += 1
+            rng_rolls[20] += 1
+
+            if tidus_escape_roll < escape_chance:
+
+                tidus_escaped = True
+
+            else:
+
+                time_value += 6
+
+        while not wakka_escaped:
+
+            wakka_escape_roll = rng24_array_wakka[rng_rolls[24] + 1] % 256
+            wakka_escape_attempts += 1
+            rng_rolls[24] += 1
+
+            if wakka_escape_roll < escape_chance:
+
+                wakka_escaped = True
+
+            else:
+
+                time_value += 6
+
+        if tidus_escape_attempts > 1 or wakka_escape_attempts > 1:
+
+            if encounter_formation in [0, 1]:
+
+                time_value += 3
+
+            elif encounter_formation == 2:
+
+                time_value += 6
+
+            elif encounter_formation == 3:
+
+                time_value += 3
+
+    # Attacking
+    elif strat == 1:
+
+        if encounter_formation in [0, 1]:
+
+            time_value += -1
+
+        elif encounter_formation == 2:
+
+            if ambush_preempt_roll < 32:
+
+                time_value += 10
+
+            else:
+
+                time_value += 13
+
+        else:
+
+            if ambush_preempt_roll < 32:
+
+                time_value += 13
+
+            else:
+
+                time_value += 16
 
     return time_value
 
@@ -919,17 +1070,17 @@ def roll_steal(rng_rolls, steal_successes) -> (bool, int):
     return steal_success, grenade_steals
 
 
-def chain_encounter() -> bool:
+def chain_encounter() -> (bool, int):
 
     rng00_array = main.rng_array_from_index(index=0, array_len=200)
     rng00_rolls = 0
 
     danger_value = 60
     grace_period = danger_value // 2
-    steps = 62
+    total_steps = 64
     current_distance = 0
 
-    for step in range(steps):
+    for step in range(total_steps):
         current_distance += 1
         if current_distance > grace_period:
             encounter_chance = (current_distance - grace_period) * 256 // (4 * danger_value)
@@ -937,118 +1088,36 @@ def chain_encounter() -> bool:
             rng00_rolls += 1
             if encounter_roll < encounter_chance:
                 logging.debug(f"Chain encounter on step: {step}")
-                return True
+                return True, rng00_rolls
 
-    return False
+    return False, total_steps
 
 
-def ruins_encounter_steals(grenades_needed: int) -> (int, int):
+def calculate_lagoon_encounters(rng_rolls):
 
-    global rng01_array_enemy_formation
-    global rng10_array_drop_steal_chance
-    global rng11_array_rare_steal_chance
+    danger_value = 60
+    grace_period = danger_value // 2
+    total_steps = 142
+    current_distance = 0
 
-    rng01_array_enemy_formation = main.rng_array_from_index(index=1, array_len=200)
-    rng10_array_drop_steal_chance = main.rng_array_from_index(index=10, array_len=200)
-    rng11_array_rare_steal_chance = main.rng_array_from_index(index=11, array_len=200)
+    encounters = []
 
-    item_drop_chance = 205
+    for step in range(total_steps):
+        current_distance += 1
+        if current_distance > grace_period:
+            encounter_chance = (current_distance - grace_period) * 256 // (4 * danger_value)
+            encounter_roll = rng00_array_encounter[rng_rolls[0] + 1] % 256
+            rng_rolls[0] += 1
+            if encounter_roll < encounter_chance:
+                encounter_formation = rng01_array_enemy_formation[rng_rolls[1] + 1] % 4
+                ambush_preempt_roll = rng01_array_enemy_formation[rng_rolls[1] + 2] % 256
+                encounter = (encounter_formation, ambush_preempt_roll)
+                encounters.append(encounter)
 
-    first_rare_steal = 0
-    steal_first_turn = True
-    steal_second_turn = True
-    steal_twice_first = False
-    steal_twice_second = False
-    second_steal_flip1 = False
-    second_steal_flip2 = False
+                rng_rolls[1] += 2
+                current_distance = 0
 
-    ruins_steals = 0
-
-    rng_rolls = [0] * 68
-
-    for steal in range(3):
-        if rng11_array_rare_steal_chance[rng_rolls[11] + steal + 1] < rare_steal_chance:
-            first_rare_steal = steal + 1
-
-    steal_roll = rng10_array_drop_steal_chance[rng_rolls[10] + 2] % 255
-    steal_chance = 255 // 2
-
-    second_steal_flip1 = (steal_roll < steal_chance)
-
-    steal_roll = rng10_array_drop_steal_chance[rng_rolls[10] + 5] % 255
-    steal_chance = 255 // 2
-
-    second_steal_flip2 = (steal_roll < steal_chance)
-
-    logging.debug(f"Grenades Needed: {grenades_needed}")
-
-    if grenades_needed < 1:
-
-        ruins_steals = 0
-
-    else:
-
-        if grenades_needed == 1:
-
-            # steal once if rare steal, otherwise steal once per grenade we need
-            steal_first_turn = False
-            ruins_steals = 1
-
-        elif grenades_needed == 2:
-
-            if first_rare_steal == 1:
-
-                ruins_steals = 1
-
-            elif first_rare_steal == 2:
-
-                item_drop_roll = rng10_array_drop_steal_chance[rng_rolls[10] + 1] % 255
-
-                if item_drop_roll < item_drop_chance:
-
-                    steal_first_turn = False
-                    ruins_steals = 1
-
-                else:
-
-                    ruins_steals = 2
-
-            else:
-
-                ruins_steals = 2
-
-        elif grenades_needed > 2:
-
-            if first_rare_steal == 1:
-
-                ruins_steals = 2
-
-            elif first_rare_steal == 2:
-
-                ruins_steals = 2
-
-            elif first_rare_steal == 3:
-
-                steal_second_turn = False
-                ruins_steals = 2
-
-            elif second_steal_flip1:
-
-                steal_twice_first = True
-                ruins_steals = 2
-
-            elif second_steal_flip2:
-
-                steal_twice_second = True
-                steal_first_turn = False
-                ruins_steals = 2
-
-            else:
-
-                # idk... cry?
-                ruins_steals = 2
-
-    return ruins_steals, steal_first_turn, steal_second_turn, steal_twice_first, steal_twice_second
+    return encounters
 
 
 def rikku_damage_taken_tros():
