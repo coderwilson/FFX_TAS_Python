@@ -1858,6 +1858,10 @@ def nea_track(pre_defender_x:bool = False, report=False):
     if pre_defender_x:
         if result1 and not result2:
             return (extras, memory.main.next_chance_rng_10_calm())
+        elif result1 and result2:
+            response1 = memory.main.next_chance_rng_10_calm()
+            response2 = memory.main.next_chance_rng_10()
+            return (extras, min(response1,response2))
         else:
             return (extras, memory.main.next_chance_rng_10())
     else:

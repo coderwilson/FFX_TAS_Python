@@ -71,7 +71,7 @@ def to_hidden_cave():
             elif (
                 checkpoint == 8
                 and memory.main.get_item_slot(39) == 255
-                and memory.main.next_chance_rng_10()
+                and memory.main.next_chance_rng_10() > 4
             ):
                 if not last_report:
                     logger.info("No silence grenade | Advancing further before cave")

@@ -336,16 +336,20 @@ class Player:
                 f"Wrong position targeted {battle_cursor() % 2}, {position % 2}"
             )
             while battle_cursor() % 2 != position % 2:
-                if battle_cursor() < position:
-                    xbox.tap_right()
-                else:
-                    xbox.tap_left()
+                while battle_cursor() % 2 != position % 2:
+                    if battle_cursor() < position:
+                        xbox.tap_right()
+                    else:
+                        xbox.tap_left()
+                memory.main.wait_frames(1)
             while battle_cursor() != position:
-                logger.debug(f"Battle_cursor: {battle_cursor()}")
-                if battle_cursor() > position:
-                    xbox.tap_up()
-                else:
-                    xbox.tap_down()
+                while battle_cursor() != position:
+                    logger.debug(f"Battle_cursor: {battle_cursor()}")
+                    if battle_cursor() > position:
+                        xbox.tap_up()
+                    else:
+                        xbox.tap_down()
+                memory.main.wait_frames(1)
 
     def _tap_targeting(self):
         logger.debug(

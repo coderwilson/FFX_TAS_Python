@@ -4883,10 +4883,10 @@ def rikku_full_od(battle):
         xbox.tap_left()
 
     while not memory.main.interior_battle_menu():
-        xbox.tap_b()
+        xbox.menu_b()
     rikku_od_items(item1)
     while not memory.main.rikku_overdrive_item_selected_number():
-        xbox.tap_b()
+        xbox.menu_b()
     rikku_od_items(item2)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
@@ -5316,9 +5316,9 @@ def ghost_kill():
     if owner2 in [0, 4, 6]:
         logger.debug(f"Aeon kill results in NEA on char:{owner2}")
         ghost_kill_aeon()
-    elif silence_slot > 200:
-        logger.debug(f"No silence grenade, going with aeon kill: {owner2}")
-        ghost_kill_aeon()
+    #elif silence_slot > 200:
+    #    logger.debug(f"No silence grenade, going with aeon kill: {owner2}")
+    #    ghost_kill_aeon()
     elif owner1 in [0, 4, 6]:
         logger.debug(f"Any character kill results in NEA on char:{owner1}")
         ghost_kill_any(silence_slot=silence_slot, self_haste=tidus_hasted)
