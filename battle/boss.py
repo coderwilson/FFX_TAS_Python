@@ -1400,11 +1400,13 @@ def wendigo():
     tidushaste = False
 
     screen.await_turn()
+    enemy_targets = rng_track.enemy_target_predictions()
 
     while not memory.main.turn_ready():
         pass
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
+            enemy_targets = rng_track.enemy_target_predictions()
             party_hp = memory.main.get_battle_hp()
             tidus_slot = memory.main.get_battle_char_slot(0)
 

@@ -286,15 +286,15 @@ def escape():
     menu.equip_sonic_steel(full_menu_close=True)
 
     logger.info("Now to escape the Guado")
-    chance = 99 #random.choice(range(0, 100))
+    chance = random.choice(range(0, 100))
     #if game_vars.rng_seed_num() == 139:
     #    chance = 1  # Testing where 139 does the extra battle.
     #else:
     #    chance = 99  # For now, don't use randomness.
-    if chance < 20 or not game_vars.get_blitz_win():
-        force_battle = True
-    else:
-        force_battle = False
+    #if chance < 20 or not game_vars.get_blitz_win():
+    #    force_battle = True
+    #else:
+    #    force_battle = False
 
     checkpoint = 0
     while memory.main.get_encounter_id() != 195:
@@ -304,7 +304,7 @@ def escape():
                 save_sphere.touch_and_go()
                 checkpoint += 1
                 logger.debug(f"Touching save sphere. Update Checkpoint {checkpoint}")
-            elif checkpoint == 18 and force_battle:
+            elif checkpoint == 18 and not menu_done:
                 FFXC.set_neutral()
 
             # Map changes
@@ -322,14 +322,15 @@ def escape():
                 screen.await_turn()
                 if not menu_done:
                     battle.main.escape_with_xp()
-                    menu.home_grid()
-                    menu_done = True
+                    if memory.main.get_tidus_slvl() >= 2:
+                        menu.home_grid()
+                        menu_done = True
                     memory.main.update_formation(Tidus, Yuna, Rikku)
+                    memory.main.close_menu()
                 elif memory.main.get_encounter_id() == 195:
                     break
                 else:
                     battle.main.flee_all()
-                force_battle = False
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():

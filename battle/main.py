@@ -1926,6 +1926,12 @@ def seymour_guado_blitz_win():
     rikku_turns = 0
     animahits = 0
     animamiss = 0
+    steal_count = 0
+    rareptr = 0
+    swap_timing = 4
+    anima_targets = rng_track.enemy_target_predictions()
+    if anima_targets[2] == 0:
+        swap_timing = 5
 
     while not memory.main.turn_ready():
         pass
@@ -1963,11 +1969,13 @@ def seymour_guado_blitz_win():
                     CurrentPlayer().defend()
                 elif tidus_turns == 3:
                     CurrentPlayer().attack()
-                elif tidus_turns == 4:
+                elif tidus_turns == 4 and anima_targets[2] == 0:
                     buddy_swap(Wakka)
-                elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
-                    buddy_swap(Lulu)
-                elif animahits + animamiss == 3 and not next_hit:
+                elif animahits + animamiss == swap_timing-1 and anima_targets[3] == 0 and (
+                    (
+                        animamiss > 0 and not missbackup
+                    ) or not next_hit
+                ):
                     buddy_swap(Lulu)
                     animamiss += 1
                 elif not tidushaste:
@@ -2026,8 +2034,10 @@ def seymour_guado_blitz_win():
                         buddy_swap(Tidus)
                     elif rikkuposition >= 3:
                         buddy_swap(Rikku)
-                    elif not memory.main.next_steal_rare(pre_advance=0):
+                    elif not memory.main.next_steal_rare(pre_advance=steal_count):
                         steal()
+                        steal_count += 1
+                        rareptr += 1
                     else:
                         CurrentPlayer().defend()
                 kimahriturns += 1
@@ -2043,10 +2053,13 @@ def seymour_guado_blitz_win():
                     else:
                         CurrentPlayer().defend()
                 elif auronturns == 1:  # Stone Breath logic
-                    if Kimahri.is_dead():
-                        revive_target(target=3)
+                    if anima_targets[2] != 2:
+                        buddy_swap(Rikku)
                     else:
-                        CurrentPlayer().defend()
+                        if Kimahri.is_dead():
+                            revive_target(target=3)
+                        else:
+                            CurrentPlayer().defend()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
                     if kimahridead and rikku_turns == 0:
                         buddy_swap(Rikku)
@@ -2089,10 +2102,10 @@ def seymour_guado_blitz_win():
                     tidushaste = False
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
                     if kimahridead and rikku_turns == 0:
-                        if not memory.main.next_steal_rare(pre_advance=0):
+                        if not memory.main.next_steal_rare(pre_advance=steal_count):
                             steal()
-                        elif memory.main.next_steal(steal_count=1, pre_advance=1):
-                            if not memory.main.next_steal_rare(pre_advance=1):
+                        elif memory.main.next_steal(steal_count=steal_count, pre_advance=rareptr):
+                            if not memory.main.next_steal_rare(pre_advance=rareptr):
                                 steal()
                             else:
                                 CurrentPlayer().defend()
@@ -2108,8 +2121,8 @@ def seymour_guado_blitz_win():
                         else:
                             CurrentPlayer().defend()
                 elif animahits < 4:
-                    if memory.main.next_steal(steal_count=1, pre_advance=0):
-                        if not memory.main.next_steal_rare(pre_advance=0):
+                    if memory.main.next_steal(steal_count=steal_count, pre_advance=rareptr):
+                        if not memory.main.next_steal_rare(pre_advance=rareptr):
                             steal()
                         else:
                             CurrentPlayer().defend()
@@ -2430,7 +2443,7 @@ def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
         if memory.main.get_throw_items_slot(7) < 255:
             revive_all()
         elif memory.main.get_throw_items_slot(6) < 255:
-            revive_target(target=0)  # Should technically target tidus but need to update this logic
+            revive_target(target=0)
     # If just Tidus is dead revive him
     elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
         logger.debug("Reviving tidus")

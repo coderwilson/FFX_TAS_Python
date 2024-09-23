@@ -1958,6 +1958,17 @@ def desert_to_evrae_equip_drop_count() -> []:
     return drop_count
 
 
+def enemy_target_predictions(attacks:int=4, chars:int=3):
+    rolls = memory.main.rng_array_from_index(index=4, array_len=attacks+3)
+    results = []
+    
+    for i in range(attacks):
+        results.append((rolls[i+1] & 0x7FFFFFFF) % chars)
+    
+    logger.manip(f"Target predictions: {results}")
+    return results
+
+
 def evrae_targets() -> []:
     rolls = memory.main.rng_array_from_index(index=4, array_len=5)
     results = [9,9]

@@ -281,6 +281,8 @@ def find_summoners():
     logger.info("Desert complete. Starting Home section")
     if game_vars.get_blitz_win():
         menu.home_grid()
+        memory.main.update_formation(Tidus, Auron, Rikku)
+        memory.main.close_menu()
     learn_first_OD = False
 
     checkpoint = 7

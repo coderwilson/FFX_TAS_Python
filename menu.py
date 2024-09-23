@@ -922,8 +922,6 @@ def home_grid():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_quit()
 
-    memory.main.update_formation(Tidus, Auron, Rikku)
-    memory.main.close_menu()
 
 
 def overworld_use_item(item_to_use: int = 3):
