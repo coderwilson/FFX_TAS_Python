@@ -751,13 +751,10 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    extra_drops, _ = rng_track.nea_track()
-                    if extra_drops in [0, 1]:
-                        logger.info(f"Straight to NEA area: {extra_drops}")
-                        game.step = 2
-                    else:
-                        logger.info(f"B&Y battle before NEA: {extra_drops}")
+                    if game_vars.get_nea_after_bny():
                         game.step = 3
+                    else:
+                        game.step = 2
 
                 if game.step == 2:
                     if game_vars.try_for_ne():
@@ -783,11 +780,11 @@ def perform_TAS():
                     area.gagazet.to_the_ronso()
                     extra_drops, _ = rng_track.nea_track()
                     if game_vars.ne_armor() == 255:
-                        if extra_drops <= 5:
+                        if extra_drops <= 3:
                             area.ne_armor.loop_back_from_ronso()
                             game.step = 2
                         else:
-                            area.gagazet.to_the_ronso(checkpoint=7)
+                            area.gagazet.to_the_ronso(checkpoint=6)
                             game.step = 4
                     else:
                         game.step = 4

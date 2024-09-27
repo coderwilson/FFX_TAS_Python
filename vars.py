@@ -84,6 +84,15 @@ class AllVars:
         self.confirmed_seed_num = 999
         self.skip_zan_luck = False
         self.god_mode_val = config_vars.get("god_mode", False)
+        
+        # ----NEA Manip
+        self.try_ne_val = True  # We can choose False later, no current value here.
+        self.ne_armor_val = 255
+        self.ne_battles = 0  # Tracks number of forced manip battles outside cave.
+        self.nea_zone = 0
+        self.nea_force_third_larvae = False
+        self.nea_force_def_x_drop = False
+        self.nea_after_bny = False
 
         # ----Other
         self.new_game = False
@@ -91,10 +100,6 @@ class AllVars:
         self.ytk_farm = 0
         self.rescue_count = 0
         self.flux_overkill_var = False
-        self.try_ne_val = True  # We can choose False later, no current value here.
-        self.ne_armor_val = 255
-        self.ne_battles = 0  # Tracks number of forced manip battles outside cave.
-        self.nea_zone = 0
         self.first_hits = [0] * 8
 
         # === Nemesis stuff ===
@@ -254,6 +259,24 @@ class AllVars:
 
     def set_nea_zone(self, value):
         self.nea_zone = value
+    
+    def get_force_third_larvae(self):
+        return self.nea_force_third_larvae
+
+    def set_force_third_larvae(self, value):
+        self.nea_force_third_larvae = value
+
+    def get_def_x_drop(self):
+        return self.nea_force_def_x_drop
+
+    def set_def_x_drop(self, value):
+        self.nea_force_def_x_drop = value
+
+    def get_nea_after_bny(self):
+        return self.nea_after_bny
+
+    def set_nea_after_bny(self, value):
+        self.nea_after_bny = value
 
     def nem_checkpoint_ap(self):
         return self.nem_ap_val
@@ -388,6 +411,9 @@ class AllVars:
 
     def set_rescue_count(self, value):
         self.rescue_count = value
+
+    def get_rescue_count(self):
+        return self.rescue_count
 
     def completed_rescue_fights(self):
         # logger.debug(f"Completed {self.rescue_count} exp kills")

@@ -243,10 +243,31 @@ def item_to_be_dropped(
     pre_advance_13: int = 0,
     party_size: int = 7,
 ):
-    test_mode = False # Doesn't functionally change, but prints more stuff.
+    test_mode = False
     slot_mod = slot_modifier(enemy=enemy)
     ability_mod = ability_modifier(enemy=enemy)
-
+    
+    party_chars = memory.main.get_order_six()
+    # Focused on NEA manip, we'd need to back fill this later to other fights.
+    if enemy == "evrae":
+        party_chars = [0,2,3,4,5,6]
+    elif enemy == "larva":
+        party_chars = [1,2]
+    elif enemy == "evrae_altana":
+        party_chars = [0,4,6]
+    elif enemy == "ykt-63":
+        party_chars = [0,1,2,4,5,6]
+    elif enemy in ["seymour_natus","defender_x","biran_ronso","yenke_ronso","ghost"]:
+        party_chars = [0,1,2,3,4,5,6]
+    else:
+        # Good old bubble sort
+        for i in range(len(party_chars)):
+            for j in range(i, len(party_chars)):
+                if party_chars[j] < party_chars[i]:
+                    temp = party_chars[j]
+                    party_chars[j] = party_chars[i]
+                    party_chars[i] = temp
+    '''
     if party_size == 2:
         party_chars = [0, 4]
     elif party_size == 3:  # Oblitzerator
@@ -261,6 +282,8 @@ def item_to_be_dropped(
         party_chars = [0, 1, 2, 3, 4, 5, 6]
     else:
         party_chars = [0]
+    '''
+    #logger.warning(party_chars)
 
     advance_12 = 4 + pre_advance_12
     test_array_12 = memory.main.rng_12_array(advance_12)
@@ -290,12 +313,24 @@ def item_to_be_dropped(
     # Abilities
     base_mod = (ability_mod + ((test_array_12[3] & 0x7FFFFFFF) & 7)) - 4
     ability_count = (base_mod + ((base_mod >> 31) & 7)) >> 3
-    if slots < ability_count:
-        ability_count = slots
+    #if slots < ability_count:
+    #    ability_count = slots
+    
+    # Killer - NEA drop only
+    character = 0
+    if enemy == "biran_ronso" or enemy == "yenke_ronso":
+        character = 3
+    elif enemy in ["defender_x", "maze_larva"]:
+        character = user_2
 
     # rng13 logic here, determine which ability goes where.
     new_abilities = ability_to_be_dropped(
-        enemy=enemy, equip_type=equip_type, slots=ability_count, advances=pre_advance_13
+        enemy=enemy, 
+        equip_type=equip_type, 
+        slots=slots,
+        ability_count=ability_count,
+        advances=pre_advance_13,
+        char=character
     )
     ability_list = new_abilities[0]
     pre_advance_13 += new_abilities[1]
@@ -312,36 +347,35 @@ def item_to_be_dropped(
         e_slots=slots,
         e_abilities=ability_list,
     )
+    
 
     return final_item, pre_advance_13
 
 
 def ability_to_be_dropped(
-    enemy: str = "ghost", equip_type: int = 0, slots: int = 1, advances: int = 0
+    enemy: str = "ghost", equip_type: int = 0, slots: int = 1, advances: int = 0,
+    ability_count:int=1, char:int = 0
 ):
     test_mode = False  # Doesn't functionally change, but prints more stuff.
     outcomes = drop_ability_list(enemy=enemy, equip_type=equip_type)
     found = 0
     # if test_mode:
     #    logger.debug(f"outcomes: {outcomes}")
-    if slots == 0:
-        slots = 1
     filled_slots = [99] * slots
-    # if test_mode:
-    #    logger.debug(f"fs: {filled_slots}")
+    if char in [2,3] and equip_type == 0:  # Weapon for Auron or Kimahri
+        filled_slots.remove(99)
+        filled_slots.append(0x800B)
+        ability_count -= 1
+    
+    
 
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
     test_array = memory.main.rng_13_array(array_len=50 + advances)
-    # if test_mode:
-    #    logger.debug(f"ta: {test_array}")
-
-    # if outcomes[0]:
-    #    filled_slots.append(outcomes[0])
-    #    filled_slots.remove(99)
+    
     if test_mode:
         logger.debug(f"Enemy: {enemy} - Outcomes: {outcomes}")
 
-    while 99 in filled_slots and ptr < 50 + advances:
+    while 99 in filled_slots and ptr < 50 + advances and found < ability_count:
         # Increment to match the first (and subsequent) advance(s)
         try:
             ptr += 1
@@ -1829,83 +1863,41 @@ def zombie_track(report=False):
 
 
 def nea_track(pre_defender_x:bool = False, report=False):
-    test1 = ["ghost"]
-    test2 = ["defender_x","ghost"]
-    result1 = False
-    result2 = False
-    extras = 0
-    preferred_result = [0,4,6,9]
-    preferable1 = False
-    preferable2 = False
-    
-    while not result1 and not result2:
-        result1, equip1 = rng_alignment_before_nea(
-            enemies=test1,
-            steals=0,
-            report=0)
-        if equip1.owner() in preferred_result or equip1.owner_alt() in preferred_result:
-            preferable1 = True  # Used if aligned for both drop versions
-        if pre_defender_x:
-            result2, equip2 = rng_alignment_before_nea(
-                enemies=test2,
-                steals=0,
-                report=0)
-            if equip2.owner() in preferred_result or equip2.owner_alt() in preferred_result:
-                preferable2 = True  # Used if aligned for both drop versions
-        else:
-            result2 = False
-        if not result1 and not result2:
-            test1 = ["epaaj"] + test1
-            test2 = ["epaaj"] + test2
-            extras += 1
-    
-    if report:
-        logger.manip(f"Without-X: {result1} | With-X: {result2} | Extras: {extras} | {pre_defender_x}")
-    # Return align (int, zero is aligned) and advances (int)
+    drop_x = False
+    bny = False
+    #logger.warning(memory.main.rng_array_from_index(index=12, array_len=20))
+    #logger.warning(memory.main.rng_array_from_index(index=13, array_len=20))
     if pre_defender_x:
-        if result1 and not result2:
-            return (extras, memory.main.next_chance_rng_10_calm())
-        elif result1 and result2:
-            if preferable1 and not preferable2:
-                return (extras, memory.main.next_chance_rng_10_calm())
-            elif preferable2 and not preferable1:
-                return (extras, memory.main.next_chance_rng_10())
-                
-            # else return whichever aligns faster
-            response1 = memory.main.next_chance_rng_10_calm()
-            response2 = memory.main.next_chance_rng_10()
-            return (extras, min(response1,response2))
-        else:
-            return (extras, memory.main.next_chance_rng_10())
+        stage = 2
     else:
-        return (extras, memory.main.next_chance_rng_10())
+        stage = 3
     
-
-def nea_track_old():
-    pre_advance_12 = 0
-    pre_advance_13 = 0
-
-    total_advance_pre_x = 999
-    total_advance_post_x = 999
-    total_advance_array = []
-
-    # If already aligned for NEA, we want X to drop nothing.
-    next_item, pre_advance_13 = item_to_be_dropped(enemy="ghost")
-    if next_item.equipment_type() == 1 and next_item.has_ability(0x801D):
-        total_advance_post_x = 0
-    while pre_advance_12 < 200:
-        pre_advance_12 += 4
-        next_item, pre_advance_13 = item_to_be_dropped(
-            enemy="ghost", pre_advance_12=pre_advance_12, pre_advance_13=pre_advance_13
-        )
-        if next_item.equipment_type() == 1 and 0x801D in next_item.abilities():
-            total_advance_array.append(int(pre_advance_12 / 4))
-            if total_advance_post_x == 999:
-                total_advance_post_x = int(pre_advance_12 / 4)
-            if total_advance_pre_x == 999:
-                total_advance_pre_x = int((pre_advance_12 / 4) - 1)
-    # logger.debug(f"// Pre-X: {total_advance_pre_x} // Post-X {total_advance_post_x}")
-    return total_advance_pre_x, total_advance_post_x, total_advance_array
+    paths, best = purifico_to_nea(
+        stage=stage
+    )
+    if best == 99:
+        return (99,99)
+    
+    bny = bool(best >= len(paths)/2)
+    if stage == 2:
+        drop_x = bool((best % 4) >= 2)
+    
+    if drop_x != game_vars.get_def_x_drop():
+        game_vars.set_def_x_drop(drop_x)
+    #logger.manip(f"    BnY: {bny}")
+    #logger.manip(f"BnY_var: {game_vars.get_nea_after_bny()}")
+    if bny != game_vars.get_nea_after_bny():
+        game_vars.set_nea_after_bny(bny)
+    logger.manip(
+        f"Defender X: {game_vars.get_def_x_drop()}, Ronso before NEA: {game_vars.get_nea_after_bny()}"
+    )
+    
+    #if not drop_x and not bny:
+    #    return (paths[best], memory.main.next_chance_rng_10_calm())
+    #elif not drop_x and memory.main.next_chance_rng_10() != 0:
+    #    return (paths[best], 0)
+    #else:
+    return (paths[best], memory.main.next_chance_rng_10())
 
 
 def print_manip_info(pre_x=False):
@@ -2171,8 +2163,21 @@ def guards_to_calm_equip_drop_count(
                     logger.manip(f"{i}: Battle 5 drops equipment")
         ptr += 3
     
+    extra_needed = [99,99,99]
+    for i in range(3):
+        result, best = purifico_to_nea(
+            parent_array=drop_count[i],
+            ptr=ptr+i
+        )
+        if best == 99:
+            extra_needed == 99
+        else:
+            extra_needed[i] = result[best]
+    
+    
+def end_old_logic():
     if guard_battle_num <= 6:  # Start of Via Purifico section
-        # Assume three maze larvae for Yuna.
+        
         chance = 60
         for i in range(3):  # Maze Larvae
             if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
@@ -2221,7 +2226,7 @@ def guards_to_calm_equip_drop_count(
         while not result_found:
             if not result_found:
                 test = drop_count[i] + ["ghost"]
-                result_found, _ = rng_alignment_before_nea(
+                result_found, _, _ = rng_alignment_before_nea(
                     enemies=test,
                     steals=i,
                     report=(i==report_num))
@@ -2229,7 +2234,7 @@ def guards_to_calm_equip_drop_count(
                     extra_needed[i] = j
             if not result_found:
                 test = drop_count[i] + ["defender_x","ghost"]
-                result_found, _ = rng_alignment_before_nea(
+                result_found, _, _ = rng_alignment_before_nea(
                     enemies=test,
                     steals=i,
                     report=(i==report_num))
@@ -2243,6 +2248,105 @@ def guards_to_calm_equip_drop_count(
         
     return extra_needed
 
+
+def purifico_to_nea(
+    parent_array = [],
+    ptr = 3,
+    stage=0  # used to skip forward, reassess in Calm or after defender X.
+):
+    # parent_array passes in enemies that will drop earlier, passed from earlier in the run.
+    # ptr is our position on the RNG10 array. Needs to be pre-advanced to last check +3.
+    if len(parent_array) == 0:
+        results = [[],[]]
+    else:
+        results = [[*parent_array],[*parent_array]]
+    test_array = memory.main.rng_10_array()
+    
+    chance = 60
+    if stage == 0:  # Start of Via Purifico, no Larvae killed.
+        # First larva
+        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+            results[0].append("maze_larva")
+            results[1].append("maze_larva")
+        ptr += 3
+        # Second larva
+        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+            results[0].append("maze_larva")
+            results[1].append("maze_larva")
+        ptr += 3
+        # Third larva, or Altana
+        results[0].append("evrae_altana")
+        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+            results[1].append("maze_larva")
+        ptr += 3  # Bypass aeons
+        results[1].append("evrae_altana")  # Add altana
+        ptr += 6  # Bypass aeons
+    
+    if stage <= 1:  # Highbridge start
+        chance = 30
+        if game_vars.get_rescue_count() <= 2:
+            # YKT-63, alt to third larva
+            if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+                results[0].append("ykt-63")
+            ptr += 3  # Bypass aeons
+        # YKT-63
+        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+            results[0].append("ykt-63")
+            results[1].append("ykt-63")
+        ptr += 3
+        results[0].append("seymour_natus")
+        results[1].append("seymour_natus")
+    
+    # The rest of these, we can control in the Calm Lands.
+    # No need to follow RNG10 through this logic.
+    # Eight possible permutations.
+    if stage <= 2:  # Start of calm lands, or before.
+        for i in range(2):
+            results.append(results[i] + ["defender_x"])
+        for i in range(4):
+            results.append(results[i] + ["biran_ronso","yenke_ronso"])
+        
+    elif stage == 3:
+        for i in range(2):
+            results.append(results[i] + ["biran_ronso","yenke_ronso"])
+    # else stage 4 == after B&Y completed. No extra info needed.
+    
+    # Now to find results.
+    best_array = []
+    preferable = []
+    quality = 0
+    preferred_result = [0,4,6,9]
+    for i in range(len(results)):
+        results[i].append("ghost")
+        success,equip1,align_result = rng_alignment_before_nea(enemies=results[i])
+        best_array.append(align_result)
+        if success:
+            quality += 1
+            if equip1.owner() in preferred_result or equip1.owner_alt() in preferred_result:
+                quality += 1
+        preferable.append(quality)
+        quality = 0
+        
+    best = len(results)-1
+    for i in range(best,-1,-1):
+        # Prefer overwriting with the lower value in each case.
+        if best_array[i] <= best_array[best]:
+            if preferable[i] >= preferable[best]:
+                # No need to search for what does not exist.
+                best = i
+    
+    logger.debug(f"Best result: {best}")
+    logger.debug(f"Preferable check: {preferable}")
+    
+    # Returned values are in this order:
+    # best_array (extra kills needed on each path)
+    # best (the preferred path to success)
+    if preferable[best] == 0:
+        return (best_array, 99)
+    else:
+        return (best_array, best)
+    
+    
 
 def party_size_rng_alignment(enemy_name) -> int:
     if enemy_name in [
@@ -2261,7 +2365,7 @@ def party_size_rng_alignment(enemy_name) -> int:
         
 
 
-def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False) -> int:
+def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
     ptr12 = 0
     ptr13 = 0
     advances = 0
@@ -2269,6 +2373,7 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False) -> int:
     
     for i in range(len(enemies)):
         party_size = party_size_rng_alignment(enemies[i])
+        #logger.warning(f"Checking drop for enemy {enemies[i]}")
         if enemies[i] == "epaaj":
             extras += 1
     
@@ -2293,15 +2398,18 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False) -> int:
         condition = "without"
         if "defender_x" in enemies[i]:
             condition = "with"
-        if enemies[i] == "ghost" and equipment.has_ability(32797):
+        if equipment.has_ability(32797):
+            #logger.warning("Found one!")
             if report:
                 logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
-            if equipment.has_ability(32797):
-                return (True, equipment)
+                logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
+            if equipment.equipment_type() == 1 and equipment.has_ability(32797):
+                return (bool(extras == 0), equipment, extras)
+                
         ptr12 += 4
         ptr13 += advances
     
-    return (False, equipment)
+    return (False, equipment, extras)
 
 
 def next_action_escape(character: int = 0):

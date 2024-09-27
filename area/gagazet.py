@@ -49,15 +49,24 @@ def check_gems():
 
 def calm_lands():
     memory.main.await_control()
+    #memory.main.set_rng_by_index(value=787723442, index=12)
+    #memory.main.set_rng_by_index(value=1841850229, index=13)
     # Start by getting away from the save sphere
-    memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
+    memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
     battle.main.heal_up(full_menu_close=True)
+    
+    # Determine variables for the path forward.
+    routes, best = rng_track.purifico_to_nea(stage=2)
+    half = int(len(routes)/2)
+    game_vars.set_def_x_drop(bool((best % half) >= half/2))
+    game_vars.set_nea_after_bny(bool(best >= half))
+    logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
 
     rng_track.print_manip_info(pre_x= True)
     #next_green()
-    logger.debug(f"RNG10: {memory.main.rng_10()}")
-    logger.debug(f"RNG12: {memory.main.rng_12()}")
-    logger.debug(f"RNG13: {memory.main.rng_13()}")
+    #logger.debug(f"RNG10: {memory.main.rng_10()}")
+    #logger.debug(f"RNG12: {memory.main.rng_12()}")
+    #logger.debug(f"RNG13: {memory.main.rng_13()}")
     # Enter the cutscene where Yuna muses about ending her journey.
     while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
         if memory.main.user_control():
@@ -152,6 +161,7 @@ def to_the_ronso(checkpoint: int = 2):
 
 def gagazet_gates(checkpoint: int = 0):
     # Should appear on the map just before the Ronso hymn
+    rng_track.nea_track()
     end_ver = game_vars.end_game_version()
     logger.debug(f"Grid version: {end_ver}")
     logs.write_stats("B&Y Return spheres:")
