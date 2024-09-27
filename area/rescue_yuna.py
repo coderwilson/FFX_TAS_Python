@@ -449,7 +449,17 @@ def trials_end():
 
 def via_purifico():
     # Print RNG info
-    rng_track.guards_to_calm_equip_drop_count(guard_battle_num=6,report_num=0)
+    #rng_track.guards_to_calm_equip_drop_count(guard_battle_num=6,report_num=0)
+    routes, best = rng_track.purifico_to_nea()
+    
+    # Determine variables for the path forward.
+    game_vars.set_force_third_larvae(bool((best % 2) == 1))
+    game_vars.set_def_x_drop(bool((best % 4) >= 2))
+    game_vars.set_nea_after_bny(bool(best >= 4))
+    logger.manip(f"Third larvae: {game_vars.get_force_third_larvae()}")
+    logger.manip(f"Defender X: {game_vars.get_def_x_drop()}")
+    logger.manip(f"B&Y: {game_vars.get_nea_after_bny()}")
+    
     memory.main.click_to_control()
 
     # New logic
@@ -484,7 +494,11 @@ def via_purifico():
             if memory.main.get_slvl_yuna() < 15 and memory.main.get_coords()[1] > 1460:
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(60)
-            elif larvae_count < 3 and memory.main.get_coords()[1] > 1460:
+            elif (
+                game_vars.get_force_third_larvae() and
+                larvae_count < 3 and 
+                memory.main.get_coords()[1] > 1460
+            ):
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(60)
             else:

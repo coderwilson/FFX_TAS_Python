@@ -735,7 +735,7 @@ def get_order_six():
     pos7 = process.read_bytes(coord, 1)
 
     formation = [pos1, pos2, pos3, pos4, pos5, pos6, pos7]
-    logger.debug(f"Party formation: {formation}")
+    #logger.debug(f"Party formation: {formation}")
     while 255 in formation:
         formation.remove(255)
     return formation
