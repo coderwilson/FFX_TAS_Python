@@ -132,48 +132,53 @@ def facing_sin():
     logger.info("End of battle with Sin's face.")
 
 
-def inside_sin():
-    logger.info("Moving to position next to save sphere")
-    while not pathing.set_movement([247, -237]):
-        if memory.main.cutscene_skip_possible():
-            FFXC.set_neutral()
-            memory.main.wait_frames(3)
-            xbox.skip_scene()
-        elif memory.main.diag_skip_possible():
+def inside_sin(checkpoint = 0):
+    re_equip_ne = False
+    if checkpoint == 0:
+        logger.info("Moving to position next to save sphere")
+        while not pathing.set_movement([247, -237]):
+            if memory.main.cutscene_skip_possible():
+                FFXC.set_neutral()
+                memory.main.wait_frames(3)
+                xbox.skip_scene()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_b()
+        logger.info("Moving to next map")
+        while memory.main.get_map() != 203:
+            # Skip dialog and run to the sea of sorrows map
+            FFXC.set_movement(0, -1)
             xbox.tap_b()
-        elif memory.main.menu_open():
-            xbox.tap_b()
-    logger.info("Moving to next map")
-    while memory.main.get_map() != 203:
-        # Skip dialog and run to the sea of sorrows map
-        FFXC.set_movement(0, -1)
-        xbox.tap_b()
-    FFXC.set_neutral()
-    logger.debug("Ready to start pathing")
+        FFXC.set_neutral()
+        logger.debug("Ready to start pathing")
 
-    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
-        re_equip_ne = True
-        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-    else:
-        re_equip_ne = False
-        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
-    memory.main.close_menu()
+        if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
+            re_equip_ne = True
+            memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+            menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+        else:
+            re_equip_ne = False
+            memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+        memory.main.close_menu()
 
-    checkpoint = 0
+    
     while memory.main.get_map() != 324:  # All the way to the egg hunt.
         if memory.main.user_control():
             # Events
             if memory.main.get_map() == 296:  # Seymour battle
                 logger.info("We've reached the Seymour screen.")
+                FFXC.set_neutral()
+                memory.main.click_to_control()
                 memory.main.update_formation(Tidus, Yuna, Auron)
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 5)
+                while not memory.main.battle_active():
+                    pathing.set_movement([0,10])
                 FFXC.set_neutral()
                 if not battle.boss.omnis():
                     logger.error("Seymour battle failed.")
                     return False
                 memory.main.click_to_control()
+                return True
             elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
             elif checkpoint < 68 and memory.main.get_map() == 327:

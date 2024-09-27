@@ -2198,7 +2198,7 @@ def end_old_logic():
                 drop_count[i].append("maze_larva")
                 if i == report_num:
                     logger.manip(f"{i}: Maze Larva 3 drops equipment")
-        ptr += 3
+        ptr += 12  # Maze Larvae plus Isaaru's aeons
         # Add Altana so we can predict Highbridge stuff after.
         for i in range(3):  # Evrae Altana
             if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
@@ -2594,7 +2594,7 @@ def record_blitz_results(duration, test_mode=False):
         json.dump(records, fp, indent=4)
 
 
-def hits_to_seed(hits_array):
+def hits_to_seed(hits_array):  # No longer accurate.
     with open("csv\\hits_to_seed.csv", "r", newline="") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:

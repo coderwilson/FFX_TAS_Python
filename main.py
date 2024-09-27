@@ -469,16 +469,18 @@ def perform_TAS():
                 if game.step == 2:
                     return_val = area.miihen.low_road(return_array[0], return_array[1])
                     if return_val is False:
-                        game.state, game.step = reset.mid_run_reset()
-
-                    # Report duration at the end of Mi'ihen section for all runs.
-                    end_time = logs.time_stamp()
-                    total_time = end_time - game.start_time
-                    logger.info(f"Mi'ihen End timer is: {total_time}")
-                    logs.write_stats("Miihen End time:")
-                    logs.write_stats(total_time)
-                    game.state = "MRR"
-                    game.step = 1
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                    else:
+                        # Report duration at the end of Mi'ihen section for all runs.
+                        end_time = logs.time_stamp()
+                        total_time = end_time - game.start_time
+                        logger.info(f"Mi'ihen End timer is: {total_time}")
+                        logs.write_stats("Miihen End time:")
+                        logs.write_stats(total_time)
+                        game.state = "MRR"
+                        game.step = 1
 
             if game.state == "MRR":
                 if game.step == 1:
@@ -855,13 +857,21 @@ def perform_TAS():
                     maybe_create_save(save_num=50)
 
                 if game.step == 3:
-                    if area.sin.inside_sin():
+                    # Up to and including Seymour Omnis
+                    if area.sin.inside_sin(checkpoint=0):
                         game.step = 4
                     else:
                         # Seymour fail/death
-                        game.state, game.step = reset.mid_run_reset()
-
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                
                 if game.step == 4:
+                    # After Seymour Omnis
+                    area.sin.inside_sin(checkpoint=41)
+                    game.step = 5
+
+                if game.step == 5:
                     area.sin.execute_egg_hunt()
                     final_battle = True
                     if game_vars.nemesis():

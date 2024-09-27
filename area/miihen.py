@@ -379,17 +379,17 @@ def low_road(self_destruct, battle_count):
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
+            if memory.main.battle_active():
                 battle_count += 1
                 logger.info("Starting battle")
                 battle.main.miihen_road()
                 if memory.main.game_over():
-                    seed_str = str(memory.main.rng_seed())
-                    avina_memory.add_battle_to_memory(
-                        seed=seed_str,
-                        area="highroad_heals",
-                        battle_num=battle_count - 1,
-                    )
+                    #seed_str = str(memory.main.rng_seed())
+                    #avina_memory.add_battle_to_memory(
+                    #    seed=seed_str,
+                    #    area="highroad_heals",
+                    #    battle_num=battle_count - 1,
+                    #)
                     return False
                 logger.info("Battle complete")
                 post_battle_logic(battle_num=battle_count)

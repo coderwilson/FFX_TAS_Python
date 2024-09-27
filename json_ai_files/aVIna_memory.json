@@ -64,7 +64,8 @@
         "kimahri_force_heal": "True"
     },
     "139": {
-        "ml_heals": "True"
+        "ml_heals": "True",
+        "kimahri_force_heal": "True"
     },
     "25": {
         "kimahri_force_heal": "True"

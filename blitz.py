@@ -68,7 +68,7 @@ def select_pass_target():
 
 
 def select_shot_type():
-    return memory.main.blitz_menu_num() in range(113, 118)
+    return memory.main.blitz_menu_num() in range(111, 118)
 
 
 def targeted_player():
