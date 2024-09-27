@@ -1834,17 +1834,24 @@ def nea_track(pre_defender_x:bool = False, report=False):
     result1 = False
     result2 = False
     extras = 0
+    preferred_result = [0,4,6,9]
+    preferable1 = False
+    preferable2 = False
     
     while not result1 and not result2:
-        result1 = rng_alignment_before_nea(
+        result1, equip1 = rng_alignment_before_nea(
             enemies=test1,
             steals=0,
             report=0)
+        if equip1.owner() in preferred_result or equip1.owner_alt() in preferred_result:
+            preferable1 = True  # Used if aligned for both drop versions
         if pre_defender_x:
-            result2 = rng_alignment_before_nea(
+            result2, equip2 = rng_alignment_before_nea(
                 enemies=test2,
                 steals=0,
                 report=0)
+            if equip2.owner() in preferred_result or equip2.owner_alt() in preferred_result:
+                preferable2 = True  # Used if aligned for both drop versions
         else:
             result2 = False
         if not result1 and not result2:
@@ -1859,6 +1866,12 @@ def nea_track(pre_defender_x:bool = False, report=False):
         if result1 and not result2:
             return (extras, memory.main.next_chance_rng_10_calm())
         elif result1 and result2:
+            if preferable1 and not preferable2:
+                return (extras, memory.main.next_chance_rng_10_calm())
+            elif preferable2 and not preferable1:
+                return (extras, memory.main.next_chance_rng_10())
+                
+            # else return whichever aligns faster
             response1 = memory.main.next_chance_rng_10_calm()
             response2 = memory.main.next_chance_rng_10()
             return (extras, min(response1,response2))
@@ -2180,7 +2193,7 @@ def guards_to_calm_equip_drop_count(
                 drop_count[i].append("maze_larva")
                 if i == report_num:
                     logger.manip(f"{i}: Maze Larva 3 drops equipment")
-        ptr += 3
+        ptr += 12  # Maze Larvae plus Isaaru's aeons
         # Add Altana so we can predict Highbridge stuff after.
         for i in range(3):  # Evrae Altana
             if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
@@ -2208,7 +2221,7 @@ def guards_to_calm_equip_drop_count(
         while not result_found:
             if not result_found:
                 test = drop_count[i] + ["ghost"]
-                result_found = rng_alignment_before_nea(
+                result_found, _ = rng_alignment_before_nea(
                     enemies=test,
                     steals=i,
                     report=(i==report_num))
@@ -2216,7 +2229,7 @@ def guards_to_calm_equip_drop_count(
                     extra_needed[i] = j
             if not result_found:
                 test = drop_count[i] + ["defender_x","ghost"]
-                result_found = rng_alignment_before_nea(
+                result_found, _ = rng_alignment_before_nea(
                     enemies=test,
                     steals=i,
                     report=(i==report_num))
@@ -2284,11 +2297,11 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False) -> int:
             if report:
                 logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
             if equipment.has_ability(32797):
-                return True
+                return (True, equipment)
         ptr12 += 4
         ptr13 += advances
     
-    return False
+    return (False, equipment)
 
 
 def next_action_escape(character: int = 0):
@@ -2473,7 +2486,7 @@ def record_blitz_results(duration, test_mode=False):
         json.dump(records, fp, indent=4)
 
 
-def hits_to_seed(hits_array):
+def hits_to_seed(hits_array):  # No longer accurate.
     with open("csv\\hits_to_seed.csv", "r", newline="") as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:

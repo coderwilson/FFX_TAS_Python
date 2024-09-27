@@ -5049,7 +5049,7 @@ def calm_lands_manip():
         calm_lands_gems()
     else:
         logger.debug("Gems good. NEA manip logic.")
-        if advances not in [0, 2]:
+        if extra_drops != 0:
             # Non-zero for both
             logger.debug("Not lined up for NEA")
             if (
@@ -5068,26 +5068,15 @@ def calm_lands_manip():
             ):
                 advance_rng_12()
             # If we can't advance on this one, try to get the next "mid" level advance.
-            else:
+            elif advances != 0:
                 logger.debug("Can't drop off of this battle.")
-                advance_rng_10(rng_10_next_chance_mid)
-        elif advances == 2:  # Lined up for drops on defender X + B&Y drops.
-            if memory.main.next_chance_rng_10() != 0:
-                advance_rng_10(memory.main.next_chance_rng_10())
+                advance_rng_10(advances)
             else:
-                logger.debug("Perfectly lined up pre-X + B&Y. Just flee.")
                 flee_all()
-        elif advances == 0:
-            logger.debug("The second equipment drop from now will be NEA.")
-            if memory.main.next_chance_rng_10() != 0:
-                advance_rng_10(memory.main.next_chance_rng_10())
-                # Trying to get onto a good drop.
-            else:
-                logger.debug("Perfectly lined up pre-X. Just flee.")
-                flee_all()
+        elif advances != 0:
+            advance_rng_10(advances)
         else:
-            logger.debug("Fallback logic, not sure.")
-            memory.main.wait_frames(180)
+            logger.debug("Not lined up at all. Just head to ronso.")
             flee_all()
         wrap_up()
 
@@ -5114,8 +5103,7 @@ def advance_rng_10(num_advances: int):
         while memory.main.battle_active():
             if memory.main.turn_ready():
                 logger.debug(f"Registering advances: {num_advances}")
-                if memory.main.battle_type() == 2:
-                    logger.debug("Registering ambush")
+                if memory.main.get_next_turn() >= 20 and num_advances < 3:
                     flee_all()
                 elif memory.main.get_encounter_id() == 321:
                     logger.debug("Registering evil jar guy, fleeing.")
@@ -5314,19 +5302,19 @@ def ghost_kill():
         silence_slot = 255  # will be used while prepping RNG10 anyway.
 
     if owner2 in [0, 4, 6]:
-        logger.debug(f"Aeon kill results in NEA on char:{owner2}")
+        logger.manip(f"Aeon kill results in NEA on char:{owner2}")
         ghost_kill_aeon()
     #elif silence_slot > 200:
     #    logger.debug(f"No silence grenade, going with aeon kill: {owner2}")
     #    ghost_kill_aeon()
     elif owner1 in [0, 4, 6]:
-        logger.debug(f"Any character kill results in NEA on char:{owner1}")
+        logger.manip(f"Any character kill results in NEA on char:{owner1}")
         ghost_kill_any(silence_slot=silence_slot, self_haste=tidus_hasted)
     elif owner1 == 9:
-        logger.debug(f"Has to be Tidus kill: {owner1}")
+        logger.manip(f"Has to be Tidus kill: {owner1}")
         ghost_kill_tidus(silence_slot=silence_slot, self_haste=tidus_hasted)
     else:
-        logger.debug(f"No way to get an optimal drop. Resorting to aeon: {owner2}")
+        logger.manip(f"No way to get an optimal drop. Resorting to aeon: {owner2}")
         ghost_kill_aeon()
 
     memory.main.click_to_control_3()
@@ -5340,7 +5328,7 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
     # We should force extra manip in gorge if no silence grenade,
     # so should be guaranteed if this triggers.
     pref_drop = [0, 4, 6]
-    if memory.main.next_chance_rng_10() >= 3:
+    if memory.main.next_chance_rng_10() >= 3 and silence_slot != 255:
         silence_used = False
     else:
         silence_used = True

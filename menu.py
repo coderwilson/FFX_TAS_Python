@@ -1949,7 +1949,7 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
 
                 if sell_item:
                     xbox.menu_b()
-                    memory.main.wait_frames(3)
+                    memory.main.wait_frames(4)
                     xbox.tap_up()
                     xbox.menu_b()
                     memory.main.wait_frames(6)

@@ -60,15 +60,15 @@ def select_breakthrough():
 
 
 def select_action():
-    return memory.main.blitz_menu_num() in [47, 52]
+    return memory.main.blitz_menu_num() in range(47, 53)
 
 
 def select_pass_target():
-    return memory.main.blitz_menu_num() in range(226, 237)
+    return memory.main.blitz_menu_num() in range(226, 256)
 
 
 def select_shot_type():
-    return memory.main.blitz_menu_num() in [113, 117]
+    return memory.main.blitz_menu_num() in range(111, 118)
 
 
 def targeted_player():
@@ -1205,6 +1205,7 @@ def blitz_main(force_blitz_win):
                     ):  # Skip through everything else
                         xbox.menu_b()
                 elif new_half():
+                    logger.debug("Starting new half")
                     if force_blitz_win:
                         memory.main.blitzball_patriots_style()
                     if memory.main.diag_progress_flag() == 347:
