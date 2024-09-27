@@ -2941,7 +2941,8 @@ def guards(group_num, sleeping_powders):
                     ):
                         steal()
                         remaining_steals -= 1
-                    elif (Rikku.is_turn() or Kimahri.is_turn()) and num_throws < 2:
+                    elif (Rikku.is_turn()) and num_throws < 2:
+                        # Not using Kimahri as that can mess up NEA manip.
                         silence_slot = memory.main.get_item_slot(39)
                         if num_throws == 0 and memory.main.get_use_items_slot(37) < 200:
                             use_item(memory.main.get_use_items_slot(37))
@@ -5049,6 +5050,7 @@ def calm_lands_manip():
         calm_lands_gems()
     else:
         logger.debug("Gems good. NEA manip logic.")
+        '''
         if advances not in [0, 2]:
             # Non-zero for both
             logger.debug("Not lined up for NEA")
@@ -5077,17 +5079,14 @@ def calm_lands_manip():
             else:
                 logger.debug("Perfectly lined up pre-X + B&Y. Just flee.")
                 flee_all()
-        elif advances == 0:
-            logger.debug("The second equipment drop from now will be NEA.")
-            if memory.main.next_chance_rng_10() != 0:
-                advance_rng_10(memory.main.next_chance_rng_10())
-                # Trying to get onto a good drop.
-            else:
-                logger.debug("Perfectly lined up pre-X. Just flee.")
-                flee_all()
+        '''
+        #elif advances == 0:
+            #logger.debug("The second equipment drop from now will be NEA.")
+        if memory.main.next_chance_rng_10() != 0:
+            advance_rng_10(memory.main.next_chance_rng_10())
+            # Trying to get onto a good drop.
         else:
-            logger.debug("Fallback logic, not sure.")
-            memory.main.wait_frames(180)
+            logger.debug("Perfectly lined up pre-X. Just flee.")
             flee_all()
         wrap_up()
 
@@ -5104,13 +5103,23 @@ def calm_steal():
 
 
 def advance_rng_10(num_advances: int):
-    escape_success_count = 0
-    logger.debug("RNG10 logic")
-    logger.debug(f"{num_advances}")
-    logger.debug(f"{screen.faint_check()}")
+    skip_attempt = False
+    if (
+        not game_vars.get_def_x_drop() and
+        memory.main.next_chance_rng_10() != 0
+    ):
+        skip_attempt = True
+
     if memory.main.get_next_turn() >= 20 and num_advances < 3:
+        # Enemy taking next turn.
+        flee_all()
+    elif skip_attempt:
         flee_all()
     else:
+        escape_success_count = 0
+        logger.debug("RNG10 logic")
+        logger.debug(f"{num_advances}")
+        logger.debug(f"{screen.faint_check()}")
         while memory.main.battle_active():
             if memory.main.turn_ready():
                 logger.debug(f"Registering advances: {num_advances}")
@@ -5308,10 +5317,9 @@ def ghost_kill():
     tidus_hasted = False
 
     if memory.main.next_chance_rng_10():
-        tidus_hasted = ghost_advance_rng_10_silence(
+        tidus_hasted, silence_slot = ghost_advance_rng_10_silence(
             silence_slot=silence_slot, owner_1=owner1, owner_2=owner2
         )
-        silence_slot = 255  # will be used while prepping RNG10 anyway.
 
     if owner2 in [0, 4, 6]:
         logger.debug(f"Aeon kill results in NEA on char:{owner2}")
@@ -5339,26 +5347,35 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
     # Premise is that we must have a silence grenade in inventory.
     # We should force extra manip in gorge if no silence grenade,
     # so should be guaranteed if this triggers.
-    pref_drop = [0, 4, 6]
-    if memory.main.next_chance_rng_10() >= 3:
+    pref_drop = [0, 4, 6, 9]  # 9 indicates equipment drops for killer.
+    if silence_slot != 255:
         silence_used = False
     else:
         silence_used = True
     tidus_hasted = False
     while memory.main.next_chance_rng_10():
         if memory.main.turn_ready():
+            logger.manip(f"Steals needed: {memory.main.next_chance_rng_10()}")
             if not silence_used:
                 if not Rikku.active():
                     buddy_swap(Rikku)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
+                    silence_slot = 255
                 elif not Kimahri.active():
                     buddy_swap(Kimahri)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
+                    silence_slot = 255
                 elif Rikku.is_turn() or Kimahri.is_turn():
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
+                    silence_slot = 255
+                elif Tidus.is_turn() and not tidus_hasted:
+                    tidus_hasted = True
+                    tidus_haste("none")
+                elif Tidus.is_turn() and memory.main.get_enemy_current_hp()[0] > 3000:
+                    CurrentPlayer().attack()
                 else:
                     CurrentPlayer().defend()
             # Next, put in preferred team
@@ -5371,6 +5388,9 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     buddy_swap(Kimahri)
                 elif not Tidus.active():
                     buddy_swap(Tidus)
+                elif Tidus.is_turn() and not tidus_hasted:
+                    tidus_hasted = True
+                    tidus_haste("none")
                 else:
                     CurrentPlayer().defend()
             else:  # Will need a non-Aeon kill
@@ -5386,13 +5406,13 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     tidus_hasted = True
                     tidus_haste("none")
                 elif memory.main.get_enemy_current_hp()[0] > 3000:
-                    attack()
+                    CurrentPlayer().attack()
                 else:
                     CurrentPlayer().defend()
     logger.debug("RNG10 is now aligned.")
     if game_vars.god_mode():
         rng_track.force_preempt()
-    return tidus_hasted
+    return tidus_hasted, silence_slot
 
 
 def ghost_kill_tidus(silence_slot: int, self_haste: bool):
