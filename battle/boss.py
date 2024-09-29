@@ -620,6 +620,8 @@ def sin_fin():
         if memory.main.turn_ready():
             if Lulu.is_turn() or Valefor.is_turn():
                 CurrentPlayer().cast_black_magic_spell(1, target_id=23, direction="r")
+            elif Lulu.is_dead():
+                battle.main.revive_target(target=5)
             else:
                 CurrentPlayer().defend()
 
@@ -1632,13 +1634,12 @@ def evrae():
     
     # Now to determine best number of steals
     if (
-        max_steals == 2 and
         nea_drop_counts[2] <= nea_drop_counts[1] and
         nea_drop_counts[2] <= nea_drop_counts[0]
     ):
-        remaining_steals = 2
-    elif max_steals == 1 and nea_drop_counts[1] <= nea_drop_counts[0]:
-        remaining_steals = 1
+        remaining_steals = min(2, max_steals)
+    elif nea_drop_counts[1] <= nea_drop_counts[0]:
+        remaining_steals = min(1, max_steals)
     else:
         remaining_steals = 0
     rng_track.guards_to_calm_equip_drop_count(

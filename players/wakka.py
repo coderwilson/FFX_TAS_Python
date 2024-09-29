@@ -21,14 +21,14 @@ class WakkaImpl(Player):
             xbox.tap_b()
 
         memory.main.wait_frames(1)
-        xbox.tap_b()
+        xbox.menu_b()
 
         while not self.overdrive_active():
             pass
-        memory.main.wait_frames(76)
+        memory.main.wait_frames(74)
         logger.info("Hit Overdrive")
         xbox.tap_b()  # First reel
-        memory.main.wait_frames(13)
+        memory.main.wait_frames(10)
         xbox.tap_b()  # Second reel
         memory.main.wait_frames(5)
         xbox.tap_b()  # Third reel
