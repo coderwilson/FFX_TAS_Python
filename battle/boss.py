@@ -538,12 +538,16 @@ def tros(preempt: bool):
 
                     battle.main.steal()
 
-                else:
+                elif grenade_count > 0:
 
                     logger.debug("Done Stealing")
                     done_stealing = True
                     grenade_slot = memory.main.get_use_items_slot(35)
                     battle.main.use_item(slot=grenade_slot)
+
+                else:
+
+                    Rikku.defend()
 
             elif Tidus.is_turn():
 
