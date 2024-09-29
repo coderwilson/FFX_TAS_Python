@@ -24,6 +24,7 @@ FFXC = xbox.controller_handle()
 def pre_evrae():
     FFXC.set_neutral()
     memory.main.click_to_control()
+    memory.main.wait_frames(2)
     logger.info("Starting first Airship section")
     #rng_track.print_manip_info()
     logger.manip(f"Evrae attack prediction: {rng_track.evrae_targets()}")
@@ -94,6 +95,8 @@ def guards():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.guards(guard_num, sleeping_powders)
+                if Rikku.hp() < 250:
+                    battle.main.heal_up_2(0, single_item=True, full_menu_close=False)
                 if guard_num == 2:
                     memory.main.update_formation(Tidus, Lulu, Rikku)
                 elif guard_num == 5:

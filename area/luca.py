@@ -49,7 +49,7 @@ def recover_low_gil():
     logger.debug("Got any weapons?")
     memory.main.wait_frames(9)
     xbox.menu_b()
-    memory.main.wait_frames(30)
+    memory.main.wait_frames(40)
     if memory.main.get_gil_value() < 3050: 
         # Selling logic, should only be if we need to sell the spear.
         xbox.menu_right()
@@ -150,7 +150,7 @@ def arrival():
                 logger.debug("Got any weapons?")
                 memory.main.wait_frames(9)
                 xbox.menu_b()
-                memory.main.wait_frames(30)
+                memory.main.wait_frames(40)
                 xbox.menu_right()
                 xbox.menu_b()
                 memory.main.wait_frames(9)

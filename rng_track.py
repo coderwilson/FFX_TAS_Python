@@ -1998,7 +1998,16 @@ def guards_to_calm_equip_drop_count(
     pre_Evrae:bool = False,
     report_num = 9
 ) -> []:
-    drop_count = [[],[],[]]  # Count for Altana, Natus, and NEA.
+    if pre_Evrae:
+        drop_count = [["evrae"],["evrae"],["evrae"]]  # Count for Altana, Natus, and NEA.
+        ptr += 3
+        tars = evrae_targets()
+        if 1 in tars:
+            ptr += 3
+        if 2 in tars:
+            ptr += 3
+    else:
+        drop_count = [[],[],[]]  # Count for Altana, Natus, and NEA.
     test_array = memory.main.rng_10_array()
     #for x in range(ptr+10):
     #    logger.debug(f"{ptr}: {x}: {test_array[x]}")
@@ -2068,6 +2077,7 @@ def guards_to_calm_equip_drop_count(
 
     # Three MORE monks
     if guard_battle_num <= 3:
+        chance = 12
         # Figure out later a way to count remaining enemies in this battle.
         for i in range(3):  # Monk
             if guard_battle_num == 3:
@@ -2170,9 +2180,11 @@ def guards_to_calm_equip_drop_count(
             ptr=ptr+i
         )
         if best == 99:
-            extra_needed == 99
+            extra_needed[i] == 99
         else:
-            extra_needed[i] = result[best]
+            extra_needed[i] = best
+    logger.manip(f"Steal check: {extra_needed}")
+    return extra_needed
     
     
 def end_old_logic():
@@ -2336,6 +2348,7 @@ def purifico_to_nea(
                 best = i
     
     logger.debug(f"Best result: {best}")
+    logger.debug(f"Best Array check: {best_array}")
     logger.debug(f"Preferable check: {preferable}")
     
     # Returned values are in this order:

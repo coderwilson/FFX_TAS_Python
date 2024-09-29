@@ -124,11 +124,13 @@ def prep_half():
                 xbox.menu_up()
                 xbox.menu_b()
         elif memory.main.diag_progress_flag() in [20, 134]:
-            if memory.main.blitz_char_select_cursor() != 6:
+            while memory.main.blitz_char_select_cursor() != 0:
+                pass
+            while memory.main.blitz_char_select_cursor() != 6:
                 xbox.tap_a()
             else:
                 xbox.menu_b()
-                memory.main.wait_frames(5)
+                memory.main.wait_frames(8)
         elif memory.main.diag_progress_flag() == 40:
             logger.info("Attempting to proceed.")
             if memory.main.blitz_proceed_cursor() != 0:

@@ -105,10 +105,10 @@ def tidus_haste(direction, character=255):
         else:
             xbox.tap_down()
     while not memory.main.other_battle_menu():
-        xbox.tap_b()
+        xbox.menu_b()
     _navigate_to_position(0)
     while memory.main.other_battle_menu():
-        xbox.tap_b()
+        xbox.menu_b()
     if character != 255:
         direction = "l"
         if character < 20:
@@ -2043,6 +2043,9 @@ def seymour_guado_blitz_win():
                 kimahriturns += 1
                 logger.debug("Kimahri turn, complete")
             elif Auron.is_turn():
+                tidusposition = memory.main.get_battle_char_slot(0)
+                kimahriposition = memory.main.get_battle_char_slot(3)
+                rikkuposition = memory.main.get_battle_char_slot(6)
                 if auronturns == 0:
                     _print_confused_state()
                     if memory.main.state_confused(3):
@@ -2053,8 +2056,8 @@ def seymour_guado_blitz_win():
                     else:
                         CurrentPlayer().defend()
                 elif auronturns == 1:  # Stone Breath logic
-                    if anima_targets[2] != 2:
-                        buddy_swap(Rikku)
+                    if anima_targets[2] != 2 and rikkuposition >= 3:
+                            buddy_swap(Rikku)
                     else:
                         if Kimahri.is_dead():
                             revive_target(target=3)
@@ -2062,16 +2065,23 @@ def seymour_guado_blitz_win():
                             CurrentPlayer().defend()
                 elif animamiss > 0 and (not missbackup or screen.faint_check() == 0):
                     if kimahridead and rikku_turns == 0:
-                        buddy_swap(Rikku)
+                        if rikkuposition >= 3:
+                            buddy_swap(Rikku)
+                        elif tidusposition >= 3:
+                            buddy_swap(Tidus)
+                        elif kimahriposition >= 3:
+                            buddy_swap(Kimahri)
+                        else:
+                            CurrentPlayer().defend()
                     else:
                         CurrentPlayer().defend()
                 else:
-                    tidusposition = memory.main.get_battle_char_slot(0)
-                    rikkuposition = memory.main.get_battle_char_slot(6)
                     if tidusposition >= 3:
                         buddy_swap(Tidus)
                     elif rikkuposition >= 3:
                         buddy_swap(Rikku)
+                    elif kimahriposition >= 3:
+                        buddy_swap(Kimahri)
                     else:
                         CurrentPlayer().defend()
                 auronturns += 1

@@ -146,16 +146,22 @@ def short_aeons():
     cursor_target = 4
     logger.debug(f"Aiming at {cursor_target}")
     while memory.main.get_menu_cursor_pos() != cursor_target:
-        logger.debug(memory.main.get_menu_cursor_pos())
-        xbox.tap_up()
+        while memory.main.get_menu_cursor_pos() != cursor_target:
+            logger.debug(memory.main.get_menu_cursor_pos())
+            xbox.tap_up()
+        memory.main.wait_frames(1)
     while memory.main.menu_number() == 5:
         xbox.tap_b()
     while memory.main.config_cursor() != 5:
-        xbox.tap_up()
+        while memory.main.config_cursor() != 5:
+            xbox.tap_up()
+        memory.main.wait_frames(1)
     while memory.main.config_aeon_cursor_column() != 1:
         xbox.tap_right()
     while memory.main.config_cursor() != 3:
-        xbox.tap_up()
+        while memory.main.config_cursor() != 3:
+            xbox.tap_up()
+        memory.main.wait_frames(1)
     while memory.main.config_cursor_column() != 1:
         xbox.tap_right()
     memory.main.close_menu()
@@ -681,7 +687,7 @@ def m_woods():
         while not memory.main.menu_open():
             xbox.tap_b()
         if memory.main.get_gil_value() < 11550:
-            memory.main.wait_frames(5)
+            memory.main.wait_frames(7)
             xbox.menu_right()
             xbox.menu_b()
             memory.main.wait_frames(3)

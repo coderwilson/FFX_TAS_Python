@@ -316,9 +316,9 @@ class Bot(commands.Bot):
     async def start_all(self, ctx: commands.Context):
         if self.is_valid_user(ctx):
             await self.start_timer(ctx)
-            await self.start_game(ctx)
-            time.sleep(3)
             await self.start_csr(ctx)
+            time.sleep(3)
+            await self.start_game(ctx)
             time.sleep(3)
             await self.start(ctx)
     
@@ -330,6 +330,17 @@ class Bot(commands.Bot):
             await self.stop_csr(ctx)
             await self.stop_timer(ctx)
             await self.stop_game(ctx)
+            
+    @commands.command(aliases=("NEA", "Nea"))
+    async def nea(self, ctx: commands.Context):
+        await ctx.send(
+            "NEA, or No-Encounters Armor, is one of the most important time-saving "
+            + "parts of the Final Fantasy speedrun. By doing a number of steals and/or allowing "
+            + "party characters to die, we manipulate randomness in a way that will line up "
+            + "a certain drop at a certain time, right at the start of Calm Lands, to result "
+            + "in this NEA equipment to drop for us. Overall time saved is around 12 minutes "
+            + "even with the cutscenes removed."
+        )
 
 
 # Main entry point of script

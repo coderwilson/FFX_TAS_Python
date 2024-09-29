@@ -112,7 +112,11 @@ class Player:
             not friendly_target
             and memory.main.get_enemy_current_hp()[target_id - 20] != 0
         ):
+            logger.warning(f"Target mode 1: {target_id}, {memory.main.battle_target_id()}")
             while memory.main.battle_target_id() != target_id:
+                if memory.main.main_battle_menu():
+                    logger.warning("Wrong menu active. Returning.")
+                    return
                 if direction == "l" or direction == "left":
                     if memory.main.battle_target_id() < 20:
                         direction = "u"
@@ -130,7 +134,11 @@ class Player:
                         direction = "r"
                     xbox.tap_down()
         elif friendly_target:
+            logger.warning("Target mode 2")
             while memory.main.battle_target_id() != target_id:
+                if memory.main.main_battle_menu():
+                    logger.warning("Wrong menu active. Returning.")
+                    return
                 if direction == "l" or direction == "left":
                     if memory.main.battle_target_id() >= 20:
                         direction = "u"
@@ -157,6 +165,7 @@ class Player:
         skip_direction = False
         if target_id is None:
             logger.debug("Attack enemy, first targetted.")
+            skip_direction = True
         elif target_id in range(7):
             logger.debug(f"Attack player character {target_id}")
         elif memory.main.get_enemy_current_hp()[target_id - 20] == 0:
@@ -180,11 +189,11 @@ class Player:
         ]
         self.navigate_to_battle_menu(attack_menu_id)
         while memory.main.main_battle_menu():
-            logger.debug("Battle menu is up.")
-            xbox.menu_b()
             if not memory.main.battle_active():
                 logger.warning("Battle is complete! Possibly something is wrong.")
                 return
+            logger.debug("Battle menu is up.")
+            xbox.menu_b()
         if target_id is not None and not skip_direction:
             logger.debug(f"Targetting ID {target_id}")
             self._target_specific_id(target_id, direction_hint)

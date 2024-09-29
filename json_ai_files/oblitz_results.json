@@ -77,6 +77,10 @@
         "1818523076": {
             "duration": 537,
             "victory": true
+        },
+        "906297804": {
+            "duration": 752,
+            "victory": false
         }
     },
     "22": {
@@ -201,6 +205,14 @@
         "234621731": {
             "duration": 684,
             "victory": false
+        },
+        "1849826051": {
+            "duration": 557,
+            "victory": true
+        },
+        "1542223807": {
+            "duration": 469,
+            "victory": true
         }
     },
     "6": {
@@ -227,6 +239,10 @@
         "254912003": {
             "duration": 537,
             "victory": false
+        },
+        "1973369353": {
+            "duration": 422,
+            "victory": true
         }
     },
     "74": {
@@ -653,8 +669,8 @@
             "victory": true
         },
         "1113692559": {
-            "duration": 415,
-            "victory": true
+            "duration": 561,
+            "victory": false
         },
         "1548921912": {
             "duration": 505,
@@ -863,6 +879,10 @@
         "777435383": {
             "duration": 630,
             "victory": true
+        },
+        "1967029944": {
+            "duration": 431,
+            "victory": true
         }
     },
     "111": {
@@ -1002,6 +1022,10 @@
         },
         "432464734": {
             "duration": 422,
+            "victory": true
+        },
+        "1503267705": {
+            "duration": 415,
             "victory": true
         }
     },
@@ -1215,6 +1239,10 @@
         "399430418": {
             "duration": 448,
             "victory": true
+        },
+        "942512928": {
+            "duration": 496,
+            "victory": false
         }
     },
     "184": {
@@ -1303,6 +1331,10 @@
         "754848326": {
             "duration": 427,
             "victory": true
+        },
+        "1453109106": {
+            "duration": 424,
+            "victory": true
         }
     },
     "93": {
@@ -1371,6 +1403,10 @@
         "859494409": {
             "duration": 446,
             "victory": true
+        },
+        "1553232166": {
+            "duration": 493,
+            "victory": false
         }
     },
     "145": {
@@ -1483,17 +1519,29 @@
         "830285538": {
             "duration": 493,
             "victory": true
+        },
+        "89343980": {
+            "duration": 460,
+            "victory": true
         }
     },
     "131": {
         "984226652": {
             "duration": 590,
             "victory": true
+        },
+        "374577923": {
+            "duration": 447,
+            "victory": true
         }
     },
     "129": {
         "57438813": {
             "duration": 421,
+            "victory": true
+        },
+        "535620753": {
+            "duration": 444,
             "victory": true
         }
     },
@@ -1588,6 +1636,10 @@
         },
         "591761530": {
             "duration": 387,
+            "victory": true
+        },
+        "402290043": {
+            "duration": 578,
             "victory": true
         }
     },
@@ -1837,6 +1889,10 @@
         "1923323429": {
             "duration": 410,
             "victory": true
+        },
+        "1591409184": {
+            "duration": 469,
+            "victory": true
         }
     },
     "168": {
@@ -1860,6 +1916,10 @@
         },
         "1221442032": {
             "duration": 391,
+            "victory": true
+        },
+        "1521522246": {
+            "duration": 426,
             "victory": true
         }
     },
@@ -2018,6 +2078,10 @@
         },
         "2113042694": {
             "duration": 394,
+            "victory": true
+        },
+        "320327670": {
+            "duration": 588,
             "victory": true
         }
     },
@@ -2277,6 +2341,10 @@
         "61830750": {
             "duration": 552,
             "victory": true
+        },
+        "73623312": {
+            "duration": 503,
+            "victory": true
         }
     },
     "110": {
@@ -2429,6 +2497,14 @@
         "1425647139": {
             "duration": 512,
             "victory": true
+        },
+        "164821440": {
+            "duration": 596,
+            "victory": true
+        },
+        "484556440": {
+            "duration": 564,
+            "victory": true
         }
     },
     "159": {
@@ -2455,6 +2531,10 @@
         "1372087539": {
             "duration": 392,
             "victory": true
+        },
+        "930530751": {
+            "duration": 544,
+            "victory": true
         }
     },
     "255": {
@@ -2471,7 +2551,11 @@
             "victory": true
         },
         "255": {
-            "duration": 499,
+            "duration": 494,
+            "victory": false
+        },
+        "1695060950": {
+            "duration": 429,
             "victory": true
         }
     },
