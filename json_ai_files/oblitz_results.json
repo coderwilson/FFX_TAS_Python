@@ -7,6 +7,10 @@
         "1044881140": {
             "duration": 419,
             "victory": true
+        },
+        "647049771": {
+            "duration": 507,
+            "victory": false
         }
     },
     "30": {
@@ -93,6 +97,10 @@
         "1961846683": {
             "duration": 499,
             "victory": true
+        },
+        "2134080779": {
+            "duration": 524,
+            "victory": false
         }
     },
     "42": {
@@ -228,6 +236,14 @@
         },
         "1905779863": {
             "duration": 429,
+            "victory": true
+        },
+        "963030584": {
+            "duration": 409,
+            "victory": true
+        },
+        "17444806": {
+            "duration": 551,
             "victory": true
         }
     },
@@ -383,6 +399,14 @@
         "1276497606": {
             "duration": 558,
             "victory": false
+        },
+        "1007072543": {
+            "duration": 577,
+            "victory": true
+        },
+        "966801147": {
+            "duration": 579,
+            "victory": true
         }
     },
     "58": {
@@ -438,6 +462,10 @@
     "10": {
         "2078238158": {
             "duration": 482,
+            "victory": true
+        },
+        "1295255340": {
+            "duration": 505,
             "victory": true
         }
     },
@@ -523,6 +551,10 @@
         "1771559438": {
             "duration": 576,
             "victory": true
+        },
+        "408171069": {
+            "duration": 469,
+            "victory": true
         }
     },
     "40": {
@@ -601,6 +633,10 @@
         "593171883": {
             "duration": 606,
             "victory": true
+        },
+        "1573296159": {
+            "duration": 432,
+            "victory": true
         }
     },
     "237": {
@@ -677,7 +713,7 @@
             "victory": false
         },
         "547419218": {
-            "duration": 454,
+            "duration": 401,
             "victory": true
         },
         "70479845": {
@@ -783,6 +819,10 @@
         "554595989": {
             "duration": 593,
             "victory": true
+        },
+        "505030391": {
+            "duration": 670,
+            "victory": true
         }
     },
     "233": {
@@ -798,6 +838,10 @@
         },
         "1367530649": {
             "duration": 578,
+            "victory": true
+        },
+        "990753057": {
+            "duration": 412,
             "victory": true
         }
     },
@@ -907,6 +951,10 @@
         "1983081064": {
             "duration": 618,
             "victory": false
+        },
+        "405558557": {
+            "duration": 450,
+            "victory": true
         }
     },
     "240": {
@@ -924,6 +972,10 @@
     "248": {
         "733044787": {
             "duration": 491,
+            "victory": true
+        },
+        "1155993836": {
+            "duration": 550,
             "victory": true
         }
     },
@@ -1013,6 +1065,10 @@
         "1043343423": {
             "duration": 480,
             "victory": true
+        },
+        "199774593": {
+            "duration": 465,
+            "victory": false
         }
     },
     "216": {
@@ -1077,6 +1133,10 @@
         "658635922": {
             "duration": 524,
             "victory": false
+        },
+        "556158708": {
+            "duration": 574,
+            "victory": true
         }
     },
     "236": {
@@ -1192,6 +1252,10 @@
         },
         "1221748661": {
             "duration": 606,
+            "victory": true
+        },
+        "44354158": {
+            "duration": 393,
             "victory": true
         }
     },
@@ -1407,6 +1471,10 @@
         "1553232166": {
             "duration": 493,
             "victory": false
+        },
+        "589645639": {
+            "duration": 421,
+            "victory": true
         }
     },
     "145": {
@@ -1427,6 +1495,14 @@
         "252453856": {
             "duration": 609,
             "victory": true
+        },
+        "1484311997": {
+            "duration": 426,
+            "victory": true
+        },
+        "1116681013": {
+            "duration": 478,
+            "victory": false
         }
     },
     "243": {
@@ -1440,6 +1516,10 @@
         },
         "1824124343": {
             "duration": 427,
+            "victory": true
+        },
+        "151802375": {
+            "duration": 691,
             "victory": true
         }
     },
@@ -1513,6 +1593,10 @@
         "695464195": {
             "duration": 668,
             "victory": true
+        },
+        "607515539": {
+            "duration": 477,
+            "victory": false
         }
     },
     "29": {
@@ -1543,6 +1627,10 @@
         "535620753": {
             "duration": 444,
             "victory": true
+        },
+        "1696321425": {
+            "duration": 601,
+            "victory": false
         }
     },
     "39": {
@@ -1620,6 +1708,10 @@
         },
         "440129130": {
             "duration": 572,
+            "victory": true
+        },
+        "2022496322": {
+            "duration": 392,
             "victory": true
         }
     },
@@ -1781,6 +1873,10 @@
         "2115693390": {
             "duration": 421,
             "victory": true
+        },
+        "1058564308": {
+            "duration": 794,
+            "victory": false
         }
     },
     "123": {
@@ -1823,6 +1919,10 @@
         "104765252": {
             "duration": 592,
             "victory": false
+        },
+        "495729157": {
+            "duration": 518,
+            "victory": false
         }
     },
     "78": {
@@ -1859,12 +1959,20 @@
         "632731230": {
             "duration": 391,
             "victory": true
+        },
+        "506479558": {
+            "duration": 437,
+            "victory": true
         }
     },
     "102": {
         "1196551032": {
             "duration": 529,
             "victory": true
+        },
+        "856979562": {
+            "duration": 627,
+            "victory": false
         }
     },
     "183": {
@@ -1882,6 +1990,10 @@
     "173": {
         "1125190876": {
             "duration": 589,
+            "victory": true
+        },
+        "1626188904": {
+            "duration": 732,
             "victory": true
         }
     },
@@ -1999,6 +2111,10 @@
         "197543004": {
             "duration": 758,
             "victory": true
+        },
+        "567553193": {
+            "duration": 409,
+            "victory": true
         }
     },
     "19": {
@@ -2022,6 +2138,14 @@
         },
         "102858694": {
             "duration": 539,
+            "victory": true
+        },
+        "910931038": {
+            "duration": 509,
+            "victory": false
+        },
+        "987942956": {
+            "duration": 471,
             "victory": true
         }
     },
@@ -2201,6 +2325,10 @@
         "52411676": {
             "duration": 437,
             "victory": true
+        },
+        "846610384": {
+            "duration": 614,
+            "victory": true
         }
     },
     "76": {
@@ -2251,6 +2379,10 @@
         "1751548749": {
             "duration": 469,
             "victory": true
+        },
+        "1572997464": {
+            "duration": 460,
+            "victory": true
         }
     },
     "59": {
@@ -2262,6 +2394,10 @@
     "15": {
         "1857866072": {
             "duration": 483,
+            "victory": true
+        },
+        "1746730067": {
+            "duration": 431,
             "victory": true
         }
     },
@@ -2413,6 +2549,10 @@
         "492043839": {
             "duration": 436,
             "victory": true
+        },
+        "1206298159": {
+            "duration": 510,
+            "victory": false
         }
     },
     "48": {
@@ -2505,6 +2645,22 @@
         "484556440": {
             "duration": 564,
             "victory": true
+        },
+        "1264533222": {
+            "duration": 411,
+            "victory": true
+        },
+        "329886658": {
+            "duration": 576,
+            "victory": true
+        },
+        "2118549759": {
+            "duration": 489,
+            "victory": true
+        },
+        "1709553865": {
+            "duration": 576,
+            "victory": false
         }
     },
     "159": {
@@ -2535,6 +2691,10 @@
         "930530751": {
             "duration": 544,
             "victory": true
+        },
+        "21462132": {
+            "duration": 562,
+            "victory": false
         }
     },
     "255": {
@@ -2602,6 +2762,14 @@
         },
         "1936450454": {
             "duration": 516,
+            "victory": true
+        },
+        "1797752808": {
+            "duration": 415,
+            "victory": true
+        },
+        "1211811282": {
+            "duration": 397,
             "victory": true
         }
     },
@@ -2707,6 +2875,10 @@
         "1225733074": {
             "duration": 473,
             "victory": true
+        },
+        "375156509": {
+            "duration": 410,
+            "victory": true
         }
     },
     "109": {
@@ -2790,6 +2962,10 @@
         },
         "1471858458": {
             "duration": 474,
+            "victory": true
+        },
+        "1886499676": {
+            "duration": 466,
             "victory": true
         }
     },

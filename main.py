@@ -487,7 +487,7 @@ def perform_TAS():
                     if area.mrr.arrival() == 1:  # Perform section before Terra skip attempt.
                         game_vars.mrr_skip_set(True)
                         if not game_vars.csr():
-                            skip_prep()
+                            #skip_prep()
                             if attempt_skip():  # i.e. if this step is successful
                                 if advance_to_aftermath():  # i.e. if this step is successful
                                     game.step = 4  # There is no 3 since Terra Skip found.
@@ -689,9 +689,14 @@ def perform_TAS():
             # Home section
             if game.state == "Home":
                 if game.step == 1:
-                    area.home.desert()
-                    game.step = 2
-                    maybe_create_save(save_num=40)
+                    if area.home.desert():
+                        game.step = 2
+                        maybe_create_save(save_num=40)
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
                 if game.step == 2:
                     area.home.find_summoners()
@@ -703,9 +708,14 @@ def perform_TAS():
             if game.state == "rescue_yuna":
                 if game.step == 1:
                     area.rescue_yuna.pre_evrae()
-                    battle.boss.evrae()
-                    area.rescue_yuna.guards()
-                    game.step = 2
+                    if battle.boss.evrae():
+                        area.rescue_yuna.guards()
+                        game.step = 2
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
                 if game.step == 2:
                     area.rescue_yuna.trials()
@@ -778,15 +788,12 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    extra_drops, _ = rng_track.nea_track()
-                    if game_vars.ne_armor() == 255:
-                        if extra_drops <= 3:
-                            area.ne_armor.loop_back_from_ronso()
-                            game.step = 2
-                        else:
-                            area.gagazet.to_the_ronso(checkpoint=6)
-                            game.step = 4
+                    nea_will_drop,_,_ = rng_track.rng_alignment_before_nea(enemies=["ghost"])
+                    if nea_will_drop and game_vars.ne_armor() == 255:
+                        area.ne_armor.loop_back_from_ronso()
+                        game.step = 2
                     else:
+                        area.gagazet.to_the_ronso(checkpoint=6)
                         game.step = 4
                     # maybe_create_save(save_num=45) # Placeholder.
                     # This save is used for immediately before climbing Gagazet.

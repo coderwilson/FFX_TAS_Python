@@ -114,5 +114,11 @@
     },
     "64": {
         "kimahri_force_heal": "True"
+    },
+    "199": {
+        "kimahri_force_heal": "True"
+    },
+    "72": {
+        "kimahri_force_heal": "True"
     }
 }

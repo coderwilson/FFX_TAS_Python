@@ -208,7 +208,8 @@ def desert():
                 xbox.click_to_battle()
                 if checkpoint < 7 and memory.main.get_encounter_id() == 197:
                     # First battle in desert
-                    battle.main.zu()
+                    if not battle.main.zu():
+                        return False
                 elif memory.main.get_encounter_id() == 234:  # Sandragora logic
                     logger.info("Sandragora fight")
                     if checkpoint < 55:
@@ -275,6 +276,7 @@ def desert():
         if pathing.set_movement(BikanelHome.execute(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint {checkpoint}")
+    return True
 
 
 def find_summoners():

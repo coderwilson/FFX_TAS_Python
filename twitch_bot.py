@@ -7,6 +7,8 @@ import time
 
 import yaml
 import logging
+import pyautogui
+from timer_saver_logic.timer_reset import clickHeader
 from typing import Dict
 
 logger = logging.getLogger(__name__)
@@ -286,6 +288,15 @@ class Bot(commands.Bot):
                 f"Sorry {ctx.author.name}, you don't have permissions to execute this."
             )
         '''
+        print("Attempting to clear.")
+        pyautogui.press("num3")
+        print("Clear successful.")
+        time.sleep(0.5)
+        clickHeader()
+        print("Save successful.")
+        time.sleep(0.5)
+        print("Killing process.")
+
         if self.is_valid_user(ctx):
             if self.timer is not None:
                 self.timer.terminate()
@@ -328,8 +339,8 @@ class Bot(commands.Bot):
         if self.is_valid_user(ctx):
             await self.exit(ctx)
             await self.stop_csr(ctx)
-            await self.stop_timer(ctx)
             await self.stop_game(ctx)
+            await self.stop_timer(ctx)
             
     @commands.command(aliases=("NEA", "Nea"))
     async def nea(self, ctx: commands.Context):

@@ -2344,6 +2344,10 @@ def open_grid(character):
         FFXC.set_neutral()
     except Exception:
         FFXC.set_neutral()
+    if character != memory.main.s_grid_char():
+        while character != memory.main.s_grid_char():
+            # Recovers if we opened the grid on the wrong character.
+            xbox.shoulder_left()
 
 
 # ------------------------------

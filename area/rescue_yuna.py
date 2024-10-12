@@ -23,7 +23,12 @@ FFXC = xbox.controller_handle()
 
 def pre_evrae():
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    while not memory.main.user_control():
+        if memory.main.battle_active():
+            # Reloaded autosave into the evrae fight will trigger this branch.
+            xbox.click_to_battle()
+            return
+        xbox.tap_b()
     memory.main.wait_frames(2)
     logger.info("Starting first Airship section")
     #rng_track.print_manip_info()
@@ -95,13 +100,15 @@ def guards():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.guards(guard_num, sleeping_powders)
-                if Rikku.hp() < 250:
-                    battle.main.heal_up_2(0, single_item=True, full_menu_close=False)
                 if guard_num == 2:
+                    #if Rikku.hp() < 250:
+                    #    battle.main.heal_up_2(0, single_item=True, full_menu_close=False)
                     memory.main.update_formation(Tidus, Lulu, Rikku)
                 elif guard_num == 5:
                     pass
                 else:
+                    #if Rikku.hp() < 250:
+                    #    battle.main.heal_up_2(0, single_item=True, full_menu_close=False)
                     memory.main.update_formation(Tidus, Kimahri, Rikku)
                 #rng_track.print_manip_info()
                 guard_num += 1
@@ -290,11 +297,11 @@ def trials():
             elif checkpoint == 22:  # Remove Bevelle sphere
                 # This takes special logic. Can't just smash face into the pedestol.
                 FFXC.set_neutral()
-                memory.main.wait_frames(9)
+                memory.main.wait_frames(3)
                 FFXC.set_movement(0,-1)
-                memory.main.wait_frames(15)
+                memory.main.wait_frames(12)
                 FFXC.set_neutral()
-                memory.main.wait_frames(9)
+                memory.main.wait_frames(6)
                 memory.main.click_to_event()
                 memory.main.click_to_control()
                 checkpoint += 1
@@ -302,6 +309,10 @@ def trials():
                 approach_coords([360,539],diag=8)
                 checkpoint += 1
             elif checkpoint == 28:  # Take Glyph sphere
+                FFXC.set_movement(0,1)
+                memory.main.wait_frames(6)
+                FFXC.set_neutral()
+                memory.main.wait_frames(3)
                 approach_coords([355,525],diag=1)
                 checkpoint += 1
             elif checkpoint == 32:  # Insert Glyph sphere
@@ -360,11 +371,11 @@ def trials():
             elif checkpoint == 47:  # Take Destro sphere
                 # This takes special logic. Can't just smash face into the pedestol.
                 FFXC.set_neutral()
-                memory.main.wait_frames(9)
+                memory.main.wait_frames(3)
                 FFXC.set_movement(1,-1)
-                memory.main.wait_frames(10)
+                memory.main.wait_frames(12)
                 FFXC.set_neutral()
-                memory.main.wait_frames(9)
+                memory.main.wait_frames(6)
                 memory.main.click_to_event()
                 memory.main.click_to_control()
                 checkpoint += 1
@@ -491,6 +502,7 @@ def via_purifico():
     memory.main.click_to_control()
     menu.via_purifico()
     larvae_count = 0
+    rng_track.purifico_to_nea(stage=0)
 
     while memory.main.get_map() != 209:  # Map number for Altana
         if memory.main.user_control():
@@ -506,11 +518,12 @@ def via_purifico():
                 memory.main.wait_frames(60)
             else:
                 FFXC.set_movement(0, 1)
-        elif screen.battle_screen():
+        elif memory.main.battle_active():
             if memory.main.get_encounter_id() < 258:
                 larvae_count += 1
             battle.boss.isaaru()
             if memory.main.game_over():
+                logger.warning("via_purifico function, RETURN FALSE")
                 return False
         else:
             FFXC.set_neutral()
@@ -521,7 +534,6 @@ def via_purifico():
 # TODO: Switch to using pathing instead, if possible
 def evrae_altana():
     # Print RNG info
-    rng_track.guards_to_calm_equip_drop_count(guard_battle_num=7,report_num=0)
     memory.main.click_to_control()
     FFXC.set_movement(0, 1)
     memory.main.wait_frames(60)
@@ -583,7 +595,6 @@ def evrae_altana():
                     FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.evrae_altana()
-            #rng_track.print_manip_info()
         elif memory.main.battle_wrap_up_active():
             xbox.menu_b()
         else:
@@ -621,19 +632,26 @@ def natus_formation(battles: int = 0, full_menu_close: bool = True):
 def seymour_natus():
     memory.main.click_to_control()
 
+    delay_grid = True
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
-    #if memory.main.get_yuna_slvl() >= 14:
-    if game_vars.get_blitz_win():
-        menu.seymour_natus_blitz_win()
-    else:
-        menu.seymour_natus_blitz_loss()
+    if memory.main.get_yuna_slvl() >= 9:
+        delay_grid = False
+        if game_vars.get_blitz_win():
+            menu.seymour_natus_blitz_win()
+        else:
+            menu.seymour_natus_blitz_loss()
     memory.main.close_menu()
 
     save_sphere.touch_and_go()
+    rng_track.purifico_to_nea(stage=1)
     complete = 0
     while complete == 0:
         if memory.main.user_control():
-            pathing.set_movement([2, memory.main.get_coords()[1] - 50])
+            if delay_grid and memory.main.get_coords()[1] < 240:
+                pathing.set_movement([2, memory.main.get_coords()[1] + 50])
+                memory.main.wait_frames(15)
+            else:
+                pathing.set_movement([2, memory.main.get_coords()[1] - 50])
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -651,7 +669,8 @@ def seymour_natus():
 
                 memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=True)
-                if memory.main.get_yuna_slvl() >= 14:
+                if memory.main.get_yuna_slvl() >= 9 and delay_grid:
+                    delay_grid = False
                     if game_vars.get_blitz_win():
                         menu.seymour_natus_blitz_win()
                     else:

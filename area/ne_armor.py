@@ -52,7 +52,6 @@ def to_hidden_cave():
     first_save = False
     checkpoint = 0
     prep_battles = 0
-    #_, next_drop, _ = rng_track.nea_track()
     next_drop, advances = rng_track.nea_track()
     while memory.main.get_map() != 56:
         if memory.main.user_control():
@@ -61,8 +60,6 @@ def to_hidden_cave():
             if checkpoint == 7 and not first_save:
                 save_sphere.touch_and_go()
                 first_save = True
-            #_, next_drop, _ = rng_track.nea_track()
-            #next_drop, advances = rng_track.nea_track()
             if checkpoint == 8 and (
                 next_drop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
@@ -106,7 +103,6 @@ def to_hidden_cave():
                 prep_battles += 1
                 memory.main.update_formation(Tidus, Rikku, Auron)
                 save_sphere.touch_and_go()
-                #_, next_drop, _ = rng_track.nea_track()
                 next_drop, advances = rng_track.nea_track()
                 rng_track.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
@@ -197,7 +193,6 @@ def drop_hunt():
 
 def return_to_gagazet():
     unequip = False
-    rng_track.nea_track()
     if memory.main.get_coords()[0] > 300:
         go_green = True
         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)

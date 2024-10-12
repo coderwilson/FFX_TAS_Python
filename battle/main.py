@@ -636,7 +636,11 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
                         CurrentPlayer().attack(target_id=20, direction_hint="l")
                     elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[1] != 0:
-                        CurrentPlayer().cast_black_magic_spell(2, target_id=21)
+                        memory.main.print_all_statuses()
+                        if not Lulu.is_status_silenced():
+                            CurrentPlayer().cast_black_magic_spell(2, target_id=21)
+                        else:
+                            flee_all()
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 32:
@@ -658,7 +662,11 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     elif Wakka.is_turn():
                         CurrentPlayer().attack(target_id=21, direction_hint="r")
                     elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
-                        CurrentPlayer().cast_black_magic_spell(2, target_id=20)
+                        memory.main.print_all_statuses()
+                        if not Lulu.is_status_silenced():
+                            CurrentPlayer().cast_black_magic_spell(2, target_id=20)
+                        else:
+                            flee_all()
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 34:
@@ -670,22 +678,27 @@ def kilika_woods(valefor_charge=True, best_charge: int = 99, next_battle=[]):
                     elif Wakka.is_turn():
                         CurrentPlayer().attack(target_id=22, direction_hint="r")
                     elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[1] != 0:
-                        CurrentPlayer().cast_black_magic_spell(2, target_id=21)
+                        memory.main.print_all_statuses()
+                        if not Lulu.is_status_silenced():
+                            CurrentPlayer().cast_black_magic_spell(2, target_id=21)
+                        else:
+                            flee_all()
                     else:
                         CurrentPlayer().defend()
                 elif enc_id == 35 or enc_id == 36:
                     flee_all()
                 elif enc_id == 37:
                     hp_pool = memory.main.get_enemy_current_hp()
-                    # if memory.main.get_speed() >= 16:
-                    #    logger.debug("== No more speed spheres needed.")
-                    #    flee_all()
                     if hp_pool[1] and hp_pool[2] == 0:
                         flee_all()
                     elif Wakka.is_turn() and memory.main.get_enemy_current_hp()[2] != 0:
                         CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif Lulu.is_turn() and memory.main.get_enemy_current_hp()[1] != 0:
-                        CurrentPlayer().cast_black_magic_spell(1, target_id=21)
+                        memory.main.print_all_statuses()
+                        if not Lulu.is_status_silenced():
+                            CurrentPlayer().cast_black_magic_spell(1, target_id=21)
+                        else:
+                            flee_all()
                     else:
                         CurrentPlayer().defend()
     logger.debug("Kilika Woods complete")
@@ -2498,9 +2511,12 @@ def zu():
                 CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Skip Dialog
+    if memory.main.game_over():
+        return False
     memory.main.click_to_control()
     if game_vars.god_mode():
         rng_track.force_preempt()
+    return True
 
 
 @battle.utils.speedup_decorator
@@ -2789,6 +2805,8 @@ def home_2():
                 CurrentPlayer().defend()
     logger.debug("Home 2 shows as fight complete.")
     FFXC.set_neutral()
+    if memory.main.game_over():
+        return False
     memory.main.click_to_control()
     if game_vars.god_mode():
         rng_track.force_preempt()
@@ -2797,6 +2815,10 @@ def home_2():
 
 @battle.utils.speedup_decorator
 def home_3():
+    return home_2() # Same logic is now used. Old logic archived.
+
+
+def home_3_old():
     logger.debug("Home 3 fight")
     xbox.click_to_battle()
     if memory.main.get_use_items_slot(49) > 200:
@@ -3254,7 +3276,6 @@ def calm_impulse():
 
 
 def calm_lands_gems():
-    #advance_pre_x, advance_post_x, _ = rng_track.nea_track()
     extra_drops, advances = rng_track.nea_track(pre_defender_x=True)
     while not memory.main.turn_ready():
         pass
@@ -4226,7 +4247,9 @@ def heal_up_2(*chars, heal_method: int = 1, item_index: int = 0, single_item: bo
 
     # Open heal menu
     while not memory.main.heal_menu_open():
-        xbox.tap_b()
+        while not memory.main.heal_menu_open():
+            xbox.tap_b()
+        memory.main.wait_frames(1)
 
     # Get the character position for each character
     character_positions = {
@@ -4423,6 +4446,7 @@ def lancet_home(direction):
 
 
 def flee_all(exclude: int = 99):
+    FFXC.set_neutral()
     logger.debug("Attempting escape (all party members and end screen)")
     if memory.main.battle_active():
         while memory.main.battle_active():
