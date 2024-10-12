@@ -228,10 +228,12 @@ def load_save_num(number):
         for _ in range(5):
             xbox.tap_b()
         FFXC.set_neutral()
-        memory.main.await_control()
+        while not memory.main.user_control() and not memory.main.battle_active():
+            pass
         memory.main.wait_frames(5)
         # So that we don't evaluate battle as complete after loading.
-        memory.main.reset_battle_end()
+        if not memory.main.battle_active():
+            memory.main.reset_battle_end()
     else:
         logger.error("That save file does not exist. Quitting program.")
         exit()

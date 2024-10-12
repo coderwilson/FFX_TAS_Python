@@ -49,8 +49,7 @@ def check_gems():
 
 def calm_lands():
     memory.main.await_control()
-    #memory.main.set_rng_by_index(value=787723442, index=12)
-    #memory.main.set_rng_by_index(value=1841850229, index=13)
+    
     # Start by getting away from the save sphere
     memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
     battle.main.heal_up(full_menu_close=True)
@@ -63,10 +62,6 @@ def calm_lands():
     logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
 
     rng_track.print_manip_info(pre_x= True)
-    #next_green()
-    #logger.debug(f"RNG10: {memory.main.rng_10()}")
-    #logger.debug(f"RNG12: {memory.main.rng_12()}")
-    #logger.debug(f"RNG13: {memory.main.rng_13()}")
     # Enter the cutscene where Yuna muses about ending her journey.
     while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
         if memory.main.user_control():
@@ -98,7 +93,6 @@ def calm_lands():
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
                 rng_track.print_manip_info(pre_x= True)
-                #next_green()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible():
@@ -161,7 +155,6 @@ def to_the_ronso(checkpoint: int = 2):
 
 def gagazet_gates(checkpoint: int = 0):
     # Should appear on the map just before the Ronso hymn
-    rng_track.nea_track()
     end_ver = game_vars.end_game_version()
     logger.debug(f"Grid version: {end_ver}")
     logs.write_stats("B&Y Return spheres:")
@@ -176,7 +169,14 @@ def gagazet_gates(checkpoint: int = 0):
         memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
     else:
         memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-    menu.after_ronso()
+    delay_grid = True
+    logger.warning(f"Check Yuna Slvl: {memory.main.get_slvl_yuna()}")
+    if memory.main.get_slvl_yuna() >= 4:
+        delay_grid = False
+        menu.after_ronso()
+    else:
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+        memory.main.close_menu()
 
     logger.info("Gagazet path section")
 
@@ -194,7 +194,19 @@ def gagazet_gates(checkpoint: int = 0):
                 xbox.tap_b()
             elif memory.main.battle_active():
                 # Charge Rikku until full, otherwise flee all
-                if memory.main.overdrive_state()[6] == 100:
+                if delay_grid:
+                    battle.main.calm_impulse()
+                    memory.main.click_to_control()
+                    if memory.main.overdrive_state()[6] == 100:
+                        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
+                    else:
+                        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+                    if memory.main.get_slvl_yuna() >= 4:
+                        menu.after_ronso()
+                        delay_grid = False
+                    else:
+                        memory.main.close_menu()
+                elif memory.main.overdrive_state()[6] == 100:
                     battle.main.flee_all()
                     memory.main.click_to_control()
                 else:

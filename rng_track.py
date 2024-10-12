@@ -257,7 +257,7 @@ def item_to_be_dropped(
         party_chars = [0,4,6]
     elif enemy == "ykt-63":
         party_chars = [0,1,2,4,5,6]
-    elif enemy in ["seymour_natus","defender_x","biran_ronso","yenke_ronso","ghost"]:
+    elif enemy in ["seymour_natus","defender_x","yenke_ronso","biran_ronso","ghost"]:
         party_chars = [0,1,2,3,4,5,6]
     else:
         # Good old bubble sort
@@ -285,7 +285,7 @@ def item_to_be_dropped(
     '''
     #logger.warning(party_chars)
 
-    advance_12 = 4 + pre_advance_12
+    advance_12 = 8 + pre_advance_12
     test_array_12 = memory.main.rng_12_array(advance_12)
     del test_array_12[0]
     if pre_advance_12 >= 1:
@@ -293,12 +293,12 @@ def item_to_be_dropped(
             del test_array_12[0]
             pre_advance_12 -= 1
 
-    # Assume killer is aeon
+    # Assume killer is not aeon
     user_2 = party_chars[(test_array_12[0] & 0x7FFFFFFF) % len(party_chars)]
     party_chars.append(9)
     party_chars.append(9)
     party_chars.append(9)
-    # Assume user == killer
+    # Assume killer is aeon
     user_1 = party_chars[(test_array_12[0] & 0x7FFFFFFF) % len(party_chars)]
 
     # Type
@@ -313,31 +313,29 @@ def item_to_be_dropped(
     # Abilities
     base_mod = (ability_mod + ((test_array_12[3] & 0x7FFFFFFF) & 7)) - 4
     ability_count = (base_mod + ((base_mod >> 31) & 7)) >> 3
-    #if slots < ability_count:
-    #    ability_count = slots
+    if slots < ability_count:
+        ability_count = slots
     
     # Killer - NEA drop only
-    character = 0
+    character = user_2  # Represents any killer except Auron or Kimahri.
     if enemy == "biran_ronso" or enemy == "yenke_ronso":
         character = 3
     elif enemy in ["defender_x", "maze_larva"]:
-        character = user_2
+        character = user_1
 
     # rng13 logic here, determine which ability goes where.
-    new_abilities = ability_to_be_dropped(
-        enemy=enemy, 
-        equip_type=equip_type, 
+    ability_list, advances = ability_to_be_dropped(
+        enemy=enemy,
+        equip_type=equip_type,
         slots=slots,
         ability_count=ability_count,
         advances=pre_advance_13,
         char=character
     )
-    ability_list = new_abilities[0]
-    pre_advance_13 += new_abilities[1]
     if test_mode:
         logger.debug(f"New Abilities: {ability_list}")
-        logger.debug(f"OWNER CHECK 1: {user_1}")
-        logger.debug(f"OWNER CHECK 2: {user_2}")
+        logger.debug(f"OWNER CHECK   (aeon): {user_1}")
+        logger.debug(f"OWNER CHECK (killer): {user_2}")
 
     final_item = memory.main.Equipment(equip_num=0)
     final_item.create_custom(
@@ -349,7 +347,7 @@ def item_to_be_dropped(
     )
     
 
-    return final_item, pre_advance_13
+    return final_item, int(pre_advance_13 + advances)
 
 
 def ability_to_be_dropped(
@@ -358,9 +356,6 @@ def ability_to_be_dropped(
 ):
     test_mode = False  # Doesn't functionally change, but prints more stuff.
     outcomes = drop_ability_list(enemy=enemy, equip_type=equip_type)
-    found = 0
-    # if test_mode:
-    #    logger.debug(f"outcomes: {outcomes}")
     filled_slots = [99] * slots
     if char in [2,3] and equip_type == 0:  # Weapon for Auron or Kimahri
         filled_slots.remove(99)
@@ -368,7 +363,7 @@ def ability_to_be_dropped(
         ability_count -= 1
     
     
-
+    found = 0
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
     test_array = memory.main.rng_13_array(array_len=50 + advances)
     
@@ -379,7 +374,7 @@ def ability_to_be_dropped(
         # Increment to match the first (and subsequent) advance(s)
         try:
             ptr += 1
-            if test_mode:
+            if test_mode and enemy=="ghost":
                 logger.debug(f"ptr: {ptr}")
                 logger.debug(f"Try: {test_array[ptr + advances]}")
             array_pos = ((test_array[ptr + advances] & 0x7FFFFFFF) % 7) + 1
@@ -409,7 +404,7 @@ def ability_to_be_dropped(
     if test_mode:
         logger.debug(f"Filled Slots fin: {filled_slots}")
 
-    return [filled_slots, found]
+    return [filled_slots, ptr]
 
 
 def report_dropped_item(
@@ -463,1127 +458,6 @@ def report_dropped_item(
         logs.write_rng_track("-Abilities: " + str(drop.equip_abilities))
         logs.write_rng_track("===================")
         return False
-
-
-def t_strike_tracking(tros=False, report=False):
-    return [0, 0, 0], [0, 0, 0]
-
-
-def t_strike_tracking_not_working_yet(tros=False, report=False):
-    if tros:
-        advance_01 = 0
-        advance_10 = 3  # Starts off with just the Tros kill advance.
-    else:
-        advance_01 = 1
-        advance_10 = 9  # Starts off with two advances for pirhanas and one for Tros
-    if report:
-        logs.open_rng_track()
-        logs.write_rng_track(memory.main.rng_10_array(array_len=80))
-        logs.write_rng_track("#########################")
-    advance_12 = [0, 0, 0]  # Tros drops one item
-    advance_13 = [0, 0, 0]  # Tros item has no abilities
-    thunder_count = [0, 0, 0]  # Count results per advance, for returning later.
-    # Count only if Oblitz will drop a weapon for Tidus.
-    oblitz_weap = [False] * 3
-    # Increment only if we need to kill yellow element on a certain battle.
-    kill_yellow = [0, 0, 0]
-    battle_variance = early_battle_count()
-    try:
-        lagoon_count = int(battle_variance["Lagoon"])
-        kilika_count = int(battle_variance["Kilika"])
-    except Exception:
-        lagoon_count = 3
-        kilika_count = 6
-    party_size = 4
-
-    # Lagoon
-    lagoon_battles = coming_battles(
-        area="besaid_lagoon", battle_count=lagoon_count, extra_advances=advance_01
-    )
-    for i in range(len(lagoon_battles)):
-        logs.write_rng_track("Lagoon battle:")
-        logs.write_rng_track(str(lagoon_battles[i]))
-        logs.write_rng_track(
-            "Battle type: "
-            + str(coming_battle_type(extra_advances=advance_01 + (2 * i)))
-        )
-        if len(lagoon_battles[i]) == 2:
-            advance_10 += 6
-        elif (
-            len(lagoon_battles[i]) == 3
-            and coming_battle_type(extra_advances=advance_01 + (2 * i)) == 1
-        ):
-            advance_10 += 9
-        else:
-            advance_10 += 0
-    advance_01 += len(lagoon_battles) * 2
-
-    logs.write_rng_track("===================")
-    logs.write_rng_track("Looking ahead for thunder strike drops")
-
-    # Besaid tutorials
-    drop_chances = track_drops(enemy="dingo", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="dingo",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="dingo",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="dingo",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="dingo",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="dingo",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="dingo",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-
-    drop_chances = track_drops(enemy="condor", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="condor",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="condor",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="condor",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="condor",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="condor",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="condor",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-
-    drop_chances = track_drops(enemy="water_flan", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="water_flan",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="water_flan",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[0] += 4
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="water_flan",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="water_flan",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[1] += 4
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="water_flan",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="water_flan",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[2] += 4
-    advance_10 += 3
-
-    # Kimahri drops something guaranteed.
-    drop_chances = track_drops(enemy="???", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="???",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="???",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[0] += 4
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="???",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="???",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[1] += 4
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="???",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="???",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[2] += 4
-    advance_10 += 3
-
-    drop_chances = track_drops(enemy="garuda_3", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="garuda_3",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="garuda_3",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="garuda_3",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="garuda_3",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="garuda_3",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="garuda_3",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-
-    drop_chances = track_drops(enemy="dingo", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="dingo",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="dingo",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="dingo",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="dingo",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="dingo",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="dingo",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-
-    drop_chances = track_drops(enemy="condor", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="condor",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="condor",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="condor",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="condor",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="condor",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="condor",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-
-    drop_chances = track_drops(enemy="water_flan", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="water_flan",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="water_flan",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[0] += 4
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="water_flan",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="water_flan",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[1] += 4
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="water_flan",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        report_dropped_item(
-            enemy="water_flan",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        )
-        advance_12[2] += 4
-    advance_10 += 3
-    advance_01 += 6
-
-    party_size = 5
-    # Sin's Fin
-    drop_chances = track_drops(enemy="sin", battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="sin",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="sin-fin",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="sin",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="sin-fin",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="sin",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="sin-fin",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-    advance_01 += 1
-
-    party_size = 2
-    # Sinspawn Echuilles
-    drop_chances = track_drops(
-        enemy="sinspawn_echuilles", battles=1, extra_advances=advance_10
-    )
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy="sinspawn_echuilles",
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy="sinspawn_echuilles",
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy="sinspawn_echuilles",
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy="sinspawn_echuilles",
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy="sinspawn_echuilles",
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy="sinspawn_echuilles",
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-    advance_01 += 1
-
-    enemy = "ragora"
-    party_size = 5
-    # Lancet tutorial
-    drop_chances = track_drops(enemy=enemy, battles=1, extra_advances=advance_10)
-    if len(drop_chances[0]) >= 1:
-        final_item, advance_13[0] = item_to_be_dropped(
-            enemy=enemy,
-            pre_advance_12=advance_12[0],
-            pre_advance_13=advance_13[0],
-            party_size=party_size,
-        )
-        advance_12[0] += 4
-        if report_dropped_item(
-            enemy=enemy,
-            drop=final_item,
-            pref_type=0,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[0] += 1
-    if len(drop_chances[1]) >= 1:
-        final_item, advance_13[1] = item_to_be_dropped(
-            enemy=enemy,
-            pre_advance_12=advance_12[1],
-            pre_advance_13=advance_13[1],
-            party_size=party_size,
-        )
-        advance_12[1] += 4
-        if report_dropped_item(
-            enemy=enemy,
-            drop=final_item,
-            pref_type=0,
-            need_adv=1,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[1] += 1
-    if len(drop_chances[2]) >= 1:
-        final_item, advance_13[2] = item_to_be_dropped(
-            enemy=enemy,
-            pre_advance_12=advance_12[2],
-            pre_advance_13=advance_13[2],
-            party_size=party_size,
-        )
-        advance_12[2] += 4
-        if report_dropped_item(
-            enemy=enemy,
-            drop=final_item,
-            pref_type=0,
-            need_adv=2,
-            pref_ability=0x8026,
-            report=report,
-        ):
-            thunder_count[2] += 1
-    advance_10 += 3
-    advance_01 += 1
-
-    party_size = 5
-    # Kilika
-    geneaux_track = False
-    kilika_battles = coming_battles(
-        area="kilika_woods", battle_count=3, extra_advances=advance_01
-    )
-    logs.write_rng_track("Kilika battles:")
-    import area.kilika as kilika
-
-    best_battle = kilika.select_best_of_two(kilika_battles)
-    ragora_kills = [0, 0, 0]
-    if "ragora" in best_battle:
-        for i in range(len(best_battle)):
-            if best_battle[i] == "ragora":
-                ragora_kills[0] += 1
-                ragora_kills[1] += 1
-                ragora_kills[2] += 1
-    best_battle_complete = [False, False, False]
-
-    for b_count in range(kilika_count):
-        if b_count == 3 and not geneaux_track:
-            advance_10 += 3  # Tentacles
-            final_item, advance_13[0] = item_to_be_dropped(
-                enemy="sinspawn_geneaux",
-                pre_advance_12=advance_12[0],
-                pre_advance_13=advance_13[0],
-                party_size=party_size,
-            )
-            advance_12[0] += 4
-            report_dropped_item(
-                enemy="geneaux",
-                drop=final_item,
-                pref_type=0,
-                pref_ability=0x8026,
-                report=report,
-            )
-            final_item, advance_13[1] = item_to_be_dropped(
-                enemy="sinspawn_geneaux",
-                pre_advance_12=advance_12[1],
-                pre_advance_13=advance_13[1],
-                party_size=party_size,
-            )
-            advance_12[1] += 4
-            report_dropped_item(
-                enemy="geneaux",
-                drop=final_item,
-                pref_type=0,
-                need_adv=1,
-                pref_ability=0x8026,
-                report=report,
-            )
-            final_item, advance_13[2] = item_to_be_dropped(
-                enemy="sinspawn_geneaux",
-                pre_advance_12=advance_12[2],
-                pre_advance_13=advance_13[2],
-                party_size=party_size,
-            )
-            advance_12[2] += 4
-            report_dropped_item(
-                enemy="geneaux",
-                drop=final_item,
-                pref_type=0,
-                need_adv=2,
-                pref_ability=0x8026,
-                report=report,
-            )
-
-            advance_01 += 1
-            geneaux_track = True
-
-        battle_formations = coming_battles(
-            area="kilika_woods", battle_count=1, extra_advances=advance_01
-        )
-        logs.write_rng_track(str(battle_formations))
-        for x in range(len(battle_formations)):
-            for i in range(len(battle_formations[x])):
-                this_battle = battle_formations[x]
-                if this_battle == ["ragora"] and ragora_kills[0] == 0:
-                    pass
-                else:
-                    drop_chances = track_drops(
-                        enemy=this_battle[i], battles=1, extra_advances=advance_10
-                    )
-                    if len(drop_chances[0]) >= 1:
-                        final_item, advance_13[0] = item_to_be_dropped(
-                            enemy=this_battle[i],
-                            pre_advance_12=advance_12[0],
-                            pre_advance_13=advance_13[0],
-                            party_size=party_size,
-                        )
-                        advance_12[0] += 4
-                        if this_battle == "ragora":
-                            ragora_kills[0] -= 1
-                        elif this_battle == "yellow_element":
-                            if final_item.equip_type == 0:
-                                if report_dropped_item(
-                                    enemy=this_battle[i],
-                                    drop=final_item,
-                                    pref_type=0,
-                                    pref_ability=0x8026,
-                                    report=report,
-                                ):
-                                    thunder_count[0] += 1
-                                    kill_yellow[0] = x
-                            elif (
-                                this_battle[i] == best_battle
-                                and not best_battle_complete[0]
-                            ):
-                                if report_dropped_item(
-                                    enemy=this_battle[i],
-                                    drop=final_item,
-                                    pref_type=0,
-                                    pref_ability=0x8026,
-                                    report=report,
-                                ):
-                                    best_battle_complete[0] = True
-                            else:
-                                advance_12[0] -= 4
-                        else:
-                            if report_dropped_item(
-                                enemy=this_battle[i],
-                                drop=final_item,
-                                pref_type=0,
-                                need_adv=1,
-                                pref_ability=0x8026,
-                                report=report,
-                            ):
-                                thunder_count[0] += 1
-                    if len(drop_chances[1]) >= 1:
-                        final_item, advance_13[1] = item_to_be_dropped(
-                            enemy=this_battle[i],
-                            pre_advance_12=advance_12[1],
-                            pre_advance_13=advance_13[1],
-                            party_size=party_size,
-                        )
-                        advance_12[1] += 4
-                        if this_battle == "ragora":
-                            ragora_kills[1] -= 1
-                        elif this_battle == "yellow_element":
-                            if final_item.equip_type == 0:
-                                if report_dropped_item(
-                                    enemy=this_battle[i],
-                                    drop=final_item,
-                                    pref_type=0,
-                                    pref_ability=0x8026,
-                                    report=report,
-                                ):
-                                    thunder_count[1] += 1
-                                    kill_yellow[1] = x
-                            elif (
-                                this_battle[i] == best_battle
-                                and not best_battle_complete[1]
-                            ):
-                                if report_dropped_item(
-                                    enemy=this_battle[i],
-                                    drop=final_item,
-                                    pref_type=0,
-                                    pref_ability=0x8026,
-                                    report=report,
-                                ):
-                                    best_battle_complete[1] = True
-                            else:
-                                advance_12[1] -= 4
-                        else:
-                            if report_dropped_item(
-                                enemy=this_battle[i],
-                                drop=final_item,
-                                pref_type=0,
-                                need_adv=1,
-                                pref_ability=0x8026,
-                                report=report,
-                            ):
-                                thunder_count[1] += 1
-                    if len(drop_chances[2]) >= 1:
-                        final_item, advance_13[2] = item_to_be_dropped(
-                            enemy=this_battle[i],
-                            pre_advance_12=advance_12[2],
-                            pre_advance_13=advance_13[2],
-                            party_size=party_size,
-                        )
-                        advance_12[2] += 4
-                        if this_battle == "ragora":
-                            ragora_kills[2] -= 1
-                        elif this_battle == "yellow_element":
-                            if final_item.equip_type == 0:
-                                if report_dropped_item(
-                                    enemy=this_battle[i],
-                                    drop=final_item,
-                                    pref_type=0,
-                                    pref_ability=0x8026,
-                                    report=report,
-                                ):
-                                    thunder_count[2] += 1
-                                    kill_yellow[2] = x
-                            elif (
-                                this_battle[i] == best_battle
-                                and not best_battle_complete[2]
-                            ):
-                                if report_dropped_item(
-                                    enemy=this_battle[i],
-                                    drop=final_item,
-                                    pref_type=0,
-                                    pref_ability=0x8026,
-                                    report=report,
-                                ):
-                                    best_battle_complete[2] = True
-                            else:
-                                advance_12[2] -= 4
-                        else:
-                            if report_dropped_item(
-                                enemy=this_battle[i],
-                                drop=final_item,
-                                pref_type=0,
-                                need_adv=1,
-                                pref_ability=0x8026,
-                                report=report,
-                            ):
-                                thunder_count[2] += 1
-                    advance_10 += 3
-            advance_01 += 2
-
-    party_size = 5
-    # Workers
-    battle_formations = coming_battles(
-        area="machina_1", battle_count=1, extra_advances=advance_01
-    )
-    for x in range(len(battle_formations)):
-        for i in range(len(battle_formations[x])):
-            this_battle = battle_formations[x]
-            drop_chances = track_drops(
-                enemy=this_battle, battles=1, extra_advances=advance_10
-            )
-            if len(drop_chances[0]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[0] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[0],
-                        pre_advance_13=advance_13[0],
-                        party_size=party_size,
-                    )
-                    advance_12[0] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[0] += 1
-            if len(drop_chances[1]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[1] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[1],
-                        pre_advance_13=advance_13[1],
-                        party_size=party_size,
-                    )
-                    advance_12[1] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        need_adv=1,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[1] += 1
-            if len(drop_chances[2]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[2] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[2],
-                        pre_advance_13=advance_13[2],
-                        party_size=party_size,
-                    )
-                    advance_12[2] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        need_adv=2,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[2] += 1
-            advance_10 += 3
-        advance_01 += 1
-    battle_formations = coming_battles(
-        area="machina_2", battle_count=1, extra_advances=advance_01
-    )
-    for x in range(len(battle_formations)):
-        for i in range(len(battle_formations[x])):
-            this_battle = battle_formations[x]
-            drop_chances = track_drops(
-                enemy=this_battle, battles=1, extra_advances=advance_10
-            )
-            if len(drop_chances[0]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[0] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[0],
-                        pre_advance_13=advance_13[0],
-                        party_size=party_size,
-                    )
-                    advance_12[0] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[0] += 1
-            if len(drop_chances[1]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[1] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[1],
-                        pre_advance_13=advance_13[1],
-                        party_size=party_size,
-                    )
-                    advance_12[1] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        need_adv=1,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[1] += 1
-            if len(drop_chances[2]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[2] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[2],
-                        pre_advance_13=advance_13[2],
-                        party_size=party_size,
-                    )
-                    advance_12[2] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        need_adv=2,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[2] += 1
-            advance_10 += 3
-        advance_01 += 1
-    battle_formations = coming_battles(
-        area="machina_3", battle_count=1, extra_advances=advance_01
-    )
-    for x in range(len(battle_formations)):
-        for i in range(len(battle_formations[x])):
-            this_battle = battle_formations[x]
-            drop_chances = track_drops(
-                enemy=this_battle, battles=1, extra_advances=advance_10
-            )
-            if len(drop_chances[0]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[0] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[0],
-                        pre_advance_13=advance_13[0],
-                        party_size=party_size,
-                    )
-                    advance_12[0] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[0] += 1
-            if len(drop_chances[1]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[1] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[1],
-                        pre_advance_13=advance_13[1],
-                        party_size=party_size,
-                    )
-                    advance_12[1] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        need_adv=1,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[1] += 1
-            if len(drop_chances[2]) >= 1:
-                if track_drops(enemy=this_battle, battles=1, extra_advances=advance_10):
-                    final_item, advance_13[2] = item_to_be_dropped(
-                        enemy=this_battle,
-                        pre_advance_12=advance_12[2],
-                        pre_advance_13=advance_13[2],
-                        party_size=party_size,
-                    )
-                    advance_12[2] += 4
-                    if report_dropped_item(
-                        enemy=this_battle,
-                        drop=final_item,
-                        pref_type=0,
-                        need_adv=2,
-                        pref_ability=0x8026,
-                        report=report,
-                    ):
-                        thunder_count[2] += 1
-            advance_10 += 3
-        advance_01 += 1
-
-    # Finally, Oblitz is guaranteed to drop an item.
-    final_item, advance_13[0] = item_to_be_dropped(
-        enemy="oblitzerator",
-        pre_advance_12=advance_12[0],
-        pre_advance_13=advance_13[0],
-        party_size=party_size,
-    )
-    if report_dropped_item(
-        enemy="Oblitzerator",
-        drop=final_item,
-        pref_type=0,
-        pref_ability=0x8026,
-        report=report,
-    ):
-        thunder_count[0] += 1
-        oblitz_weap[0] = True
-    final_item, advance_13[1] = item_to_be_dropped(
-        enemy="oblitzerator",
-        pre_advance_12=advance_12[1],
-        pre_advance_13=advance_13[1],
-        party_size=party_size,
-    )
-    if report_dropped_item(
-        enemy="Oblitzerator",
-        drop=final_item,
-        pref_type=0,
-        need_adv=1,
-        pref_ability=0x8026,
-        report=report,
-    ):
-        thunder_count[1] += 1
-        oblitz_weap[1] = True
-    final_item, advance_13[2] = item_to_be_dropped(
-        enemy="oblitzerator",
-        pre_advance_12=advance_12[2],
-        pre_advance_13=advance_13[2],
-        party_size=party_size,
-    )
-    if report_dropped_item(
-        enemy="Oblitzerator",
-        drop=final_item,
-        pref_type=0,
-        need_adv=2,
-        pref_ability=0x8026,
-        report=report,
-    ):
-        thunder_count[2] += 1
-        oblitz_weap[2] = True
-    advance_12[0] += 4
-    advance_10 += 3
-
-    logs.write_rng_track("End: thunder strike drops")
-    logs.write_rng_track("===================")
-    logs.write_rng_track("The following values are per advance.")
-    logs.write_rng_track("Drops possible:" + str(thunder_count))
-    logs.write_rng_track("Weapon drops on Oblitzerator:" + str(oblitz_weap))
-    logs.write_rng_track("Kill Yellow ele on Kilika battles:" + str(kill_yellow))
-    return thunder_count, kill_yellow
 
 
 def decide_skip_zan_luck() -> bool:
@@ -1873,7 +747,8 @@ def nea_track(pre_defender_x:bool = False, report=False):
         stage = 3
     
     paths, best = purifico_to_nea(
-        stage=stage
+        stage=stage,
+        report=True
     )
     if best == 99:
         return (99,99)
@@ -1897,14 +772,15 @@ def nea_track(pre_defender_x:bool = False, report=False):
     #elif not drop_x and memory.main.next_chance_rng_10() != 0:
     #    return (paths[best], 0)
     #else:
-    return (paths[best], memory.main.next_chance_rng_10())
+    return (0, memory.main.next_chance_rng_10())
+    # Note return of 0 means we don't need any extra mobs, other than X or Ronso.
 
 
 def print_manip_info(pre_x=False):
-    #pre_x, post_x, drop_array = nea_track()
-    next_drop, advances = nea_track(pre_defender_x=pre_x, report=True)
+    _, advances = nea_track(pre_defender_x=pre_x, report=True)
     logger.manip("Setting up for No-Encounters Armor (NEA):")
-    logger.manip(f"We need {next_drop} extra equipment drops.")
+    logger.manip(f"Defender X: {game_vars.get_def_x_drop()}")
+    logger.manip(f"B&Y: {game_vars.get_nea_after_bny()}")
     logger.manip(f"We need {advances} extra advances for next equipment drop.")
     logger.manip(f"(One advance per steal, three per player or enemy death)")
     
@@ -1996,9 +872,16 @@ def guards_to_calm_equip_drop_count(
     guard_battle_num:int, 
     ptr:int = 3, 
     pre_Evrae:bool = False,
-    report_num = 9
+    report_num = 99
 ) -> []:
     if pre_Evrae:
+        final, ptr13 = item_to_be_dropped(enemy="evrae")
+        if final.equipment_type() == 0:
+            weap = "weapon"
+        else:
+            weap = "armor"
+        #logger.warning(f"Evrae drops {weap} for {final.owner()} - [{final.abilities()}]")
+        #logger.warning(f"RNG13 after Evrae: {memory.main.rng_array_from_index(index=13, array_len=ptr13+20)[ptr13]}")
         drop_count = [["evrae"],["evrae"],["evrae"]]  # Count for Altana, Natus, and NEA.
         ptr += 3
         tars = evrae_targets()
@@ -2006,6 +889,7 @@ def guards_to_calm_equip_drop_count(
             ptr += 3
         if 2 in tars:
             ptr += 3
+        #logger.warning(f"Evrae advance manips: {ptr}, {tars}")
     else:
         drop_count = [[],[],[]]  # Count for Altana, Natus, and NEA.
     test_array = memory.main.rng_10_array()
@@ -2177,7 +1061,8 @@ def guards_to_calm_equip_drop_count(
     for i in range(3):
         result, best = purifico_to_nea(
             parent_array=drop_count[i],
-            ptr=ptr+i
+            ptr=ptr+i,
+            report=True
         )
         if best == 99:
             extra_needed[i] == 99
@@ -2185,86 +1070,13 @@ def guards_to_calm_equip_drop_count(
             extra_needed[i] = best
     logger.manip(f"Steal check: {extra_needed}")
     return extra_needed
-    
-    
-def end_old_logic():
-    if guard_battle_num <= 6:  # Start of Via Purifico section
-        
-        chance = 60
-        for i in range(3):  # Maze Larvae
-            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
-                drop_count[i].append("maze_larva")
-                if i == report_num:
-                    logger.manip(f"{i}: Maze Larva 1 drops equipment")
-        ptr += 3
-        for i in range(3):  # Maze Larvae
-            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
-                drop_count[i].append("maze_larva")
-                if i == report_num:
-                    logger.manip(f"{i}: Maze Larva 2 drops equipment")
-        ptr += 3
-        
-        # This encounter may or may not occur. Need a way to predict this.
-        for i in range(3):  # Maze Larvae
-            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
-                drop_count[i].append("maze_larva")
-                if i == report_num:
-                    logger.manip(f"{i}: Maze Larva 3 drops equipment")
-        ptr += 12  # Maze Larvae plus Isaaru's aeons
-        # Add Altana so we can predict Highbridge stuff after.
-        for i in range(3):  # Evrae Altana
-            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
-                drop_count[i].append("evrae_altana")
-        ptr += 3
-        # YKT-63
-        for i in range(3):  # Final kill for 
-            if (test_array[ptr+i] & 0x7FFFFFFF) % 255 < chance:
-                drop_count[i].append("ykt-63")
-                if i == report_num:
-                    logger.manip(f"{i}: YKT-63 drops equipment")
-        ptr += 3
-
-    # Aeons do not drop equipment.
-    # Altana and Natus always drop equipment, already accounted for.
-    extra_needed = [99,99,99]
-    for i in range(3):
-        drop_count[i].append("seymour_natus")
-        if pre_Evrae:
-            drop_count[i] = ["evrae"] + drop_count[i]
-        
-        # Now we consider possibilities with and without Defender X dropping equipment.
-        result_found = False
-        j = 0
-        while not result_found:
-            if not result_found:
-                test = drop_count[i] + ["ghost"]
-                result_found, _, _ = rng_alignment_before_nea(
-                    enemies=test,
-                    steals=i,
-                    report=(i==report_num))
-                if result_found:
-                    extra_needed[i] = j
-            if not result_found:
-                test = drop_count[i] + ["defender_x","ghost"]
-                result_found, _, _ = rng_alignment_before_nea(
-                    enemies=test,
-                    steals=i,
-                    report=(i==report_num))
-                if result_found:
-                    extra_needed[i] = j
-            if not result_found:
-                drop_count[i].append("epaaj")
-                j += 1
-                if j == 9:
-                    result_found = True
-        
-    return extra_needed
 
 
 def purifico_to_nea(
     parent_array = [],
     ptr = 3,
-    stage=0  # used to skip forward, reassess in Calm or after defender X.
+    stage=0,  # used to skip forward, reassess in Calm or after defender X.
+    report=False
 ):
     # parent_array passes in enemies that will drop earlier, passed from earlier in the run.
     # ptr is our position on the RNG10 array. Needs to be pre-advanced to last check +3.
@@ -2280,16 +1092,19 @@ def purifico_to_nea(
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("maze_larva")
             results[1].append("maze_larva")
+            logger.debug("First larvae drops item.")
         ptr += 3
         # Second larva
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("maze_larva")
             results[1].append("maze_larva")
+            logger.debug("Second larvae drops item.")
         ptr += 3
         # Third larva, or Altana
         results[0].append("evrae_altana")
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[1].append("maze_larva")
+            logger.debug("Third larvae drops item.")
         ptr += 3  # Bypass aeons
         results[1].append("evrae_altana")  # Add altana
         ptr += 6  # Bypass aeons
@@ -2300,11 +1115,13 @@ def purifico_to_nea(
             # YKT-63, alt to third larva
             if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
                 results[0].append("ykt-63")
-            ptr += 3  # Bypass aeons
+                logger.debug("Robot 0 drops item (overlap from third larvae)")
+            ptr += 3  # Bypass aeons, only appropriate before higbridge start.
         # YKT-63
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("ykt-63")
             results[1].append("ykt-63")
+            logger.debug("Robot 1 drops item")
         ptr += 3
         results[0].append("seymour_natus")
         results[1].append("seymour_natus")
@@ -2316,22 +1133,21 @@ def purifico_to_nea(
         for i in range(2):
             results.append(results[i] + ["defender_x"])
         for i in range(4):
-            results.append(results[i] + ["biran_ronso","yenke_ronso"])
+            results.append(results[i] + ["yenke_ronso","biran_ronso","ghost"])
+            results[i] = results[i] + ["ghost"]
         
     elif stage == 3:
         for i in range(2):
-            results.append(results[i] + ["biran_ronso","yenke_ronso"])
+            results.append(results[i] + ["yenke_ronso","biran_ronso","ghost"])
+            results[i] = results[i] + ["ghost"]
     # else stage 4 == after B&Y completed. No extra info needed.
     
     # Now to find results.
-    best_array = []
     preferable = []
     quality = 0
     preferred_result = [0,4,6,9]
     for i in range(len(results)):
-        results[i].append("ghost")
-        success,equip1,align_result = rng_alignment_before_nea(enemies=results[i])
-        best_array.append(align_result)
+        success,equip1,_ = rng_alignment_before_nea(enemies=results[i])
         if success:
             quality += 1
             if equip1.owner() in preferred_result or equip1.owner_alt() in preferred_result:
@@ -2342,22 +1158,27 @@ def purifico_to_nea(
     best = len(results)-1
     for i in range(best,-1,-1):
         # Prefer overwriting with the lower value in each case.
-        if best_array[i] <= best_array[best]:
-            if preferable[i] >= preferable[best]:
-                # No need to search for what does not exist.
-                best = i
+        if preferable[i] >= preferable[best]:
+            # No need to search for what does not exist.
+            best = i
     
     logger.debug(f"Best result: {best}")
-    logger.debug(f"Best Array check: {best_array}")
+    #logger.debug(f"Best Array check: {best_array}")
     logger.debug(f"Preferable check: {preferable}")
+    
+    # Test mode only:
+    if report:
+        logger.warning(results[best])
+    #logger.warning(memory.main.rng_array_from_index(index=12, array_len=20))
+    #logger.warning(memory.main.rng_array_from_index(index=13, array_len=20))
     
     # Returned values are in this order:
     # best_array (extra kills needed on each path)
     # best (the preferred path to success)
     if preferable[best] == 0:
-        return (best_array, 99)
+        return (preferable, 99)
     else:
-        return (best_array, best)
+        return (preferable, best)
     
     
 
@@ -2416,7 +1237,7 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
             if report:
                 logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
                 logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
-            if equipment.equipment_type() == 1 and equipment.has_ability(32797):
+            if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
                 return (bool(extras == 0), equipment, extras)
                 
         ptr12 += 4

@@ -567,6 +567,22 @@ def get_coords():
     return [x, y]
 
 
+def distance_to_encounter(danger_val:int = 999):
+    if danger_val == 999:
+        danger_val = 35  # Default to MRR/Clasko
+    
+    grace_period = int(danger_val // 2)
+    threat_mod = danger_val * 4
+
+    rng_array = rng_array_from_index(index=0, array_len=800)
+    for i in range(400):
+        check_rng = (rng_array[i+1] & 0x7FFFFFFF) & 255
+        check_value = (i) * 256 // threat_mod
+        if check_rng < check_value:
+            return (i+grace_period) * 10
+    return 999
+
+
 def ammes_fix(actor_index: int = 0):
     global process
     global base_value
@@ -941,11 +957,7 @@ def get_battle_char_turn():
 
 
 def get_slvl_yuna():
-    global base_value
-    # Out of combat HP only
-
-    coord = base_value + 0x00D32104
-    return process.read(coord)
+    return get_yuna_slvl()
 
 
 def get_slvl_kim():
@@ -953,7 +965,7 @@ def get_slvl_kim():
     # Out of combat HP only
 
     coord = base_value + 0x00D3222C
-    return process.read(coord)
+    return process.readBytes(coord, 1)
 
 
 def get_slvl_wakka():
@@ -1320,6 +1332,32 @@ def state_sleep(character):
     else:
         logger.debug(f"Character {character} is not asleep (probably)")
         return False
+
+
+def state_silence(character):
+    global process
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
+    offset = (0xF90 * character) + 0x609
+    result = process.read_bytes(int(base_pointer_address+offset), 1)
+    logger.debug(f"Silence turns remaining for char {character}: {result}")
+    return result
+
+
+def print_all_statuses():
+    global process
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
+    for i in range(7):
+        logger.warning("Statuses char {i}:")
+        offset = (0xF90 * i) + 0x609
+        logger.warning(process.read_bytes(int(base_pointer_address+offset), 1))
+        #offset = (0xF90 * i) + 0x607
+        #logger.warning(process.read_bytes(int(base_pointer_address+offset), 1))
+        #offset = (0xF90 * i) + 0x608
+        #logger.warning(process.read_bytes(int(base_pointer_address+offset), 1))
 
 
 def state_auto_life(character: int = 0):

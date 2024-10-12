@@ -1614,14 +1614,9 @@ def wendigo():
 
 def evrae():
     # First to determine Evrae's target attacks, and if we want to steal.
-    ptr = 6
     max_steals = 2
     remaining_steals = 99
     targets = rng_track.evrae_targets()
-    if targets[0] != 0:
-        ptr += 3
-    if targets[1] != 0:
-        ptr += 3
     if 2 in targets:
         max_steals -= 1
         if targets[0] == 1:
@@ -1632,7 +1627,6 @@ def evrae():
         max_steals -= 1
     nea_drop_counts = rng_track.guards_to_calm_equip_drop_count(
         guard_battle_num=0,
-        ptr=ptr,
         pre_Evrae=True
     )
     
@@ -1648,7 +1642,6 @@ def evrae():
         remaining_steals = 0
     rng_track.guards_to_calm_equip_drop_count(
         guard_battle_num=0,
-        ptr=ptr,
         pre_Evrae=True,
         report_num=remaining_steals
     )
@@ -1755,6 +1748,10 @@ def evrae():
                 else:
                     CurrentPlayer().defend()
                     logger.manip(f"Remaining steals: {remaining_steals}")
+    if memory.main.game_over():
+        return False
+    else:
+        return True
 
 # Process written by CrimsonInferno
 @battle.utils.speedup_decorator
@@ -1902,6 +1899,7 @@ def isaaru():
             xbox.tap_b()
     
     if memory.main.game_over():
+        logger.warning("GAME OVER, FORCE RETURN")
         return False
     FFXC.set_value("btn_b", 1)
     memory.main.wait_frames(30 * 2.8)
@@ -1919,15 +1917,16 @@ def evrae_altana():
         battle.main.flee_all()
     else:
         logger.info("Evrae Altana fight start")
-        gems = check_gems()
-        if gems != 0:
-            # One gem is enough to justify stealing in Calm Lands.
-            logger.manip(f"We have {gems} gems already. No need to steal.")
-        elif not memory.main.next_steal_rare():
-            logger.manip(f"We have {gems} gems, and the next steal is not rare.")
-            evrae_altana_steal()
-        else:
-            logger.debug(f"Next steal will crit, do not steal. {gems}")
+        # Come back to this. Maybe up NEA manip currently, so needs review.
+        #gems = check_gems()
+        #if gems != 0:
+        #    # One gem is enough to justify stealing in Calm Lands.
+        #    logger.manip(f"We have {gems} gems already. No need to steal.")
+        #elif not memory.main.next_steal_rare():
+        #    logger.manip(f"We have {gems} gems, and the next steal is not rare.")
+        #    evrae_altana_steal()
+        #else:
+        #    logger.debug(f"Next steal will crit, do not steal. {gems}")
         thrown_item = False
         while memory.main.battle_active():  # AKA end of battle screen
             if memory.main.turn_ready():

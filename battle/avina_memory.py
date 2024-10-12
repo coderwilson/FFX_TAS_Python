@@ -47,8 +47,8 @@ def add_battle_to_memory(
     new_val = {str(seed): {area: {battle_num: value}}}
     logger.info("Adding to aVIna memory:")
     logger.info(new_val)
-    results = merge(records, new_val)
-    """
+    #results = merge(records, new_val)
+    
     if str(seed) in records.keys():
         if area in records[str(seed)].keys():
             if key in records[str(seed)][area].keys():
@@ -60,6 +60,6 @@ def add_battle_to_memory(
                 records[str(seed)][area]
     else:
         records.update(new_val)
-    """
+    
 
     save_memory(to_write=results)

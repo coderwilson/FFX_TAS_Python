@@ -455,6 +455,9 @@ class Player:
                 memory.main.state_sleep,
             ]
         )
+    
+    def is_status_silenced(self) -> bool:
+        return memory.main.state_silence(self.id) != 0
 
     def escaped(self) -> bool:
         return self._read_char_battle_state_address(PlayerMagicNumbers.ESCAPED)

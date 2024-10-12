@@ -95,6 +95,8 @@ def south_pathing():
                             return 999
                     elif memory.main.menu_open():
                         xbox.tap_b()
+                    elif memory.main.game_over():
+                        return 999
 
     memory.main.await_control()
     while not pathing.set_movement([-73, 14]):
@@ -327,6 +329,8 @@ def north_pathing(battle_count: int):
                 lunar_slot = memory.main.get_item_slot(56) != 255
             elif memory.main.menu_open():
                 xbox.tap_b()
+            elif memory.main.game_over():
+                return False
 
     FFXC.set_neutral()
     memory.main.await_control()
