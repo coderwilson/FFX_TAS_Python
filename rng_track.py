@@ -1062,7 +1062,7 @@ def guards_to_calm_equip_drop_count(
         result, best = purifico_to_nea(
             parent_array=drop_count[i],
             ptr=ptr+i,
-            report=True
+            report=False
         )
         if best == 99:
             extra_needed[i] == 99
@@ -1115,6 +1115,7 @@ def purifico_to_nea(
             # YKT-63, alt to third larva
             if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
                 results[0].append("ykt-63")
+                results[1].append("ykt-63")
                 logger.debug("Robot 0 drops item (overlap from third larvae)")
             ptr += 3  # Bypass aeons, only appropriate before higbridge start.
         # YKT-63
@@ -1147,7 +1148,11 @@ def purifico_to_nea(
     quality = 0
     preferred_result = [0,4,6,9]
     for i in range(len(results)):
-        success,equip1,_ = rng_alignment_before_nea(enemies=results[i])
+        if stage == 1:
+            report = True
+        else:
+            report = False
+        success,equip1,_ = rng_alignment_before_nea(enemies=results[i], report=report)  # here
         if success:
             quality += 1
             if equip1.owner() in preferred_result or equip1.owner_alt() in preferred_result:
@@ -1204,6 +1209,7 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
     ptr13 = 0
     advances = 0
     extras = 0
+    #logger.warning(enemies)
     
     for i in range(len(enemies)):
         party_size = party_size_rng_alignment(enemies[i])
@@ -1227,24 +1233,38 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
         else:
             e_owner = memory.main.name_from_number(equipment.owner())
         e_ab_count = len([i for i in equipment.abilities() if i != 255])
-        #if report:
-            #logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
+        if report:
+            logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
         condition = "without"
         if "defender_x" in enemies[i]:
             condition = "with"
-        if equipment.has_ability(32797):
+        if equipment.has_ability(32797) and enemies[i] == "ghost":
             #logger.warning("Found one!")
             if report:
-                logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
-                logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
+                logger.warning(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
+                logger.warning(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
             if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
                 return (bool(extras == 0), equipment, extras)
                 
         ptr12 += 4
         ptr13 += advances
-    
+    if report:
+        logger.warning("No drop identified for this version.")
     return (False, equipment, extras)
 
+
+def final_nea_check():
+    max_drop = 3
+    results = []
+    results.append("ghost")
+    result_possible = False
+    for i in range(max_drop+1):
+        result_possible, _, _ = rng_alignment_before_nea(enemies=results)
+        if result_possible:
+            logger.manip(f"===  Final check found with {i} extra Epaaj drops.  ===")
+            return (result_possible, i)
+        results = ["epaaj"] + results
+    return (result_possible, 99)
 
 def next_action_escape(character: int = 0):
     index = 20 + character

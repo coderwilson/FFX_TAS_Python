@@ -37,7 +37,7 @@ def path():
             if checkpoint in [47, 48] and stone_breath == 1:
                 checkpoint = 49
             elif checkpoint == 49 and stone_breath == 0:
-                checkpoint = 47
+                checkpoint = 46
             # This is for the fabled Djose skip and not yet viable. Feel free to re-try.
             elif checkpoint == 42 and game_vars.try_djose_skip():
                 FFXC.set_movement(-1, 1)
@@ -92,7 +92,7 @@ def path():
                 logger.debug("Starting battle")
                 if stone_breath == 0:
                     logger.debug("Still looking for Stone Breath.")
-                stone_breath = battle.main.djose(stone_breath)
+                stone_breath = battle.main.djose(stone_breath, battle_count=count_battles)
                 logger.debug("Battles complete.")
                 count_battles += 1
             elif memory.main.menu_open():

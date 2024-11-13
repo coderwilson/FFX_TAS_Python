@@ -278,6 +278,19 @@ def get_turn_by_index(turn_index: int):
     return process.read_bytes(key, 1)
 
 
+def who_goes_first_after_current_turn(actors):
+    ptr = 1
+    ret_val = 99
+    while ret_val == 99:
+        turn_char = get_turn_by_index(ptr)
+        if turn_char in actors:
+            logger.warning (f"{turn_char} goes next, within options {actors}")
+            return turn_char
+        elif ptr > 30:
+            return 99
+        ptr += 1
+
+
 def battle_menu_cursor():
     global base_value
     if not turn_ready():
@@ -344,6 +357,38 @@ def auron_overdrive_active():
     global base_value
     key = base_value + 0x00F3D6B4
     return process.read_bytes(key, 1) == 4
+
+
+def kim_od_unlocks():
+    global base_value
+    results = []
+
+    # First byte
+    key = base_value + 0xD307FD
+    bits = process.read_bytes(key, 1)
+    results.append(1 if (bits &   1) else 0)
+    results.append(1 if (bits &   2) else 0)
+    results.append(1 if (bits &   4) else 0)
+    results.append(1 if (bits &   8) else 0)
+    results.append(1 if (bits &  16) else 0)
+    results.append(1 if (bits &  32) else 0)
+    results.append(1 if (bits &  64) else 0)
+    results.append(1 if (bits & 128) else 0)
+
+    # Second byte
+    key = base_value + 0xD307FE
+    bits = process.read_bytes(key, 1)
+    results.append(1 if (bits &   1) else 0)
+    results.append(1 if (bits &   2) else 0)
+    results.append(1 if (bits &   4) else 0)
+    results.append(1 if (bits &   8) else 0)
+    #results.append(1 if (bits &  16) else 0)
+    #results.append(1 if (bits &  32) else 0)
+    #results.append(1 if (bits &  64) else 0)
+    #results.append(1 if (bits & 128) else 0)
+
+    logger.warning(f"Kim OD unlocks: {results}")
+    return results
 
 
 def main_battle_menu():
@@ -567,10 +612,8 @@ def get_coords():
     return [x, y]
 
 
-def distance_to_encounter(danger_val:int = 999):
-    if danger_val == 999:
-        danger_val = 35  # Default to MRR/Clasko
-    
+def distance_to_encounter(danger_val:int = 35):
+    # Defaults to 35 for Clasko skip & thunder plains.
     grace_period = int(danger_val // 2)
     threat_mod = danger_val * 4
 
@@ -823,6 +866,15 @@ def set_power(qty):
     process.write_bytes(key, qty, 1)
     power = get_power()
     return power
+
+
+def get_mana():
+    global base_value
+
+    key = get_item_slot(71)
+    speed = get_item_count_slot(key)
+    logger.debug(f"Mana spheres: {speed}")
+    return speed
 
 
 def get_speed():

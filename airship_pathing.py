@@ -29,7 +29,11 @@ def air_ship_path(version, checkpoint:int = 0):
                 version == 1
                 and not distiller_purchase
                 and checkpoint == 5
-                and (memory.main.get_speed() < 10 or memory.main.get_power() < 28)
+                and (
+                    memory.main.get_speed() < 10 or 
+                    memory.main.get_power() < 28 or
+                    memory.main.get_mana() < 8
+                )
             ):
                 # Tyton to update this with the actual purchase.
                 while memory.main.diag_progress_flag() != 44:
@@ -50,6 +54,9 @@ def air_ship_path(version, checkpoint:int = 0):
                     xbox.menu_b()  # Click through until items menu comes up
                 while not memory.main.item_shop_menu() == 10:
                     xbox.menu_b()  # Select buy command
+
+
+                #  Power spheres
                 if memory.main.get_power() < 28:
                     while memory.main.equip_buy_row() != 7:
                         if memory.main.equip_buy_row() < 7:
@@ -67,8 +74,29 @@ def air_ship_path(version, checkpoint:int = 0):
                             xbox.tap_right()
                         else:
                             xbox.tap_left()
-                    #while not memory.main.item_shop_menu() == 9:
                     xbox.menu_b()
+
+                #  Mana spheres
+                if memory.main.get_speed() < 8:
+                    while memory.main.equip_buy_row() != 8:
+                        if memory.main.equip_buy_row() < 8:
+                            xbox.tap_down()
+                        else:
+                            xbox.tap_up()
+                    while not memory.main.item_shop_menu() == 16:
+                        xbox.tap_b()
+                    while memory.main.purchasing_amount_items() != min(
+                        math.ceil((8 - memory.main.get_speed()) / 2), 3
+                    ):
+                        if memory.main.purchasing_amount_items() < min(
+                            math.ceil((8 - memory.main.get_speed()) / 2), 3
+                        ):
+                            xbox.tap_right()
+                        else:
+                            xbox.tap_left()
+                    xbox.menu_b()
+
+                #  Speed spheres
                 if memory.main.get_speed() < 10:
                     while memory.main.equip_buy_row() != 9:
                         if memory.main.equip_buy_row() < 9:
@@ -86,8 +114,10 @@ def air_ship_path(version, checkpoint:int = 0):
                             xbox.tap_right()
                         else:
                             xbox.tap_left()
-                    #while not memory.main.item_shop_menu() == 10:
                     xbox.menu_b()
+
+                
+                #  Done purchasing
                 memory.main.close_menu()
                 memory.main.click_to_control_3()
                 distiller_purchase = True

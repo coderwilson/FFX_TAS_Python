@@ -179,9 +179,9 @@ class ZanarkandYunalesca(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [3, 8],
         1: [5, 35],
-        2: [0, 0],
+        2: [2, 80],  # Through glowey door
         3: [0, 80],
-        4: [0, 0],
+        4: [0, 200],  # Through Yunalesca room
         5: [0, 0],
         6: [0, 0],
         7: [0, 0],

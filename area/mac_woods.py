@@ -96,7 +96,7 @@ def arrival(rikku_charged):
                     else:
                         last_gil = memory.main.get_gil_value()
                 else:
-                    FFXC.set_movement(1, 1)
+                    pathing.set_movement([-141,225])
                     xbox.tap_b()
             elif checkpoint == 59:
                 logger.debug(f"Rikku Charge: {rikku_charged}")
@@ -124,7 +124,7 @@ def arrival(rikku_charged):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
+            if memory.main.battle_active():
                 battle_count += 1
                 battle.main.m_woods()
                 if memory.main.game_over():
@@ -175,7 +175,6 @@ def arrival(rikku_charged):
 def lake_road():
     logger.info("Lake road")
     memory.main.await_control()
-    # menu.kimahri_terra()
     while not pathing.set_movement([174, -96]):
         pass
     while not pathing.set_movement([138, -83]):

@@ -1608,8 +1608,11 @@ def wendigo():
                 else:
                     CurrentPlayer().defend()
 
+    if memory.main.game_over():
+        return False
     if game_vars.god_mode():
         rng_track.force_preempt()
+    return True
 
 
 def evrae():
@@ -1700,9 +1703,14 @@ def evrae():
                     lunar_curtain = True
                 elif (
                     memory.main.get_battle_hp()[memory.main.get_battle_char_slot(0)] < 1520 and 
-                    targets[1] == 0 and
-                    targets[0] == 0 and
-                    tidus_attacks < 3
+                    (
+                        not game_vars.get_blitz_win() or
+                        (
+                            targets[1] == 0 and
+                            targets[0] == 0 and
+                            tidus_attacks < 3
+                        )
+                    )
                 ):
                     logger.debug("Rikku should attempt to heal a character.")
                     kimahri_turns += 1
@@ -1727,9 +1735,14 @@ def evrae():
                     lunar_curtain = True
                 elif (
                     memory.main.get_battle_hp()[memory.main.get_battle_char_slot(0)] < 1520 and 
-                    targets[1] == 0 and
-                    targets[0] == 0 and
-                    tidus_attacks < 3
+                    (
+                        not game_vars.get_blitz_win() or
+                        (
+                            targets[1] == 0 and
+                            targets[0] == 0 and
+                            tidus_attacks < 3
+                        )
+                    )
                 ):
                     logger.debug("Kimahri should attempt to heal a character.")
                     kimahri_turns += 1
@@ -1893,6 +1906,18 @@ def isaaru():
                     battle.main.aeon_summon(2)  # Summon Ixion for Bahamut
                 else:
                     battle.main.aeon_summon(4)  # Summon Bahamut for other aeons
+            elif Auron.is_turn():
+                # Can only occur if ambushed on a Larvae fight
+                if Yuna.is_dead():
+                    if memory.main.get_throw_items_slot(6) < 250:
+                        revive_target(item_num=6, target=1)
+                    if memory.main.get_throw_items_slot(7) < 250:
+                        revive(item_num=7)
+                    else:
+                        # No good options. Wait for reset.
+                        Auron.defend()
+                else:
+                    Auron.defend()
             else:
                 CurrentPlayer().attack()  # Aeon turn
         elif memory.main.diag_skip_possible():
@@ -1935,6 +1960,9 @@ def evrae_altana():
                     thrown_item = True
                 elif memory.main.get_item_slot(16) != 255 and not thrown_item:
                     battle.main._use_healing_item(item_id=16)
+                    thrown_item = True
+                elif memory.main.get_item_slot(17) != 255 and not thrown_item:
+                    battle.main._use_healing_item(item_id=17)
                     thrown_item = True
                 else:
                     battle.main.altana_heal()
@@ -2097,7 +2125,7 @@ def biran_yenke():
         drop1 = drop_rare(drop_num=1)
         drop2 = drop_rare(drop_num=2)
         logger.debug(f"==== B&Y Drops: {drop1} : {drop2}")
-        while not (drop1 == True and drop2 == True):
+        while not (drop1 == True and drop2 != True):
             memory.main.advance_rng_index(11)
             drop1 = drop_rare(drop_num=1)
             drop2 = drop_rare(drop_num=2)
@@ -2302,9 +2330,12 @@ def s_keeper():
                     CurrentPlayer().attack()
                 else:
                     CurrentPlayer().defend()
+    if memory.main.game_over():
+        return False
     memory.main.click_to_control()
     if game_vars.god_mode():
         rng_track.force_preempt()
+    return True
 
 
 @battle.utils.speedup_decorator
@@ -2478,7 +2509,12 @@ def yu_yevon():
                 item_num = battle.main.yu_yevon_item()
                 if item_num == 99:
                     logger.warning("No phoenix downs!!! Panic!!!")
-                    CurrentPlayer().attack()
+                    if memory.main.get_enemy_current_hp()[0] < 9999 and Yuna.is_turn():
+                        Yuna.attack()
+                    elif memory.main.get_enemy_current_hp()[0] < 6000 and Tidus.is_turn() and Tidus.has_overdrive():
+                        Tidus.overdrive()
+                    else:
+                        CurrentPlayer().defend()
                 else:
                     while memory.main.battle_menu_cursor() != 1:
                         xbox.tap_down()

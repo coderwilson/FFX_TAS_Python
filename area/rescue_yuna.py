@@ -112,6 +112,7 @@ def guards():
                     memory.main.update_formation(Tidus, Kimahri, Rikku)
                 #rng_track.print_manip_info()
                 guard_num += 1
+                #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
@@ -297,11 +298,13 @@ def trials():
             elif checkpoint == 22:  # Remove Bevelle sphere
                 # This takes special logic. Can't just smash face into the pedestol.
                 FFXC.set_neutral()
-                memory.main.wait_frames(3)
-                FFXC.set_movement(0,-1)
-                memory.main.wait_frames(12)
-                FFXC.set_neutral()
                 memory.main.wait_frames(6)
+                FFXC.set_movement(0,-1)
+                memory.main.wait_frames(7)
+                FFXC.set_neutral()
+                #memory.main.wait_frames(2)
+                xbox.tap_b()
+                xbox.tap_b()
                 memory.main.click_to_event()
                 memory.main.click_to_control()
                 checkpoint += 1
@@ -309,10 +312,12 @@ def trials():
                 approach_coords([360,539],diag=8)
                 checkpoint += 1
             elif checkpoint == 28:  # Take Glyph sphere
-                FFXC.set_movement(0,1)
-                memory.main.wait_frames(6)
+                FFXC.set_movement(1,1)
+                memory.main.wait_frames(2)
                 FFXC.set_neutral()
-                memory.main.wait_frames(3)
+                #memory.main.wait_frames(30)
+                xbox.tap_b()
+                xbox.tap_b()
                 approach_coords([355,525],diag=1)
                 checkpoint += 1
             elif checkpoint == 32:  # Insert Glyph sphere
@@ -473,6 +478,7 @@ def via_purifico():
     logger.manip(f"Third larvae: {game_vars.get_force_third_larvae()}")
     logger.manip(f"Defender X: {game_vars.get_def_x_drop()}")
     logger.manip(f"B&Y: {game_vars.get_nea_after_bny()}")
+    #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
     
     memory.main.click_to_control()
 
@@ -501,15 +507,22 @@ def via_purifico():
     # End logic replacement
     memory.main.click_to_control()
     menu.via_purifico()
+    if (
+        1 in memory.main.ambushes() or
+        2 in memory.main.ambushes() or
+        3 in memory.main.ambushes()
+    ):
+        save_sphere.touch_and_go()
     larvae_count = 0
     rng_track.purifico_to_nea(stage=0)
+    #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
 
     while memory.main.get_map() != 209:  # Map number for Altana
         if memory.main.user_control():
-            if memory.main.get_slvl_yuna() < 15 and memory.main.get_coords()[1] > 1460:
-                FFXC.set_movement(0, -1)
-                memory.main.wait_frames(60)
-            elif (
+            #if memory.main.get_slvl_yuna() < 15 and memory.main.get_coords()[1] > 1460:
+            #    FFXC.set_movement(0, -1)
+            #    memory.main.wait_frames(60)
+            if (
                 game_vars.get_force_third_larvae() and
                 larvae_count < 3 and 
                 memory.main.get_coords()[1] > 1460
@@ -519,12 +532,19 @@ def via_purifico():
             else:
                 FFXC.set_movement(0, 1)
         elif memory.main.battle_active():
+            logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
             if memory.main.get_encounter_id() < 258:
                 larvae_count += 1
             battle.boss.isaaru()
             if memory.main.game_over():
                 logger.warning("via_purifico function, RETURN FALSE")
+                game_vars.reset_rescue_count()
                 return False
+            elif 1 in memory.main.ambushes() and memory.main.get_encounter_id() == 257:
+                memory.main.click_to_control()
+                battle.main.heal_up(full_menu_close=True)
+            logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
+            #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
         else:
             FFXC.set_neutral()
             xbox.tap_b()
@@ -534,9 +554,10 @@ def via_purifico():
 # TODO: Switch to using pathing instead, if possible
 def evrae_altana():
     # Print RNG info
-    memory.main.click_to_control()
+    2
     FFXC.set_movement(0, 1)
     memory.main.wait_frames(60)
+    #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
     FFXC.set_neutral()
 
     checkpoint = 0
@@ -595,6 +616,7 @@ def evrae_altana():
                     FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.evrae_altana()
+            #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
         elif memory.main.battle_wrap_up_active():
             xbox.menu_b()
         else:
@@ -641,6 +663,7 @@ def seymour_natus():
         else:
             menu.seymour_natus_blitz_loss()
     memory.main.close_menu()
+    #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
 
     save_sphere.touch_and_go()
     rng_track.purifico_to_nea(stage=1)
@@ -676,6 +699,7 @@ def seymour_natus():
                     else:
                         menu.seymour_natus_blitz_loss()
                 memory.main.close_menu()
+                #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
                 #rng_track.print_manip_info()
 
     # Movement for make-out scene

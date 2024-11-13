@@ -13,7 +13,6 @@ import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 from players import Auron, Tidus, Wakka
-from area.mrr_skip import skip_prep, attempt_skip, advance_to_aftermath
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
