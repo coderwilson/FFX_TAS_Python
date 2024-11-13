@@ -416,6 +416,7 @@ class Player:
         raise NotImplementedError()
 
     def overdrive_percent(self, combat=False) -> int:
+        combat = memory.main.battle_active()  # Overwrites passed variable.
         if combat:
             return self._read_char_battle_state_address(
                 PlayerMagicNumbers.BATTLE_OVERDRIVE

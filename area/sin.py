@@ -7,6 +7,7 @@ import egg_hunt
 import memory.main
 import menu
 import pathing
+import save_sphere
 import vars
 import xbox
 from paths import InsideSin
@@ -133,8 +134,15 @@ def facing_sin():
 
 
 def inside_sin(checkpoint = 0):
-    re_equip_ne = False
-    if checkpoint == 0:
+    rikku_charge = False
+    yuna_xp = False
+    touch_save = False
+    if checkpoint >= 41 and memory.main.get_yuna_slvl() < 18:
+        yuna_xp = True
+        touch_save = True
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+    if checkpoint == 0 and memory.main.get_map() != 296:
         logger.info("Moving to position next to save sphere")
         while not pathing.set_movement([247, -237]):
             if memory.main.cutscene_skip_possible():
@@ -155,6 +163,7 @@ def inside_sin(checkpoint = 0):
 
         if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
             re_equip_ne = True
+            rikku_charge = True
             memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
             menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         else:
@@ -183,6 +192,9 @@ def inside_sin(checkpoint = 0):
                 checkpoint = 41
             elif checkpoint < 68 and memory.main.get_map() == 327:
                 checkpoint = 68
+            elif checkpoint == 69 and touch_save:
+                save_sphere.touch_and_go()
+                touch_save = False
 
             # General Pathing
             elif pathing.set_movement(InsideSin.execute(checkpoint)):
@@ -191,14 +203,24 @@ def inside_sin(checkpoint = 0):
         else:
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.turn_ready():
-                battle.main.charge_rikku_od()
-                if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
-                    re_equip_ne = False
+                if rikku_charge:  # and memory.main.overdrive_state_2()[6] == 100:
+                    battle.main.charge_rikku_od()
+                    rikku_charge = False
                     memory.main.click_to_control()
                     memory.main.update_formation(
                         Tidus, Yuna, Auron, full_menu_close=False
                     )
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                elif yuna_xp:
+                    battle.main.calm_impulse()
+                    yuna_xp = False
+                    memory.main.click_to_control()
+                    memory.main.update_formation(
+                        Tidus, Yuna, Auron, full_menu_close=False
+                    )
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                else:
+                    battle.main.flee_all()
             elif memory.main.menu_open():
                 xbox.tap_b()
     return True

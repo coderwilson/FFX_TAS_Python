@@ -22,7 +22,8 @@
     },
     "160": {
         "kimahri_force_heal": "False",
-        "ml_heals": "True"
+        "ml_heals": "True",
+        "zan_luck": "False"
     },
     "135": {
         "kimahri_force_heal": "True"
@@ -119,6 +120,33 @@
         "kimahri_force_heal": "True"
     },
     "72": {
+        "kimahri_force_heal": "True"
+    },
+    "198": {
+        "zan_luck": "False"
+    },
+    "230": {
+        "kimahri_force_heal": "True"
+    },
+    "30": {
+        "kimahri_force_heal": "True"
+    },
+    "115": {
+        "kimahri_force_heal": "True"
+    },
+    "61": {
+        "zan_luck": "False"
+    },
+    "227": {
+        "kimahri_force_heal": "True"
+    },
+    "246": {
+        "zan_luck": "False"
+    },
+    "141": {
+        "zan_luck": "False"
+    },
+    "200": {
         "kimahri_force_heal": "True"
     }
 }

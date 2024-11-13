@@ -687,7 +687,7 @@ def m_woods():
         while not memory.main.menu_open():
             xbox.tap_b()
         if memory.main.get_gil_value() < 11550:
-            memory.main.wait_frames(7)
+            memory.main.wait_frames(8)
             xbox.menu_right()
             xbox.menu_b()
             memory.main.wait_frames(3)
@@ -1379,18 +1379,18 @@ def seymour_natus_blitz_win():
 
 
 def seymour_natus_blitz_loss():
-    open_grid(character=0)
+    open_grid(character=1)
 
     menu_grid.use_first()
     menu_grid.sel_sphere("tele", "left")  # Str+4 by mental break
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("friend", "left")  # next to Str+4 and Agi+2
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("speed", "none")
+    menu_grid.sel_sphere("friend", "up")  # next to Str+4 and Agi+2
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("speed", "none")
     
     menu_grid.use_and_move()
     grid_right()
@@ -1596,8 +1596,8 @@ def after_ronso():
         menu_grid.move_and_use()
         menu_grid.sel_sphere("ability", "none")
         
-    menu_grid.use_and_quit()
-    memory.main.close_menu()
+        menu_grid.use_and_quit()
+        memory.main.close_menu()
 
 def after_ronso_blitz_loss():
     # Added post Terra
@@ -1621,29 +1621,28 @@ def after_ronso_blitz_loss():
         menu_grid.move_and_use()
         menu_grid.sel_sphere("ability", "none")
         menu_grid.use_and_move()
-        grid_down()  # This needs to be dialed in.
-        grid_down()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
-        grid_right()  # This needs to be dialed in.
+        grid_right()
+        grid_down()
+        grid_right()
+        grid_right()
+        grid_down()
         menu_grid.move_shift_right("Yuna")
-        menu_grid.use_first()
-        menu_grid.sel_sphere("friend", "none")  # To Tidus
+        menu_grid.move_first()
+        grid_right()
+        grid_right()
+        grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("friend", "up")  # To Tidus
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "left")
     elif game_vars.end_game_version() == 4:
         menu_grid.move_shift_right("Yuna")
         menu_grid.use_first()
-        menu_grid.sel_sphere("ret", "up_left")
+        menu_grid.sel_sphere("ret", "up2")
         menu_grid.use_and_move()
         grid_right()
         grid_right()
@@ -1694,6 +1693,14 @@ def after_ronso_blitz_loss():
         menu_grid.sel_sphere("friend", "down")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
+        menu_grid.move_shift_right("Tidus")
+        menu_grid.move_first()
+        grid_right()
+        grid_left()
+        grid_left()
+        grid_up()
+        grid_left()
+        menu_grid.move_and_quit()
     else:
         # Tidus armor break
         menu_grid.move_shift_right("Tidus")
@@ -1709,6 +1716,8 @@ def after_ronso_blitz_loss():
         grid_down()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("ability", "none")
+        menu_grid.use_and_quit()
+    memory.main.close_menu()
 
 
 
@@ -2057,9 +2066,11 @@ def bfa():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("attribute", "none")
     else:
-        # Not tested, needs work.
         menu_grid.use_first()
         menu_grid.sel_sphere("attribute", "right")
+        if game_vars.get_blitz_win():
+            menu_grid.use_and_use_again()
+            menu_grid.sel_sphere("ability", "none")
         menu_grid.use_and_move()
         grid_left()
         grid_left()
@@ -2266,6 +2277,13 @@ def sk_friend():
     menu_grid.move_first()
     grid_down()
     grid_down()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_right()
+    grid_right()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("ability", "none")  # Spare Change
     if not game_vars.get_skip_zan_luck():

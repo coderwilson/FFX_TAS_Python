@@ -24,6 +24,8 @@ class AllVars:
         self.force_blitz_win = False
         self.blitz_loop = False
         self.battle_speedup = False
+        self.ml_heals_val = False
+        self.run_modifier_val = "standard"
         # ----Overrides
         if config_vars.get("game_mode") == "speed":
             self.perfect_aeon_kills = True
@@ -40,7 +42,7 @@ class AllVars:
         self.patched = config_vars.get("game_patched", False)
         self.rng_mode_val = config_vars.get("rng_mode", False)
         self.rng_seed = config_vars.get("rng_seed_num")
-        self.rng_preferred_seeds = [31, 160]
+        self.rng_preferred_seeds = [31, 139, 160]
 
         # === Other vars from user ===
         self.nemesis_value = config_vars.get("nemesis_value", False)
@@ -135,6 +137,19 @@ class AllVars:
         # If your computer has bad specs, this will input commands to the controller
         # at a lower rate of speed. Very rarely used.
         self.artificial_pauses = config_vars.get("artificial_pauses", False)
+
+
+    def ml_heals(self):
+        return self.ml_heals_val
+
+    def set_ml_heals(self, value):
+        self.ml_heals_val = value
+    
+    def run_modifier(self):
+        return self.run_modifier_val
+    
+    def set_run_modifier(self, value):
+        self.run_modifier_val = value
 
     def god_mode(self):
         if self.god_mode_val:
@@ -405,6 +420,9 @@ class AllVars:
 
     def add_rescue_count(self):
         self.rescue_count += 1
+
+    def reset_rescue_count(self):
+        self.rescue_count = 0
 
     def remove_rescue_count(self):
         self.rescue_count = 3

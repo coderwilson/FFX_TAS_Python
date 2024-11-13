@@ -9,7 +9,7 @@ import save_sphere
 import vars
 import xbox
 import random
-import rng_track
+#import rng_track
 from paths import BikanelDesert, BikanelHome
 from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu
 
@@ -87,8 +87,8 @@ def desert():
     menu.equip_sonic_steel()
     memory.main.close_menu()
     
-    rng_track.print_manip_info()
-    logger.manip(f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}")
+    #rng_track.print_manip_info()
+    #logger.manip(f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}")
 
     checkpoint = 0
     first_format = False
@@ -261,10 +261,10 @@ def desert():
                 #logger.debug(f"Need more Speed spheres: {need_speed}")
                 #logger.debug(f"Need more Power spheres: {need_power}")
                 logger.debug(f"Additional items needed before Home: {items_needed}")
-                rng_track.print_manip_info()
-                logger.manip(
-                    f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}"
-                )
+                #rng_track.print_manip_info()
+                #logger.manip(
+                #    f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}"
+                #)
                 if checkpoint == 60:
                     checkpoint = 58
             elif memory.main.diag_skip_possible():
@@ -283,9 +283,10 @@ def find_summoners():
     logger.info("Desert complete. Starting Home section")
     if game_vars.get_blitz_win():
         menu.home_grid()
-        memory.main.update_formation(Tidus, Auron, Rikku)
-        memory.main.close_menu()
-    learn_first_OD = False
+    memory.main.update_formation(Tidus, Auron, Rikku)
+    memory.main.close_menu()
+    od_learns = 2
+    ambush_check = memory.main.ambushes()
 
     checkpoint = 7
     while memory.main.get_map() != 261:
@@ -301,7 +302,7 @@ def find_summoners():
             elif checkpoint < 18 and memory.main.get_map() == 280:
                 checkpoint = 19
             elif checkpoint < 25 and memory.main.get_coords()[0] < -100:
-                checkpoint = 25
+                checkpoint = 26
             elif checkpoint == 34:
                 checkpoint = 60
             elif checkpoint == 63:
@@ -344,7 +345,7 @@ def find_summoners():
                     checkpoint = 21
                 else:
                     checkpoint = 81
-            elif checkpoint in [24, 25] and 1 in memory.main.ambushes():
+            elif checkpoint in [24, 25] and 1 in ambush_check:
                 checkpoint = 22
             elif checkpoint == 31 and not game_vars.csr():
                 memory.main.click_to_event_temple(6)
@@ -366,24 +367,27 @@ def find_summoners():
             if memory.main.battle_active():
                 if memory.main.get_encounter_id() == 417:
                     logger.info("Home, battle 1")
-                    battle.main.home_1()
+                    od_learns = battle.main.home_1()
                     memory.main.update_formation(Tidus, Auron, Lulu)
                 elif memory.main.get_encounter_id() == 419:
                     if memory.main.get_map() == 280:
                         logger.info("Home, battle 2")
-                        learn_first_OD = battle.main.home_2()
+                        od_learns = battle.main.home_2(od_learns)
                         memory.main.update_formation(Tidus, Auron, Lulu)
+                        od_learns = min(od_learns, 2)
                     else:
                         logger.info("Home, bonus battle for Blitz loss")
-                        battle.main.home_3()
+                        od_learns = battle.main.home_3(od_learns)
+                        memory.main.update_formation(Tidus, Auron, Lulu)
                 elif memory.main.get_encounter_id() == 420:
                     logger.info("Home, final battle")
-                    battle.main.home_4(learn_first_OD)
+                    battle.main.home_4()
                     memory.main.update_formation(Tidus, Rikku, Kimahri)
                 else:
                     logger.debug(f"Flee from battle: {memory.main.get_encounter_id()}")
                     battle.main.flee_all()
-                rng_track.print_manip_info()
+                battle.main.wrap_up()
+                ambush_check = memory.main.ambushes()
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
     logger.info("Let's go get that airship!")
