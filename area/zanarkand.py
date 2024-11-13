@@ -431,10 +431,13 @@ def sanctuary_keeper():
         if memory.main.turn_ready():
             logger.debug(memory.main.rng_array_from_index(index=43, array_len=4))
             battle.main.attack("none")
+    if memory.main.game_over():
+        return False
     memory.main.click_to_control()
+    return True
 
 
-def yunalesca():
+def yunalesca_prep():
     ver = game_vars.end_game_version()
     while not pathing.set_movement([-2, -179]):
         if memory.main.diag_skip_possible():
@@ -455,17 +458,20 @@ def yunalesca():
         rng_track.force_equip(equip_type = 0, character = 3)
         rng_track.force_drop()
 
+def yunalesca():
     checkpoint = 0
     # Gets us to Yunalesca battle through multiple rooms.
     while not memory.main.battle_active():
         if memory.main.menu_open():
             memory.main.close_menu()
         elif memory.main.user_control():
-            if checkpoint in [2, 4]:
-                FFXC.set_movement(0, 1)
-                memory.main.await_event()
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
+            if memory.main.get_map() == 244 and checkpoint < 3:
+                checkpoint = 3
+            #elif checkpoint in [2, 4]:
+            #    FFXC.set_movement(0, 1)
+            #    memory.main.await_event()
+            #    checkpoint += 1
+            #    logger.debug(f"Checkpoint {checkpoint}")
             elif pathing.set_movement(ZanarkandYunalesca.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")

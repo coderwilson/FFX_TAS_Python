@@ -275,7 +275,9 @@ def trials():
 
 
 def escape():
-    memory.main.click_to_control()
+    while not memory.main.user_control():
+        xbox.tap_b()
+    
     logger.info("First, some menuing")
     menu_done = game_vars.get_blitz_win()
     if game_vars.nemesis():
@@ -321,7 +323,7 @@ def escape():
             if memory.main.battle_active():
                 screen.await_turn()
                 if not menu_done:
-                    battle.main.escape_with_xp()
+                    battle.main.mac_flee_xp()
                     if memory.main.get_tidus_slvl() >= 2:
                         menu.home_grid()
                         menu_done = True
@@ -337,9 +339,15 @@ def escape():
                 xbox.tap_b()
 
     logger.info("Done pathing. Now for the Wendigo fight.")
-    battle.boss.wendigo()
-    logger.info("Wendigo fight over")
-    memory.main.click_to_control_dumb()
+    
+def attempt_wendigo():
+    if battle.boss.wendigo():
+        logger.info("Wendigo fight over")
+        memory.main.click_to_control_dumb()
+        return True
+    else:
+        logger.warning("Wendigo fight fail! Reset!")
+        return False
 
 
 def under_lake():

@@ -10,6 +10,7 @@ import pathing
 import screen
 import vars
 import xbox
+import save_sphere
 from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 from players import Auron, Tidus, Wakka
 
@@ -21,6 +22,9 @@ FFXC = xbox.controller_handle()
 
 def south_pathing():
     memory.main.click_to_control()
+    next_enc_dist = memory.main.distance_to_encounter()
+    #next_enc_dist = 380  # Testing only
+    logger.warning(f"Next encounter distance: {next_enc_dist}")
 
     game_vars.set_l_strike(memory.main.l_strike_count())
 
@@ -44,11 +48,15 @@ def south_pathing():
                     elif checkpoint == 2 and game_vars.nemesis():
                         checkpoint = 20
                     elif checkpoint == 3 and not save_touched:
-                        while not memory.main.touch_save_sphere():
+                        if next_enc_dist in [380,390]:
+                            while not memory.main.battle_active():
+                                FFXC.set_movement(0,1)
+                            FFXC.set_neutral()
                             battle.main.flee_all()
                             if memory.main.game_over():
                                 return 999
                             battle.main.wrap_up()
+                        save_sphere.touch_and_go()
                         save_touched = True
                     #elif checkpoint == 2 and not game_vars.get_blitz_win():
                     #    checkpoint = 20

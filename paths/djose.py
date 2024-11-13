@@ -50,8 +50,8 @@ class DjosePath(AreaMovementBase):
         44: [461.5, 658],
         45: [461.5, 658],
         46: [461.5, 658],
-        47: [550, 710],  # Point of deferral 1
-        48: [489, 730],  # Point of deferral 2
+        47: [503, 786],  # Point of deferral 1
+        48: [530, 757],  # Point of deferral 2
         49: [604, 836],  # Point of continuation
         50: [734, 859],
         51: [0, 0],  # Transition to next map

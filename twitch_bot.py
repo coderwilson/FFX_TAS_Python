@@ -25,6 +25,7 @@ BLITZ_PATH = "x_blitz_only.py"
 CSR_PATH = ""
 GAME_PATH = ""
 CONFIG_FILE_PATH = "bot-config.yaml"
+MARBLES_PATH = "C:\\Users\\coder\\Desktop\\Python_projects\\marbles_on_stream"
 
 
 def oblitz_history():
@@ -61,15 +62,22 @@ class Bot(commands.Bot):
         self.csr = None
         self.game = None
         self.timer = None
+        self.marbles = None
     
     def is_valid_user(self, ctx: commands.Context):
+        if self.game_ended_check():
+            self.kill(ctx)
+            time.sleep(5)
+        return True
+        if self.marbles != None:
+            self.marbles_end(ctx)
         if ctx.author.is_mod or ctx.author.name in self.allowed_users:
             return True
-        else:
+        elif self.process == None and self.marbles == None:
             return True
-            #await ctx.send(
+        else:
             ctx.send(
-                f"Sorry {ctx.author.name}, you don't have permissions to execute this."
+                f"Sorry {ctx.author.name}, you don't have permissions to execute this. Please wait for the run to finish or ask for mod status."
             )
             return False
 
@@ -123,7 +131,7 @@ class Bot(commands.Bot):
             arg_array.append("-seed")
             arg_array.append(seed_num)
 
-        if self.process is None:
+        if self.process is None and self.marbles is None:
             print(["python", SCRIPT_PATH] + arg_array)
             self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
             await ctx.send("FFX TAS started.")
@@ -136,7 +144,7 @@ class Bot(commands.Bot):
     # Define the start command
     @commands.command()
     async def blitz(self, ctx: commands.Context):
-        if self.process is None:
+        if self.process is None and self.marbles is None:
             print(["python", BLITZ_PATH])
             self.process = subprocess.Popen(["python", BLITZ_PATH])
             await ctx.send("FFX TAS started.")
@@ -149,7 +157,7 @@ class Bot(commands.Bot):
     # Alternate start command, Chocobo races
     @commands.command(aliases=("choco", "race", "races", "showcase"))
     async def chocobo(self, ctx: commands.Context):
-        if self.process is None:
+        if self.process is None and self.marbles is None:
             print(["python", CHOCO_PATH])
             await self.start_csr(ctx)
             await self.start_game(ctx)
@@ -181,7 +189,7 @@ class Bot(commands.Bot):
     async def start_csr(self, ctx: commands.Context):
         arg_array = []
         if self.is_valid_user(ctx):
-            if self.csr is None:
+            if self.csr is None and self.marbles is None:
                 print(CSR_PATH)
                 arg_array.append("--csr=true")
                 arg_array.append("--truerng=false")
@@ -208,7 +216,7 @@ class Bot(commands.Bot):
     @commands.command(aliases=("game_start", "launch_game"))
     async def start_game(self, ctx: commands.Context):
         if self.is_valid_user(ctx):
-            if self.game is None:
+            if self.game is None and self.marbles is None:
                 cwd = os.getcwd()
                 print(cwd)
                 os.chdir(GAME_PATH)
@@ -260,7 +268,7 @@ class Bot(commands.Bot):
         if csr_val is None:
             csr_val = "True"
         if self.is_valid_user(ctx):
-            if self.timer is None:
+            if self.timer is None and self.marbles is None:
                 if csr_val == "False":
                     TIMER_PATH = TIMER_PATH_NORM
                 else:
@@ -288,10 +296,6 @@ class Bot(commands.Bot):
                 f"Sorry {ctx.author.name}, you don't have permissions to execute this."
             )
         '''
-        print("Attempting to clear.")
-        pyautogui.press("num3")
-        print("Clear successful.")
-        time.sleep(0.5)
         clickHeader()
         print("Save successful.")
         time.sleep(0.5)
@@ -325,11 +329,12 @@ class Bot(commands.Bot):
     # Start All
     @commands.command(aliases=("begin_all", "all"))
     async def start_all(self, ctx: commands.Context):
+        await self.marbles_end(ctx)
         if self.is_valid_user(ctx):
+            await self.start_game(ctx)
+            time.sleep(3)
             await self.start_timer(ctx)
             await self.start_csr(ctx)
-            time.sleep(3)
-            await self.start_game(ctx)
             time.sleep(3)
             await self.start(ctx)
     
@@ -337,6 +342,7 @@ class Bot(commands.Bot):
     @commands.command(aliases=("kill_all","halt_all","stop_all"))
     async def kill(self, ctx: commands.Context):
         if self.is_valid_user(ctx):
+            await self.marbles_end(ctx)
             await self.exit(ctx)
             await self.stop_csr(ctx)
             await self.stop_game(ctx)
@@ -352,6 +358,58 @@ class Bot(commands.Bot):
             + "in this NEA equipment to drop for us. Overall time saved is around 12 minutes "
             + "even with the cutscenes removed."
         )
+    
+    @commands.command(aliases=("play_marbles"))
+    async def play(self, ctx: commands.Context):
+        # This is so we don't have to catch someone joining a game of marbles.
+        pass
+        
+
+    # End Marbles
+    @commands.command(aliases=("marbles_stop"))
+    async def marbles_end(self, ctx: commands.Context):
+        print("Marbles command received")
+        try:
+            if self.marbles is not None and self.marbles.poll() != None:
+                print("Reset handle, process is no longer running.")
+                self.marbles = None
+            else:
+                print("Marbles still running. Try again after it is done.")
+        except:
+            print("Process was never launched, this is normal.")
+        print (f"Reset logic complete - {self.marbles}")
+    
+    # Launch Marbles
+    @commands.command(aliases=("marbles_start"))
+    async def marbles(self, ctx: commands.Context):
+        await self.marbles_end(ctx)
+        if self.marbles is None and self.game is None:
+            print("Attempting process start.")
+            cwd = os.getcwd()
+            print(cwd)
+            os.chdir(MARBLES_PATH)
+            print(os.getcwd())
+            launch_path = MARBLES_PATH
+            print(launch_path)
+            self.marbles = subprocess.Popen(["python", "marblesMain.py"])
+            os.chdir(cwd)
+            print("Marbles started.")
+        else:
+            print("===  MARBLES ALREADY RUNNING  ===")
+    
+    def game_ended_check(self):
+        try:
+            game_running = self.process.poll()
+            if game_running == None:
+                # Game is still running.
+                return False
+            else:
+                # Game has been ended properly.
+                self.process = None
+                return True
+        except:
+            # Game has not been started.
+            return False
 
 
 # Main entry point of script

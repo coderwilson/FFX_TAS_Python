@@ -19,8 +19,10 @@ FFXC = xbox.controller_handle()
 
 
 def post_battle_logic(section: str = "highroad_heals", battle_num: int = 0):
+    if memory.main.game_over():
+        return
+    battle.main.wrap_up()
     heal_array = []
-    ml_heals = False
     try:
         records = avina_memory.retrieve_memory()
         logger.debug(records.keys())
@@ -34,9 +36,6 @@ def post_battle_logic(section: str = "highroad_heals", battle_num: int = 0):
                             heal_array.append(i)
             else:
                 logger.info("I have no memory of this seed. (A)")
-            if "ml_heals" in records[seed_str].keys():
-                if records[seed_str]["ml_heals"] == "True":
-                    ml_heals = True
         else:
             logger.info("I have no memory of this seed. (B)")
     except Exception:
@@ -45,8 +44,8 @@ def post_battle_logic(section: str = "highroad_heals", battle_num: int = 0):
     memory.main.update_formation(Tidus, Wakka, Auron, full_menu_close=False)
     hp_check = memory.main.get_hp()
     logger.debug(f"HP check: {hp_check}")
-    logger.debug(f"ML heals value: {ml_heals}")
-    if ml_heals:
+    logger.debug(f"ML heals value: {game_vars.ml_heals()}")
+    if game_vars.ml_heals():
         logger.warning("aVIna deciding if we need to heal.")
         if battle_num in heal_array:
             battle.main.heal_up()

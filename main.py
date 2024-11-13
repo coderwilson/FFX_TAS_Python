@@ -49,10 +49,13 @@ import vars
 import xbox
 from gamestate import game
 from image_to_text import maybe_show_image
+from json_ai_files.write_seed_results import add_to_seed_results, check_ml_heals
+from json_ai_files.update_leaderboard import new_leaderboard
 
 import manip_planning.rng
 import manip_planning.ammes
 import manip_planning.baaj_to_tros
+from datetime import timedelta
 
 # This sets up console and file logging (should only be called once)
 log_init.initialize_logging()
@@ -61,6 +64,7 @@ logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 
 truerng = False
+blitz_duration = None
 
 
 def configuration_setup():
@@ -109,7 +113,7 @@ def configuration_setup():
     if args.godrng is not None:
         game_vars.activate_god_rng()
     elif game.state != "none":  # Loading a save file, no RNG manip here
-        game_vars.rng_seed_num_set(255)
+        game_vars.rng_seed_num_set(256)
         game_length = "Loading mid point for testing."
     elif game_vars.rng_mode() == "set":
         game_length = f"Full Run, set seed: [{game_vars.rng_seed_num()}]"
@@ -187,6 +191,8 @@ def perform_TAS():
         only_play_blitz = False
 
     game_vars = vars.vars_handle()
+    results_mod = "not_set"
+    blitz_duration = int(0)
 
     # Original seed for when looping
     rng_seed_orig = game_vars.rng_seed_num()
@@ -197,7 +203,7 @@ def perform_TAS():
 
     while game.state != "End":
         try:
-            if game_vars.rng_seed_num() >= 256:
+            if game_vars.rng_seed_num() > 256:
                 game.state = "End"
 
             # Start of the game, start of Dream Zanarkand section
@@ -205,11 +211,31 @@ def perform_TAS():
                 from json_ai_files.write_seed import write_new_game
 
                 write_new_game()
+                game_vars.set_csr(True)
+                try:
+                    results_mod, use_heals = check_ml_heals(seed_num=game_vars.rng_seed_num())
+                    logger.warning(f"Response check: {results_mod}, {use_heals}")
+
+                    if use_heals:
+                        game_vars.set_ml_heals(True)
+                        logger.warning("Setting to use aVIna heal method!")
+                    else:
+                        game_vars.set_ml_heals(False)
+                        logger.warning("No aVIna heal method. Set to heal always.")
+                except Exception as e:
+                    logger.warning(f"Response check 2: {e}")
+                    game_vars.set_ml_heals(False)
+                    results_mod = "standard"
+                logger.warning(f"Response check 3: {results_mod}, {use_heals}")
+                game_vars.set_run_modifier(results_mod)
+                logger.warning(f"Run modifier: {game_vars.run_modifier()}")
+
+                logger.info("Variables initialized.")
+                memory.main.wait_frames(60)
+                logger.warning(f"Run type: {results_mod}")
                 logger.info("New Game 1 function initiated.")
                 area.dream_zan.new_game(game.state)
                 logger.info("New Game 1 function complete.")
-                game_vars.set_csr(True)
-                logger.info("Variables initialized.")
                 game.state = "DreamZan"
                 game.step = 1
 
@@ -341,7 +367,11 @@ def perform_TAS():
                         game.state = "Boat1"
                         game.step = 1
                     else:
-                        game.state, game.step = reset.mid_run_reset()
+                        #game.state, game.step = reset.mid_run_reset()
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
             if game.state == "Boat1":
                 area.boats.ss_liki()
@@ -491,6 +521,11 @@ def perform_TAS():
                             if attempt_skip():  # i.e. if this step is successful
                                 if advance_to_aftermath():  # i.e. if this step is successful
                                     game.step = 4  # There is no 3 since Terra Skip found.
+                                else:
+                                    reset.reset_to_main_menu()
+                                    area.dream_zan.new_game(gamestate="reload_autosave")
+                                    load_game.load_save_num(0)
+                                    # Do not change game.state or game.step. Will restart this section.
                         
                         else:
                             game.step = 2
@@ -537,6 +572,7 @@ def perform_TAS():
                     # Formerly step 3, this was the entire battle site logic.
                     area.mrr.battle_site()
                     game.step = 4
+
                 if game.step == 4:
                     area.mrr.aftermath()
                     end_time = logs.time_stamp()
@@ -676,9 +712,18 @@ def perform_TAS():
                 if game.step == 6:
                     area.mac_temple.escape()
                     game.step = 7
-                    maybe_create_save(save_num=38)
 
                 if game.step == 7:
+                    if area.mac_temple.attempt_wendigo():
+                        game.step = 8
+                        maybe_create_save(save_num=38)
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
+
+                if game.step == 8:
                     area.mac_temple.under_lake()
                     game.step = 1
                     game.state = "Home"
@@ -767,13 +812,14 @@ def perform_TAS():
                         game.step = 2
 
                 if game.step == 2:
-                    if game_vars.try_for_ne():
+                    nea_possible_check, _ = rng_track.final_nea_check()
+                    if game_vars.try_for_ne() and nea_possible_check:
                         manip_time_1 = logs.time_stamp()
 
                         logger.debug("Mark 1")
-                        area.ne_armor.to_hidden_cave()
-                        logger.debug("Mark 2")
-                        area.ne_armor.drop_hunt()
+                        if area.ne_armor.to_hidden_cave():
+                            logger.debug("Mark 2")
+                            area.ne_armor.drop_hunt()
                         logger.debug("Mark 3")
                         area.ne_armor.return_to_gagazet()
                         manip_time_2 = logs.time_stamp()
@@ -788,8 +834,8 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    nea_will_drop,_,_ = rng_track.rng_alignment_before_nea(enemies=["ghost"])
-                    if nea_will_drop and game_vars.ne_armor() == 255:
+                    nea_possible_check, _ = rng_track.final_nea_check()
+                    if nea_possible_check and game_vars.ne_armor() == 255:
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:
@@ -828,15 +874,25 @@ def perform_TAS():
                     game.step = 3
 
                 if game.step == 3:
-                    area.zanarkand.sanctuary_keeper()
-                    game.step = 4
-                    maybe_create_save(save_num=48)
+                    if area.zanarkand.sanctuary_keeper():
+                        game.step = 4
+                        maybe_create_save(save_num=48)
+                        area.zanarkand.yunalesca_prep()
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
                 if game.step == 4:
                     if area.zanarkand.yunalesca():
                         game.step = 5
                     else:
-                        game.state, game.step = reset.mid_run_reset()
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
+                        #game.state, game.step = reset.mid_run_reset()
 
                 if game.step == 5:
                     area.zanarkand.post_yunalesca()
@@ -1061,8 +1117,6 @@ def perform_TAS():
 
     logger.info("Time! The game is now over.")
 
-
-def write_final_logs():
     if memory.main.get_story_progress() > 3210:
         end_time = logs.time_stamp()
         total_time = end_time - game.start_time
@@ -1071,6 +1125,30 @@ def write_final_logs():
         logger.info(f"The game duration was: {str(total_time)}")
         logger.info("This duration is intended for internal comparisons only.")
         logger.info("It is not comparable to non-TAS runs.")
+        try:
+            adj_time = total_time - timedelta(seconds=blitz_duration)
+            logger.debug(f"Time checks: {total_time} | {blitz_duration} | {adj_time}")
+            if blitz_duration != None and not truerng:
+                if game_vars.get_blitz_win():
+                    logger.debug(f"Writing seed results to memory: {adj_time}")
+                    add_to_seed_results(
+                        seed=game_vars.rng_seed_num(), 
+                        modifier=game_vars.run_modifier(),
+                        avina_heals=str(game_vars.ml_heals()),
+                        raw=str(total_time),
+                        blitz=str(blitz_duration),
+                        adjusted=str(adj_time)
+                    )
+                else:
+                    logger.debug(f"Do not write seed results to memory for Blitz loss.")
+            else:
+                logger.info(f"Identified run started as a test, no results to confirm.")
+        except Exception as e:
+            logger.warning(f"Error calculating results: {e}")
+        
+        # Update leaderboard
+        new_leaderboard()
+
         memory.main.wait_frames(30)
         logger.info("--------")
         logger.info("In order to conform to the speedrun.com/ffx ruleset,")
@@ -1134,6 +1212,3 @@ if __name__ == "__main__":
     # game.state = "Baaj"
     # game.step = 1
     perform_TAS()
-
-    # Finalize writing to logs
-    write_final_logs()

@@ -63,7 +63,7 @@ class BevelleTrials(AreaMovementBase):
         # To third alcove, and insert Glyph sphere
         19: [353, 531],
         20: [367, 532],
-        21: [370, 526],  # Lining up north of pedestol. Very precise.
+        21: [370, 524],  # Lining up north of pedestol. Very precise.
         # Remove Bevelle sphere
         23: [367, 532],
         # Insert Bevelle sphere

@@ -52,8 +52,11 @@ def to_hidden_cave():
     first_save = False
     checkpoint = 0
     prep_battles = 0
-    next_drop, advances = rng_track.nea_track()
+    #next_drop, advances = rng_track.nea_track()
+    nea_possible_check, next_drop = rng_track.final_nea_check()
     while memory.main.get_map() != 56:
+        if not nea_possible_check:
+            return False
         if memory.main.user_control():
             if checkpoint < 5 and memory.main.get_map() == 266:
                 checkpoint = 5
@@ -103,12 +106,14 @@ def to_hidden_cave():
                 prep_battles += 1
                 memory.main.update_formation(Tidus, Rikku, Auron)
                 save_sphere.touch_and_go()
-                next_drop, advances = rng_track.nea_track()
+                #next_drop, advances = rng_track.nea_track()
+                nea_possible_check, next_drop = rng_track.final_nea_check()
                 rng_track.print_manip_info()
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
                 xbox.tap_b()
     logs.write_stats("NEA extra manip battles:")
     logs.write_stats(prep_battles)
+    return True
 
 
 def next_green() -> bool:

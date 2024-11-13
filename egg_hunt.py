@@ -96,16 +96,14 @@ def engage():
                 memory.main.build_icicles()
             )  # Added for additional pathing needs
             if active_egg == 99:
-                min_dist = float('inf')
                 for marker in range(10):  # Only print active eggs/icicles
-                    egg = egg_array[marker]
-                    # find closest egg
-                    if egg.go_for_egg and egg.egg_life < 150:
-                        dist = np.linalg.norm(player_pos - np.array([egg.x, egg.y]))
-                        if dist < min_dist:
-                            active_egg = marker
-                            target = [egg.x, egg.y]
-                            min_dist = dist
+                    if (
+                        active_egg == 99
+                        and egg_array[marker].go_for_egg
+                        and egg_array[marker].egg_life < 150
+                    ):
+                        active_egg = marker
+                        target = [egg_array[marker].x, egg_array[marker].y]
                         # We will hunt for this egg for this many seconds.
             elif not egg_array[active_egg].go_for_egg:
                 active_egg = 99
@@ -145,7 +143,7 @@ def engage():
             player_pos = np.array(player)
 
             closest_intersect = 9999
-            intersect_icicle = []
+            intersect_point = []
             for icicle in ice_array:
                 num_intersect, hits = line_sphere_intersect(
                     player_pos, target_pos, np.array([icicle.x, icicle.y])
@@ -156,12 +154,11 @@ def engage():
                     ) ** 2
                     if intersect_distance < closest_intersect:
                         closest_intersect = intersect_distance
-                        intersect_icicle = icicle
+                        intersect_point = hits[0]
 
             if closest_intersect < 9999:
                 # Move around icicle instead
-        
-                target = path_around(player_pos, np.array([intersect_icicle.x, intersect_icicle.y]), target_pos)
+                target = path_around(player_pos, np.array(intersect_point), target_pos)
 
             # Calculate forward and right directions relative to camera space
             pX = player[0]

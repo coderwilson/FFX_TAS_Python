@@ -6,7 +6,7 @@ class GuadoStart(AreaMovementBase):
         0: [-4, -5],
         1: [-21, 40],
         2: [-21, 83],
-        3: [-7, 178],
+        3: [-2, 174],
         4: [0, 0],  # Into the door
         5: [-1, -111],
         6: [0, 0],  # Back out the door.

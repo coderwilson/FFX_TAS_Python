@@ -362,8 +362,8 @@
                 "mrr_skip": false
             },
             "False": {
-                "save_num": "40",
-                "blitz_win_value": "True",
+                "save_num": "15",
+                "blitz_win_value": "False",
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
@@ -443,6 +443,17 @@
                 "special_movement": "none",
                 "mrr_skip": true
             }
+        },
+        "2": {
+            "False": {
+                "save_num": "13",
+                "blitz_win_value": "True",
+                "end_game_version_val": "0",
+                "nea_zone": "0",
+                "nem_ap_val": "1",
+                "special_movement": "none",
+                "mrr_skip": true
+            }
         }
     },
     "Gagazet": {
@@ -459,8 +470,9 @@
         },
         "1": {
             "False": {
-                "save_num": "44",
-                "blitz_win_value": "True",
+                "save_num_blitzwin": "44",
+                "save_num": "16",
+                "blitz_win_value": "False",
                 "end_game_version_val": "0",
                 "nea_zone": "0",
                 "nem_ap_val": "1",
@@ -470,8 +482,9 @@
         },
         "4": {
             "False": {
-                "save_num": "45",
-                "blitz_win_value": "True",
+                "save_num_blitzwin": "45",
+                "save_num": "17",
+                "blitz_win_value": "False",
                 "end_game_version_val": "3",
                 "nea_zone": "0",
                 "nem_ap_val": "1",

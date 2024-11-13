@@ -165,82 +165,6 @@ def skip_prep():
         past_clasko()
         align_1_side()
 
-
-def skip_prep_old():
-    start_time = time.time()
-    max_time = start_time + 20
-    pos = memory.main.get_coords()
-    tidus_coords = [round(pos[0],2),round(pos[1],2)]
-    # Max number of seconds that we will wait for the skip to occur.
-    last_count = 0
-    logger.info("Attempting MRR Skip")
-    if memory.main.get_map() == 92:
-        memory.main.await_control()
-        FFXC.set_movement(1, -1)
-        memory.main.await_event()
-        FFXC.set_neutral()
-        memory.main.await_control()
-        remaining_time()
-
-    # Get near the spot, but out of the way of the runner.
-    runner_index = actor_index(8323)
-    while get_actor_coords(runner_index)[1] > get_coords()[1] - 100:
-        # Time-related items and infinite loop protection
-        current_time = time.time()
-        pos = memory.main.get_coords()
-        if pos != [0,0]:
-            tidus_coords = [round(pos[0],2),round(pos[1],2)]
-        if current_time > max_time:
-            logger.warning("Skip seemingly failed. Resetting.")
-            return False
-        elif int(current_time - start_time) > int(last_count):
-            remaining_time(max=max_time, current = current_time, coords=tidus_coords)
-            #logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
-            last_count = int(current_time - start_time)
-        
-        target = [-20, -400]
-        movements(target, buffer=2)
-        if memory.main.diag_skip_possible():
-            xbox.tap_b()
-    logger.info("Near skip, but away from the runner")
-
-    align_complete = False
-    while not align_complete:
-        # Time-related items and infinite loop protection
-        current_time = time.time()
-        pos = memory.main.get_coords()
-        if pos != [0,0]:
-            tidus_coords = [round(pos[0],2),round(pos[1],2)]
-        if current_time > max_time:
-            logger.warning("Skip seemingly failed. Resetting.")
-            return False
-        elif int(current_time - start_time) > int(last_count):
-            remaining_time(max=max_time, current = current_time, coords=tidus_coords)
-            #logger.debug(f"Wait incrementer: {int(current_time - start_time)} - Coords: {tidus_coords}")
-            last_count = int(current_time - start_time)
-        
-        logger.info("Moving to position.")
-        #target = [-25, -420]
-        #movements(target)
-        target = [-17.2, -415]
-        if movements(target):
-            logger.info("Stutter step to position.")
-            target = [-14.7, -400.1]
-            if movements(target, stutter=True, buffer=0.5):
-                align_complete = True
-            else:
-                # If fail, move away and try again.
-                movements([-22, -430])
-        else:
-            # If fail, move away and try again.
-            movements([-22, -430])
-    wait_frames(15)
-    FFXC.set_movement(0, -1)
-    wait_frames(1)
-    FFXC.set_neutral()
-    wait_frames(3)
-    logger.info("In position.")
-
 def attempt_skip():
     logger.info("Waiting for the guy to come back")
     part_1_done = False
@@ -294,7 +218,7 @@ def attempt_skip():
             ):
                 skip_prep()
             elif _distance(position, tidus_coords) < 15:
-                if attempt % 2 == 1 and tidus_coords[1] < -392:
+                if attempt % 2 == 1 and tidus_coords[1] < -390:
                     # Attempting skip / talking
                     FFXC.set_value("btn_b", 1)
                     wait_frames(1)

@@ -452,6 +452,25 @@ def move_shift_right(toon):
     logger.debug(f"Ready for grid: {toon}")
 
 
+def move_and_quit():
+    logger.debug("move and quit")
+    memory.main.wait_frames(1)
+    xbox.menu_b()
+    memory.main.wait_frames(1)
+    while memory.main.s_grid_active():
+        if move_complete():
+            xbox.menu_b()
+        elif first_position():
+            logger.debug("Opening the Quit menu")
+            xbox.menu_a()
+        elif quit_grid_ready():
+            logger.debug("quitting sphere grid")
+            xbox.menu_b()
+    while memory.main.menu_number() != 5:
+        pass
+    return True
+
+
 def use_and_quit():
     memory.main.wait_frames(30 * 0.1)
     xbox.menu_b()

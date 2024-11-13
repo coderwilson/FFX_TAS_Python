@@ -29,7 +29,7 @@ def arrival():
                     FFXC.set_neutral()
                     battle.main.heal_up(full_menu_close=False)
                 menu.t_plains_terra_skip()
-                FFXC.set_movement(0, 1)
+                FFXC.set_movement(-1, 1)
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 6:

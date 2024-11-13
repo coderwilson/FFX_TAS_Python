@@ -207,7 +207,7 @@ def trials():
                 checkpoint = 29
 
 
-def leaving():
+def leaving(checkpoint = 17):
     logger.info("Ready to leave Besaid")
     memory.main.click_to_control()
     while not pathing.set_movement([0, 23]):
@@ -218,7 +218,9 @@ def leaving():
     memory.main.await_event()
     FFXC.set_neutral()
     gil_guy = False
-    checkpoint = 17
+    
+    if memory.main.get_map() == 21:
+        checkpoint = 25
 
     while memory.main.get_map() != 301:
         if memory.main.user_control():
