@@ -1,6 +1,6 @@
 import logging
 import time
-from math import copysign
+from math import copysign, radians, cos, sin
 
 import numpy as np
 
@@ -11,90 +11,75 @@ import xbox
 
 logger = logging.getLogger(__name__)
 
+def compute_escape_vector(player_pos, ice_array, target, avoidance_radius=15):
+    def is_inside(pos, icicle):
+        distance = np.linalg.norm(pos - np.array([icicle.x, icicle.y]))
+        return distance < avoidance_radius
 
-def line_sphere_intersect(start, end, circle, radius=11):
-    num_hits = 0
-    hits = []
+    if not any(is_inside(player_pos, icicle) for icicle in ice_array):
+        return np.array([0.0, 0.0])
 
-    direction = end - start
-    sphere_to_start = start - circle
-    a = np.dot(direction, direction)
-    b = 2 * np.dot(sphere_to_start, direction)
-    c = np.dot(sphere_to_start, sphere_to_start) - radius**2
-    d = b**2 - 4 * a * c
-    if d < 0:  # no intersection
-        return (num_hits, hits)
+    angle = 0.0
+    angle_increment = radians(10)
+    radius = 0.0
 
-    d = np.sqrt(d)
-    # Solve quadratic equation
-    t1 = (-b - d) / (2 * a)
-    t2 = (-b + d) / (2 * a)
+    # Start expanding outward in concentric circles until a valid position is found
+    for _ in range(100):
+        radius += 2
+        # Check multiple angles to find a valid position
+        valid_positions = []
+        for i in range(int(360 / 10)):
+            theta = angle + i * angle_increment
+            new_x = player_pos[0] + radius * cos(theta)
+            new_y = player_pos[1] + radius * sin(theta)
+            new_pos = [new_x, new_y]
+            if not any(is_inside(new_pos, icicle) for icicle in ice_array):
+                valid_positions.append(new_pos)
 
-    if t1 >= 0 and t1 <= 1:
-        num_hits += 1
-        hits.append(start + direction * t1)
-    if t2 >= 0 and t2 <= 1:
-        num_hits += 1
-        hits.append(start + direction * t2)
-    return (num_hits, hits)
-
-
-def path_around(player, circle, target, radius=11):
-    line = player - circle
-    line /= np.linalg.norm(line)  # normalize to length 1
-    angle = np.arctan2(line[1], line[0])
-
-    # Create two points rotated 90 degrees from player -> circle intersection
-    new_angle_1 = angle + 0.5 * np.pi
-    new_angle_2 = angle - 0.5 * np.pi
-    p1 = circle + [radius * np.cos(new_angle_1), radius * np.sin(new_angle_1)]
-    p2 = circle + [radius * np.cos(new_angle_2), radius * np.sin(new_angle_2)]
-    # Find which of two possible points gives shortest path
-    p1length = np.linalg.norm(p1 - player) + np.linalg.norm(target - p1)
-    p2length = np.linalg.norm(p2 - player) + np.linalg.norm(target - p2)
-    if p1length < p2length:
-        return p1
-    return p2
+        # If we find multiple valid positions, choose one that is closest to our target so we still attempt to move forward
+        if len(valid_positions) > 0 and target:
+            min_dist = float('inf')
+            closest = valid_positions[0]
+            for position in valid_positions:
+                distance = np.linalg.norm(target - np.array(position))
+                if distance < min_dist:
+                    min_dist = distance
+                    closest = position
+            return closest - player_pos
 
 
-def distance(n1, n2):
-    try:
-        return abs(n1[1] - n2[1]) + abs(n1[0] - n2[0])
-    except Exception as x:
-        logger.error(f"Exception: {x}")
-        return 999
+    return np.array([0.0, 0.0])
 
 
-def check_icicle_distances(target, ice_array):
-    for icicle in ice_array:
-        if distance(target, [icicle.x, icicle.y]) < 20:
-            return False  # Not safe to use this spot.
-    return True  # Safe to use this spot.
 
 
 def engage():
     FFXC = xbox.controller_handle()
     logger.info("Start egg hunt")
     start_time = time.time()
-    checkpoint = 0
     battle_count = 0
     looking_count = 0
-    logger.info("Generating Plot file (the X/Y kind)")
     active_egg = 99
     target = [10, -10]
+    target_egg = [0, 0]
     logger.info("Ready for movement.")
     while memory.main.get_story_progress() < 3251:
         looking_count += 1
+        player = memory.main.get_coords()
+        (forward, right) = memory.main.get_movement_vectors()
+
+        player_pos = np.array(player)
+
         if memory.main.battle_active():
             logger.info("Battle engaged - using flee.")
             FFXC.set_neutral()
             battle.main.flee_all()
             battle_count += 1
-        else:  # User control is different for this section.
+        else:
             egg_array = memory.main.build_eggs()
             ice_array = (
                 memory.main.build_icicles()
-            )  # Added for additional pathing needs
+            )
             if active_egg == 99:
                 for marker in range(10):  # Only print active eggs/icicles
                     if (
@@ -188,23 +173,17 @@ def engage():
                 FFXC.set_movement(Lx, Ly)
             except Exception:
                 pass
-            target = old_target
 
             # Now if we're close, we want to slow down a bit.
             if (
-                active_egg != 99
-                and egg_array[active_egg].distance < 15
-                and egg_array[active_egg].egg_life < 130
+                    active_egg != 99
+                    and egg_array[active_egg].distance < 15
+                    and egg_array[active_egg].egg_life < 150
+                    and not need_to_dodge
             ):
+                logger.debug(f"Stutter-step to egg. ")
                 memory.main.wait_frames(7)
                 FFXC.set_neutral()
-                logger.debug(f"Stutter-step to egg. | {checkpoint}")
-                xbox.tap_b()
-            elif active_egg == 99:
-                logger.debug(f"Looking for new egg. | {checkpoint}")
-                xbox.tap_b()
-            else:
-                logger.debug(f"Targeting egg: | {checkpoint}")
             xbox.tap_b()
     end_time = time.time()
     logger.info("End egg hunt")
