@@ -57,7 +57,7 @@ def calm_lands():
     # Determine variables for the path forward.
     routes, best = rng_track.purifico_to_nea(stage=2)
     half = int(len(routes)/2)
-    game_vars.set_def_x_drop(bool((best % half) >= half/2))
+    game_vars.set_def_x_drop(bool((best % 4) >= 2))
     game_vars.set_nea_after_bny(bool(best >= half))
     logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
 

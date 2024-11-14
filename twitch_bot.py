@@ -385,6 +385,7 @@ class Bot(commands.Bot):
         await self.marbles_end(ctx)
         if self.marbles is None and self.game is None:
             print("Attempting process start.")
+            await ctx.send("Launching marbles. Credit for background music: Rozen - Battle for Spira (feat. Julie Elven) https://youtu.be/TpXtRt6hM4Q?si=xkdA83vHXMZZ1J1E")
             cwd = os.getcwd()
             print(cwd)
             os.chdir(MARBLES_PATH)

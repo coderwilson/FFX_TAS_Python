@@ -1253,17 +1253,21 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
     return (False, equipment, extras)
 
 
-def final_nea_check():
+def final_nea_check(with_ronso:bool = False):
     max_drop = 3
-    results = []
-    results.append("ghost")
+    ghost_array = ["ghost"]
+    ronso_array = []
+    epaaj_array = []
+    if with_ronso:
+        ronso_array = ["yenke_ronso","biran_ronso"]
     result_possible = False
     for i in range(max_drop+1):
+        results = ronso_array + epaaj_array + ghost_array
         result_possible, _, _ = rng_alignment_before_nea(enemies=results)
         if result_possible:
             logger.manip(f"===  Final check found with {i} extra Epaaj drops.  ===")
             return (result_possible, i)
-        results = ["epaaj"] + results
+        epaaj_array.append("epaaj")
     return (result_possible, 99)
 
 def next_action_escape(character: int = 0):

@@ -806,10 +806,13 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    if game_vars.get_nea_after_bny():
-                        game.step = 3
-                    else:
+                    #if game_vars.get_nea_after_bny():
+                    success,direct = rng_track.final_nea_check()
+                    _,indirect = rng_track.final_nea_check(with_ronso=True)
+                    if success and direct <= indirect:
                         game.step = 2
+                    else:
+                        game.step = 3
 
                 if game.step == 2:
                     nea_possible_check, _ = rng_track.final_nea_check()
@@ -835,7 +838,10 @@ def perform_TAS():
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
                     nea_possible_check, _ = rng_track.final_nea_check()
-                    if nea_possible_check and game_vars.ne_armor() == 255:
+                    
+                    #if nea_possible_check and game_vars.ne_armor() == 255:
+                    success,_ = rng_track.final_nea_check()
+                    if success and game_vars.ne_armor() == 255:
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:
