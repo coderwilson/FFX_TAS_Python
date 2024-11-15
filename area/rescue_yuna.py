@@ -616,7 +616,10 @@ def evrae_altana():
                     FFXC.set_movement(0, 1)
         elif screen.battle_screen():
             battle.boss.evrae_altana()
-            #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
+            logger.debug(memory.main.get_encounter_id())
+            if memory.main.get_encounter_id() == 266:
+                rng_track.purifico_to_nea(stage=1)
+                logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
         elif memory.main.battle_wrap_up_active():
             xbox.menu_b()
         else:
@@ -653,6 +656,10 @@ def natus_formation(battles: int = 0, full_menu_close: bool = True):
 
 def seymour_natus():
     memory.main.click_to_control()
+    start_count = game_vars.get_rescue_count()
+    if start_count == 0:
+        start_count = 3
+        game_vars.set_rescue_count(value=start_count)
 
     delay_grid = True
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
@@ -667,6 +674,7 @@ def seymour_natus():
 
     save_sphere.touch_and_go()
     rng_track.purifico_to_nea(stage=1)
+    logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
     complete = 0
     while complete == 0:
         if memory.main.user_control():
@@ -699,6 +707,7 @@ def seymour_natus():
                     else:
                         menu.seymour_natus_blitz_loss()
                 memory.main.close_menu()
+                logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
                 #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
                 #rng_track.print_manip_info()
 

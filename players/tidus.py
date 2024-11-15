@@ -3,6 +3,7 @@ import logging
 import memory.main
 import vars
 import xbox
+import time
 from players.base import Player
 from rng_track import current_battle_formation, luck_check
 
@@ -55,7 +56,8 @@ class TidusImpl(Player):
                 xbox.tap_left()
         while not self.overdrive_active():
             xbox.tap_b()
-        memory.main.wait_frames(12)
+        memory.main.wait_frames(11)
+        time.sleep(0.02)  # Maybe this will dial it in?
         xbox.tap_b()  # First try pog
         logger.info("Hit Overdrive")
 

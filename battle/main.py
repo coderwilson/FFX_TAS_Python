@@ -2959,28 +2959,39 @@ def home_4():
 
 @battle.utils.speedup_decorator
 def guards(group_num, sleeping_powders):
-    nea_drop_counts = rng_track.guards_to_calm_equip_drop_count(
+    max_steals = 0
+    remaining_steals = 0
+    nea_result_array = rng_track.guards_to_calm_equip_drop_count(
         guard_battle_num=group_num
     )
     
     # Now to determine best number of steals
-    remaining_steals = min(nea_drop_counts[0],nea_drop_counts[1],nea_drop_counts[2])
     if group_num in [1,3]:
         max_steals = 2
-    elif group_num == 5:
+        if (
+            nea_result_array[0] <= nea_result_array[1] and
+            nea_result_array[0] <= nea_result_array[2]
+        ):
+            remaining_steals = 0
+        elif nea_result_array[1] <= nea_result_array[2]:
+            remaining_steals = 1
+        else:
+            remaining_steals = 2
+    elif group_num in [2,4]:
         # For now, never manip on the fifth fight.
-        max_steals = 0
-        remaining_steals = 0
-    else:
         max_steals = 1
-        remaining_steals = min(nea_drop_counts[0],nea_drop_counts[1])
+        if nea_result_array[0] <= nea_result_array[1]:
+            remaining_steals = 0
+        else:
+            remaining_steals = 1
+    # Group 5, should not need any steals. No else statement needed.
     
     nea_drop_counts = rng_track.guards_to_calm_equip_drop_count(
         guard_battle_num=group_num,
         report_num=remaining_steals
     )
-    logger.debug(f"0-2 Steals result in extras needed: {nea_drop_counts}")
-    logger.manip(f"Expected steals this fight: {remaining_steals}/{max_steals}")
+    #logger.debug(f"0-2 Steals result in extras needed: {nea_result_array}")
+    logger.warning(f"Expected steals this fight: {remaining_steals}/{max_steals}")
     xbox.click_to_battle()
     throw_distiller = (
         memory.main.get_item_slot(16) != 255 or 

@@ -347,7 +347,8 @@ def item_to_be_dropped(
     )
     
 
-    return final_item, int(pre_advance_13 + advances)
+    #return final_item, int(pre_advance_13 + advances)
+    return final_item, advances
 
 
 def ability_to_be_dropped(
@@ -748,7 +749,7 @@ def nea_track(pre_defender_x:bool = False, report=False):
     
     paths, best = purifico_to_nea(
         stage=stage,
-        report=True
+        report=False
     )
     if best == 99:
         return (99,99)
@@ -763,9 +764,10 @@ def nea_track(pre_defender_x:bool = False, report=False):
     #logger.manip(f"BnY_var: {game_vars.get_nea_after_bny()}")
     if bny != game_vars.get_nea_after_bny():
         game_vars.set_nea_after_bny(bny)
-    logger.manip(
-        f"Defender X: {game_vars.get_def_x_drop()}, Ronso before NEA: {game_vars.get_nea_after_bny()}"
-    )
+    if report:
+        logger.manip(
+            f"Defender X: {game_vars.get_def_x_drop()}, Ronso before NEA: {game_vars.get_nea_after_bny()}"
+        )
     
     #if not drop_x and not bny:
     #    return (paths[best], memory.main.next_chance_rng_10_calm())
@@ -777,10 +779,14 @@ def nea_track(pre_defender_x:bool = False, report=False):
 
 
 def print_manip_info(pre_x=False):
+    if pre_x:
+        purifico_to_nea(stage=2, report=True)
+    else:
+        purifico_to_nea(stage=3, report=True)
     _, advances = nea_track(pre_defender_x=pre_x, report=True)
-    logger.manip("Setting up for No-Encounters Armor (NEA):")
-    logger.manip(f"Defender X: {game_vars.get_def_x_drop()}")
-    logger.manip(f"B&Y: {game_vars.get_nea_after_bny()}")
+    logger.manip(f"Setting up for NEA | " + \
+    f"X: {game_vars.get_def_x_drop()} | " + \
+    f"B&Y: {game_vars.get_nea_after_bny()}")
     logger.manip(f"We need {advances} extra advances for next equipment drop.")
     logger.manip(f"(One advance per steal, three per player or enemy death)")
     
@@ -1057,26 +1063,27 @@ def guards_to_calm_equip_drop_count(
                     logger.manip(f"{i}: Battle 5 drops equipment")
         ptr += 3
     
-    extra_needed = [99,99,99]
+    result_array = [99,99,99]
     for i in range(3):
+        report_val = report_num == i
         result, best = purifico_to_nea(
             parent_array=drop_count[i],
             ptr=ptr+i,
-            report=False
+            report=report_val
         )
         if best == 99:
-            extra_needed[i] == 99
+            result_array[i] == 99
         else:
-            extra_needed[i] = best
-    logger.manip(f"Steal check: {extra_needed}")
-    return extra_needed
+            result_array[i] = best
+    logger.warning(f"Steal check: {result_array}")
+    return result_array
 
 
 def purifico_to_nea(
     parent_array = [],
     ptr = 3,
     stage=0,  # used to skip forward, reassess in Calm or after defender X.
-    report=False
+    report=True
 ):
     # parent_array passes in enemies that will drop earlier, passed from earlier in the run.
     # ptr is our position on the RNG10 array. Needs to be pre-advanced to last check +3.
@@ -1100,32 +1107,73 @@ def purifico_to_nea(
             results[1].append("maze_larva")
             logger.debug("Second larvae drops item.")
         ptr += 3
-        # Third larva, or Altana
+        
+        # Two larvae path
+        results[0].append("evrae_altana")
+        #ptr+3
+        #Ifrit
+        #ptr+6
+        #Valefor
+        #ptr+9
+        #Bahamut
+        #ptr+12
+        #ykt-63
+        chance = 30
+        if (test_array[ptr+12] & 0x7FFFFFFF) % 255 < chance:
+            results[0].append("ykt-63")
+            logger.debug("Robot 1 drops item")
+        #ptr+15
+        
+        chance = 60
+        # Third larvae path
+        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+            results[1].append("maze_larva")
+        #ptr+3
+        results[1].append("evrae_altana")
+        #ptr+6
+        #Ifrit
+        #ptr+9
+        #Valefor
+        #ptr+12
+        #Bahamut
+        #ptr+15
+        
+        ptr += 15
+        
+        '''
         results[0].append("evrae_altana")
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[1].append("maze_larva")
             logger.debug("Third larvae drops item.")
         ptr += 3  # Bypass aeons
         results[1].append("evrae_altana")  # Add altana
-        ptr += 6  # Bypass aeons
+        ptr += 9  # Bypass aeons
+        # This is to offset the third larvae.
+        chance = 30
+        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
+            results[0].append("ykt-63")
+            logger.debug("Robot 1 drops item")
+        ptr += 3
+        '''
     
     if stage <= 1:  # Highbridge start
         chance = 30
-        if game_vars.get_rescue_count() <= 2:
+        if stage == 1 and game_vars.get_rescue_count() <= 2:
             # YKT-63, alt to third larva
             if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
                 results[0].append("ykt-63")
                 results[1].append("ykt-63")
-                logger.debug("Robot 0 drops item (overlap from third larvae)")
-            ptr += 3  # Bypass aeons, only appropriate before higbridge start.
+                logger.debug("Robot 1 drops item (overlap from third larvae)")
+            ptr += 3
         # YKT-63
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("ykt-63")
             results[1].append("ykt-63")
-            logger.debug("Robot 1 drops item")
+            logger.debug("Robot 2 drops item")
         ptr += 3
         results[0].append("seymour_natus")
         results[1].append("seymour_natus")
+        ptr += 3
     
     # The rest of these, we can control in the Calm Lands.
     # No need to follow RNG10 through this logic.
@@ -1134,7 +1182,8 @@ def purifico_to_nea(
         for i in range(2):
             results.append(results[i] + ["defender_x"])
         for i in range(4):
-            results.append(results[i] + ["yenke_ronso","biran_ronso","ghost"])
+            results.append(results[i] + ["yenke_ronso","biran_ronso"])
+        for i in range(8):
             results[i] = results[i] + ["ghost"]
         
     elif stage == 3:
@@ -1150,8 +1199,11 @@ def purifico_to_nea(
     for i in range(len(results)):
         if stage == 1:
             report = True
-        else:
-            report = False
+        #else:
+        #    report = False
+        if report:
+            logger.manip("=========================")
+            logger.manip(f"Line start: {results[i]}")
         success,equip1,_ = rng_alignment_before_nea(enemies=results[i], report=report)  # here
         if success:
             quality += 1
@@ -1167,15 +1219,11 @@ def purifico_to_nea(
             # No need to search for what does not exist.
             best = i
     
-    logger.debug(f"Best result: {best}")
-    #logger.debug(f"Best Array check: {best_array}")
-    logger.debug(f"Preferable check: {preferable}")
-    
-    # Test mode only:
     if report:
-        logger.warning(results[best])
-    #logger.warning(memory.main.rng_array_from_index(index=12, array_len=20))
-    #logger.warning(memory.main.rng_array_from_index(index=13, array_len=20))
+        #logger.debug(f"Best result: {best}")
+        #logger.debug(f"Best Array check: {best_array}")
+        logger.warning(f"Preferable check: {preferable}")
+        #logger.warning(results[best])
     
     # Returned values are in this order:
     # best_array (extra kills needed on each path)
@@ -1204,7 +1252,7 @@ def party_size_rng_alignment(enemy_name) -> int:
         
 
 
-def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
+def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=True):
     ptr12 = 0
     ptr13 = 0
     advances = 0
@@ -1236,20 +1284,23 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
         if report:
             logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
         condition = "without"
-        if "defender_x" in enemies[i]:
+        condition2 = "without"
+        if "defender_x" in enemies:
             condition = "with"
+        if "yenke_ronso" in enemies:
+            condition2 = "with"
         if equipment.has_ability(32797) and enemies[i] == "ghost":
             #logger.warning("Found one!")
             if report:
-                logger.warning(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} drop on defender X.")
-                logger.warning(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
+                logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.")
+                logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
             if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
                 return (bool(extras == 0), equipment, extras)
                 
         ptr12 += 4
         ptr13 += advances
     if report:
-        logger.warning("No drop identified for this version.")
+        logger.manip(f"No drop identified for this version: Owner: {e_owner}, Type: {e_type}, {equipment.abilities()}")
     return (False, equipment, extras)
 
 
