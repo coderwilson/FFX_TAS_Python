@@ -421,8 +421,8 @@ class AllVars:
     def add_rescue_count(self):
         self.rescue_count += 1
 
-    def reset_rescue_count(self):
-        self.rescue_count = 0
+    def reset_rescue_count(self, value=0):
+        self.rescue_count = value
 
     def remove_rescue_count(self):
         self.rescue_count = 3
