@@ -241,7 +241,7 @@ def perform_TAS():
 
             if game.state == "DreamZan":
                 if game.step == 1:
-                    memory.main.wait_frames(30 * 0.5)
+                    #memory.main.wait_frames(15)
                     logger.info("New Game 2 function initiated.")
 
                     maybe_show_image(filename="images/laugh.jpg")
@@ -486,17 +486,22 @@ def perform_TAS():
                     return_array = area.miihen.arrival()
                     if return_array[2] is False:
                         game.state, game.step = reset.mid_run_reset()
+                    else:
+                        game.step = 2
+                        
+                if game.step == 2:
                     return_array = area.miihen.arrival_2(
                         return_array[0], return_array[1]
                     )
                     if return_array[2] is False:
                         game.state, game.step = reset.mid_run_reset()
-                    area.miihen.mid_point()
-                    logger.info("End of Mi'ihen mid point section.")
-                    game.step = 2
-                    maybe_create_save(save_num=26)
+                    else:
+                        area.miihen.mid_point()
+                        logger.info("End of Mi'ihen mid point section.")
+                        game.step = 3
+                        maybe_create_save(save_num=26)
 
-                if game.step == 2:
+                if game.step == 3:
                     return_val = area.miihen.low_road(return_array[0], return_array[1])
                     if return_val is False:
                         reset.reset_to_main_menu()
@@ -806,17 +811,19 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    #if game_vars.get_nea_after_bny():
-                    success,direct = rng_track.final_nea_check()
-                    _,indirect = rng_track.final_nea_check(with_ronso=True)
-                    if success and direct <= indirect:
-                        game.step = 2
-                    else:
+                    if game_vars.get_nea_after_bny():
                         game.step = 3
+                    else:
+                        success,direct = rng_track.final_nea_check()
+                        _,indirect = rng_track.final_nea_check(with_ronso=True)
+                        if success and direct <= indirect:
+                            game.step = 2
+                        else:
+                            game.step = 3
 
                 if game.step == 2:
                     nea_possible_check, _ = rng_track.final_nea_check()
-                    if game_vars.try_for_ne() and nea_possible_check:
+                    if nea_possible_check:  #game_vars.try_for_ne() and nea_possible_check:
                         manip_time_1 = logs.time_stamp()
 
                         logger.debug("Mark 1")
@@ -837,11 +844,10 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    nea_possible_check, _ = rng_track.final_nea_check()
-                    
-                    #if nea_possible_check and game_vars.ne_armor() == 255:
-                    success,_ = rng_track.final_nea_check()
-                    if success and game_vars.ne_armor() == 255:
+                    drop_check,_ = rng_track.final_nea_check()
+                    logger.warning(f"NE Armor check main: {game_vars.ne_armor()}")
+                    logger.warning(f"  NEA can drop main: {drop_check}")
+                    if drop_check and game_vars.ne_armor() == 255:
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:
@@ -876,23 +882,28 @@ def perform_TAS():
                     game.step = 2
 
                 if game.step == 2:
-                    area.zanarkand.trials()
+                    area.zanarkand.dome_interior()
                     game.step = 3
 
                 if game.step == 3:
+                    area.zanarkand.trials()
+                    game.step = 4
+
+                if game.step == 4:
                     if area.zanarkand.sanctuary_keeper():
-                        game.step = 4
+                        game.step = 5
                         maybe_create_save(save_num=48)
                         area.zanarkand.yunalesca_prep()
                     else:
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
                         load_game.load_save_num(0)
+                        game.step = 2
                         # Do not change game.state or game.step. Will restart this section.
 
-                if game.step == 4:
+                if game.step == 5:
                     if area.zanarkand.yunalesca():
-                        game.step = 5
+                        game.step = 6
                     else:
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
@@ -900,7 +911,7 @@ def perform_TAS():
                         # Do not change game.state or game.step. Will restart this section.
                         #game.state, game.step = reset.mid_run_reset()
 
-                if game.step == 5:
+                if game.step == 6:
                     area.zanarkand.post_yunalesca()
                     game.step = 1
                     game.state = "Sin"
@@ -1177,20 +1188,7 @@ def perform_TAS():
     xbox.tap_a()
     memory.main.wait_frames(90)
 
-    #load_game.load_into_game(gamestate="Nem_Farm", step_counter=1)
-    #nemesis.arena_prep.return_to_airship()
-    #nemesis.arena_prep.air_ship_destination(dest_num=12)
-    #area.chocobos.all_races()
-    # Use the following to go straight into remiem races.
-    # while not pathing.set_movement([-637, -246]):
-    #    pass
-    #area.chocobos.to_remiem()
-    #area.chocobos.remiem_races()
-    #area.chocobos.leave_temple()
-    #area.chocobos.sun_crest(godhand=0, baaj=0)
-    #area.chocobos.butterflies()
-    
-    #reset.reset_no_battles()
+    import z_choco_races_test
 
     memory.main.end()
     logger.info("Automation complete. Shutting down. Have a great day!")

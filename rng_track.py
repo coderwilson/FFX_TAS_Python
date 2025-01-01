@@ -416,6 +416,7 @@ def report_dropped_item(
     need_adv: int = 0,
     report=False,
 ):
+    report=False  # For now, we don't want to see this. Slows down the TAS slightly.
     abi_str = str(pref_ability)
     pref_type
     report = True
@@ -426,6 +427,7 @@ def report_dropped_item(
         logger.debug(drop.equip_type)
         report = False
 
+    
     if report:
         logs.write_rng_track(
             "+Item drop off of:" + str(enemy) + "| advances:" + str(need_adv)
@@ -740,6 +742,7 @@ def zombie_track(report=False):
 def nea_track(pre_defender_x:bool = False, report=False):
     drop_x = False
     bny = False
+    advances = 0
     #logger.warning(memory.main.rng_array_from_index(index=12, array_len=20))
     #logger.warning(memory.main.rng_array_from_index(index=13, array_len=20))
     if pre_defender_x:
@@ -757,6 +760,8 @@ def nea_track(pre_defender_x:bool = False, report=False):
     bny = bool(best >= len(paths)/2)
     if stage == 2:
         drop_x = bool((best % 4) >= 2)
+        if not drop_x:
+            advances = 1
     
     if drop_x != game_vars.get_def_x_drop():
         game_vars.set_def_x_drop(drop_x)
@@ -774,7 +779,7 @@ def nea_track(pre_defender_x:bool = False, report=False):
     #elif not drop_x and memory.main.next_chance_rng_10() != 0:
     #    return (paths[best], 0)
     #else:
-    return (0, memory.main.next_chance_rng_10())
+    return (advances, memory.main.next_chance_rng_10())
     # Note return of 0 means we don't need any extra mobs, other than X or Ronso.
 
 
@@ -1201,9 +1206,11 @@ def purifico_to_nea(
             report = True
         #else:
         #    report = False
+        '''
         if report:
             logger.manip("=========================")
             logger.manip(f"Line start: {results[i]}")
+        '''
         success,equip1,_ = rng_alignment_before_nea(enemies=results[i], report=report)  # here
         if success:
             quality += 1
@@ -1222,7 +1229,7 @@ def purifico_to_nea(
     if report:
         #logger.debug(f"Best result: {best}")
         #logger.debug(f"Best Array check: {best_array}")
-        logger.warning(f"Preferable check: {preferable}")
+        logger.warning(f"Preferable check: {preferable} | best = {best}")
         #logger.warning(results[best])
     
     # Returned values are in this order:
@@ -1252,7 +1259,7 @@ def party_size_rng_alignment(enemy_name) -> int:
         
 
 
-def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=True):
+def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
     ptr12 = 0
     ptr13 = 0
     advances = 0
@@ -1281,8 +1288,8 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=True):
         else:
             e_owner = memory.main.name_from_number(equipment.owner())
         e_ab_count = len([i for i in equipment.abilities() if i != 255])
-        if report:
-            logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
+        #if report:
+        #    logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
         condition = "without"
         condition2 = "without"
         if "defender_x" in enemies:
@@ -1293,9 +1300,9 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=True):
             #logger.warning("Found one!")
             if report:
                 logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.")
-                logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
+                #logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
             if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
-                return (bool(extras == 0), equipment, extras)
+                return (True, equipment, extras)
                 
         ptr12 += 4
         ptr13 += advances
@@ -1316,7 +1323,11 @@ def final_nea_check(with_ronso:bool = False):
         results = ronso_array + epaaj_array + ghost_array
         result_possible, _, _ = rng_alignment_before_nea(enemies=results)
         if result_possible:
-            logger.manip(f"===  Final check found with {i} extra Epaaj drops.  ===")
+            if len(ronso_array) == 0:
+                check = "without"
+            else:
+                check = "with"
+            logger.manip(f"===  Final check found with {i} extra Epaaj drops, {check} ronso first.  ===")
             return (result_possible, i)
         epaaj_array.append("epaaj")
     return (result_possible, 99)
@@ -1389,6 +1400,31 @@ def hit_chance_table(index: int):
         return 80
     elif index == 8:
         return 100
+
+
+def future_enemy_attack_damage(
+    character: int = 0, 
+    enemy: str = "spectral_keeper", 
+    attack_index: int = 1, 
+    report:bool = False
+) -> int:
+    # NOT WORKING
+    pre_battle_advance = int(not memory.main.battle_active())
+    index = 20 + character
+    damage_array = memory.main.rng_array_from_index(index=index, array_len=(attack_index*2) + 3)
+    array_pos = (attack_index*2) + 1 + pre_battle_advance
+
+    damage_roll = (damage_array[array_pos] // 0xFFFFFFFF % 31) + 240
+    if enemy == "spectral_keeper":
+        base_damage_value = 24
+    else:
+        base_damage_value = 1
+    if report:
+        logger.manip(f"{enemy} base damage value: {base_damage_value}")
+    damage_value = (base_damage_value * damage_roll) // 256
+    if report:
+        logger.manip(f"Future Attack {attack_index} will hit for damage {damage_value}")
+    return damage_value
 
 
 def oblitz_history():

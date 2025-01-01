@@ -184,7 +184,8 @@ class Player:
                 if memory.main.game_over() or not memory.main.battle_complete():
                     logger.warning("Battle has ended. Returning.")
                     return
-        attack_menu_id = [x for x in [0, 203, 207, 210, 216] if x in self.battle_menu][
+        attack_indices = [0, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216]
+        attack_menu_id = [x for x in attack_indices if x in self.battle_menu][
             0
         ]
         self.navigate_to_battle_menu(attack_menu_id)

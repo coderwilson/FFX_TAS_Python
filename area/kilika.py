@@ -232,7 +232,7 @@ def forest_1():
             xbox.tap_b()
 
 
-def trials():
+def trials(destro:bool=False):
     logger.info("Kilika trials")
     memory.main.click_to_control()
     checkpoint = 0
@@ -273,21 +273,76 @@ def trials():
                 approach_coords([56,175])
                 checkpoint += 1
             elif checkpoint == 39:  # Pick up last Kilika sphere
-                approach_coords([40,-21])
-                checkpoint += 1
+                approach_coords([-40,-21])
+                if destro:
+                    checkpoint = 60
+                else:
+                    checkpoint += 1
             elif checkpoint == 50:  # Insert and remove, opens door
                 approach_coords([12,280])
                 memory.main.wait_frames(3)
                 approach_coords([12,280])
                 checkpoint += 1
-            # elif checkpoint == 53 and game_vars.csr():
-            #    memory.main.await_control()
-            #    FFXC.set_movement(0, 1)
-            #    memory.main.wait_frames(2)
-            #    memory.main.await_event()
-            #    FFXC.set_neutral()
-            #    xbox.name_aeon("Ifrit")  # Set Ifrit name
-            #    checkpoint = 55
+
+            # Destro sphere pieces
+            elif checkpoint == 61:
+                approach_coords([-20,-30])
+                checkpoint += 1
+            elif checkpoint == 65:  # North to wall
+                while memory.main.get_actor_coords(0)[1] < 12:
+                    FFXC.set_movement(0,1)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 69:  # Center podium
+                FFXC.set_movement(1,0)
+                memory.main.wait_frames(12)
+                FFXC.set_neutral()
+                memory.main.wait_frames(15)
+                while memory.main.get_actor_coords(0)[0] < -8:
+                    FFXC.set_movement(1,-0.5)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 73:  # North near wall
+                FFXC.set_neutral()
+                memory.main.wait_frames(18)
+                while memory.main.get_actor_coords(0)[1] < 180:
+                    FFXC.set_movement(0,1)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 77:  # Push east towards hidden room
+                while memory.main.get_actor_coords(0)[0] < 44:
+                    FFXC.set_movement(1,-0.5)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 81:  # Push podium north
+                FFXC.set_neutral()
+                memory.main.wait_frames(18)
+                while memory.main.get_actor_coords(0)[1] < 189.7:
+                    FFXC.set_movement(0,1)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 88:  # Pick up kilika sphere
+                approach_coords([58,208])
+                checkpoint += 1
+            elif checkpoint == 91:  # Place kilika sphere
+                approach_coords([15,282])
+                checkpoint += 1
+            elif checkpoint == 97:  # Pick up destro sphere
+                approach_coords([86,174])
+                checkpoint += 1
+            elif checkpoint == 107:  # Place destro sphere
+                approach_coords([58,208])
+                checkpoint += 1
+            elif checkpoint == 109:  # Open chest
+                approach_coords([65,208])
+                checkpoint += 1
+            elif checkpoint == 113:  # Pick up kilika sphere
+                approach_coords([15,282])
+                checkpoint = 51  # Back to regular path
+            
+            # Chamber pieces
+            elif checkpoint == 54 and memory.main.get_story_progress() > 2000:
+                return
             elif checkpoint == 54 and not game_vars.csr():  # Talk to Wakka
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1

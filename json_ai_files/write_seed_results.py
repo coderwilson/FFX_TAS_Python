@@ -78,6 +78,14 @@ def check_ml_heals(seed_num):
             avina_heals = True
         
         #  Add other cases before catchall Else statement here, as we add them to the program.
+        elif not "flip_lowroad" in results[seed_num].keys():
+            logger.debug("First attempt, flipping at Lowroad")
+            modifier = "flip_lowroad"
+            avina_heals = False
+        elif not "True" in results[seed_num]["flip_lowroad"]:
+            logger.debug("Flip lowroad and aVIna heals")
+            modifier = "flip_lowroad"
+            avina_heals = True
 
         else:
             logger.debug("Catchall settings.")

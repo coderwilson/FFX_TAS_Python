@@ -168,7 +168,7 @@ class DjoseTrials(AreaMovementBase):
         98: [8, 70],
         99: [0, 61],
         # Insert destro sphere
-        101: [22, 42],
+        101: [18, 42],
         # Destro chest
         103: [-26, 37],
         # End of Trials

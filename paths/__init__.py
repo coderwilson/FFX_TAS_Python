@@ -57,6 +57,25 @@ from paths.zanarkand import (
     ZanarkandTrials,
     ZanarkandYunalesca,
 )
+from paths.cactuar_village import (
+    cactuar1,
+    cactuar2,
+    cactuar3,
+    cactuar4,
+    cactuar5,
+    cactuar6,
+    cactuar7,
+    cactuar8,
+    cactuar9,
+    cactuar10,
+)
+from paths.destro_spheres import (
+    zan_destro_sphere,
+    besaid_destro_sphere,
+    kilika_destro_sphere,
+    djose_destro_sphere,
+    macalania_destro_sphere
+)
 
 __all__ = [
     "Airship",
@@ -74,6 +93,16 @@ __all__ = [
     "BikanelHome",
     "BoatsLiki",
     "BoatsWinno",
+    "cactuar1",
+    "cactuar2",
+    "cactuar3",
+    "cactuar4",
+    "cactuar5",
+    "cactuar6",
+    "cactuar7",
+    "cactuar8",
+    "cactuar9",
+    "cactuar10",
     "CalmLands",
     "DefenderX",
     "DjoseDance",
@@ -133,4 +162,9 @@ __all__ = [
     "ZanarkandOutdoors",
     "ZanarkandTrials",
     "ZanarkandYunalesca",
+    "zan_destro_sphere",
+    "besaid_destro_sphere",
+    "kilika_destro_sphere",
+    "djose_destro_sphere",
+    "macalania_destro_sphere"
 ]

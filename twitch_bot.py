@@ -198,7 +198,7 @@ class Bot(commands.Bot):
                 print("CSR started.")
             else:
                 await ctx.send("CSR is already running.")
-
+                
     # Define the stop-CSR command
     @commands.command(aliases=("csr_stop", "csr_halt"))
     async def stop_csr(self, ctx: commands.Context):
@@ -382,6 +382,8 @@ class Bot(commands.Bot):
     # Launch Marbles
     @commands.command(aliases=("marbles_start"))
     async def marbles(self, ctx: commands.Context):
+        #await ctx.send("Sorry, Marbles is currently broken.")
+        
         await self.marbles_end(ctx)
         if self.marbles is None and self.game is None:
             print("Attempting process start.")
@@ -397,6 +399,7 @@ class Bot(commands.Bot):
             print("Marbles started.")
         else:
             print("===  MARBLES ALREADY RUNNING  ===")
+        
     
     def game_ended_check(self):
         try:

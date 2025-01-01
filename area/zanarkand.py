@@ -101,6 +101,37 @@ def decide_luck():
     return force_luck
 
 
+def decide_advance_spectral_keeper(report:bool=False) -> int:
+    # NOT WORKING YET
+    bahamut_hp = 2899
+    if game_vars.end_game_version() == 4:
+        bahamut_hp = 2710
+    if (
+        rng_track.future_enemy_attack_damage(character=8, enemy="spectral_keeper", attack_index=1) and
+        rng_track.future_enemy_attack_damage(character=8, enemy="spectral_keeper", attack_index=2)
+    ):
+        damage1 = rng_track.future_enemy_attack_damage(
+            character=8, 
+            enemy="spectral_keeper", 
+            attack_index=1, 
+            report= True
+        )
+        damage2 = rng_track.future_enemy_attack_damage(
+            character=8, 
+            enemy="spectral_keeper", 
+            attack_index=2, 
+            report= True
+        )
+        total_damage = damage1 + damage2
+        remaining_hp = max(bahamut_hp - total_damage, 0)
+        if report:
+            logger.warning(f"Bahamut damage on Spectral: {total_damage}/{bahamut_hp} | remaining HP: {remaining_hp}")
+        return remaining_hp
+    if report:
+        logger.debug("Spectral will miss at least once. No calc needed.")
+    return 9999
+
+
 def arrival():
     memory.main.await_control()
     decide_nea()
@@ -180,6 +211,8 @@ def arrival():
         FFXC.set_movement(0, 1)
         xbox.tap_b()
 
+def dome_interior():
+    re_equip_ne = False
     logger.info("Start of Zanarkand Dome section")
     friend_slot = memory.main.get_item_slot(97)
     if friend_slot == 255:
@@ -198,7 +231,10 @@ def arrival():
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
 
-    checkpoint = 0
+    if memory.main.get_map() == 316:
+        checkpoint = 21  # Reset from failing Spectral Keeper fight.
+    else:
+        checkpoint = 0
     while memory.main.get_map() != 320:
         if memory.main.user_control():
             if checkpoint == 11 and game_vars.end_game_version() != 4:

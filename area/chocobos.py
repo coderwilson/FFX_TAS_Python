@@ -2,20 +2,43 @@ import logging
 
 import battle.main
 import memory.main
-from memory.main import check_near_actors
+from memory.main import check_near_actors, actor_index, get_actor_angle
 import pathing
+from pathing import approach_coords
 import xbox
 import math
+import time
 from paths.nem import Race1, Race2, Race3, ToRemiem
 from nemesis.arena_prep import (
     air_ship_destination,
     return_to_airship,
-    unlock_omega
+    unlock_omega,
+    arena_return
 )
 from nemesis.arena_battles import yojimbo_battle
 from airship_pathing import air_ship_path
 from area.sin import exit_cockpit
 from paths.home import BikanelDesert
+from paths.cactuar_village import (
+    cactuar1,
+    cactuar2,
+    cactuar3,
+    cactuar4,
+    cactuar5,
+    cactuar6,
+    cactuar7,
+    cactuar8,
+    cactuar9,
+    cactuar10
+)
+from paths.destro_spheres import (
+    zan_destro_sphere,
+    besaid_destro_sphere,
+    kilika_destro_sphere,
+    djose_destro_sphere,
+    macalania_destro_sphere
+)
+from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
 from menu import equip_armor
 from save_sphere import touch_and_go
 import tts
@@ -23,6 +46,7 @@ from players import CurrentPlayer
 import reset
 from area.dream_zan import new_game
 from json_ai_files.write_seed import write_custom_message
+import time
 
 FFXC = xbox.controller_handle()
 logger = logging.getLogger(__name__)
@@ -87,7 +111,7 @@ def choco_tame_1():
     race_left = memory.main.get_actor_coords(0)[0]
     race_right = memory.main.get_actor_coords(0)[0]
     while memory.main.diag_progress_flag() not in [44, 74]:
-        angle = memory.main.get_actor_angle(0)
+        angle = get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
         
         # For troubleshooting:
@@ -159,11 +183,11 @@ def choco_tame_2():
     last_ball = 0
     min_angle = 1.4
     max_angle = 1.6
-    angle = memory.main.get_actor_angle(0)
+    angle = get_actor_angle(0)
     near_end_reset = False
     while memory.main.diag_progress_flag() not in [44, 74]:
         position = memory.main.get_actor_coords(0)
-        angle = memory.main.get_actor_angle(0)
+        angle = get_actor_angle(0)
         
         # V3 logic
         if position[1] > 100:  # Right at the end, force back to center.
@@ -282,7 +306,7 @@ def choco_tame_2_old():
         if last_cp != checkpoint:
             logger.debug(f"Checkpoint: {checkpoint}")
             last_cp = checkpoint
-        memory.main.get_actor_angle(0)
+        get_actor_angle(0)
         position = memory.main.get_actor_coords(0)
         
         if (
@@ -461,14 +485,20 @@ def choco_tame_3():
 def to_remiem(start_races:bool = True):
     memory.main.await_control()
     logger.info("Talking to chocobo lady")
-    while memory.main.user_control():
-        pathing.set_movement([-1565, 434])
-        xbox.tap_b()
+    pathing.approach_actor_by_id(20531)
+    #while memory.main.user_control():
+    #    pathing.set_movement([-1565, 434])
+    #    xbox.tap_b()
     FFXC.set_neutral()
     logger.info("Let me ride one!")
     memory.main.click_to_control()
     logger.info("Heading to Remiem")
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
+
+    pos = memory.main.get_actor_coords(0)
+    if pos[0] > 1200 and pos[1] > -200:
+        while not pathing.set_movement([533, -132]):
+            pass
 
     checkpoint = 0
     while checkpoint < 35:
@@ -494,13 +524,9 @@ def to_remiem(start_races:bool = True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
     
-    if not start_races:
-        while not pathing.set_movement([526,359]):
-            pass
-        xbox.set_neutral()
+    #memory.main.set_game_speed(0)
+    FFXC.set_neutral()
     
-    memory.main.set_game_speed(0)
-
 
 def remiem_races():
     logger.debug("Ready to start races")
@@ -514,9 +540,8 @@ def remiem_races():
 
 
 def choco_race_1():
-    for i in range(memory.main.get_actor_array_size()):
-        if memory.main.get_actor_id(i) != 52685 and pathing.distance(i) < 60:
-            logger.debug(f"Actor {i}: {memory.main.get_actor_id(i)}")
+    FFXC.set_neutral()
+    check_near_actors(wait_results=False)
     pathing.approach_actor_by_id(20531)
     FFXC.set_neutral()
     memory.main.click_to_control()
@@ -540,9 +565,7 @@ def choco_race_1():
 
 def choco_race_2():
     FFXC.set_neutral()
-    for i in range(memory.main.get_actor_array_size()):
-        if memory.main.get_actor_id(i) != 52685 and pathing.distance(i) < 60:
-            logger.debug(f"Actor {i}: {memory.main.get_actor_id(i)}")
+    check_near_actors(wait_results=False)
     memory.main.click_to_control()
     pathing.approach_actor_by_id(20531)
     FFXC.set_neutral()
@@ -575,9 +598,7 @@ def choco_race_2():
 
 def choco_race_3():
     FFXC.set_neutral()
-    for i in range(memory.main.get_actor_array_size()):
-        if memory.main.get_actor_id(i) != 52685 and pathing.distance(i) < 60:
-            logger.debug(f"Actor {i}: {memory.main.get_actor_id(i)}")
+    check_near_actors(wait_results=False)
     memory.main.click_to_control()
     pathing.approach_actor_by_id(20531)
     FFXC.set_neutral()
@@ -650,7 +671,7 @@ def butterflies():
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    memory.main.set_game_speed(1)
+    #memory.main.set_game_speed(1)
     
     # Inside Rin travel agency
     while not pathing.set_movement([-3,-54]):
@@ -875,20 +896,22 @@ def butterflies():
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             pass
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     
 # How about getting the celestial mirror?
 def upgrade_mirror():
     # Assume we have already arrived near the family.
     while not pathing.set_movement([253,45]):
         pass
-    memory.main.set_game_speed(1)
+    #memory.main.set_game_speed(0)
     while not pathing.set_movement([255,62]):
         pass
     while memory.main.user_control():  # Talk to lady
         pathing.set_movement([245,62])
         xbox.tap_b()
     memory.main.click_to_control()
+    while not pathing.set_movement([250,70]):
+        pass
     while not pathing.set_movement([267,110]):
         pass
     while memory.main.user_control():  # Screen change
@@ -991,11 +1014,11 @@ def upgrade_mirror():
     
     leave_mirror_area(to_airship=False)
     
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     
 def leave_mirror_area(to_airship:bool = False):
     # Leave this area.
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     path = [
         [-112,-15],
         [-62,-3]
@@ -1022,12 +1045,12 @@ def leave_mirror_area(to_airship:bool = False):
 
 def spirit_lance():
     # Assumes we start from Macalania Woods first screen.
-    #memory.main.set_game_speed(1)
+    ##memory.main.set_game_speed(1)
     
     dodge_count = memory.main.l_strike_count()
     start_count = dodge_count
     
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     # Towards thunder plains
     path = [
         [431,-4],
@@ -1038,7 +1061,7 @@ def spirit_lance():
             pass
     while memory.main.user_control():
         pathing.set_movement([900,55])
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     
     logger.debug("Enter thunder plains north.")
     # Approach first cactuar stone
@@ -1055,10 +1078,10 @@ def spirit_lance():
     FFXC.set_neutral()
     logger.debug("Waiting for cactuar stone to change status.")
     
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     while not memory.main.cactuar_stone_4():
         logger.debug(f"Cactuar status: {memory.main.cactuar_stone_4()}")
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     
     for i in range(2):
         while not pathing.set_movement([-165,577]):
@@ -1067,7 +1090,7 @@ def spirit_lance():
         xbox.tap_x()
         logger.debug("Activating stone!")
         memory.main.click_to_control()
-    #memory.main.set_game_speed(1)
+    ##memory.main.set_game_speed(1)
     
     
     # South towards travel agency
@@ -1089,9 +1112,9 @@ def spirit_lance():
                 dodge_count = memory.main.l_strike_count()
                 
     logger.debug("Ready to dodge.")
-    #memory.main.set_game_speed(1)
+    ##memory.main.set_game_speed(1)
     run_count = 0
-    while dodge_count < start_count + 5:
+    while dodge_count < start_count + 200:
         if run_count % 3 == 0:
             if pathing.set_movement([-95,-1000]):
                 run_count = random.choice(range(0, 1000))
@@ -1104,7 +1127,7 @@ def spirit_lance():
         if memory.main.dodge_lightning(dodge_count):
             dodge_count = memory.main.l_strike_count()
             logger.debug(f"Dodges left: {start_count + 200 - dodge_count}")
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     
     
     # Wrap up North map
@@ -1202,7 +1225,7 @@ def spirit_lance():
     
     item_index = memory.main.get_item_slot(9)
     item_count = 0
-    '''
+    
     if item_index == 255:
         while memory.main.get_item_slot(9) == 255:
             logger.debug(f"A - Index: {item_index} | Count: {item_count}")
@@ -1223,7 +1246,6 @@ def spirit_lance():
     FFXC.set_neutral()
     logger.debug("Got it. Let's get going!")
     memory.main.click_to_control()
-    '''
     
     while not pathing.set_movement([-79,28]):
         pass
@@ -1242,7 +1264,7 @@ def rusty_sword():
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     
     # Ronso area
     path1 = [
@@ -1295,7 +1317,7 @@ def rusty_sword():
             pass
     FFXC.set_neutral()
     
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     
     for i in range(memory.main.get_actor_array_size()):
         if memory.main.get_actor_id(i) != 52685:
@@ -1304,7 +1326,7 @@ def rusty_sword():
     FFXC.set_neutral()
     #memory.main.wait_frames(300)
     memory.main.click_to_control()
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     
     # Return trip from the rusty sword
     for i in range(len(path3)-1, -1, -1):
@@ -1331,12 +1353,12 @@ def rusty_sword():
             pass
     
     #return_to_airship()
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     #memory.main.await_control()
 
 def masamune():
     air_ship_destination(dest_num=5)
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     
     # Aftermath map
     path = [
@@ -1368,7 +1390,7 @@ def masamune():
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             logger.debug(path[i])
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     FFXC.set_neutral()
     xbox.tap_b()  # Lift
     xbox.tap_b()
@@ -1396,7 +1418,7 @@ def masamune():
     xbox.tap_b()
     xbox.tap_b()
     memory.main.click_to_control()
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     
     # Back towards High/Low roads.
     path = [
@@ -1494,7 +1516,7 @@ def masamune():
             pass
     memory.main.click_to_control()
     
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
 
 def saturn_crest():
@@ -1505,7 +1527,7 @@ def saturn_crest():
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     
     #Teleporter pad.
     while not pathing.set_movement([54,107]):
@@ -1551,7 +1573,7 @@ def saturn_crest():
     
     while not pathing.set_movement([154,-601]):
         pass
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
     
     
@@ -1563,7 +1585,7 @@ def moon_crest():  # Not used in current route
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     
     # To the chest, used both directions.
     path = [
@@ -1593,41 +1615,8 @@ def moon_crest():  # Not used in current route
         while not pathing.set_movement(path[i]):
             pass
     
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
-
-def belgemine():  # Not yet working.
-    # Assumes airship start.
-    air_ship_destination(dest_num=12)
-    to_remiem(start_races=False)
-    
-    # First battle, Valefor
-    memory.main.click_to_event_temple(0)  # Just to go north.
-    battle.main.belgemine()
-    
-    for i in range(memory.main.get_actor_array_size()):
-        if memory.main.get_actor_id(i) != 52685 and pathing.distance(i) < 200:
-            logger.debug(f"Actor {i}: {memory.main.get_actor_id(i)}, {pathing.distance(i)}")
-    
-    for i in range(4):
-        while memory.main.user_control():
-            pathing.set_movement([-10,0])
-        if i == 3:
-            battle.main.belgemine(use_aeon=3)
-        else:
-            battle.main.belgemine()
-        
-    # To the girls
-    path = [
-        [-61,-61],
-        [11,-78],
-        [105,-26],
-        [145,-4]
-    ]
-    for i in range(len(path)):
-        while not pathing.set_movement(path[i]):
-            pass
-    memory.main.click_to_event_temple(0)  # Just to go north.
 
 def desert_path(start:int=4, end:int=55):
     # Let's borrow the movement from the run.
@@ -1690,10 +1679,18 @@ def divert_to_stone_south(return_north:bool = False,last_path:bool = False):
         pass
         
     # Approach stone
-    #speed_check = memory.main.get_game_speed()
+    speed_check = memory.main.get_game_speed()
     #memory.main.set_game_speed(0)
+    start_time = int(time.time())  # Record the starting time as an integer.
     while memory.main.user_control():
-        pathing.set_movement([350,-340])
+        current_time = int(time.time())  # Get the current timestamp as an integer.
+        elapsed_time = current_time - start_time
+
+        if elapsed_time % 2 == 1:  # Every third second.
+            pathing.set_movement([340, -340])
+        else:  # For the other two seconds.
+            pathing.set_movement([350, -340])
+        
         xbox.tap_b()
     memory.main.click_to_control()
     #memory.main.set_game_speed(speed_check)
@@ -1720,10 +1717,18 @@ def divert_to_stone_north(return_north:bool = True):
         pass
     while not pathing.set_movement([349,-346]):
         pass
-    #speed_check = memory.main.get_game_speed()
+    speed_check = memory.main.get_game_speed()
     #memory.main.set_game_speed(0)
+    start_time = int(time.time())  # Record the starting time as an integer.
     while memory.main.user_control():
-        pathing.set_movement([350,-340])
+        current_time = int(time.time())  # Get the current timestamp as an integer.
+        elapsed_time = current_time - start_time
+
+        if elapsed_time % 2 == 1:  # Every third second.
+            pathing.set_movement([340, -340])
+        else:  # For the other two seconds.
+            pathing.set_movement([350, -340])
+        
         xbox.tap_b()
     memory.main.click_to_control()
     #memory.main.set_game_speed(speed_check)
@@ -1740,9 +1745,57 @@ def divert_to_stone_north(return_north:bool = True):
             pass
         memory.main.click_to_event_temple(5)
 
+def move_cactuar(cactuar_num:int = 4, checkpoint:int = 0):
+    try:
+        if cactuar_num == 1:
+            pos = cactuar1.checkpoint_coordiantes[checkpoint]
+        elif cactuar_num == 2:
+            pos = cactuar2.checkpoint_coordiantes[checkpoint]
+        elif cactuar_num == 3:
+            #pos = cactuar3.checkpoint_coordiantes[checkpoint]
+            pos = []
+        elif cactuar_num == 4:
+            pos = cactuar4.checkpoint_coordiantes[checkpoint]
+        elif cactuar_num == 5:
+            # Technically there is no 5. Paired with 4.
+            pos = cactuar5.checkpoint_coordiantes[checkpoint]
+        elif cactuar_num == 6:
+            #pos = cactuar6.checkpoint_coordiantes[checkpoint]
+            pos = []
+        elif cactuar_num == 7:
+            pos = cactuar7.checkpoint_coordiantes[checkpoint]
+        elif cactuar_num == 8:
+            pos = cactuar8.checkpoint_coordiantes[checkpoint]
+        elif cactuar_num == 9:
+            pos = cactuar9.checkpoint_coordiantes[checkpoint]
+            pos = []
+        elif cactuar_num == 10:
+            #pos = cactuar10.checkpoint_coordiantes[checkpoint]
+            pos = []
+        else:
+            pos = []
+    except:
+        pos = []
+    #logger.warning(pos)
+
+    #if cactuar_num in [8]:
+    #    FFXC.set_neutral()
+    #    return
+    if len(pos) != 0:
+        #logger.debug(f"From [{round(memory.main.get_coords()[0],2)}, {round(memory.main.get_coords()[1],2)}] towards: {pos}")
+        if pathing.set_movement(pos):
+            return True
+    else:
+        #logger.debug(f"From [{round(memory.main.get_coords()[0],2)}, {round(memory.main.get_coords()[1],2)}] towards: Cactuar")
+        #pathing.approach_actor_by_id(4304)
+        cactuar_index = actor_index(4304)
+        pathing.set_movement(memory.main.get_actor_coords(cactuar_index))
+    return False
+
+
 def engage_cactuar(cactuar_num:int = 99):
     speed_check = memory.main.get_game_speed()
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     if cactuar_num == 6:
         touch_and_go()
     elif cactuar_num == 7:
@@ -1752,27 +1805,107 @@ def engage_cactuar(cactuar_num:int = 99):
             pathing.set_movement([7,-200])
     elif not cactuar_num in [3,10]:
         pathing.approach_actor_by_id(4304)
+    if cactuar_num == 9:
+        memory.main.click_to_diag_progress(33)
+    else:
+        memory.main.click_to_diag_progress(41)
     memory.main.click_to_control()
-    while not memory.main.diag_progress_flag() in [64, 77, 78, 92, 95, 106]:
-        if memory.main.user_control():
-            FFXC.set_movement(0,-1)
+    start_frame = memory.main.get_frame_count()
+    last_turn_frame = start_frame
+    check_near_actors(wait_results=False, max_dist=350)
+    if cactuar_num == 4:
+        # Some value between 19 and 22 (inclusive)
+        cactuar_index = 21
+    else:
+        cactuar_index = actor_index(4304)
+    cactuar_angle = get_actor_angle(cactuar_index)
+    angle_set = False
+    last_status = "None"
+    new_status = "None"
+    last_diag = memory.main.diag_progress_flag()
+    logger.warning(f"Prepping cactuar angle: {cactuar_angle}")
+    checkpoint = 0
+    #while not memory.main.diag_progress_flag() in [64, 77, 78, 92, 95, 106]:
+    while (
+        (not memory.main.battle_active()) and 
+        (not memory.main.diag_progress_flag() in [64, 77, 78, 92, 95, 106])
+    ):
+        if memory.main.diag_progress_flag() == 40:
+            checkpoint = 0
+        elif memory.main.user_control():
+            # General movement.
+            if memory.main.get_frame_count() - start_frame < 4:
+                # Always move for the first four frames.
+                new_status = "First Four Frames"
+                last_turn_frame = memory.main.get_frame_count()
+                if move_cactuar(cactuar_num=cactuar_num, checkpoint=checkpoint):
+                    checkpoint += 1
+            elif cactuar_num == 4 and memory.main.get_frame_count() - start_frame < 15:
+                last_turn_frame = memory.main.get_frame_count()
+                new_status = "First Ten Frames"
+                if move_cactuar(cactuar_num=cactuar_num, checkpoint=checkpoint):
+                    checkpoint += 1
+            elif not angle_set:
+                # First time we hit this, should be after four frames so Cactuar adjusts.
+                cactuar_angle = get_actor_angle(cactuar_index)
+                logger.debug(f"Angle update: {cactuar_angle}")
+                angle_set = True
+            elif cactuar_num == 8 and checkpoint in [1,2]:
+                last_turn_frame = memory.main.get_frame_count()
+                new_status = "Underground Move"
+                if move_cactuar(cactuar_num=cactuar_num, checkpoint=checkpoint):
+                    checkpoint += 1
+            elif get_actor_angle(cactuar_index) == cactuar_angle:
+                last_turn_frame = memory.main.get_frame_count()
+                new_status = "Main Move"
+                if move_cactuar(cactuar_num=cactuar_num, checkpoint=checkpoint):
+                    checkpoint += 1
+            elif memory.main.get_frame_count() - last_turn_frame < 4:
+                new_status = "Buffer Move"
+                # As cactuar is turning, we have a small buffer to continue moving.
+                if move_cactuar(cactuar_num=cactuar_num, checkpoint=checkpoint):
+                    checkpoint += 1
+            else:
+                new_status = "HOOOOOOOOLD"
+                FFXC.set_neutral()
+            
+        elif memory.main.diag_progress_flag() != last_diag:
+            FFXC.set_neutral()
+            new_status = "Diag progress change"
+            xbox.tap_b()
+            last_diag = memory.main.diag_progress_flag()
         else:
-            logger.debug(f"Progress flag: {memory.main.diag_progress_flag()}")
             FFXC.set_neutral()
             xbox.tap_b()
+        
+        if last_status != new_status:
+            if new_status == "Diag progress change":
+                logger.debug(f"Diag: {memory.main.diag_progress_flag()} | {new_status}")
+            else:
+                logger.debug(f"[{round(memory.main.get_coords()[0],2)}, {round(memory.main.get_coords()[1],2)}] | {new_status}")
+            #logger.debug(f"[{round(last_angle,2)}, {round(get_actor_angle(cactuar_index),2)}] | {new_status}")
+            last_status = new_status
+        
+        if (cactuar_num==9 and memory.main.diag_progress_flag() == 41):
+            dist_check = int(memory.main.distance(actor_index=cactuar_index))
+            logger.debug(f"Dist: {dist_check}")
+            if dist_check > 200:
+                break
     logger.debug(f"Final Progress flag: {memory.main.diag_progress_flag()}")
+    # If battle started, we will just blindly attack to victory.
     memory.main.click_to_control()
-    memory.main.set_game_speed(speed_check)
+    #memory.main.set_game_speed(speed_check)
 
 def cactuars():
     # Assumes airship start.
     air_ship_destination(dest_num=10)
+    memory.main.update_formation(0, 3, 4)
     memory.main.check_nea_armor()
     if game_vars.ne_armor() != 255:
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    memory.main.set_game_speed(2)
+    ##memory.main.set_game_speed(2)
     
     desert_path(start=4, end=40)
     
@@ -1781,7 +1914,7 @@ def cactuars():
     while not pathing.set_movement([-43,-98]):
         pass
     check_near_actors(wait_results=False)
-    engage_cactuar()  # First cactuar
+    engage_cactuar(cactuar_num = 1)  # First cactuar
     
     desert_path(start=5, end=40)
     divert_to_stone_south()
@@ -1789,7 +1922,7 @@ def cactuars():
     while not pathing.set_movement([412,532]):
         pass
     check_near_actors(wait_results=False)
-    engage_cactuar()  # Second cactuar
+    engage_cactuar(cactuar_num = 2)  # Second cactuar
     desert_path(start=35, end=40)
     divert_to_stone_south(return_north=True)
     while not pathing.set_movement([-280,-90]):
@@ -1800,7 +1933,7 @@ def cactuars():
     desert_path(start=50, end=47)
     while not pathing.set_movement([-622,437]):
         pass
-    engage_cactuar()  # 4 and 5, brothers.
+    engage_cactuar(cactuar_num=4)  # 4 and 5, brothers.
     desert_path(start=48, end=51)
     divert_to_stone_north(return_north=False)
     desert_path(start=36, end=24)
@@ -1819,7 +1952,7 @@ def cactuars():
         while not pathing.set_movement(path[i]):
             logger.debug(f"{i}: {path[i]}")
     check_near_actors(False)
-    engage_cactuar(cactuar_num=7)
+    engage_cactuar(cactuar_num=7)  # seventh cactuar (chest guys)
     
     for i in range(len(path)-1,0,-1):
         while not pathing.set_movement(path[i]):
@@ -1855,13 +1988,13 @@ def cactuars():
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             pass
-    engage_cactuar()
+    engage_cactuar(cactuar_num=8)  # Eighth cactuar (sinkhole guys)
     divert_to_stone_north(return_north=False)
     
     
     # Airship guy.
     desert_path(start=39, end=2)
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
     FFXC.set_neutral()
     
@@ -1880,7 +2013,7 @@ def cactuars_finish():
     memory.main.wait_frames(60)
     memory.main.click_to_control()
     #memory.main.wait_frames(900)
-    engage_cactuar(cactuar_num=9)
+    engage_cactuar(cactuar_num=9)  # Airship guy
     memory.main.click_to_control()
     while memory.main.user_control():
         pathing.set_movement([7,200])
@@ -1908,11 +2041,11 @@ def cactuars_finish():
     air_ship_destination(dest_num=10)
     memory.main.await_control()
     
-    memory.main.set_game_speed(2)
+    ##memory.main.set_game_speed(2)
     desert_path(start=4, end=40)
     divert_to_stone_south(last_path=True)
     
-    engage_cactuar(cactuar_num=10)  # Last one starts automatically.
+    engage_cactuar(cactuar_num=10)  # Last one is behind you.
     while memory.main.user_control():  # Straight back to the stone.
         pathing.set_movement([350,-340])
         xbox.tap_b()
@@ -1940,7 +2073,7 @@ def cactuars_finish():
             pass
     
     desert_path(start=50, end=3)
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
     
     FFXC.set_neutral()
@@ -1973,8 +2106,95 @@ def onion_knight():
         if CurrentPlayer().is_turn():
             CurrentPlayer().attack()
     memory.main.click_to_control()
+
+    # Let's go get Seymour's mom
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([2,230])
+        FFXC.set_value("btn_a", 1)
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    while not pathing.set_movement([-5,-241]):
+        pass
+    while not pathing.set_movement([-92,-147]):
+        pass
+    while not pathing.set_movement([-22,-147]):
+        pass
+    while not pathing.set_movement([-3,-110]):
+        pass
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-2,10])
+    memory.main.click_to_control()
+
+    # Room with six statues
+    while not pathing.set_movement([0,-29]):
+        pass
+    pathing.approach_coords([-20,-29])
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    pathing.approach_coords([20,-29])
+    FFXC.set_neutral()
+    memory.main.click_to_control()
     
-    # Now to get chest.
+    while not pathing.set_movement([0,0]):
+        pass
+    pathing.approach_coords([-20,0])
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    pathing.approach_coords([20,0])
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    
+    while not pathing.set_movement([0,30]):
+        pass
+    pathing.approach_coords([-20,29])
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    pathing.approach_coords([20,29])
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+
+    
+    while not pathing.set_movement([0,41]):
+        pass
+    memory.main.click_to_event_temple(0)
+    memory.main.await_control()
+
+    # Room with aeon
+    FFXC.set_movement(0,1)
+    memory.main.await_event()
+    FFXC.set_neutral()
+    while not memory.main.name_aeon_ready():
+        pass
+    xbox.name_aeon("Anima")  # Set Anima name
+    memory.main.await_control()
+    FFXC.set_movement(0,-1)  # Leave chamber
+    memory.main.await_event()
+    FFXC.set_neutral()
+    memory.main.await_control()
+    FFXC.set_movement(0,-1)  # Leave statue room
+    memory.main.await_event()
+    FFXC.set_neutral()
+
+    # Back to circle area
+    while not pathing.set_movement([-24,-147]):
+        pass
+    while not pathing.set_movement([-92,-147]):
+        pass
+    while not pathing.set_movement([-92,-183]):
+        pass
+    while not pathing.set_movement([-4,-248]):
+        pass
+    while not pathing.set_movement([0,-341]):
+        pass
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([0,-600])
+    FFXC.set_neutral()
+    
+    
+    # Now to get Lulu's chest.
     FFXC.set_value("btn_a", 1)
     while not pathing.set_movement([14,-93]):
         pass
@@ -2007,7 +2227,140 @@ def onion_knight():
     
     return_to_airship()
     return 1
+
+def belgemine(godhand:int = 1, baaj:int = 1):
+    arena_return(godhand=godhand, baaj=baaj)
+
+    FFXC.set_neutral()
+    memory.main.await_control()
+    pathing.approach_actor_by_id(20482)  # Open chest for Yuna
+    FFXC.set_neutral()
+    memory.main.click_to_control()
     
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        FFXC.set_movement(0,-1)
+    #return_to_airship()
+    #memory.main.await_control()
+    #air_ship_destination(dest_num=12+godhand+baaj)
+    #while not pathing.set_movement([-638, -121]):
+    #    pass
+    memory.main.click_to_control()
+    check_near_actors(wait_results=False, max_dist=350)
+
+    to_remiem(start_races=False)
+    while not pathing.set_movement([501, 357]):
+        pass
+    while not pathing.set_movement([542, 357]):
+        pass
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        FFXC.set_movement(0,1)
+    FFXC.set_neutral()
+    logger.debug("Belgemine dialogue")
+    while not memory.main.diag_progress_flag() == 9:
+        pass
+    
+    for i in range(7):
+        if memory.main.user_control():
+            while memory.main.user_control():
+                pathing.set_movement([-10,0])
+        logger.warning(f"Belgemine Battle Number: {i}")
+        if i == 4:  # Bahamut battle, can't run mirror matchup.
+            battle.main.belgemine(use_aeon=2)
+        elif i == 5:
+            battle.main.belgemine(impulse=True)
+        else:
+            battle.main.belgemine()
+        FFXC.set_neutral()
+        memory.main.click_to_control()
+
+        
+    # To the girls
+    path = [
+        [-61,-61],
+        [11,-78],
+        [105,-26]
+    ]
+    for i in range(len(path)):
+        while not pathing.set_movement(path[i]):
+            pass
+        logger.debug(f"mark {i}")
+    logger.debug("Approach 1")
+    while memory.main.user_control():
+        pathing.set_movement([160,0])
+        xbox.tap_b()
+    FFXC.set_neutral()
+    logger.debug("Approach 2")
+    while not memory.main.name_aeon_ready():
+        xbox.menu_b()
+    logger.debug("Names")
+    #xbox.name_aeon("Cindy")
+    memory.main.wait_frames(90)
+    xbox.menu_b()
+    memory.main.wait_frames(30)
+    xbox.menu_up()
+    xbox.menu_b()
+    #xbox.name_aeon("Sandy")
+    memory.main.wait_frames(90)
+    xbox.menu_b()
+    memory.main.wait_frames(30)
+    xbox.menu_up()
+    xbox.menu_b()
+    #xbox.name_aeon("Mindy")
+    memory.main.wait_frames(90)
+    xbox.menu_b()
+    memory.main.wait_frames(30)
+    xbox.menu_up()
+    xbox.menu_b()
+    memory.main.await_control()
+    while memory.main.user_control():
+        pathing.set_movement([160,0])  # Dialog with the girls
+        
+    last_time = int(time.time())
+    while memory.main.diag_progress_flag() != 2:
+        current_time = int(time.time())
+        if current_time != last_time:
+            logger.debug(f"Dialog: {memory.main.diag_progress_flag()}")
+            last_time = current_time
+    
+    memory.main.wait_frames(240)
+    memory.main.click_to_control()
+
+    current_map = memory.main.get_map()  # Leave girls room.
+    while current_map == memory.main.get_map():
+        pathing.set_movement([0, -105])
+    memory.main.await_control()
+    
+    while memory.main.user_control():
+        pathing.set_movement([-10,0])
+    battle.main.belgemine(impulse=True)
+    FFXC.set_neutral()
+
+    last_time = int(time.time())
+    while memory.main.diag_progress_flag() != 48:
+        current_time = int(time.time())
+        if current_time != last_time:
+            logger.debug(f"Dialog: {memory.main.diag_progress_flag()}")
+            last_time = current_time
+        if memory.main.diag_progress_flag() in [38,45]:
+            xbox.menu_b()
+            
+    memory.main.wait_frames(240)
+    memory.main.click_to_control()
+    
+    while not pathing.set_movement([-135, 0]):
+        pass
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-180, 0])
+    memory.main.click_to_control()
+    
+    while not pathing.set_movement([501, 361]):
+        pass
+    return_to_airship()
+
+
 def godhand(baaj:int=0):
     # Assumes Baaj already unlocked.
     memory.main.check_nea_armor()
@@ -2129,7 +2482,7 @@ def sun_sigil(godhand:int = 1, baaj:int = 1):
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    #memory.main.set_game_speed(2)
+    ##memory.main.set_game_speed(2)
     
     # Dialog with chocobo lady
     while not pathing.set_movement([-637, -246]):
@@ -2152,7 +2505,7 @@ def sun_sigil(godhand:int = 1, baaj:int = 1):
 
     logger.debug("Catcher Chocobo complete. Let's get our prize!")
     memory.main.await_control()
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     #pathing.approach_actor_by_id(actor_id=20531)
     #FFXC.set_neutral()
     #memory.main.click_to_diag_progress(302)
@@ -2175,12 +2528,12 @@ def sun_sigil(godhand:int = 1, baaj:int = 1):
         while not pathing.set_movement(path[i]):
             pass
     FFXC.set_neutral()
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     pathing.approach_coords([-851,720])
     
     
     memory.main.click_to_control()
-    memory.main.set_game_speed(2)
+    #memory.main.set_game_speed(2)
     for i in range(len(path)-2,-1,-1):
         while not pathing.set_movement(path[i]):
             pass
@@ -2188,7 +2541,7 @@ def sun_sigil(godhand:int = 1, baaj:int = 1):
         pass
     while not pathing.set_movement([-656,-64]):
         pass
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
     
 
@@ -2455,7 +2808,7 @@ def venus_crest(godhand:int = 1, baaj:int = 1):
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    #memory.main.set_game_speed(2)
+    ##memory.main.set_game_speed(2)
     
     
     path = [
@@ -2515,13 +2868,559 @@ def venus_crest(godhand:int = 1, baaj:int = 1):
                 FFXC.set_neutral()
                 memory.main.click_to_control()
     
-    #memory.main.set_game_speed(0)
+    ##memory.main.set_game_speed(0)
     return_to_airship()
 
+def besaid_destro(godhand:int = 1, baaj:int = 1):
+    # Includes destro sphere
+    write_custom_message("Showcase!")
+    memory.main.fill_overdrive()
+    air_ship_destination(dest_num=(1+baaj))
+    memory.main.update_formation(0, 3, 5)
+    memory.main.check_nea_armor()
+    if game_vars.ne_armor() != 255:
+        equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+    else:
+        memory.main.set_encounter_rate(0)
+    memory.main.set_gil_value(999999999)
+    
+    current_map = memory.main.get_map()
+    #while current_map == memory.main.get_map():
+    #    pathing.set_movement([-380,-460])
+    memory.main.await_control()
+    current_map = memory.main.get_map()
+
+    checkpoint = 0
+    while memory.main.get_map() != 17:
+        if memory.main.user_control():
+            # events
+            if current_map != memory.main.get_map():
+                checkpoint += 1
+                current_map = memory.main.get_map()
+            elif checkpoint == 6:
+                pathing.approach_actor_by_id(20482)
+                memory.main.click_to_control()
+                checkpoint += 1
+
+            # General pathing
+            elif pathing.set_movement(besaid_destro_sphere.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+    
+    success = False
+    while not success:
+        xbox.click_to_battle()
+        cur_gil = min(memory.main.get_gil_value(),99999999)
+        success = yojimbo_battle(flee_available=False, needed_amount=cur_gil, force_max=True)
+        logger.debug(f"Yojimbo results: {success}")
+        if not success:
+            logger.debug("Starting reset process.")
+            reset.reset_to_main_menu()
+            logger.debug("Intro screen - load game")
+            new_game(gamestate="reload_autosave")
+            logger.debug("Selecting save number.")
+            load_game.load_save_num(0)
+    memory.main.await_control()
+
+    path = [
+        [-1,492],
+        [-19,74],
+        [-22,20],
+        [-15,-42],
+        [-5,-75],
+        [-2,-176],
+        [0,-250],
+        [1,33],
+        [1,77],
+        [-1,200]
+    ]
+    current_map = memory.main.get_map()
+    for i in range(len(path)):
+        while current_map == memory.main.get_map() and not pathing.set_movement(path[i]):
+            pass
+        if current_map != memory.main.get_map():
+            current_map = memory.main.get_map()
+    import area.besaid
+
+    area.besaid.trials(destro=True)
+
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([0, memory.main.get_actor_coords(0)[1] + 30])
+    FFXC.set_neutral()
+    while memory.main.diag_progress_flag() != 3:
+        pass
+    memory.main.wait_frames(270)  # Because I like the dialog here
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([27,-21]):
+        # Chest 1
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([19,19]):
+        # Chest 2
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([-16,31]):
+        # Chest 3
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([-30,-12]):
+        # Chest 4
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([0,-43]):
+        # Near exit
+        pass
+    
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        FFXC.set_movement(0,-1)  # Out of fayth chamber
+    FFXC.set_neutral()
+    memory.main.await_control()
+
+    while not pathing.set_movement([0,-68]):
+        # Near exit
+        pass
+    
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        FFXC.set_movement(0,-1)  # Out of fayth foyer
+    FFXC.set_neutral()
+    memory.main.await_control()
+
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-140])  # Leave temple
+    FFXC.set_neutral()
+    memory.main.await_control()
+
+    # Save sphere in crusaders' tent
+    while not pathing.set_movement([20,-11]):
+        pass
+    while not pathing.set_movement([22,39]):
+        pass
+    while not pathing.set_movement([40,138]):
+        pass
+    while not pathing.set_movement([63,204]):
+        pass
+    while not pathing.set_movement([102,220]):
+        pass
+    
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([150,225])  # Crusader tent
+    FFXC.set_neutral()
+    memory.main.await_control()
+
+    while not pathing.set_movement([-3,48]):
+        pass
+    return_to_airship()
+    
+
+def kilika_destro(godhand:int = 0, baaj:int = 0):
+    import area.kilika
+    write_custom_message("Showcase!")
+    air_ship_destination(dest_num=(2+baaj))
+    memory.main.check_nea_armor()
+    if game_vars.ne_armor() != 255:
+        equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+    else:
+        memory.main.set_encounter_rate(0)
+    memory.main.set_gil_value(999999999)
+
+    path = Kilika1.checkpoint_coordiantes
+    i = 17
+    current_map = memory.main.get_map()
+    while memory.main.get_map() == current_map:
+        if i == 18:
+            FFXC.set_movement(-1,1)
+            memory.main.await_event()
+        else:
+            logger.debug(f"Path check: ({i}) - {path[i]}")
+            while not pathing.set_movement(path[i]):
+                pass
+        i += 1
+        
+    logger.debug(f"Transition to next map: {memory.main.get_map()}")
+    current_map = memory.main.get_map()
+    while memory.main.get_map() == current_map:
+        if i == 18:
+            FFXC.set_movement(-1,1)
+            memory.main.await_event()
+        else:
+            logger.debug(f"Path check: ({i}) - {path[i]}")
+            while (not pathing.set_movement(path[i])) and memory.main.get_map() == current_map:
+                pass
+        i += 1
+        
+    logger.debug(f"Transition to next map: {memory.main.get_map()}")
+    path = Kilika2.checkpoint_coordiantes
+    i = 0
+    current_map = memory.main.get_map()
+    while memory.main.get_map() == current_map:
+        try:
+            logger.debug(f"Path check: ({i}) - {path[i]}")
+            if i in [9,82] or i in range(37,60):
+                pass
+            else:
+                while not pathing.set_movement(path[i]) and memory.main.get_map() == current_map:
+                    pass
+        except:
+            # Skip the ones where there is an event in the normal run.
+            pass
+        i += 1
+
+    current_map = memory.main.get_map()  # Geneaux map
+    while memory.main.get_map() == current_map:
+        try:
+            logger.debug(f"Path check: ({i}) - {path[i]}")
+            if i == 9 or i in range(38,58):
+                pass
+            else:
+                while not pathing.set_movement(path[i]) and memory.main.get_map() == current_map:
+                    pass
+        except:
+            # Skip the ones where there is an event in the normal run.
+            pass
+        i += 1
+
+    current_map = memory.main.get_map()  # Outside temple
+    while memory.main.get_map() == current_map:
+        try:
+            logger.debug(f"Path check: ({i}) - {path[i]}")
+            if i == 9 or i in range(38,58):
+                pass
+            else:
+                while not pathing.set_movement(path[i]) and memory.main.get_map() == current_map:
+                    pass
+        except:
+            # Skip the ones where there is an event in the normal run.
+            pass
+        i += 1
+
+    current_map = memory.main.get_map()  # Inside temple
+    while i < 101:
+        try:
+            logger.debug(f"Path check: ({i}) - {path[i]}")
+            while not pathing.set_movement(path[i]) and memory.main.get_map() == current_map:
+                pass
+        except:
+            # Skip the ones where there is an event in the normal run.
+            pass
+        i += 1
+    
+    FFXC.set_movement(0,1)
+    memory.main.await_event()
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    
+    while not pathing.set_movement([-1,-4]):
+        # Elevator down
+        pass
+    FFXC.set_neutral()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    if memory.main.user_control():
+        while memory.main.user_control():
+            xbox.tap_b()
+    memory.main.await_control()
+    
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,320])
+    memory.main.await_control()
+    
+    area.kilika.trials(destro=True)
+    memory.main.await_control()
+
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,100])
+
+    FFXC.set_neutral()  # Fayth dialog
+    while memory.main.diag_progress_flag() != 2:
+        pass
+    #while not memory.main.user_control():
+    #    logger.debug(memory.main.diag_progress_flag())
+    memory.main.wait_frames(270)  # Because I like the dialog here
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([27,-21]):
+        # Chest 1
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([16,21]):
+        # Chest 2
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([-16,26]):
+        # Chest 3
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+    
+    while not pathing.set_movement([-1,-44]):
+        # Near exit
+        pass
+    
+    current_map = memory.main.get_map()  # Leave fayth room
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-130])
+    current_map = memory.main.get_map()  # Leave fayth foyer
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-130])
+    
+    
+    while not pathing.set_movement([-1,-4]):
+        # Elevator up
+        pass
+    FFXC.set_neutral()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.tap_b()
+    if memory.main.user_control():
+        while memory.main.user_control():
+            xbox.tap_b()
+    memory.main.await_control()
+
+    
+    current_map = memory.main.get_map()  # Leave elevator room
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-80])
+    memory.main.await_control()
+    
+    while not pathing.set_movement([1,55]):
+        pass
+    while not pathing.set_movement([27,35]):
+        pass
+    return_to_airship()
+
+def djose_destro(godhand:int = 1, baaj:int = 1):
+    # Includes destro sphere
+    write_custom_message("Showcase!")
+    air_ship_destination(dest_num=(5+godhand+baaj))
+    memory.main.check_nea_armor()
+    if game_vars.ne_armor() != 255:
+        equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+    else:
+        memory.main.set_encounter_rate(0)
+    
+    checkpoint = 0
+    current_map = memory.main.get_map()
+    while checkpoint < 28:
+        if memory.main.user_control():
+            # events
+            if current_map != memory.main.get_map():
+                checkpoint += 1
+                current_map = memory.main.get_map()
+
+            # General pathing
+            elif pathing.set_movement(djose_destro_sphere.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+    while memory.main.user_control():
+        pathing.set_movement([0,200])  # Are you prepared?
+    FFXC.set_neutral()
+    memory.main.click_to_control()
+    while memory.main.user_control():
+        pathing.set_movement([0,200])
+    
+    import area.djose
+    area.djose.trials(destro=True)
+
+    while not pathing.set_movement([0,50]):
+        pass
+    current_map = memory.main.get_map()
+    while current_map == memory.main.get_map():
+        pathing.set_movement([0,100])
+        
+    FFXC.set_neutral()  # Fayth dialog
+    while memory.main.diag_progress_flag() != 4:
+        pass
+    #while not memory.main.user_control():
+    #    if memory.main.diag_skip_possible():
+    #        logger.debug(memory.main.diag_progress_flag())
+    #        xbox.tap_b()
+    memory.main.wait_frames(270)  # Because I like the dialog here
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([25,23]):
+        # Chest 1
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([-13,31]):
+        # Chest 2
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([-1,-44]):
+        # Near exit
+        pass
+    
+    current_map = memory.main.get_map()  # Leave fayth room
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-130])
+    current_map = memory.main.get_map()  # Leave fayth foyer
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-90])
+    current_map = memory.main.get_map()  # Leave temple
+    while current_map == memory.main.get_map():
+        pathing.set_movement([-1,-160])
+        
+    while not pathing.set_movement([18,-161]):
+        pass
+    while not pathing.set_movement([81,-239]):
+        pass
+    return_to_airship()
+    
+def ice_destro(godhand:int = 1, baaj:int = 1):
+    # Includes destro sphere
+    memory.main.fill_overdrive()
+    memory.main.set_gil_value(999999999)
+    write_custom_message("Showcase!")
+    air_ship_destination(dest_num=(9+godhand+baaj))
+    memory.main.check_nea_armor()
+    if game_vars.ne_armor() != 255:
+        equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+    else:
+        memory.main.set_encounter_rate(0)
+    memory.main.update_formation(0, 2, 5)
+    import area.mac_temple
+    
+    checkpoint = 0
+    current_map = memory.main.get_map()
+    while checkpoint < 68:
+        if memory.main.user_control():
+            # events
+            if current_map != memory.main.get_map():
+                checkpoint += 1
+                current_map = memory.main.get_map()
+
+            # General pathing
+            elif pathing.set_movement(macalania_destro_sphere.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if checkpoint == 67 and memory.main.get_map() == 284:
+                break
+            elif memory.main.battle_active():
+                xbox.click_to_battle()
+                cur_gil = min(memory.main.get_gil_value(),99999999)
+                success = yojimbo_battle(flee_available=False, needed_amount=cur_gil, force_max=True)
+                logger.debug(f"Yojimbo results: {success}")
+                if success:
+                    area.mac_temple.escape(dark_aeon=True)
+                    checkpoint = 33
+                else:
+                    logger.debug("Starting reset process.")
+                    reset.reset_to_main_menu()
+                    logger.debug("Intro screen - load game")
+                    new_game(gamestate="reload_autosave")
+                    logger.debug("Selecting save number.")
+                    load_game.load_save_num(0)
+                    checkpoint = 35
+                memory.main.await_control()
+
+    checkpoint += 1
+    FFXC.set_neutral()  # Fayth dialog
+    logger.debug("Fayth room")
+    while memory.main.diag_progress_flag() != 4:
+        pass
+    #while not memory.main.user_control():
+    #    if memory.main.diag_skip_possible():
+    #        logger.debug(memory.main.diag_progress_flag())
+    #        xbox.tap_b()
+    memory.main.wait_frames(270)  # Because I like the dialog here
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([22,22]):
+        # Chest 1
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([-13,30]):
+        # Chest 2
+        pass
+    FFXC.set_neutral()
+    check_near_actors(False)
+    pathing.approach_actor_by_id(20482)
+    memory.main.click_to_control()
+
+    while not pathing.set_movement([0,-42]):
+        # Near exit
+        pass
+
+    current_map = memory.main.get_map()
+    while checkpoint < 79:
+        if memory.main.user_control():
+            # events
+            if current_map != memory.main.get_map():
+                checkpoint += 1
+                current_map = memory.main.get_map()
+
+            # General pathing
+            elif pathing.set_movement(macalania_destro_sphere.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+    
+    area.mac_temple.trials(destro=True)
+
+    while not pathing.set_movement([-6, -76]):
+        pass
+    while not pathing.set_movement([-14, -108]):
+        pass
+    return_to_airship()
+  
 
 def sun_crest(godhand:int = 1, baaj:int = 1):
-    # Assumes Yuna has overdrive.
+    # Includes destro sphere
     write_custom_message("Showcase!")
+    memory.main.fill_overdrive()
     air_ship_destination(dest_num=(15+godhand+baaj))
     memory.main.update_formation(0, 3, 5)
     memory.main.check_nea_armor()
@@ -2529,7 +3428,7 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    
+    memory.main.set_gil_value(999999999)
     
     while not pathing.set_movement([114,32]):
         pass
@@ -2560,26 +3459,23 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
     memory.main.click_to_control()
     
     # Trials room
-    path = [
-        [94,-68],
-        [89,-47],
-        [91,7],
-        [96,21],
-        [96,32],
-        [77,54],
-        [2,68],
-        [-21,21],
-        [-41,-15],
-        [-44,-40],
-        [-66,-59],
-        [-79,-48]
-    ]
+    path = zan_destro_sphere.checkpoint_coordiantes
     for i in range(len(path)):
-        while not pathing.set_movement(path[i]):
-            if path[i] == [2,68]:
-                FFXC.set_movement(-1,1)
-                memory.main.wait_frames(30)
-                break
+        if i in [8,31]:
+            FFXC.set_movement(-1,1)
+            memory.main.wait_frames(30)
+        elif i == 26:
+            FFXC.set_movement(1,0)
+            memory.main.wait_frames(30)
+        elif i == 28:
+            pathing.approach_coords([105, 50])
+        elif i == 34:
+            pathing.approach_coords([-68, 120])
+        elif i == 36:
+            pathing.approach_coords([-82, 130])
+        else:
+            while not pathing.set_movement(path[i]):
+                pass
     memory.main.click_to_event_temple(0)
     memory.main.await_control()
     
@@ -2602,10 +3498,10 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
             pathing.set_movement([0,200])
     
         xbox.click_to_battle()
-        memory.main.set_game_speed(2)
-        cur_gil = min(memory.main.get_gil_value(),9999999)
-        cur_gil = memory.main.get_gil_value()
-        success = yojimbo_battle(flee_available=False, needed_amount=cur_gil)
+        #memory.main.set_game_speed(2)
+        cur_gil = min(memory.main.get_gil_value(),99999999)
+        #cur_gil = memory.main.get_gil_value()
+        success = yojimbo_battle(flee_available=False, needed_amount=cur_gil, force_max=True)
         logger.debug(f"Yojimbo results: {success}")
         if not success:
             logger.debug("Starting reset process.")
@@ -2652,7 +3548,7 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
     while not pathing.set_movement([-1,-163]):
         pass
     
-    memory.main.set_game_speed(0)
+    #memory.main.set_game_speed(0)
     return_to_airship()
 
 def upgrade_celestials(godhand:int=1, baaj:int=1, Yuna:bool=False, Wakka:bool=False):

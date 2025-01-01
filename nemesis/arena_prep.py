@@ -630,9 +630,9 @@ def arena_npc():
     memory.main.wait_frames(3)  # This buffer can be improved later.
 
 
-def arena_return(checkpoint: int = 0):
+def arena_return(checkpoint: int = 0, godhand:int = 0, baaj:int = 0):
     if checkpoint == 0:
-        air_ship_destination(dest_num=12)
+        air_ship_destination(dest_num=12+godhand+baaj)
 
     while memory.main.get_map() != 307:
         if memory.main.user_control():

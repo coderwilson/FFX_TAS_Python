@@ -54,15 +54,17 @@ def new_game(gamestate):
                     last_message = 4
                     logger.info("New Game is selected. Starting game.")
                 xbox.menu_b()
-        memory.main.click_to_diag_progress(6)
         if game_vars.use_legacy_soundtrack():
+            memory.main.click_to_diag_progress(6)
             # tts.message("Setting original soundtrack")
-            memory.main.wait_frames(20)
+            memory.main.wait_frames(3)
             xbox.tap_down()
-            memory.main.wait_frames(20)
+            memory.main.wait_frames(3)
             memory.main.click_to_diag_progress(8)
         else:
             memory.main.click_to_diag_progress(7)
+            for i in range(8):
+                xbox.tap_b()
     else:  # Load Game
         while not memory.main.save_menu_open():
             if memory.main.get_map() != 23:
@@ -81,7 +83,7 @@ def new_game_2():
     time_buffer = 15
     #logger.info("====================================")
     #logger.info("Starting in")
-    #logger.info("3")
+    #logger.info("33")
     #memory.main.wait_frames(time_buffer)
     #logger.info("2")
     #memory.main.wait_frames(time_buffer)

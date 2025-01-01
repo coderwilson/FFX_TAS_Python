@@ -122,7 +122,7 @@ def night_scene():
     
 
 
-def trials():
+def trials(destro:bool=False):
     checkpoint = 0
 
     while memory.main.get_map() != 60:
@@ -139,7 +139,10 @@ def trials():
                 checkpoint += 1
             elif checkpoint == 12:  # Insert Besaid sphere
                 memory.main.click_to_event_temple(0)
-                checkpoint += 1
+                if destro:
+                    checkpoint = 50
+                else:
+                    checkpoint += 1
             elif checkpoint == 20:  # Touch the hidden door glyph
                 while memory.main.user_control():
                     pathing.set_movement([-13, -33])
@@ -148,27 +151,54 @@ def trials():
                 memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 23:  # Second Besaid sphere
-                while memory.main.user_control():
-                    pathing.set_movement([-14, 31])
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                pathing.approach_coords([-14, 31])
                 checkpoint += 1
             elif checkpoint == 26:  # Insert Besaid sphere, and push to completion
-                while memory.main.user_control():
-                    pathing.set_movement([-13, -60])
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                memory.main.click_to_control_3()
-                if game_vars.use_pause():
-                    memory.main.wait_frames(2)
-                while memory.main.get_map() == 122:
-                    FFXC.set_movement(0, 1)
-                FFXC.set_neutral()
-                checkpoint += 1
+                pathing.approach_coords([-13, -60])
+                if destro:
+                    checkpoint = 54
+                else:
+                    while memory.main.get_map() == 122:
+                        FFXC.set_movement(0, 1)
+                    FFXC.set_neutral()
+                    checkpoint += 1
             elif memory.main.get_map() == 100:
                 night_scene()
                 checkpoint = 35
+            
+            # Destro sphere pieces
+            elif checkpoint == 16 and destro:
+                checkpoint = 52
+            elif checkpoint == 51:
+                FFXC.set_neutral()
+                memory.main.check_near_actors(False)
+                pathing.approach_actor_by_id(20597)
+                checkpoint = 14
+            elif checkpoint == 53:
+                pathing.approach_coords([67, 3])
+                checkpoint = 17
+            elif checkpoint == 58:
+                pathing.approach_coords([93, 4])
+                checkpoint += 1
+            elif checkpoint == 63:
+                pathing.approach_coords([-14, 32])
+                checkpoint += 1
+            elif checkpoint == 68:
+                pathing.approach_coords([-72, 75])
+                checkpoint += 1
+            elif checkpoint == 72:
+                FFXC.set_neutral()
+                memory.main.wait_frames(16)
+                while memory.main.get_map() != 103:
+                    FFXC.set_movement(-1,0)
+                FFXC.set_neutral()
+                if memory.main.get_story_progress() > 2000:
+                    return
+                else:
+                    checkpoint = 27
+
+
+            # After trials pieces
             elif checkpoint == 34:  # Night, talk to Yuna and Wakka
                 FFXC.set_movement(-1, -1)
                 memory.main.await_event()
