@@ -171,9 +171,9 @@ def float_from_integer(integer):
     return struct.unpack("!f", struct.pack("!I", integer))[0]
 
 
-def check_near_actors(wait_results:bool = False):
+def check_near_actors(wait_results:bool = False, max_dist = 200):
     for i in range(get_actor_array_size()):
-        if get_actor_id(i) != 52685 and pathing.distance(i) < 200:
+        if get_actor_id(i) != 52685 and pathing.distance(i) < max_dist:
             logger.debug(f"Actor {i}: {get_actor_id(i)}, {pathing.distance(i)}")
     if wait_results:
         FFXC.set_neutral()
@@ -473,7 +473,7 @@ def await_control():
         with tqdm(bar_format=fmt) as pbar:
             while not user_control():
                 pbar.update()
-    wait_frames(1)
+    #wait_frames(1)
     logger.debug("User control restored.")
     return True
 
@@ -543,7 +543,7 @@ def click_to_control_special():
                 FFXC.set_value("btn_y", 0)
                 wait_frames(30 * 0.035)
                 pbar.update()
-    wait_frames(2)
+    #wait_frames(2)
     logger.debug("User control restored.")
     return True
 
@@ -2250,6 +2250,21 @@ def overdrive_state_2():
     return ret_val
 
 
+def fill_overdrive(character:int=1):
+    global process
+    global base_value
+    x = 0
+    base_pointer = base_value + 0x003AB9B0
+    base_pointer_address = process.read(base_pointer)
+    for x in range(20):
+        offset = (0x94 * x) + 0x39
+        if character == x:
+            if x < 7:
+                process.write_bytes(base_pointer_address + offset, 100, 1)
+            else:
+                process.write_bytes(base_pointer_address + offset, 20, 1)
+
+
 def char_luck(character: int = 0):
     global process
     global base_value
@@ -2277,7 +2292,7 @@ def dodge_lightning(l_dodge_num):
         if get_game_speed() >= 1:
             wait_frames(1)
         else:
-            wait_frames(4)
+            wait_frames(5)
         xbox.tap_b()
         if get_game_speed() >= 1:
             wait_frames(3)

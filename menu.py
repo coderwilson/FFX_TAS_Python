@@ -2068,9 +2068,9 @@ def bfa():
     else:
         menu_grid.use_first()
         menu_grid.sel_sphere("attribute", "right")
-        if game_vars.get_blitz_win():
-            menu_grid.use_and_use_again()
-            menu_grid.sel_sphere("ability", "none")
+        #if game_vars.get_blitz_win():
+        #    menu_grid.use_and_use_again()
+        #    menu_grid.sel_sphere("ability", "none")
         menu_grid.use_and_move()
         grid_left()
         grid_left()

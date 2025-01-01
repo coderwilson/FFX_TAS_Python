@@ -120,6 +120,30 @@ class BesaidTrials(AreaMovementBase):
         40: [7, 24],
         41: [4, -46],
         42: [0, -200],
+
+        # Destro sphere items
+        50: [-31,70],
+        # 51, Grab used sphere
+        52: [56,3],
+        # 53, Insert orb, open door
+        54: [56,3],
+        55: [36,-37],
+        56: [54,4],
+        57: [85,3],
+        # 58, pick up destro sphere
+        59: [54,4],
+        60: [36,-37],
+        61: [-14,-33],
+        62: [-16,10],
+        # 63, insert destro sphere
+        64: [-16,10],
+        65: [-14,-33],
+        66: [-71,-32],
+        67: [-75,45],
+        # 68, open destro chest
+        69: [-71,-32],
+        70: [-17,-40],
+        71: [-14.5,-57],
     }
     checkpoint_fallback = {
         1: "First glyph",

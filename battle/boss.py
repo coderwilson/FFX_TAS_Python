@@ -553,7 +553,10 @@ def tros(preempt: bool):
 
                 tidus_turn += 1
 
-                if tidus_turn == 1 and low_roll and not preempt:
+                if Rikku.is_dead():
+                    battle.main.revive_target(target=6)
+
+                elif tidus_turn == 1 and low_roll and not preempt:
 
                     Tidus.defend()
 
@@ -2579,7 +2582,10 @@ def yu_yevon():
             elif za_char == 255:
                 if Tidus.is_turn():
                     # Tidus to use Zombie Strike ability
-                    battle.main.use_skill(0)
+                    if memory.main.get_tidus_mp() > 10:
+                        battle.main.use_skill(0)
+                    else:
+                        CurrentPlayer().attack()
                     zombie_attack = True
                 else:
                     # Non-Tidus char to defend so Tidus can use Zombie Strike ability

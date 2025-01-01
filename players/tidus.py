@@ -57,7 +57,6 @@ class TidusImpl(Player):
         while not self.overdrive_active():
             xbox.tap_b()
         memory.main.wait_frames(11)
-        time.sleep(0.02)  # Maybe this will dial it in?
         xbox.tap_b()  # First try pog
         logger.info("Hit Overdrive")
 

@@ -18,7 +18,7 @@ from paths import (
     MacalaniaTempleTrials,
     MacalaniaUnderTemple,
 )
-from players import Auron, Rikku, Tidus, Yuna
+from players import Auron, Rikku, Tidus, Yuna, CurrentPlayer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -190,13 +190,17 @@ def seymour_fight():
     FFXC.set_neutral()
 
 
-def trials():
+def trials(destro=False):
     logger.debug("Start of trials.")
     memory.main.await_control()
     # FFXC.set_movement(0,1)
     # memory.main.wait_frames(15)
 
-    checkpoint = 0
+    if destro or game_vars.csr():
+        checkpoint = 3
+    else:
+        checkpoint = 0
+    last_checkpoint = checkpoint
     while memory.main.get_map() != 153:
         if memory.main.user_control():
             # CSR start point
@@ -254,52 +258,122 @@ def trials():
                 approach_coords([1,10])
                 checkpoint += 1
             elif checkpoint == 58:  # End of trials
+                if destro:
+                    checkpoint += 1
+                else:
+                    while memory.main.user_control():
+                        if memory.main.get_actor_coords(0)[0] < -2:
+                            FFXC.set_movement(0.5,1)
+                        else:
+                            FFXC.set_movement(0,1)
+                    memory.main.await_control()
+
+                    # Into/through foyer
+                    FFXC.set_movement(0,-1)
+                    memory.main.await_event()
+                    FFXC.set_neutral()
+            
+            # Destro sphere section
+            elif checkpoint == 61:
+                approach_coords([-14,-116])
+                memory.main.click_to_control()
+                while memory.main.user_control():
+                    FFXC.set_movement(-1,0)
+                FFXC.set_neutral()
+                checkpoint += 1
+            elif checkpoint == 68:
+                approach_coords([0,109])
+                memory.main.click_to_control()
+                checkpoint += 1
+            elif checkpoint == 75:
+                FFXC.set_movement(1, 0)
+                memory.main.await_event()
+                FFXC.set_neutral()
+                memory.main.wait_frames(30 * 1)
+                checkpoint += 1
+            elif checkpoint == 78:
+                approach_coords([0,109])
+                memory.main.click_to_control()
+                checkpoint += 1
+            elif checkpoint == 81:
+                approach_coords([-80,59])
+                checkpoint += 1
+            elif checkpoint == 85:
+                memory.main.click_to_event_temple(0)
+                checkpoint += 1
+            elif checkpoint == 90:
+                approach_coords([0,8])
+                checkpoint += 1
+            elif checkpoint == 92:
+                approach_coords([-13,-16])
+                checkpoint += 1
+            elif checkpoint == 96:
+                memory.main.check_near_actors(False)
+                pathing.approach_actor_by_id(20482)
+                memory.main.click_to_control()
+                checkpoint += 1
+            elif checkpoint == 106:
+                approach_coords([1,7])
+                checkpoint += 1
+            elif checkpoint == 113:
+                approach_coords([1,7])
+                FFXC.set_neutral()
+                memory.main.click_to_control()
+                FFXC.set_movement(1, 0)
+                memory.main.await_event()
+                FFXC.set_neutral()
+                memory.main.wait_frames(30)
+                checkpoint += 1
+            elif checkpoint == 117:
+                approach_coords([-80,59])
+                checkpoint += 1
+            elif checkpoint == 120:
+                approach_coords([1,7])
+                checkpoint += 1
+            elif checkpoint == 125:  # End of trials
                 while memory.main.user_control():
                     if memory.main.get_actor_coords(0)[0] < -2:
                         FFXC.set_movement(0.5,1)
                     else:
                         FFXC.set_movement(0,1)
                 memory.main.await_control()
-                
-                # Into/through foyer
-                FFXC.set_movement(0,-1)
-                memory.main.await_event()
-                FFXC.set_neutral()
+                return
 
             # General pathing
             elif pathing.set_movement(MacalaniaTempleTrials.execute(checkpoint)):
                 checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
+            
+            if last_checkpoint != checkpoint:
+                logger.debug(f"Checkpoint: {checkpoint}")
+                last_checkpoint = checkpoint
         else:
             FFXC.set_neutral()
 
 
-def escape():
+def escape(dark_aeon:bool = False):
     while not memory.main.user_control():
         xbox.tap_b()
     
     logger.info("First, some menuing")
     menu_done = game_vars.get_blitz_win()
-    if game_vars.nemesis():
-        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+    if not dark_aeon:
+        if game_vars.nemesis():
+            memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+        else:
+            menu.after_seymour()
+            memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
+        menu.equip_sonic_steel(full_menu_close=True)
+
+        logger.info("Now to escape the Guado")
+
+    if dark_aeon:
+        checkpoint = 3
     else:
-        menu.after_seymour()
-        memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
-    menu.equip_sonic_steel(full_menu_close=True)
-
-    logger.info("Now to escape the Guado")
-    chance = random.choice(range(0, 100))
-    #if game_vars.rng_seed_num() == 139:
-    #    chance = 1  # Testing where 139 does the extra battle.
-    #else:
-    #    chance = 99  # For now, don't use randomness.
-    #if chance < 20 or not game_vars.get_blitz_win():
-    #    force_battle = True
-    #else:
-    #    force_battle = False
-
-    checkpoint = 0
+        checkpoint = 0
     while memory.main.get_encounter_id() != 195:
+        if dark_aeon and memory.main.get_map() == 192:
+            FFXC.set_neutral()
+            return
         if memory.main.user_control():
             # Events
             if checkpoint == 2:
@@ -322,7 +396,14 @@ def escape():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 screen.await_turn()
-                if not menu_done:
+                if dark_aeon:
+                    while memory.main.battle_active():
+                        if Tidus.is_turn():
+                            Tidus.attack()
+                        else:
+                            CurrentPlayer().defend()
+                    battle.main.wrap_up()
+                elif not menu_done:
                     battle.main.mac_flee_xp()
                     if memory.main.get_tidus_slvl() >= 2:
                         menu.home_grid()

@@ -201,7 +201,8 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.turn_ready():
+            if memory.main.battle_active():
+                logger.debug("Miihen battle check")
                 if checkpoint < 4:  # Tutorial battle with Auron
                     while memory.main.battle_active():
                         if memory.main.turn_ready():
@@ -232,10 +233,19 @@ def arrival():
                     post_battle_logic(battle_num=battle_count)
 
                 # Kimahri manip
-                next_crit_kim = memory.main.next_crit(
-                    character=3, char_luck=18, enemy_luck=15
+                #next_crit_kim = memory.main.next_crit(
+                #    character=3, char_luck=18, enemy_luck=15
+                #)
+                #logger.debug(f"Next Kimahri crit: {next_crit_kim}")
+            elif memory.main.game_over():
+                logger.warning("Game-over state identified in Miihen via ambush.")
+                seed_str = str(memory.main.rng_seed())
+                avina_memory.add_battle_to_memory(
+                    seed=seed_str,
+                    area="highroad_heals",
+                    battle_num=battle_count - 1,
                 )
-                logger.debug(f"Next Kimahri crit: {next_crit_kim}")
+                return [False, 0, False, False]
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menu_open():
@@ -342,6 +352,8 @@ def mid_point():
 
 # Starts just after the save sphere.
 def low_road(self_destruct, battle_count):
+    #game_vars.set_run_modifier("flip_lowroad")  # This is for testing only, needs to be replaced at start of run.
+    flip_lowroad = "flip_lowroad" in game_vars.run_modifier()
     checkpoint = 0
     post_battle_logic(battle_num=battle_count)
     while memory.main.get_map() != 79:
@@ -369,6 +381,9 @@ def low_road(self_destruct, battle_count):
                 checkpoint = 17
             elif checkpoint < 28 and memory.main.get_map() == 59:
                 checkpoint = 28
+            elif checkpoint == 33 and flip_lowroad:
+                reverse_battle_rng()
+                flip_lowroad = False
 
             # General pathing
             elif pathing.set_movement(MiihenLowroad.execute(checkpoint)):
@@ -400,3 +415,28 @@ def low_road(self_destruct, battle_count):
     # logs.write_stats('Miihen encounters:')
     # logs.write_stats(battle_count)
     return True
+
+
+def reverse_battle_rng():
+    FFXC.set_neutral()
+    memory.main.check_near_actors()
+    pathing.approach_actor_by_id(actor_id=20496)
+    FFXC.set_neutral()
+    memory.main.wait_frames(63)
+
+    # Start battle
+    xbox.tap_down()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.click_to_battle()
+
+    # Escape and back out of menu
+    battle.main.flee_all()
+    while not memory.main.user_control():
+        xbox.tap_a()
+
+    # Back to alginment with the path
+    while not pathing.set_movement([-69,156]):
+        pass
+
+    # Return back to the parent process.

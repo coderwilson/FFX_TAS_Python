@@ -62,4 +62,4 @@ def add_battle_to_memory(
         records.update(new_val)
     
 
-    save_memory(to_write=results)
+    save_memory(to_write=records)

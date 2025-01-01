@@ -1540,7 +1540,15 @@ def djose(stone_breath, battle_count=0):
                 else:
                     logger.info("Djose: Cannot learn Stone Breath here.")
                     flee_all()
+        elif memory.main.game_over():
+            logger.warning("Djose battle, game over identified!!! (A)")
+            seed_str = str(memory.main.rng_seed())
+            avina_memory.add_battle_to_memory(
+                seed=seed_str, area="djose_heals", battle_num=battle_count - 1
+            )
+            return False
     if memory.main.game_over():
+        logger.warning("Djose battle, game over identified!!!(B)")
         seed_str = str(memory.main.rng_seed())
         avina_memory.add_battle_to_memory(
             seed=seed_str, area="djose_heals", battle_num=battle_count - 1
@@ -5068,18 +5076,18 @@ def get_digit(number, n):
     return number // 10**n % 10
 
 
-def calculate_spare_change_movement(gil_amount):
+def calculate_spare_change_movement(gil_amount, force_max=False):
     max_gil_check = False
     if gil_amount > memory.main.get_gil_value():
         gil_amount = memory.main.get_gil_value()
         max_gil_check = True
         
-    if max_gil_check:
+    if max_gil_check or force_max:
         # If we snap to max, the original logic will not work.
         xbox.menu_right()
-        for _ in range(9):
+        for _ in range(10):
             xbox.tap_up()
-        memory.main.wait_frames(30)
+        memory.main.wait_frames(3)
         xbox.tap_b()
         xbox.tap_b()
         xbox.tap_b()
@@ -5398,6 +5406,8 @@ def advance_rng_12():
                 else:
                     aeon_summon(4)
             elif screen.turn_aeon():
+                Bahamut.unique()
+                '''
                 num_enemies = len(memory.main.get_enemy_current_hp())
                 logger.debug(f"{memory.main.get_enemy_current_hp()}")
                 logger.debug(f"{num_enemies}")
@@ -5430,6 +5440,7 @@ def advance_rng_12():
                         CurrentPlayer().dismiss()
                 else:
                     CurrentPlayer().dismiss()
+                '''
                 aeon_turn = True
             else:
                 if aeon_turn:
@@ -5653,3 +5664,32 @@ def ghost_kill_aeon():
                 CurrentPlayer().defend()
     if game_vars.god_mode():
         rng_track.force_preempt()
+
+
+def belgemine(use_aeon:int = 4, impulse:bool = False):
+    # Used in showcase mode only
+    FFXC.set_neutral()
+    if not memory.main.battle_active():
+        memory.main.click_to_diag_progress(9)
+        logger.debug("Mark 1")
+        memory.main.wait_frames(45)
+        xbox.tap_b()
+        logger.debug("Mark 2")
+        memory.main.wait_frames(60)
+        xbox.tap_up()
+        xbox.tap_up()
+        xbox.tap_b()
+        xbox.click_to_battle()
+    while memory.main.battle_active():
+        if Yuna.is_turn():
+            aeon_summon(use_aeon)
+        elif Bahamut.is_turn():
+            if impulse:
+                Bahamut.unique()
+            else:
+                Bahamut.attack()
+        elif screen.turn_aeon():
+            CurrentPlayer().attack()
+        else:
+            CurrentPlayer().defend()
+    wrap_up()

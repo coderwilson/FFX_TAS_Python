@@ -132,7 +132,7 @@ def temple():
                 xbox.tap_b()
 
 
-def trials():
+def trials(destro:bool=False):
     logger.info("Starting Trials section.")
     memory.main.click_to_control()
 
@@ -258,15 +258,15 @@ def trials():
                 logger.info("Final insert Right sphere")
                 approach_coords([34,-221])
                 checkpoint += 1
-            elif checkpoint == 76:  # No longer doing Destruction Sphere stuff.
+            elif checkpoint == 76 and not destro:  # No longer doing Destruction Sphere stuff.
                 checkpoint = 85
             elif checkpoint == 80:
                 logger.info("Destruction Glyph")
-                approach_coords([-60,333])
+                approach_coords([-60,34])
                 checkpoint += 1
             elif checkpoint == 82:
                 logger.info("Destruction sphere")
-                approach_coords([-63,70])
+                approach_coords([-64,65])
                 checkpoint += 1
             elif checkpoint == 85:  # Lift
                 if pathing.set_movement([0, 30]):
@@ -295,10 +295,23 @@ def trials():
                 approach_coords([27,117])
                 checkpoint += 1
             elif checkpoint == 100:
-                checkpoint += 2
+                if destro:
+                    approach_coords([0,71])
+                    FFXC.set_neutral()
+                    memory.main.click_to_control()
+                    checkpoint += 1
+                else:
+                    checkpoint += 2
             elif checkpoint == 102:
+                if destro:
+                    approach_coords([24,40])
                 checkpoint += 1
             elif checkpoint == 104:
+                if memory.main.get_story_progress() > 2000:
+                    FFXC.set_movement(-1, 1)
+                    memory.main.await_event()
+                    FFXC.set_neutral()
+                    return
                 logger.info("End of Trials")
                 if game_vars.csr():
                     FFXC.set_movement(-1, 1)

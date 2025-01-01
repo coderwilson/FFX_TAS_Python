@@ -195,7 +195,7 @@ class KilikaTrials(AreaMovementBase):
         35: [8, 133],
         36: [1, 34],
         37: [1, 15],
-        38: [36, -18],
+        38: [-36, -18],
         # Pick up last Kilika sphere
         40: [1, 15],
         41: [1, 34],
@@ -214,6 +214,62 @@ class KilikaTrials(AreaMovementBase):
         53: [-13, -10],
         # Talk to Wakka
         55: [-6, -20],
+
+        # These are for destro sphere
+        60: [-24, -25],
+        # Place Kilika sphere
+        62: [-30,-36],
+        63: [-18,-52],
+        64: [-19,-37.3],
+        # Push pedestol to wall
+        66: [-24,9],
+        67: [-27,18.5],
+        68: [-27,18.5],
+        # Push pedestol to center
+        70: [-9,8],
+        71: [-2,-1],
+        72: [0,12],
+        # Push pedestol North, long push.
+        74: [-8,176],
+        75: [-10,185],
+        76: [-10,187],
+        # Push east towards hidden room
+        78: [42,177],
+        79: [50,172],
+        80: [49,179],  # 51
+        # Push pedestol north to final spot
+        82: [51,173],
+        83: [-29,168],
+        84: [-40,178],
+        85: [-40,209],
+        86: [-26,213],
+        87: [46,208],
+        # Pick up Kilika sphere
+        89: [35,261],
+        90: [29,275],
+        # Place Kilika sphere
+        92: [38,266],
+        93: [36,222],
+        94: [-39,208],
+        95: [-36,164],
+        96: [46,171],
+        # Pick up destro sphere
+        98: [46,171],  # Buffer
+        99: [46,171],  # Buffer
+
+        100: [64,174],
+        101: [56,174],
+        102: [-29,168],
+        103: [-40,178],
+        104: [-40,209],
+        105: [-26,213],
+        106: [46,208],
+        # Place up destro sphere
+        108: [55,208],
+        # Pick up chest
+        110: [46,208],
+        111: [35,261],
+        112: [29,275],
     }
     checkpoint_fallback = {
         2: "Pick up Kilika sphere",

@@ -147,6 +147,7 @@ def to_the_ronso(checkpoint: int = 2):
             FFXC.set_neutral()
             if memory.main.turn_ready():
                 battle.boss.biran_yenke()
+                logger.warning(f"NE Armor check: {game_vars.ne_armor()}")
                 if game_vars.ne_armor() == 255:
                     return
             elif memory.main.diag_skip_possible():

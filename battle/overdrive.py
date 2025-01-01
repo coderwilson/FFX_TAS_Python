@@ -10,7 +10,7 @@ FFXC = xbox.controller_handle()
 logger = logging.getLogger(__name__)
 
 
-def yojimbo(gil_value: int = 263000):
+def yojimbo(gil_value: int = 263000, force_max=False):
     logger.info("Yojimbo overdrive")
     screen.await_turn()
     memory.main.wait_frames(3)
@@ -23,7 +23,7 @@ def yojimbo(gil_value: int = 263000):
         xbox.menu_b()
     logger.info("Selecting amount")
     memory.main.wait_frames(15)
-    battle.main.calculate_spare_change_movement(gil_value)
+    battle.main.calculate_spare_change_movement(gil_value, force_max=force_max)
     logger.info(f"Amount selected: {gil_value}")
     xbox.tap_b()
     xbox.tap_b()

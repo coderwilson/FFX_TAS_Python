@@ -204,7 +204,7 @@ def aeon_start():
 
 
 @battle.utils.speedup_decorator
-def yojimbo_battle(flee_available:bool=True, needed_amount:int = 263000):
+def yojimbo_battle(flee_available:bool=True, needed_amount:int = 263000, force_max=False):
     # zanmato_gil_needed()  # Just to report
     # Incomplete
     screen.await_turn()
@@ -222,7 +222,7 @@ def yojimbo_battle(flee_available:bool=True, needed_amount:int = 263000):
             return False
         
         logger.debug(f"Pay the man: {needed_amount}")
-        battle.overdrive.yojimbo(gil_value=needed_amount)
+        battle.overdrive.yojimbo(gil_value=needed_amount, force_max=force_max)
         memory.main.wait_frames(90)
 
     while memory.main.battle_active():
