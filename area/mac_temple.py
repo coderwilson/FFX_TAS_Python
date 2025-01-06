@@ -102,9 +102,9 @@ def arrival():
                 logger.info("Now lined up. Here we go.")
                 FFXC.set_movement(1, 0)
                 memory.main.wait_frames(3)
-                FFXC.set_value("btn_b", 1)
+                FFXC.set_confirm()
                 memory.main.wait_frames(4)
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
                 memory.main.wait_frames(45)
                 FFXC.set_neutral()
                 checkpoint += 1

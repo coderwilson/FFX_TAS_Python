@@ -378,14 +378,14 @@ def after_ammes(tanker_sinscale_kill: bool, klikk_steals: int):
 def swim_to_jecht():
     logger.info("Swimming to Jecht")
 
-    FFXC.set_value("btn_a", 1)
+    FFXC.set_back()
     FFXC.set_movement(-1, -1)
     memory.main.wait_frames(30 * 8)
     while memory.main.user_control():
         FFXC.set_movement(-1, 1)
 
     FFXC.set_neutral()
-    FFXC.set_value("btn_a", 0)
+    FFXC.release_back()
     logger.info("We've now reached Jecht.")
     xbox.skip_dialog(5)
 

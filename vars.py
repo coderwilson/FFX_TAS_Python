@@ -103,6 +103,7 @@ class AllVars:
         self.rescue_count = 0
         self.flux_overkill_var = False
         self.first_hits = [0] * 8
+        self.invert_confirm = False
 
         # === Nemesis stuff ===
         # ----Nemesis variables, unused in any%
@@ -142,6 +143,12 @@ class AllVars:
     def ml_heals(self):
         return self.ml_heals_val
 
+    def set_invert_confirm(self, value):
+        self.invert_confirm = value
+
+    def get_invert_confirm(self):
+        return self.invert_confirm
+    
     def set_ml_heals(self, value):
         self.ml_heals_val = value
     

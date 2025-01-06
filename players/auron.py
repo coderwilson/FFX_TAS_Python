@@ -46,12 +46,12 @@ class AuronImpl(Player):
                 FFXC.set_value("btn_shoulder_r", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_shoulder_r", 0)
-                FFXC.set_value("btn_a", 1)
+                FFXC.set_back()
                 memory.main.wait_frames(1)
-                FFXC.set_value("btn_a", 0)
-                FFXC.set_value("btn_b", 1)
+                FFXC.release_back()
+                FFXC.set_confirm()
                 memory.main.wait_frames(1)
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
         elif style == "shooting star":
             self._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
             while not self.overdrive_active():
@@ -60,24 +60,24 @@ class AuronImpl(Player):
                 FFXC.set_value("btn_y", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_y", 0)
-                FFXC.set_value("btn_a", 1)
+                FFXC.set_back()
                 memory.main.wait_frames(1)
-                FFXC.set_value("btn_a", 0)
+                FFXC.release_back()
                 FFXC.set_value("btn_x", 1)
                 memory.main.wait_frames(1)
                 FFXC.set_value("btn_x", 0)
-                FFXC.set_value("btn_b", 1)
+                FFXC.set_confirm()
                 memory.main.wait_frames(1)
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
                 FFXC.set_value("d_pad", 4)  # left
                 memory.main.wait_frames(1)
                 FFXC.set_value("d_pad", 0)
                 FFXC.set_value("d_pad", 8)  # right
                 memory.main.wait_frames(1)
                 FFXC.set_value("d_pad", 0)
-                FFXC.set_value("btn_b", 1)
+                FFXC.set_confirm()
                 memory.main.wait_frames(1)
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
 
     def overdrive_active(self):
         return memory.main.read_val(0x00F3D6B4, 1) == 4

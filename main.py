@@ -135,6 +135,40 @@ def configuration_setup():
         )
 
 
+def set_confirm_button():
+    logger.manip("Now checking control scheme. Stand by.")
+    game_vars = vars.vars_handle()
+    while memory.main.get_map() != 23:
+        logger.warning("Cannot check confirm button. Wrong map is active.")
+        memory.main.wait_frames(10)
+
+    last_click = "none"
+    while not memory.main.save_menu_open():
+        if memory.main.save_menu_cursor() != 1:
+            xbox.tap_down()
+        elif last_click == "back":
+            last_click = "confirm"
+            xbox.tap_confirm()
+        else:
+            last_click = "back"
+            xbox.tap_back()
+        memory.main.wait_frames(90)
+    
+    if last_click == "back":
+        logger.warning(f"Check: {game_vars.get_invert_confirm()}")
+        logger.warning("A is confirm. Inverting TAS controls! (no user action needed)")
+        game_vars.set_invert_confirm(not game_vars.get_invert_confirm())
+        logger.warning(f"Check: {game_vars.get_invert_confirm()}")
+    else:
+        logger.warning("B is confirm. Controls set correctly. No TAS change.")
+    
+    memory.main.wait_frames(90)
+    xbox.tap_back()
+    xbox.tap_back()
+    xbox.tap_back()
+    
+
+
 def memory_setup():
     # Initiate memory reading, after we know the game is open.
     while not memory.main.start():
@@ -143,6 +177,8 @@ def memory_setup():
     # Main
     if memory.main.get_map not in [23, 348, 349]:
         reset.reset_to_main_menu()
+    
+    set_confirm_button()
 
     logger.info("Game start screen")
 

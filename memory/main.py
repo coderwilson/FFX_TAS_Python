@@ -536,10 +536,10 @@ def click_to_control_special():
         fmt = "Awaiting control... elapsed {elapsed}"
         with tqdm(bar_format=fmt) as pbar:
             while not user_control():
-                FFXC.set_value("btn_b", 1)
+                FFXC.set_confirm()
                 FFXC.set_value("btn_y", 1)
                 wait_frames(30 * 0.035)
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
                 FFXC.set_value("btn_y", 0)
                 wait_frames(30 * 0.035)
                 pbar.update()
@@ -550,12 +550,12 @@ def click_to_control_special():
 
 def click_to_event():
     while user_control():
-        FFXC.set_value("btn_b", 1)
+        FFXC.set_confirm()
         if game_vars.use_pause():
             wait_frames(2)
         else:
             wait_frames(1)
-        FFXC.set_value("btn_b", 0)
+        FFXC.release_confirm()
         if game_vars.use_pause():
             wait_frames(3)
         else:
@@ -1869,11 +1869,11 @@ def click_to_story_progress(destination):
     )
     while current_state < destination:
         if menu_control():
-            FFXC.set_value("btn_b", 1)
-            FFXC.set_value("btn_a", 1)
+            FFXC.set_confirm()
+            FFXC.set_back()
             wait_frames(1)
-            FFXC.set_value("btn_b", 0)
-            FFXC.set_value("btn_a", 0)
+            FFXC.release_confirm()
+            FFXC.release_back()
             wait_frames(1)
         if counter % 100000 == 0:
             logger.debug(

@@ -220,9 +220,9 @@ def attempt_skip():
             elif _distance(position, tidus_coords) < 15:
                 if attempt % 2 == 1 and tidus_coords[1] < -390:
                     # Attempting skip / talking
-                    FFXC.set_value("btn_b", 1)
+                    FFXC.set_confirm()
                     wait_frames(1)
-                    FFXC.set_value("btn_b", 0)
+                    FFXC.release_confirm()
                     wait_frames(1)
             elif tidus_coords[1] > -398 and tidus_coords[1] != 0:
                 if _distance(position, tidus_coords) > 15:
@@ -282,9 +282,9 @@ def attempt_skip():
             elif _distance(position, tidus_coords) < 15:
                 if attempt % 2 == 1:
                     # Attempting skip / talking
-                    FFXC.set_value("btn_b", 1)
+                    FFXC.set_confirm()
                     wait_frames(1)
-                    FFXC.set_value("btn_b", 0)
+                    FFXC.release_confirm()
                     wait_frames(1)
             elif attempt % 2 == 1 and position[1] > tidus_coords[1] + 15:
                 logger.debug(" - Runner too far North. Wait for him to come back.")
@@ -347,9 +347,9 @@ def attempt_skip():
                 logger.info("Part 2 complete, we should be able to continue.")
             elif attempt % 2 == 1 and _distance(position, tidus_coords) < 10:
                 # Attempting skip / talking
-                FFXC.set_value("btn_b", 1)
+                FFXC.set_confirm()
                 wait_frames(1)
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
                 wait_frames(1)
             elif (
                 tidus_coords[1] < -355 and

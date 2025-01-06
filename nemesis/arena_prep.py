@@ -599,9 +599,9 @@ def bribe_battle(spare_change_value: int = 12000):
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():
         pass
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(150)
-    FFXC.set_value("btn_b", 0)
+    FFXC.release_confirm()
     logger.debug("Now back in control.")
 
 
@@ -885,9 +885,9 @@ def farm_feathers():
     while not memory.main.menu_open():
         pass
 
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(150)
-    FFXC.set_value("btn_b", 0)
+    FFXC.release_confirm()
     logger.debug("Now back in control.")
     nemesis.arena_select.arena_menu_select(4)
 
@@ -1086,9 +1086,9 @@ def tonberry_levels_battle():
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():
         pass
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(150)
-    FFXC.set_value("btn_b", 0)
+    FFXC.release_confirm()
     logger.debug("Now back in control.")
 
 
@@ -1111,9 +1111,9 @@ def cactuar_levels_battle():
     logger.debug("Battle is complete.")
     while not memory.main.menu_open():
         pass
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(150)
-    FFXC.set_value("btn_b", 0)
+    FFXC.release_confirm()
     logger.debug("Now back in control.")
 
 

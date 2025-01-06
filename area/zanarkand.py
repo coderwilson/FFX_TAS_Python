@@ -513,11 +513,11 @@ def yunalesca():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            FFXC.set_value("btn_b", 1)
-            FFXC.set_value("btn_a", 1)
+            FFXC.set_confirm()
+            FFXC.set_back()
             memory.main.wait_frames(1)
-            FFXC.set_value("btn_b", 0)
-            FFXC.set_value("btn_a", 0)
+            FFXC.release_confirm()
+            FFXC.release_back()
             memory.main.wait_frames(1)
     if not battle.boss.yunalesca():
         return False

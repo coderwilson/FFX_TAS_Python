@@ -249,14 +249,14 @@ def arrival():
             else:
                 FFXC.set_movement(1, 1)
                 if memory.main.menu_open():
-                    FFXC.set_value("btn_b", 1)
+                    FFXC.set_confirm()
                     memory.main.wait_frames(2)
-                    FFXC.set_value("btn_b", 0)
+                    FFXC.release_confirm()
                     memory.main.wait_frames(3)
                 elif memory.main.diag_skip_possible():
-                    FFXC.set_value("btn_b", 1)
+                    FFXC.set_confirm()
                     memory.main.wait_frames(2)
-                    FFXC.set_value("btn_b", 0)
+                    FFXC.release_confirm()
                     memory.main.wait_frames(3)
     logger.debug(f"Mi'ihen skip status: {miihen_skip}")
     return [game_vars.self_destruct_get(), battle_count, True, miihen_skip]

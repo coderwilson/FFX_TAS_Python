@@ -2111,7 +2111,7 @@ def onion_knight():
     current_map = memory.main.get_map()
     while current_map == memory.main.get_map():
         pathing.set_movement([2,230])
-        FFXC.set_value("btn_a", 1)
+        FFXC.set_back()
     FFXC.set_neutral()
     memory.main.click_to_control()
     while not pathing.set_movement([-5,-241]):
@@ -2195,7 +2195,7 @@ def onion_knight():
     
     
     # Now to get Lulu's chest.
-    FFXC.set_value("btn_a", 1)
+    FFXC.set_back()
     while not pathing.set_movement([14,-93]):
         pass
     while not pathing.set_movement([67,-143]):
@@ -2203,7 +2203,7 @@ def onion_knight():
     while not pathing.set_movement([54,-140]):
         pass
     FFXC.set_movement(0,0)
-    FFXC.set_value("btn_a", 0)
+    FFXC.release_back()
     while memory.main.user_control():
         xbox.tap_b()
     FFXC.set_neutral()

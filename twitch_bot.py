@@ -26,7 +26,27 @@ CSR_PATH = ""
 GAME_PATH = ""
 CONFIG_FILE_PATH = "bot-config.yaml"
 MARBLES_PATH = "C:\\Users\\coder\\Desktop\\Python_projects\\marbles_on_stream"
+#MARBLES_EXE = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Marbles on Stream"
+#MARBLES_EXE = "C:\\Users\\coder\\Desktop"
 
+import psutil
+
+def terminate_marbles_processes():
+    """Identify and terminate processes with 'marbles' in their names (case-insensitive)."""
+    terminated = []
+    for process in psutil.process_iter(attrs=["pid", "name"]):
+        try:
+            process_name = process.info["name"]
+            if "marbles" in process_name.lower():
+                process.terminate()  # Request termination
+                terminated.append(process.info["pid"])
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue  # Process might have ended or can't be accessed
+    
+    if terminated:
+        print(f"Terminated processes: {terminated}")
+    else:
+        print("No processes with 'marbles' in their names found.")
 
 def oblitz_history():
     filepath = os.path.join("json_ai_files", "oblitz_results.json")
@@ -325,6 +345,7 @@ class Bot(commands.Bot):
             "Other commands: !start, !showcase, or !blitz to start the TAS from the New Game screen, "
             + "or !stop to hald the TAS if already running."
         )
+        await ctx.send("New command, !stuck will attempt to reset all programs.")
     
     # Start All
     @commands.command(aliases=("begin_all", "all"))
@@ -342,7 +363,6 @@ class Bot(commands.Bot):
     @commands.command(aliases=("kill_all","halt_all","stop_all"))
     async def kill(self, ctx: commands.Context):
         if self.is_valid_user(ctx):
-            await self.marbles_end(ctx)
             await self.exit(ctx)
             await self.stop_csr(ctx)
             await self.stop_game(ctx)
@@ -368,13 +388,20 @@ class Bot(commands.Bot):
     # End Marbles
     @commands.command(aliases=("marbles_stop"))
     async def marbles_end(self, ctx: commands.Context):
-        print("Marbles command received")
+        print("Marbles End command received")
         try:
-            if self.marbles is not None and self.marbles.poll() != None:
-                print("Reset handle, process is no longer running.")
+            if self.marbles is not None: # and self.marbles.poll() != None:
+                self.marbles.terminate()
+                self.marbles.wait()
                 self.marbles = None
+                print("Reset handle, python process is no longer running.")
+                terminate_marbles_processes()
+                #self.game.terminate()
+                #self.game.wait()
+                #self.game = None
+                print("Reset handle, marbles executable is no longer running.")
             else:
-                print("Marbles still running. Try again after it is done.")
+                print("Marbles was not launched or has completed.")
         except:
             print("Process was never launched, this is normal.")
         print (f"Reset logic complete - {self.marbles}")
@@ -386,6 +413,23 @@ class Bot(commands.Bot):
         
         await self.marbles_end(ctx)
         if self.marbles is None and self.game is None:
+            '''
+            # First need to launch the game.
+            cwd = os.getcwd()
+            print(cwd)
+            os.chdir(GAME_PATH)
+            print(os.getcwd())
+            launch_path = MARBLES_EXE + "\Marbles on Stream"
+            print(launch_path)
+            self.game = subprocess.Popen([launch_path])
+            os.chdir(cwd)
+            await ctx.send("FFX started.")
+            print("FFX started.")
+            time.sleep(10)
+            print("Sleep check")
+            '''
+
+            # Now for the python code
             print("Attempting process start.")
             await ctx.send("Launching marbles. Credit for background music: Rozen - Battle for Spira (feat. Julie Elven) https://youtu.be/TpXtRt6hM4Q?si=xkdA83vHXMZZ1J1E")
             cwd = os.getcwd()
@@ -415,6 +459,12 @@ class Bot(commands.Bot):
             # Game has not been started.
             return False
 
+    # Stuck command
+    @commands.command(aliases=("stuck_all"))
+    async def stuck(self, ctx: commands.Context):
+        await ctx.send("Attempting to un-stuck the system. Stand by.")
+        await self.kill(ctx)
+        await self.marbles_end(ctx)
 
 # Main entry point of script
 if __name__ == "__main__":

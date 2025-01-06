@@ -163,16 +163,16 @@ def trials():
                 while not memory.main.user_control():
                     if memory.main.get_actor_coords(0)[1] < -100:
                         if memory.main.bt_bi_direction() == 1:
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
                     elif (
                         memory.main.get_actor_coords(0)[1] > 30
                         and memory.main.get_actor_coords(0)[1] < 90
                     ):
-                        FFXC.set_value("btn_b", 1)
+                        FFXC.set_confirm()
                     else:
-                        FFXC.set_value("btn_b", 0)
+                        FFXC.release_confirm()
                 FFXC.set_neutral()
                 if memory.main.get_actor_coords(0)[0] < -20:
                     logger.info("Correct alcove. Moving on with swiftness.")
@@ -210,11 +210,11 @@ def trials():
                 FFXC.set_neutral()
                 logger.debug("Mark 1")
                 memory.main.wait_frames(30 * 1)
-                FFXC.set_value("btn_b", 1)
+                FFXC.set_confirm()
                 logger.debug("Mark 2")
                 memory.main.await_control()
                 logger.debug("Mark 3")
-                FFXC.set_value("btn_b", 0)
+                FFXC.release_confirm()
                 checkpoint += 1
             elif checkpoint == 10:  # Insert Bevelle sphere. Activate lower areas.
                 approach_coords([13,97],diag=8)
@@ -232,9 +232,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
 
                     elif memory.main.get_actor_coords(0)[1] < -10:
                         if (
@@ -253,9 +253,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 293
                             and memory.main.get_actor_coords(0)[1] < 432
                         ):
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 16:  # Take Glyph sphere from second alcove
@@ -272,12 +272,12 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
 
                     elif memory.main.get_actor_coords(0)[1] > 425:
-                        FFXC.set_value("btn_b", 1)
+                        FFXC.set_confirm()
                     elif (
                         memory.main.get_actor_coords(0)[1] < -30
                         and memory.main.bt_bi_direction() == 0
@@ -291,7 +291,7 @@ def trials():
                             xbox.menu_b()
                             memory.main.wait_frames(20)
                     else:
-                        FFXC.set_value("btn_b", 0)
+                        FFXC.release_confirm()
                 # Go ahead and insert Glyph sphere.
                 approach_coords([355,525],diag=8)
                 checkpoint += 1
@@ -344,9 +344,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
 
                     elif memory.main.get_actor_coords(0)[1] < -30:
                         if (
@@ -364,9 +364,9 @@ def trials():
                         memory.main.get_actor_coords(0)[1] > 250
                         and memory.main.get_actor_coords(0)[1] < 450
                     ):
-                        FFXC.set_value("btn_b", 1)
+                        FFXC.set_confirm()
                     else:
-                        FFXC.set_value("btn_b", 0)
+                        FFXC.release_confirm()
                 FFXC.set_neutral()
                 logger.info("Arriving in the second alcove again.")
                 checkpoint += 1
@@ -398,9 +398,9 @@ def trials():
                             memory.main.get_actor_coords(0)[1] > 100
                             or memory.main.get_actor_coords(0)[1] < 10
                         ):
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
 
                     elif memory.main.get_actor_coords(0)[1] < -30:
                         if (
@@ -416,9 +416,9 @@ def trials():
                                 memory.main.wait_frames(20)
                     else:
                         if memory.main.get_actor_coords(0)[1] < 250:
-                            FFXC.set_value("btn_b", 1)
+                            FFXC.set_confirm()
                         else:
-                            FFXC.set_value("btn_b", 0)
+                            FFXC.release_confirm()
                 FFXC.set_neutral()
                 memory.main.await_control()
                 memory.main.wait_frames(3)
