@@ -880,7 +880,7 @@ def shinryu_battle():
     # After battle stuff
     while not memory.main.menu_open():
         xbox.tap_b()
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(170)
     FFXC.set_neutral()
     memory.main.wait_frames(2)
@@ -998,7 +998,7 @@ def recharge_yuna():
                 battle.main.escape_one()
 
     logger.debug("Battle is complete.")
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(180)
     FFXC.set_neutral()
     memory.main.wait_frames(2)

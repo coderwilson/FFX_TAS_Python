@@ -312,7 +312,7 @@ def klikk_truerng():
     ):
         # logger.debug(memory.main.get_map())
         if game_vars.csr():
-            FFXC.set_value("btn_b", 1)
+            FFXC.set_confirm()
         else:
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
@@ -360,7 +360,7 @@ def klikk(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: 
     ):
         # logger.debug(memory.main.get_map())
         if game_vars.csr():
-            FFXC.set_value("btn_b", 1)
+            FFXC.set_confirm()
         else:
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
@@ -1929,9 +1929,9 @@ def isaaru():
     if memory.main.game_over():
         logger.warning("GAME OVER, FORCE RETURN")
         return False
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(30 * 2.8)
-    FFXC.set_value("btn_b", 0)
+    FFXC.release_confirm()
     if game_vars.god_mode():
         rng_track.force_preempt()
     return True

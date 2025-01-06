@@ -983,9 +983,9 @@ def after_blitz_3_late_haste(early_haste):
                 revive()
             else:
                 CurrentPlayer().attack()
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_confirm()
     memory.main.wait_frames(30 * 4)
-    FFXC.set_value("btn_b", 0)
+    FFXC.release_confirm()
     logger.info("Battle complete (Garuda)")
     # Get to control
     while not memory.main.user_control():
@@ -4753,8 +4753,8 @@ def wrap_up():
             return False
     memory.main.wait_frames(1)
     while memory.main.battle_wrap_up_active():
-        FFXC.set_value("btn_b", 1)
-    FFXC.set_value("btn_b", 0)
+        FFXC.set_confirm()
+    FFXC.release_confirm()
     logger.debug("Wrap up complete.")
     memory.main.wait_frames(1)
     if game_vars.god_mode():

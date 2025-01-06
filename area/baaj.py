@@ -240,18 +240,18 @@ def ab_boat_1():
             xbox.menu_a()
             xbox.menu_b()
     logger.info("In the water!")
-    FFXC.set_value("btn_a", 1)
+    FFXC.set_back()
     while not memory.main.user_control():
-        FFXC.set_value("btn_b", 1)
+        FFXC.set_confirm()
         memory.main.wait_frames(1)
-        FFXC.set_value("btn_b", 0)
+        FFXC.release_confirm()
         memory.main.wait_frames(1)
-    FFXC.set_value("btn_a", 1)
+    FFXC.set_back()
     FFXC.set_movement(-1, -1)
     memory.main.wait_frames(20)
 
     while memory.main.get_map() != 288:
-        FFXC.set_value("btn_a", 1)
+        FFXC.set_back()
         FFXC.set_movement(0, -1)
         if memory.main.battle_active():
             FFXC.set_neutral()
@@ -268,7 +268,7 @@ def ab_swimming_1_truerng():
     while memory.main.get_map() != 288:
         if memory.main.user_control():
             pathing.set_movement([-300, -300])
-            FFXC.set_value("btn_a", 1)
+            FFXC.set_back()
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -286,9 +286,9 @@ def ab_swimming_1_truerng():
         if memory.main.user_control():
             if memory.main.get_map() == 71:
                 FFXC.set_movement(0, -1)
-                FFXC.set_value("btn_a", 1)
+                FFXC.set_back()
             else:
-                FFXC.set_value("btn_a", 0)
+                FFXC.release_back()
                 if pos[1] > -230:
                     pathing.set_movement([-343, -284])
                 elif pos[1] > -410:
@@ -311,7 +311,7 @@ def ab_swimming_1(chain_encounter_strat: int):
     while memory.main.get_map() != 288:
         if memory.main.user_control():
             pathing.set_movement([-300, -300])
-            FFXC.set_value("btn_a", 1)
+            FFXC.set_back()
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
@@ -342,9 +342,9 @@ def ab_swimming_1(chain_encounter_strat: int):
         if memory.main.user_control():
             if memory.main.get_map() == 71:
                 FFXC.set_movement(0, -1)
-                FFXC.set_value("btn_a", 1)
+                FFXC.set_back()
             else:
-                FFXC.set_value("btn_a", 1)
+                FFXC.set_back()
                 if pos[1] > -230:
                     pathing.set_movement([-343, -284])
                 elif pos[1] > -410:
@@ -368,7 +368,7 @@ def ab_swimming_2_truerng():
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)
-    FFXC.set_value("btn_a", 1)
+    FFXC.set_back()
     memory.main.touch_save_sphere()
     # TODO: adapt save_sphere.touch_and_go() to handle this save sphere
 
@@ -450,7 +450,7 @@ def ab_swimming_2(ruins_encounter_strat: int):
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)
-    FFXC.set_value("btn_a", 1)
+    FFXC.set_back()
     memory.main.touch_save_sphere()
     # TODO: adapt save_sphere.touch_and_go() to handle this save sphere
 

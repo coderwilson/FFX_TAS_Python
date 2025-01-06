@@ -106,6 +106,63 @@ class VgTranslator:
     def set_neutral(self):
         self.gamepad.reset()
         self.gamepad.update()
+        
+    def tap_confirm(self):
+        if game_vars.get_invert_confirm():
+            FFXC.set_value("btn_a", 1)
+            memory.main.wait_frames(1)
+            FFXC.set_value("btn_a", 0)
+            memory.main.wait_frames(2)
+            if game_vars.use_pause():
+                memory.main.wait_frames(2)
+        else:
+            FFXC.set_value("btn_b", 1)
+            memory.main.wait_frames(1)
+            FFXC.set_value("btn_b", 0)
+            memory.main.wait_frames(2)
+            if game_vars.use_pause():
+                memory.main.wait_frames(3)
+    
+    def set_confirm(self):
+        if game_vars.get_invert_confirm():
+            FFXC.set_value("btn_a", 1)
+        else:
+            FFXC.set_value("btn_b", 1)
+
+    def release_confirm(self):
+        if game_vars.get_invert_confirm():
+            FFXC.set_value("btn_a", 0)
+        else:
+            FFXC.set_value("btn_b", 0)
+                
+    def tap_back(self):
+        if game_vars.get_invert_confirm():
+            FFXC.set_value("btn_b", 1)
+            memory.main.wait_frames(1)
+            FFXC.set_value("btn_b", 0)
+            memory.main.wait_frames(2)
+            if game_vars.use_pause():
+                memory.main.wait_frames(3)
+        else:
+            FFXC.set_value("btn_a", 1)
+            memory.main.wait_frames(1)
+            FFXC.set_value("btn_a", 0)
+            memory.main.wait_frames(2)
+            if game_vars.use_pause():
+                memory.main.wait_frames(2)
+    
+    def set_back(self):
+        if game_vars.get_invert_confirm():
+            FFXC.set_value("btn_b", 1)
+        else:
+            FFXC.set_value("btn_a", 1)
+    
+    def release_back(self):
+        if game_vars.get_invert_confirm():
+            FFXC.set_value("btn_b", 0)
+        else:
+            FFXC.set_value("btn_a", 0)
+
 
 
 FFXC = VgTranslator()
@@ -167,13 +224,17 @@ def skip_stored_scene(skip_timer: int = 3):
 
 def attack():
     logger.debug("Basic attack")
-    FFXC.set_value("btn_b", 1)
+    confirm_button = "btn_b"
+    if game_vars.get_invert_confirm():
+        confirm_button = "btn_a"
+
+    FFXC.set_value(confirm_button, 1)
     memory.main.wait_frames(30 * 0.08)
-    FFXC.set_value("btn_b", 0)
+    FFXC.set_value(confirm_button, 0)
     memory.main.wait_frames(30 * 0.08)
-    FFXC.set_value("btn_b", 1)
+    FFXC.set_value(confirm_button, 1)
     memory.main.wait_frames(30 * 0.08)
-    FFXC.set_value("btn_b", 0)
+    FFXC.set_value(confirm_button, 0)
     memory.main.wait_frames(30 * 0.5)
 
 
@@ -300,35 +361,43 @@ def shoulder_right():
 
 
 def menu_a():
-    FFXC.set_value("btn_a", 1)
-    memory.main.wait_frames(2)
-    FFXC.set_value("btn_a", 0)
-    memory.main.wait_frames(4)
+    if game_vars.get_invert_confirm():
+        FFXC.set_value("btn_b", 1)
+        memory.main.wait_frames(2)
+        FFXC.set_value("btn_b", 0)
+        memory.main.wait_frames(4)
+    else:
+        FFXC.set_value("btn_a", 1)
+        memory.main.wait_frames(2)
+        FFXC.set_value("btn_a", 0)
+        memory.main.wait_frames(4)
 
 
 def menu_b():
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(2)
-    FFXC.set_value("btn_b", 0)
-    memory.main.wait_frames(4)
+    if game_vars.get_invert_confirm():
+        FFXC.set_value("btn_a", 1)
+        memory.main.wait_frames(2)
+        FFXC.set_value("btn_a", 0)
+        memory.main.wait_frames(4)
+    else:
+        FFXC.set_value("btn_b", 1)
+        memory.main.wait_frames(2)
+        FFXC.set_value("btn_b", 0)
+        memory.main.wait_frames(4)
 
+
+def tap_back():
+    FFXC.tap_back()
 
 def tap_a():
-    FFXC.set_value("btn_a", 1)
-    memory.main.wait_frames(1)
-    FFXC.set_value("btn_a", 0)
-    memory.main.wait_frames(2)
-    if game_vars.use_pause():
-        memory.main.wait_frames(2)
+    FFXC.tap_back()
 
+
+def tap_confirm():
+    FFXC.tap_confirm()
 
 def tap_b():
-    FFXC.set_value("btn_b", 1)
-    memory.main.wait_frames(1)
-    FFXC.set_value("btn_b", 0)
-    memory.main.wait_frames(2)
-    if game_vars.use_pause():
-        memory.main.wait_frames(3)
+    FFXC.tap_confirm()
 
 
 def menu_x():
