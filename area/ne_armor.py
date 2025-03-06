@@ -40,8 +40,10 @@ def loop_back_from_ronso(checkpoint=0):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible() or memory.main.menu_open():
-                xbox.tap_b()
+            if memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
 
 
 def to_hidden_cave():
@@ -55,7 +57,7 @@ def to_hidden_cave():
     #next_drop, advances = rng_track.nea_track()
     nea_possible_check, next_drop = rng_track.final_nea_check()
     while memory.main.get_map() != 56:
-        if not nea_possible_check:
+        if not nea_possible_check or next_drop == 99:
             return False
         if memory.main.user_control():
             if checkpoint < 5 and memory.main.get_map() == 266:
@@ -109,8 +111,10 @@ def to_hidden_cave():
                 #next_drop, advances = rng_track.nea_track()
                 nea_possible_check, next_drop = rng_track.final_nea_check()
                 rng_track.print_manip_info()
-            elif memory.main.diag_skip_possible() or memory.main.menu_open():
-                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
     logs.write_stats("NEA extra manip battles:")
     logs.write_stats(prep_battles)
     return True
@@ -187,8 +191,10 @@ def drop_hunt():
                         go_green = True
                     pre_ghost_battles += 1
                 memory.main.close_menu()
-            elif memory.main.diag_skip_possible() or memory.main.menu_open():
-                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
     logger.info(f"The NE armor hunt is complete. Char: {game_vars.ne_armor()}")
     logs.write_stats("Pre-Ghost flees:")
     logs.write_stats(pre_ghost_battles)
@@ -235,5 +241,7 @@ def return_to_gagazet():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.flee_all()
-            elif memory.main.diag_skip_possible() or memory.main.menu_open():
-                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()

@@ -137,7 +137,9 @@ def arrival():
                     battle.main.heal_up()
             elif memory.main.menu_open():
                 xbox.tap_b()
-            elif memory.main.diag_skip_possible():
+            elif checkpoint in [75,76] and memory.main.diag_skip_possible():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
     logger.info("End of approach section, should now be talking to Lucille/Elma/etc.")
 
@@ -146,12 +148,12 @@ def south_bank(checkpoint: int = 0):
     # Arrive at the south bank of the moonflow.
     logger.info("South bank, Save sphere screen")
 
-    memory.main.click_to_control_3()  # "Where there's a will, there's a way."
+    memory.main.click_to_control()  # "Where there's a will, there's a way."
     FFXC.set_movement(1, -1)
     memory.main.wait_frames(30 * 1)
     FFXC.set_neutral()
 
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     party_hp = memory.main.get_hp()
     if memory.main.equipped_weapon_has_ability(char_num=0, ability_num=0x8026):
         if memory.main.check_ability(ability=0x804B):
@@ -179,7 +181,7 @@ def south_bank(checkpoint: int = 0):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
     battle.boss.extractor()
@@ -202,7 +204,7 @@ def north_bank():
         memory.main.click_to_event()  # Talk to Auron
         FFXC.set_neutral()
         memory.main.wait_frames(9)
-        memory.main.click_to_control_3()
+        memory.main.click_to_control()
     FFXC.set_movement(-1, 0)
     memory.main.wait_frames(15)
     memory.main.await_event()
@@ -241,7 +243,8 @@ def north_bank():
             FFXC.set_neutral()
             if screen.battle_screen():
                 battle.main.flee_all()
-            elif memory.main.diag_skip_possible() and not memory.main.battle_active():
+            elif memory.main.diag_skip_possible() and not memory.main.battle_active() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.menu_open():
                 xbox.tap_b()
+    logger.info("Moonflow End")

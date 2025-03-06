@@ -65,7 +65,7 @@ def arrival():
 
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 xbox.skip_scene_spec()
@@ -99,6 +99,10 @@ def forest_1():
     advances = 2  # Used to find the best battle coming up.
     next_battle = []
     import rng_track
+    save_after_pray = False
+    if game_vars.story_mode():
+        save_after_pray = True
+
 
     game_vars.dont_skip_kilika_luck()
 
@@ -145,15 +149,23 @@ def forest_1():
             elif checkpoint == 86:
                 save_sphere.touch_and_go()
                 memory.main.update_formation(Tidus, Wakka, Yuna)
-                if not game_vars.did_full_klikk_menu():
+                if not game_vars.did_full_kilika_menu():
                     menu.geneaux()
                 memory.main.close_menu()
                 checkpoint += 1
             elif checkpoint == 99:  # Lord O'holland
                 pathing.approach_actor_by_id(5)  # Wakka is party member 4, ID 5
                 FFXC.set_neutral()
-                memory.main.click_to_control_dumb()
+                if game_vars.story_mode():
+                    memory.main.wait_seconds(6)
+                    xbox.tap_confirm()
+                    memory.main.await_control()
+                else:
+                    memory.main.click_to_control_dumb()
                 checkpoint += 1
+            elif checkpoint == 100 and save_after_pray:
+                save_sphere.touch_and_go()
+                save_after_pray = False
 
             # General pathing
             elif pathing.set_movement(Kilika2.execute(checkpoint)):
@@ -193,8 +205,11 @@ def forest_1():
                     logger.debug(f"{next_battle}")
                     kilika_battles += 1
                 memory.main.update_formation(Tidus, Wakka, Lulu)
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif checkpoint == 47 and game_vars.story_mode():
+                # Story mode needs a little help with the Luck chest.
+                xbox.tap_confirm()
 
             # Map changes
             elif checkpoint < 84 and memory.main.get_map() == 65:  # Stairs
@@ -229,12 +244,31 @@ def forest_1():
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
-            xbox.tap_b()
+            if game_vars.story_mode():
+                if memory.main.get_actor_coords(0)[1] > 250:
+                    memory.main.wait_seconds(2)  # So Tidus dialog plays
+                    xbox.tap_confirm()  # Only if near the door.
+                    memory.main.wait_seconds(27)  # So Tidus dialog plays
+                # Else, don't skip dialog.
+            else:
+                xbox.tap_confirm()
+
+
+def _distance(n1, n2):
+    try:
+        player1 = n1
+        player2 = n2
+        return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
+    except Exception as x:
+        logger.exception(x)
+        return 999
 
 
 def trials(destro:bool=False):
     logger.info("Kilika trials")
     memory.main.click_to_control()
+    if game_vars.story_mode():
+        destro = True
     checkpoint = 0
     while memory.main.get_map() != 45:
         if memory.main.user_control():
@@ -288,35 +322,41 @@ def trials(destro:bool=False):
             elif checkpoint == 61:
                 approach_coords([-20,-30])
                 checkpoint += 1
-            elif checkpoint == 65:  # North to wall
-                while memory.main.get_actor_coords(0)[1] < 12:
+            elif checkpoint == 68:  # Reset glyph
+                approach_coords([50,205])
+                checkpoint += 1
+            elif checkpoint == 71:
+                # Line up to push north
+                FFXC.set_neutral()
+                memory.main.wait_frames(16)
+                while _distance(memory.main.get_coords(), KilikaTrials.execute(checkpoint)) > 1.5:
+                    logger.debug(memory.main.get_coords())
+                    pathing.set_movement(KilikaTrials.execute(checkpoint))
+                    memory.main.wait_frames(2)
+                    FFXC.set_neutral()
+                    memory.main.wait_frames(3)
+                memory.main.wait_frames(9)
+                while memory.main.get_coords()[1] < 180.6:
                     FFXC.set_movement(0,1)
                 FFXC.set_neutral()
+                memory.main.wait_frames(6)
                 checkpoint += 1
-            elif checkpoint == 69:  # Center podium
-                FFXC.set_movement(1,0)
-                memory.main.wait_frames(12)
-                FFXC.set_neutral()
-                memory.main.wait_frames(15)
-                while memory.main.get_actor_coords(0)[0] < -8:
-                    FFXC.set_movement(1,-0.5)
-                FFXC.set_neutral()
-                checkpoint += 1
-            elif checkpoint == 73:  # North near wall
-                FFXC.set_neutral()
-                memory.main.wait_frames(18)
-                while memory.main.get_actor_coords(0)[1] < 180:
-                    FFXC.set_movement(0,1)
-                FFXC.set_neutral()
-                checkpoint += 1
+                   
             elif checkpoint == 77:  # Push east towards hidden room
                 while memory.main.get_actor_coords(0)[0] < 44:
                     FFXC.set_movement(1,-0.5)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif checkpoint == 81:  # Push podium north
+            elif checkpoint == 81:  # Push podium north to where it locks in.
                 FFXC.set_neutral()
-                memory.main.wait_frames(18)
+                memory.main.wait_frames(16)
+                while _distance(memory.main.get_coords(), [50,181]) > 1.5:
+                    logger.debug(memory.main.get_coords())
+                    pathing.set_movement([50,181])
+                    memory.main.wait_frames(2)
+                    FFXC.set_neutral()
+                    memory.main.wait_frames(3)
+                memory.main.wait_frames(9)
                 while memory.main.get_actor_coords(0)[1] < 189.7:
                     FFXC.set_movement(0,1)
                 FFXC.set_neutral()
@@ -407,8 +447,11 @@ def forest_3():
     memory.main.update_formation(Tidus, Wakka, Lulu)
     kilika_battles = 0
     optimal_battles = 0
+    valefor_charge = True  # No need to recharge.
+    if game_vars.story_mode():
+        valefor_charge = memory.main.overdrive_state()[7] == 20
     checkpoint = 0
-    while checkpoint < 69:  # All the way to the boats
+    while memory.main.get_map() != 167:  # All the way to the boats
         if memory.main.user_control():
             # Events
             if checkpoint == 68:
@@ -430,7 +473,7 @@ def forest_3():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                battle.main.kilika_woods(True)
+                valefor_charge = battle.main.kilika_woods(valefor_charge)
                 kilika_battles += 1
                 if memory.main.get_encounter_id() in [32, 34, 37]:
                     optimal_battles += 1

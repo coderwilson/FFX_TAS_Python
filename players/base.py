@@ -47,6 +47,12 @@ class Player:
     @property
     def actor_id(self):
         return self.id + 1
+    
+    def raw_id(self):
+        return self.id
+
+    def update_battle_menu(self, value):
+        self.battle_menu = value
 
     def __eq__(self, other):
         if isinstance(other, int):
@@ -289,6 +295,59 @@ class Player:
                 raise ValueError("Unsure direction")
         self._tap_targeting()
 
+    # spell_id should become an enum at some point
+    def cast_white_magic_spell(
+        self,
+        spell_id: int=0,
+        target_id: Optional[int] = 99,
+        direction: Optional[str] = "right",
+    ):
+        if target_id is None:
+            logger.debug(f"Casting white magic {spell_id}")
+        else:
+            logger.debug(
+                f"Casting white magic {spell_id} on a specific target with id {target_id}, "
+                + "direction is {direction}"
+            )
+        try:
+            self.navigate_to_battle_menu(22)
+        except Exception:
+            return
+        while memory.main.main_battle_menu():
+            xbox.menu_b()
+        self._navigate_to_position(spell_id)
+        while memory.main.other_battle_menu():
+            xbox.menu_b()
+        if target_id != 99:
+            self._target_specific_id(target_id, direction)
+        elif direction:
+            direction = direction.lower()
+            if direction == "right" or direction == "r":
+                xbox.tap_right()
+            elif direction == "left" or direction == "l":
+                xbox.tap_left()
+            elif direction == "up" or direction == "u":
+                xbox.tap_up()
+            elif direction == "down" or direction == "d":
+                xbox.tap_down()
+            elif direction == "l2":
+                xbox.tap_left()
+                xbox.tap_left()
+            elif direction == "rd":
+                xbox.tap_right()
+                xbox.tap_down()
+            elif direction == "right2" or direction == "r2":
+                xbox.tap_right()
+                xbox.tap_right()
+                xbox.tap_down()
+            elif direction == "d2":
+                xbox.tap_down()
+                xbox.tap_down()
+            else:
+                logger.error(f"UNSURE DIRECTION: {direction}")
+                raise ValueError("Unsure direction")
+        self._tap_targeting()
+
     def skill(self):
         raise NotImplementedError()
 
@@ -316,6 +375,8 @@ class Player:
         current_position = memory.main.battle_menu_cursor()
         while current_position == 255:
             current_position = memory.main.battle_menu_cursor()
+        if not target in self.battle_menu:
+            return False
         target_position = self.battle_menu.index(target)
         while current_position != target:
             try:
@@ -329,6 +390,8 @@ class Player:
             except Exception:
                 xbox.tap_up()
                 current_position = memory.main.battle_menu_cursor()
+        return True
+
 
     def luck(self) -> int:
         return self._read_char_stat_offset_address(PlayerMagicNumbers.LUCK)
@@ -367,6 +430,12 @@ class Player:
             + f"Not battle menu: {not memory.main.main_battle_menu()}, "
             + f"Battle active: {memory.main.battle_active()}"
         )
+        if game_vars.story_mode():
+            xbox.tap_confirm()
+            xbox.tap_confirm()
+            xbox.tap_confirm()
+            xbox.tap_confirm()
+            return
         while (not memory.main.main_battle_menu()) and memory.main.battle_active():
             xbox.tap_b()
             # if not self.is_turn():
@@ -489,6 +558,10 @@ class Player:
             return self._read_char_battle_offset_address(
                 PlayerMagicNumbers.BATTLE_MAX_HP, self.battle_slot()
             )
+
+    def mp(self) -> int:
+        # Assumes always in combat.
+        return memory.main.get_battle_mp(self.id)
 
     def active(self) -> bool:
         return self in memory.main.get_active_battle_formation()

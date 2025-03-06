@@ -11,7 +11,7 @@ import save_sphere
 import vars
 import xbox
 from paths import InsideSin
-from players import Auron, Rikku, Tidus, Yuna
+from players import Auron, Rikku, Tidus, Yuna, Bahamut
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -20,6 +20,8 @@ FFXC = xbox.controller_handle()
 
 
 def making_plans():
+    # This weird logic allows story mode to work without messing with regular logic.
+    memory.main.click_to_diag_progress(210)
     memory.main.click_to_control_3()
     logger.info("Final Push! Let's get this show on the road!!! (Highbridge)")
 
@@ -41,14 +43,16 @@ def making_plans():
 def shedinja():  # shelinda
     logger.info("The hymn is the key")
     while memory.main.get_map() != 382:
-        logger.debug("Mark 1")
-        xbox.tap_b()
+        if not game_vars.story_mode():
+            xbox.tap_confirm()
+    logger.debug("Mark 1")
     while memory.main.diag_progress_flag() not in [4, 255]:
-        logger.debug("Mark 2")
-        xbox.tap_b()
+        xbox.tap_confirm()
+    logger.debug("Mark 2")
     while memory.main.map_cursor() != 10:
         logger.debug("The destination is the key")
         memory.main.menu_direction(memory.main.map_cursor(), 10, 13)
+    logger.debug("Mark 3")
     memory.main.click_to_control_dumb()
 
     memory.main.await_control()
@@ -61,6 +65,10 @@ def shedinja():  # shelinda
     FFXC.set_neutral()
     if not game_vars.csr():
         memory.main.click_to_diag_progress(100)
+    memory.main.click_to_diag_progress(75)  # Have you found a way? Well?
+    if game_vars.story_mode():
+        memory.main.wait_seconds(10)
+        xbox.tap_confirm()
     memory.main.click_to_diag_progress(76)  # Have you found a way? Well?
     memory.main.wait_frames(10)
     xbox.tap_down()
@@ -100,9 +108,20 @@ def facing_sin():
         memory.main.click_to_control_dumb()
     else:
         # Gets us through the Airship destination menu.
-        xbox.skip_dialog(15)
+        if game_vars.story_mode():
+            memory.main.wait_seconds(15)
+            xbox.tap_confirm()
+            memory.main.wait_seconds(2)
+            xbox.tap_confirm()
+            memory.main.wait_seconds(2)
+            xbox.tap_confirm()
+
+        else:
+            xbox.skip_dialog(15)
         while not memory.main.user_control():
-            if memory.main.menu_open() or memory.main.diag_skip_possible():
+            if memory.main.menu_open():
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 xbox.tap_b()
@@ -136,8 +155,13 @@ def facing_sin():
 def inside_sin(checkpoint = 0):
     rikku_charge = False
     yuna_xp = False
+    if checkpoint < 41:
+        yuna_needs_levels = 17
+    else:
+        yuna_needs_levels = 19
     touch_save = False
-    if checkpoint >= 41 and memory.main.get_yuna_slvl() < 18:
+    if memory.main.get_yuna_slvl() < yuna_needs_levels:
+        # We will get some XP from Seymour.
         yuna_xp = True
         touch_save = True
         memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
@@ -149,7 +173,7 @@ def inside_sin(checkpoint = 0):
                 FFXC.set_neutral()
                 memory.main.wait_frames(3)
                 xbox.skip_scene()
-            elif memory.main.diag_skip_possible():
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.menu_open():
                 xbox.tap_b()
@@ -166,13 +190,18 @@ def inside_sin(checkpoint = 0):
             rikku_charge = True
             memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
             menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+        elif memory.main.get_yuna_slvl() < yuna_needs_levels:
+            yuna_xp = True
+            touch_save = True
+            #memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+            #menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         else:
             re_equip_ne = False
             memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
         memory.main.close_menu()
 
     
-    while memory.main.get_map() != 324:  # All the way to the egg hunt.
+    while memory.main.get_map() != 327:  # All the way to the final save sphere
         if memory.main.user_control():
             # Events
             if memory.main.get_map() == 296:  # Seymour battle
@@ -187,6 +216,12 @@ def inside_sin(checkpoint = 0):
                     logger.error("Seymour battle failed.")
                     return False
                 memory.main.click_to_control()
+                
+                if memory.main.get_yuna_slvl() < yuna_needs_levels:
+                    yuna_xp = True
+                    touch_save = True
+                    memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=99)
                 return True
             elif checkpoint < 41 and memory.main.get_map() == 204:
                 checkpoint = 41
@@ -203,6 +238,7 @@ def inside_sin(checkpoint = 0):
         else:
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.turn_ready():
+                logger.debug(f"Encounter check: == {memory.main.get_encounter_id()}")
                 if rikku_charge:  # and memory.main.overdrive_state_2()[6] == 100:
                     battle.main.charge_rikku_od()
                     rikku_charge = False
@@ -210,23 +246,47 @@ def inside_sin(checkpoint = 0):
                     memory.main.update_formation(
                         Tidus, Yuna, Auron, full_menu_close=False
                     )
-                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                elif yuna_xp:
+                    if not yuna_xp:
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                elif yuna_xp and not memory.main.get_encounter_id() in [376,378,381,384,386]:
                     battle.main.calm_impulse()
-                    yuna_xp = False
                     memory.main.click_to_control()
                     memory.main.update_formation(
                         Tidus, Yuna, Auron, full_menu_close=False
                     )
-                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                    if memory.main.get_yuna_slvl() >= yuna_needs_levels:
+                        yuna_xp = False
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                    memory.main.close_menu()
                 else:
                     battle.main.flee_all()
             elif memory.main.menu_open():
                 xbox.tap_b()
+    while not pathing.set_movement([-63,-525]):
+        pass
     return True
 
 
 def execute_egg_hunt():
+    #FFXC.set_neutral()
+    logger.warning(f"Aeon HP: {Bahamut.hp()}")
+    #memory.main.wait_seconds(3)
+    #quit()
+    #exit()
+    if Bahamut.hp() < 2600:
+        save_sphere.touch_and_go()
+    else:
+        save_sphere.touch_and_go()
+
+    while memory.main.get_map() == 327:
+        coords = memory.main.get_coords()
+        if coords[0] < -18:
+            pathing.set_movement([-10,-500])
+        elif coords[1] < -455:
+            pathing.set_movement([0,-450])
+        else:
+            pathing.set_movement([0,-100])
+
     # Done with pathing, now for egg hunt.
     while not memory.main.user_control():
         FFXC.set_movement(-1, -1)

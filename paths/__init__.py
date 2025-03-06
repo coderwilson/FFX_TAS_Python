@@ -6,6 +6,7 @@ from paths.djose import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 from paths.dream_zan import AllStartsHere, TidusHomeMovement
 from paths.gagazet import (
     CalmLands,
+    CalmLandsNemesis,
     DefenderX,
     GagazetCave,
     GagazetDreamSeq,
@@ -104,6 +105,7 @@ __all__ = [
     "cactuar9",
     "cactuar10",
     "CalmLands",
+    "CalmLandsNemesis",
     "DefenderX",
     "DjoseDance",
     "DjoseExit",

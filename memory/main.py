@@ -171,13 +171,51 @@ def float_from_integer(integer):
     return struct.unpack("!f", struct.pack("!I", integer))[0]
 
 
-def check_near_actors(wait_results:bool = False, max_dist = 200):
+def check_near_actors(wait_results:bool = False, max_dist = 200, super_coords:bool=False):
+    count = 0
     for i in range(get_actor_array_size()):
-        if get_actor_id(i) != 52685 and pathing.distance(i) < max_dist:
-            logger.debug(f"Actor {i}: {get_actor_id(i)}, {pathing.distance(i)}")
+        if get_actor_id(i) != 52685 and pathing.distance(i,use_super_coords=super_coords) < max_dist:
+            logger.debug(f"Actor {i}: {get_actor_id(i)}, {pathing.distance(i,use_super_coords=super_coords)}")
+            count += 1
     if wait_results:
         FFXC.set_neutral()
         wait_frames(300)
+
+
+def check_near_actors_print(wait_results:bool = False, max_dist = 200, super_coords:bool=False):
+    print("========== TEST ==========")
+    count = 0
+    for i in range(get_actor_array_size()):
+        if get_actor_id(i) != 52685 and pathing.distance(i,use_super_coords=super_coords) < max_dist:
+            print(f"Actor {i}: {get_actor_id(i)}, {pathing.distance(i,use_super_coords=super_coords)}")
+            count += 1
+    if wait_results:
+        FFXC.set_neutral()
+        wait_frames(300)
+        
+    print("==========================")
+    print(" ")
+
+
+def check_moving_actors():
+    FFXC.set_neutral()
+    wait_frames(12)
+    
+    all_coords = {}  # Use a dictionary to store actor coordinates
+    count = 0  # Initialize count
+
+    # First loop: Initialize with actors not equal to 52685
+    for i in range(get_actor_array_size()):
+        if get_actor_id(i) != 52685:
+            all_coords[i] = get_actor_coords(i)  # Store coords by index
+            # logger.debug(f"Actor {i}: {get_actor_id(i)}, {pathing.distance(i)}")
+
+    wait_frames(9)
+
+    # Second loop: Check for movement based on keys in all_coords
+    for i in all_coords.keys():
+        if all_coords[i] != get_actor_coords(i):  # Compare stored coords to current coords
+            logger.debug(f"Actor movement {i}: {get_actor_id(i)}, {all_coords[i]}")
 
 def wait_frames(frames: int):
     frames = max(round(frames), 1)
@@ -192,6 +230,15 @@ def wait_frames(frames: int):
         previous = current
         current = process.read_bytes(key, 4)
     return
+
+
+def wait_seconds(i:int):
+    logger.debug(f"Wait function, initialize for {i} seconds.")
+    while i > 0:
+        logger.debug(f"Wait seconds: {i}")
+        i -= 1
+        wait_frames(30)
+    logger.debug(f"Wait function end")
 
 
 def rng_seed():
@@ -391,6 +438,11 @@ def kim_od_unlocks():
     return results
 
 
+def tidus_od_count():
+    global base_value
+    return process.read_bytes(base_value + 0xd3083c, 2)
+
+
 def main_battle_menu():
     global base_value
     key = base_value + 0x00F3C911
@@ -492,8 +544,13 @@ def click_to_control_dumb():
     return True
 
 
-def click_to_control_smart():
+def click_to_control_smart(allow_story_mode:bool=False):
     if user_control():
+        return True
+    if game_vars.story_mode() and allow_story_mode:
+        FFXC.set_neutral()
+        while not user_control():
+            xbox.tap_confirm()
         return True
     logger.debug("Awaiting control (clicking only when appropriate - dialog)")
     wait_frames(6)  # Why?
@@ -505,7 +562,7 @@ def click_to_control_smart():
                 if battle_active():
                     while battle_active():
                         xbox.tap_b()
-                if diag_skip_possible():
+                if diag_skip_possible() and not game_vars.story_mode():
                     xbox.tap_b()
                 elif menu_open():
                     xbox.tap_b()
@@ -527,7 +584,7 @@ def click_to_control_2():
 
 
 def click_to_control_3():
-    return click_to_control_smart()
+    return click_to_control_smart(allow_story_mode=True)
 
 
 def click_to_control_special():
@@ -563,7 +620,7 @@ def click_to_event():
     wait_frames(6)
 
 
-def click_to_event_temple(direction):
+def click_to_event_temple(direction, story_mode_dialog=False):
     if direction == 0:
         FFXC.set_movement(0, 1)
     if direction == 1:
@@ -583,10 +640,11 @@ def click_to_event_temple(direction):
     while user_control():
         xbox.tap_b()
     FFXC.set_neutral()
-    wait_frames(30 * 0.2)
-    while not user_control():
+    wait_frames(6)
+    if story_mode_dialog:
+        click_to_control()
+    else:
         click_to_control_3()
-        wait_frames(30 * 0.035)
 
 
 def await_event():
@@ -909,6 +967,20 @@ def get_battle_hp():
     return hp_array
 
 
+def get_battle_mp(character):
+    global base_value
+    key = base_value + 0xD334CC
+    ptr = process.read_bytes(key,4)
+    offset = (0xF90 * character)
+    logger.debug("==================")
+    #logger.debug(process.read_bytes(ptr + offset + 0x5D4, 2))
+    #logger.debug(process.read_bytes(ptr + 0x5D4, 2))
+    #logger.debug(process.read_bytes(ptr + offset + 0x6E8, 2))
+    #logger.debug(process.read_bytes(ptr + 0x6E8, 2))
+    ret_val = process.read_bytes(ptr + offset + 0x5D4, 2)
+    return ret_val
+
+
 def get_encounter_id():
     global base_value
 
@@ -1017,7 +1089,7 @@ def get_slvl_kim():
     # Out of combat HP only
 
     coord = base_value + 0x00D3222C
-    return process.readBytes(coord, 1)
+    return process.read_bytes(coord, 1)
 
 
 def get_slvl_wakka():
@@ -1066,7 +1138,7 @@ def get_use_items_slot(item_num):
     items = get_use_items_order()
     x = 0
     for x in range(len(items)):
-        logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
+        #logger.debug(f"get_use_items_slot(): {items[x]} | {item_num} | {x}")
         if items[x] == item_num:
             logger.debug("============================")
             logger.debug(f"FOUND ITEM: {items[x]} | {item_num} | {x}")
@@ -1445,7 +1517,7 @@ def battle_type():
     return read_val(0x00D2C9DC)
 
 
-def get_enemy_current_hp():
+def get_enemy_current_hp(ignore_dead = True):
     global process
     global base_value
     enemy_num = 20
@@ -1462,7 +1534,7 @@ def get_enemy_current_hp():
             current_hp = [process.read_bytes(key2, 4)]
         else:
             next_hp = process.read_bytes(key1, 4)
-            if next_hp != 0:
+            if next_hp != 0 or not ignore_dead:
                 max_hp.append(next_hp)
                 current_hp.append(process.read_bytes(key2, 4))
         enemy_num += 1
@@ -1601,6 +1673,38 @@ def s_grid_node_selected():
     key = base_value + 0x0012BEB7F
     node_region = process.read_bytes(key, 1)
     return [node_number, node_region]
+
+
+def s_grid_cursor_coords():
+    global base_value
+    key = base_value + 0x0012BEB28
+    x = float_from_integer(process.read_bytes(key, 4))
+    key = base_value + 0x0012BEB2C
+    y = float_from_integer(process.read_bytes(key, 4))
+    if x != 0 and y != 0:
+        if x != None and y != None:
+            return [x,y]
+    key = base_value + 0x0012BEB78
+    x = float_from_integer(process.read_bytes(key, 4))
+    key = base_value + 0x0012BEB7C
+    y = float_from_integer(process.read_bytes(key, 4))
+    if x != 0 and y != 0:
+        if x != None and y != None:
+            return [x,y]
+    key = base_value + 0x0012BEB88
+    x = float_from_integer(process.read_bytes(key, 4))
+    key = base_value + 0x0012BEB8C
+    y = float_from_integer(process.read_bytes(key, 4))
+    if x != 0 and y != 0:
+        if x != None and y != None:
+            return [x,y]
+    key = base_value + 0x0012BECC0
+    x = float_from_integer(process.read_bytes(key, 4))
+    key = base_value + 0x0012BECC4
+    y = float_from_integer(process.read_bytes(key, 4)) * -1
+    if x != 0 and y != 0:
+        if x != None and y != None:
+            return [x,y]
 
 
 def cursor_location():
@@ -1802,7 +1906,7 @@ def diag_skip_possible_old():
 
 def diag_skip_possible():
     global base_value
-    if auditory_dialog_playing() and not game_vars.accessibility_vars()[1]:
+    if auditory_dialog_playing() and game_vars.story_mode():
         # logger.debug("Skip 2")
         return False
     else:
@@ -1868,7 +1972,7 @@ def click_to_story_progress(destination):
         f"Story goal: {destination} | Awaiting progress state: {current_state}"
     )
     while current_state < destination:
-        if menu_control():
+        if menu_control() and not game_vars.story_mode():
             FFXC.set_confirm()
             FFXC.set_back()
             wait_frames(1)
@@ -2344,21 +2448,23 @@ def diag_progress_flag():
     return process.read_bytes(key, 4)
 
 
-def click_to_diag_progress(num):
+def click_to_diag_progress(num, force=False):
     logger.debug(f"Clicking to dialog progress: {num}")
     last_num = diag_progress_flag()
     while diag_progress_flag() != num:
         if user_control():
             return False
-        else:
-            # if not auditory_dialog_playing():
+        elif force:
             xbox.tap_b()
-            logger.debug("Tapping Confirm")
-            if diag_progress_flag() != last_num:
-                last_num = diag_progress_flag()
-                logger.debug(
-                    f"Dialog change: {diag_progress_flag()} - clicking to {num}"
-                )
+            #logger.debug("Tapping Confirm")
+        elif not game_vars.story_mode():
+            xbox.tap_b()
+            #logger.debug("Tapping Confirm")
+        if diag_progress_flag() != last_num:
+            last_num = diag_progress_flag()
+            logger.debug(
+                f"Dialog change: {diag_progress_flag()} - clicking to {num}"
+            )
     return True
 
 
@@ -2850,15 +2956,32 @@ def get_equip_type(equip_num):
 
 
 def get_equip_legit(equip_num):
+    #return True
     global base_value
+    report = False  # Reports illegitimate equipments for troubleshooting.
 
     base_pointer = base_value + 0x00D30F2C
     key = base_pointer + (0x16 * equip_num) + 0x03
     ret_val = process.read_bytes(key, 1)
+    if not get_equip_exists(equip_num=equip_num):
+        #logger.debug(f"Equip num/pos {equip_num} does not exist.")
+        return False
+    if report:
+        logger.warning(f"========Legitimacy check {equip_num}=========")
+        logger.warning(f"Owner: {get_equip_owner(equip_num=equip_num)}")
+        if get_equip_type(equip_num) == 1:
+            type_val = "Armor"
+        else:
+            type_val = "Weapon"
+        logger.warning(f"Type: {type_val}")
+        logger.warning(f"Legitimacy: {ret_val}")
+        logger.warning(f"Abilities: {get_equip_abilities(equip_num=equip_num)}")
+        logger.warning("====================================")
     if ret_val in [0, 8, 9]:
         return True
-    else:
-        return False
+    if ret_val == 4 and 32793 in get_equip_abilities(equip_num=equip_num):
+        return True
+    return False
 
 
 def is_equip_brotherhood(equip_num):
@@ -2998,6 +3121,11 @@ def weapon_array_character(char_num):
     char_weaps = []
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
+        #logger.debug("===========================")
+        #logger.debug(f"Owner: {current_handle.owner()}")
+        #logger.debug(f"Type (0 for weapon): {current_handle.equipment_type()}")
+        #logger.debug(f"Abilities: {current_handle.abilities()}")
+        #logger.debug("===========================")
         if current_handle.owner() == char_num and current_handle.equipment_type() == 0:
             if first_equipment:
                 char_weaps = [current_handle]
@@ -3385,6 +3513,28 @@ def item_shop_menu():
     key = base_value + 0x0085A860
     ret_val = process.read_bytes(key, 1)
     return ret_val
+
+
+def equipment_sell_ready():
+    return equipment_shop_prompts() == 25
+
+
+def equipment_sell_prompt_open():
+    return equipment_shop_prompts() == 31
+
+
+def equipment_buy_ready():
+    return equipment_shop_prompts() == 12
+
+
+def equipment_buy_prompt_open():
+    return equipment_shop_prompts() == 18
+
+
+def equipment_shop_prompts():
+    global base_value
+    key = base_value + 0x0085A83C
+    return process.read_bytes(key, 1)
 
 
 def equip_shop_menu():
@@ -4419,10 +4569,19 @@ def rng_10_array(array_len: int = 256):
     return ret_val
 
 
-def next_chance_rng_10(drop_chance_val: int = 60) -> int:
+def next_miss_rng_10(drop_chance_val: int = 60,min_steals = 0) -> int:
     test_array = rng_10_array()
     for i in range(len(test_array)):
-        if i < 3:
+        if i < 3+min_steals:
+            pass
+        elif (test_array[i] & 0x7FFFFFFF) % 255 >= drop_chance_val:
+            return i - 3
+
+
+def next_chance_rng_10(drop_chance_val: int = 60,min_steals = 0) -> int:
+    test_array = rng_10_array()
+    for i in range(len(test_array)):
+        if i < 3+min_steals:
             pass
         elif (test_array[i] & 0x7FFFFFFF) % 255 < drop_chance_val:
             return i - 3
@@ -4684,23 +4843,34 @@ def arena_farm_check(
         ap_needed = menu.next_ap_needed(game_vars.nem_checkpoint_ap())
         logger.debug(f"Next Sphere Grid checkpoint: {game_vars.nem_checkpoint_ap()}")
         logger.debug(f"Tidus S.levels: {get_tidus_slvl()} - need levels: {ap_needed}")
-        logger.debug("Number of captures in this zone:")
-        logger.debug(result_array)
-        logger.debug(
-            f"End goal is {end_goal} minimum before leaving this zone for each index."
-        )
+        logger.info(f"Zone Capture Progress - should reach {end_goal} total for all:")
+        logger.info([min(value, end_goal) for value in result_array])
+        #result_array = [min(value, end_goal) for value in result_array]
+        #logger.info(result_array)
     if return_array:
         return result_array
     else:
         return complete
 
 
-def arena_cursor():
+def arena_cursor():  # Not working properly
     global base_value
 
     key = base_value + 0x00D2A084
     status = process.read_bytes(key, 2)
     return status
+
+def arena_cursor_1():  # left/right on monster select screen
+    global base_value
+
+    ptr = process.read_bytes(base_value + 0xD2A084, 4)
+    return process.read_bytes(ptr + 0x10, 2)
+
+def arena_cursor_2():  # up/down on monster select screen
+    global base_value
+
+    ptr = process.read_bytes(base_value + 0xD2A084, 4)
+    return process.read_bytes(ptr + 0x12, 2)
 
 
 # Escape logic, and used for others
@@ -4757,3 +4927,10 @@ def next_steal_rare(pre_advance: int = 0):
     steal_crit_rng = use_array[indeces] & 255
     logger.warning(f" RNG&255: {steal_crit_rng} | Returning {steal_crit_rng < 32}")
     return steal_crit_rng < 32
+
+def disable_battle_music():
+    global base_value
+    address = base_value + 0xF26B09
+    original_value = process.read_bytes(address, size=1)
+    modified_value = original_value | 0b00000101
+    process.write_bytes(address, modified_value, size=1)

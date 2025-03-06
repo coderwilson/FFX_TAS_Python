@@ -73,7 +73,7 @@ class Besaid1(AreaMovementBase):
 
 class BesaidTrials(AreaMovementBase):
     checkpoint_coordiantes = {
-        0: [-30, 126],
+        0: [-20, 126],
         # First glyph
         2: [-11, 116],
         # Second glyph
@@ -143,7 +143,8 @@ class BesaidTrials(AreaMovementBase):
         # 68, open destro chest
         69: [-71,-32],
         70: [-17,-40],
-        71: [-14.5,-57],
+        71: [-14.5,-58],
+        72: [-13.5,-82.5],
     }
     checkpoint_fallback = {
         1: "First glyph",

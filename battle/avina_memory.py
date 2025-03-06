@@ -51,11 +51,11 @@ def add_battle_to_memory(
     
     if str(seed) in records.keys():
         if area in records[str(seed)].keys():
-            if key in records[str(seed)][area].keys():
-                if records[str(seed)][area][key] != value:
-                    records[str(seed)][area][key] = value
+            if battle_num in records[str(seed)][area].keys():
+                if records[str(seed)][area][battle_num] != value:
+                    records[str(seed)][area][battle_num] = value
                 else:
-                    records[str(seed)][area][key].update(new_val[str(seed)])
+                    records[str(seed)][area][battle_num].update(new_val[str(seed)])
             else:
                 records[str(seed)][area]
     else:

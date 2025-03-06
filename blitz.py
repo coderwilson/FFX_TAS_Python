@@ -167,7 +167,7 @@ def storyline(force_blitz_win):
     current = memory.main.get_story_progress()
     if not game_vars.csr():
         if current == 540:
-            if force_blitz_win:
+            if force_blitz_win or game_vars.story_mode():
                 memory.main.blitzball_patriots_style()
             logger.info("Halftime hype")
             memory.main.click_to_diag_progress(164)
@@ -1205,7 +1205,12 @@ def blitz_main(force_blitz_win):
                     elif (
                         memory.main.diag_skip_possible()
                     ):  # Skip through everything else
-                        xbox.menu_b()
+                        if game_vars.story_mode():
+                            if memory.main.get_story_progress() in [535,575]:
+                                xbox.tap_confirm()
+                            #logger.debug(f"{memory.main.get_story_progress()}, {memory.main.diag_progress_flag()}")
+                        else:
+                            xbox.menu_b()
                 elif new_half():
                     logger.debug("Starting new half")
                     if force_blitz_win:
@@ -1237,7 +1242,7 @@ def blitz_main(force_blitz_win):
     end_time = logs.time_stamp()
     time_diff = end_time - start_time
     total_time = int(time_diff.total_seconds())
-    if game_vars.get_force_blitz_win():
+    if game_vars.get_force_blitz_win() or game_vars.story_mode():
         pass
     else:
         rng_track.record_blitz_results(duration=total_time)

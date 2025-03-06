@@ -13,6 +13,7 @@ import vars
 import xbox
 from paths import (
     CalmLands,
+    CalmLandsNemesis,
     DefenderX,
     GagazetCave,
     GagazetDreamSeq,
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 if game_vars.nemesis():
     import nemesis.changes
+from nemesis.changes import gagazet_lv_4_chest
 
 FFXC = xbox.controller_handle()
 
@@ -47,10 +49,21 @@ def check_gems():
     return gems
 
 
-def calm_lands():
+def calm_lands(checkpoint = 0):
     memory.main.await_control()
-    
     # Start by getting away from the save sphere
+    if memory.main.get_map() == 329:
+        while memory.main.get_map() != 223:
+            coords = memory.main.get_coords()
+            if coords[1] < (5.5714 * coords[0]) + 122.43:
+                pathing.set_movement([35,200])
+            else:
+                pathing.set_movement([-3,-5])
+    FFXC.set_neutral()
+    needed_levels = game_vars.get_calm_levels_needed()
+    if game_vars.story_mode():
+        needed_levels += 1
+    
     memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
     battle.main.heal_up(full_menu_close=True)
     
@@ -68,24 +81,43 @@ def calm_lands():
             FFXC.set_movement(0, 1)
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
 
-    checkpoint = 0
-    while memory.main.get_map() != 279:
+    dest_map = 279
+    if game_vars.nemesis() and checkpoint == 0:
+        dest_map = 307
+    while memory.main.get_map() != dest_map:
         if memory.main.user_control():
-            if pathing.set_movement(CalmLands.execute(checkpoint)):
-                checkpoint += 1
-                if checkpoint == 15:
-                    if check_gems() < 2:
-                        checkpoint -= 1
-                        FFXC.set_movement(-1, -1)
-                        memory.main.wait_frames(60)
-                logger.debug(f"Checkpoint {checkpoint}")
+            if game_vars.nemesis():
+                if pathing.set_movement(CalmLandsNemesis.execute(checkpoint)):
+                    checkpoint += 1
+                    if checkpoint == 15:
+                        if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
+                            checkpoint -= 1
+                            FFXC.set_movement(-1, -1)
+                            memory.main.wait_frames(60)
+                    logger.debug(f"Checkpoint {checkpoint}")
+            else:
+                if pathing.set_movement(CalmLands.execute(checkpoint)):
+                    checkpoint += 1
+                    if checkpoint == 15:
+                        if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
+                            checkpoint -= 1
+                            FFXC.set_movement(-1, -1)
+                            memory.main.wait_frames(60)
+                    logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
             if screen.battle_screen():
-                if memory.main.get_yuna_slvl() < 4:
+                enc_id = memory.main.get_encounter_id()
+                if check_gems() < 2 and enc_id in [273,275,281,283]:
+                    battle.main.calm_lands_gems()
+                elif game_vars.mrr_skip_val() and memory.main.get_yuna_slvl() < needed_levels:
+                    # We expect to be under levelled on Battle Site logic.
+                    battle.main.calm_impulse()
+                elif memory.main.get_yuna_slvl() < needed_levels:
+                    # This is to catch if we are under level for some other reason. Needs improvement.
                     battle.main.calm_impulse()
                 else:
                     battle.main.calm_lands_manip()
@@ -94,8 +126,8 @@ def calm_lands():
                 battle.main.heal_up(full_menu_close=True)
                 rng_track.print_manip_info(pre_x= True)
             elif memory.main.menu_open():
-                xbox.tap_b()
-            elif memory.main.diag_skip_possible():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.menu_b()
 
 
@@ -109,7 +141,11 @@ def defender_x():
     memory.main.await_event()
     FFXC.set_neutral()
 
-    xbox.click_to_battle()
+    if game_vars.story_mode():
+        while not memory.main.turn_ready():
+            pass
+    else:
+        xbox.click_to_battle()
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Tidus.is_turn():
@@ -133,8 +169,8 @@ def to_the_ronso(checkpoint: int = 2):
                     logger.debug(f"Checkpoint {checkpoint}")
             else:
                 FFXC.set_neutral()
-                if memory.main.diag_skip_possible():
-                    xbox.tap_b()
+                if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                    xbox.tap_confirm()
         checkpoint = 0
 
     # Now in screen with Ronso
@@ -150,11 +186,11 @@ def to_the_ronso(checkpoint: int = 2):
                 logger.warning(f"NE Armor check: {game_vars.ne_armor()}")
                 if game_vars.ne_armor() == 255:
                     return
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
 
 
-def gagazet_gates(checkpoint: int = 0):
+def gagazet_climb(checkpoint: int = 0):
     # Should appear on the map just before the Ronso hymn
     end_ver = game_vars.end_game_version()
     logger.debug(f"Grid version: {end_ver}")
@@ -180,11 +216,24 @@ def gagazet_gates(checkpoint: int = 0):
         memory.main.close_menu()
 
     logger.info("Gagazet path section")
+    talk_wantz = False
+    if game_vars.nemesis() or game_vars.story_mode():
+        talk_wantz = True
 
     while memory.main.get_map() != 285:
         if memory.main.user_control():
+            if checkpoint == 19 and talk_wantz:
+                memory.main.check_near_actors()
+                if pathing.approach_actor_by_id(8413):
+                    while memory.main.diag_progress_flag() != 35:
+                        if game_vars.nemesis():
+                            xbox.tap_confirm()
+                    memory.main.wait_seconds(1)
+                    xbox.tap_a()
+                    xbox.tap_b()
+                    talk_wantz = False
             if checkpoint == 22 and game_vars.nemesis():
-                nemesis.changes.gagazet_lv_4_chest()
+                gagazet_lv_4_chest()
                 checkpoint += 1
             elif pathing.set_movement(GagazetSnow.execute(checkpoint)):
                 checkpoint += 1
@@ -192,7 +241,7 @@ def gagazet_gates(checkpoint: int = 0):
         else:
             FFXC.set_neutral()
             if memory.main.menu_open():
-                xbox.tap_b()
+                xbox.tap_confirm()
             elif memory.main.battle_active():
                 # Charge Rikku until full, otherwise flee all
                 if delay_grid:
@@ -205,6 +254,11 @@ def gagazet_gates(checkpoint: int = 0):
                     if memory.main.get_slvl_yuna() >= 4:
                         menu.after_ronso()
                         delay_grid = False
+                        if (
+                            memory.main.overdrive_state_2()[6] == 100
+                            and game_vars.ne_armor() != 255
+                        ):
+                            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     else:
                         memory.main.close_menu()
                 elif memory.main.overdrive_state()[6] == 100:
@@ -217,14 +271,14 @@ def gagazet_gates(checkpoint: int = 0):
                         memory.main.update_formation(Tidus, Kimahri, Auron)
                     else:
                         memory.main.update_formation(Tidus, Rikku, Auron)
-                memory.main.click_to_control()
-                if (
-                    memory.main.overdrive_state_2()[6] == 100
-                    and game_vars.ne_armor() != 255
-                ):
-                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
+                    memory.main.click_to_control()
+                    if (
+                        memory.main.overdrive_state_2()[6] == 100
+                        and game_vars.ne_armor() != 255
+                    ):
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
     logger.debug("Should now be on the map with Seymour Flux.")
 
 
@@ -257,25 +311,98 @@ def flux():
                 logger.info("Flux battle start")
                 battle.boss.seymour_flux()
                 # FFXC.set_movement(0,1)
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 # Removed for Terra
                 #if game_vars.end_game_version() != 3:
                 #    menu.after_flux()
                 memory.main.update_formation(Tidus, Kimahri, Auron)
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
             elif memory.main.menu_open():
-                xbox.tap_b()
+                xbox.tap_confirm()
 
 
 def dream(checkpoint: int = 0):
+    logger.info("Start of dream segment.")
+    if memory.main.get_map() == 285:
+        while memory.main.get_map() == 285:
+            pathing.set_movement([20,-680])
+        FFXC.set_neutral()
+    logger.info("Dream should be starting now.")
+    memory.main.click_to_control()
+
+    while memory.main.get_map() != 309:
+        if memory.main.get_story_progress() == 2590:
+            # Outdoors, before finding the kid.
+            if memory.main.user_control():
+                coords = memory.main.get_coords()
+                # Outdoor map
+                if coords[0] < -1 and coords[1] > 130:
+                    pathing.set_movement([3,126])
+                elif coords[0] < 20 and coords[1] > 12:
+                    pathing.set_movement([12,10])
+                elif coords[0] < 125:
+                    pathing.set_movement([129,-1])
+                elif coords[0] < 195:
+                    pathing.set_movement([200,1])
+                else:
+                    pathing.set_movement([248,26])
+        elif memory.main.get_story_progress() == 2595:
+            # Indoors, entering the home.
+            if memory.main.user_control():
+                coords = memory.main.get_coords()
+                if coords[1] < -15:
+                    pathing.set_movement([62,-10])
+                else:
+                    pathing.set_movement([30,10])
+            else:
+                FFXC.set_neutral()
+                if not game_vars.story_mode():
+                    xbox.tap_confirm()
+        elif memory.main.get_story_progress() == 2600:
+            if memory.main.get_map() == 165:
+                # Indoors, after talking to boy
+                if memory.main.user_control():
+                    coords = memory.main.get_coords()
+                    if coords[0] < 60:
+                        pathing.set_movement([62,-10])
+                    elif coords[1] > -45:
+                        pathing.set_movement([66,-48])
+                    else:
+                        pathing.set_movement([150,-48])
+                else:
+                    FFXC.set_neutral()
+                    if not game_vars.story_mode():
+                        xbox.tap_confirm()
+            else:
+                # Outdoors, go talk again.
+                if memory.main.user_control():
+                    coords = memory.main.get_coords()
+                    if coords[1] > 12:
+                        pathing.set_movement([226,3])
+                    elif coords[0] < 235 and coords[1] > -24:
+                        pathing.set_movement([237,-26])
+                    elif coords[0] < 285:
+                        pathing.set_movement([290,-26])
+                    elif pathing.set_movement([315,-12]):
+                        pathing.approach_coords([326,0],quick_return=True)
+                else:
+                    FFXC.set_neutral()
+                    if not game_vars.story_mode():
+                        xbox.tap_confirm()
+    logger.info("Dream sequence over")
+    memory.main.click_to_control()
+
+
+
+def dream_old(checkpoint: int = 0):
     if game_vars.csr():
         while memory.main.get_map() != 309:
             FFXC.set_movement(1, 1)
     else:
         while not memory.main.cutscene_skip_possible():
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
             elif memory.main.user_control():
                 FFXC.set_movement(1, 1)
         xbox.skip_scene()
@@ -308,9 +435,9 @@ def dream(checkpoint: int = 0):
 
             # Start the final dialog
             if checkpoint == 25:
-                xbox.tap_b()
+                xbox.tap_confirm()
         else:
-            xbox.tap_b()  # Skip all dialog
+            xbox.tap_confirm()  # Skip all dialog
     logger.info("Dream sequence over")
 
 
@@ -329,10 +456,10 @@ def cave():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
             elif memory.main.menu_open():
-                xbox.tap_b()
+                xbox.tap_confirm()
 
     memory.main.await_control()
     logger.info("Gagazet cave section")
@@ -356,7 +483,14 @@ def cave():
                 FFXC.set_neutral()
 
                 logger.debug("Now the trial has started.")
-                xbox.skip_dialog(2)
+                if game_vars.story_mode():
+                    memory.main.wait_seconds(2)
+                    xbox.tap_confirm()
+                    xbox.tap_confirm()
+                    xbox.tap_confirm()
+                    xbox.tap_confirm()
+                else:
+                    xbox.skip_dialog(2)
 
                 # Need logic here for when to start the trial
 
@@ -370,12 +504,12 @@ def cave():
                             memory.main.gt_inner_ring() < 2.9
                             and memory.main.gt_inner_ring() > 1.3
                         ):
-                            xbox.tap_b()
+                            xbox.tap_confirm()
                         elif (
                             memory.main.gt_inner_ring() < 0.1
                             and memory.main.gt_inner_ring() > -1.6
                         ):
-                            xbox.tap_b()
+                            xbox.tap_confirm()
                     elif (
                         memory.main.gt_outer_ring() < -0.7
                         and memory.main.gt_outer_ring() > -1.1
@@ -384,12 +518,12 @@ def cave():
                             memory.main.gt_inner_ring() < 2.9
                             and memory.main.gt_inner_ring() > 1.3
                         ):
-                            xbox.tap_b()
+                            xbox.tap_confirm()
                         elif (
                             memory.main.gt_inner_ring() < 0.1
                             and memory.main.gt_inner_ring() > -1.6
                         ):
-                            xbox.tap_b()
+                            xbox.tap_confirm()
 
                 logger.info("First trial complete")
                 checkpoint += 1
@@ -464,8 +598,8 @@ def cave():
                     checkpoint += 1
                 elif memory.main.battle_active():
                     battle.main.flee_all()
-                elif memory.main.diag_skip_possible() or memory.main.menu_open():
-                    xbox.tap_b()
+                elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                    xbox.tap_confirm()
             elif memory.main.battle_active():
                 if memory.main.get_power() < power_needed:
                     if memory.main.get_encounter_id() == 351:
@@ -487,13 +621,13 @@ def cave():
                 else:
                     battle.main.flee_all()
             elif memory.main.menu_open():
-                xbox.tap_b()
+                xbox.tap_confirm()
             elif checkpoint == 6 or checkpoint == 54:
                 if memory.main.battle_active():
                     battle.main.flee_all()
                 elif memory.main.diag_skip_possible():
                     # So we don't override the second trial
-                    xbox.tap_b()
+                    xbox.tap_confirm()
 
     xbox.click_to_battle()
     battle.boss.s_keeper()
@@ -505,7 +639,11 @@ def wrap_up():
 
     checkpoint = 0
     while memory.main.get_map() != 132:
-        if memory.main.user_control():
+        if memory.main.get_map() == 381:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+        elif memory.main.user_control():
             if memory.main.get_map() == 312 and checkpoint < 6:
                 logger.info("Move forward to next map. Final path before making camp.")
                 checkpoint = 7
@@ -514,11 +652,12 @@ def wrap_up():
                 # - 2635 before hug
                 # - 2650 after hug
                 # - 2678 after the Mi'ihen scene
-                while memory.main.get_story_progress() < 2651:
+                if memory.main.get_story_progress() >= 2651:
+                    checkpoint += 1
+                    logger.debug(f"Checkpoint {checkpoint}")
+                else:
                     pathing.set_movement([786, -819])
-                    xbox.tap_b()
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
+                    xbox.tap_confirm()
             elif checkpoint == 6:
                 if memory.main.get_map() == 312:
                     logger.info("Final path before making camp.")
@@ -531,8 +670,8 @@ def wrap_up():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
 
     # Resting point before Zanarkand
     FFXC.set_neutral()
@@ -634,9 +773,3 @@ def wrap_up():
 
         memory.main.click_to_control()
         logger.info("OMG finally! Let's get to it! (Do kids say that any more?)")
-        FFXC.set_movement(0, 1)
-        memory.main.wait_frames(30 * 1)
-        FFXC.set_movement(-1, 1)
-        memory.main.await_event()
-        FFXC.set_neutral()
-        memory.main.wait_frames(30 * 0.2)

@@ -107,7 +107,7 @@ def desert():
                 checkpoint = 50
 
             # Nemesis stuff
-            elif checkpoint == 47 and game_vars.nemesis():
+            elif checkpoint == 47 and (game_vars.nemesis() or game_vars.story_mode()):
                 checkpoint = 70
             elif checkpoint == 72:
                 FFXC.set_neutral()
@@ -119,7 +119,7 @@ def desert():
                 if memory.main.user_control():
                     xbox.tap_b()
                     memory.main.wait_frames(2)
-                    memory.main.click_to_control()
+                    memory.main.click_to_control_3()
                     checkpoint += 1
             elif checkpoint == 74:
                 FFXC.set_neutral()
@@ -131,7 +131,7 @@ def desert():
                 if memory.main.user_control():
                     xbox.tap_b()
                     memory.main.wait_frames(2)
-                    memory.main.click_to_control()
+                    memory.main.click_to_control_3()
                     checkpoint += 1
             elif checkpoint == 76:
                 checkpoint = 48
@@ -202,8 +202,6 @@ def desert():
                     logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible() and not memory.main.battle_active():
-                xbox.menu_b()
             if memory.main.battle_active():  # Lots of battle logic here.
                 xbox.click_to_battle()
                 if checkpoint < 7 and memory.main.get_encounter_id() == 197:
@@ -267,8 +265,11 @@ def desert():
                 #)
                 if checkpoint == 60:
                     checkpoint = 58
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif checkpoint == 53:
+                xbox.tap_confirm()
+
 
     # Move to save sphere
     checkpoint = 0
@@ -281,16 +282,37 @@ def desert():
 
 def find_summoners():
     logger.info("Desert complete. Starting Home section")
+    if game_vars.story_mode():
+        menu.equip_weapon(character=2, ability=0x8002, full_menu_close=False)
     if game_vars.get_blitz_win():
         menu.home_grid()
     memory.main.update_formation(Tidus, Auron, Rikku)
     memory.main.close_menu()
     od_learns = 2
     ambush_check = memory.main.ambushes()
+    last_story = memory.main.get_story_progress()
+    last_dialog = memory.main.diag_progress_flag()
 
     checkpoint = 7
     while memory.main.get_map() != 261:
         if memory.main.user_control():
+            coords = memory.main.get_coords()
+            # Summoner's Sanctum room
+            if memory.main.get_map() == 219:
+                if coords[0] < 100:
+                    pathing.set_movement([105,-40])
+                else:
+                    pathing.set_movement([160,-50])
+            # Ramp to airship
+            elif memory.main.get_map() == 303:
+                if coords[0] > 185:
+                    if coords[1] < 56:
+                        pathing.set_movement([190,60])
+                    else:
+                        pathing.set_movement([165,58])
+                else:
+                    pathing.set_movement([80,60])
+
             # events
             if checkpoint == 7:
                 FFXC.set_neutral()
@@ -348,13 +370,17 @@ def find_summoners():
             elif checkpoint in [24, 25] and 1 in ambush_check:
                 checkpoint = 22
             elif checkpoint == 31 and not game_vars.csr():
-                memory.main.click_to_event_temple(6)
+                #memory.main.click_to_event_temple(6)
+                FFXC.set_movement(-1,0)
+                memory.main.await_event()
+                FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 39:
                 memory.main.click_to_event_temple(2)
                 checkpoint += 1
             elif checkpoint == 42:
-                memory.main.click_to_event_temple(0)
+                FFXC.set_movement(0,1)
+                memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 45:
                 memory.main.click_to_event_temple(1)
@@ -388,23 +414,39 @@ def find_summoners():
                     battle.main.flee_all()
                 battle.main.wrap_up()
                 ambush_check = memory.main.ambushes()
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+
+            # Just so the console has something to do
+            if (
+                last_story != memory.main.get_story_progress() or
+                last_dialog != memory.main.diag_progress_flag()
+            ):
+                last_story = memory.main.get_story_progress()
+                last_dialog = memory.main.diag_progress_flag()
+                logger.debug(f"Progress update - story: {last_story} | dialog {last_dialog}")
     logger.info("Let's go get that airship!")
     FFXC.set_neutral()
+    if game_vars.story_mode():
+        logger.debug("Story mode, no need to wait on these scenes.")
+        memory.main.await_control()
+        return
     if not game_vars.csr():
         memory.main.click_to_diag_progress(27)
         while not memory.main.cutscene_skip_possible():
-            xbox.tap_b()
+            if not game_vars.story_mode():
+                xbox.tap_confirm()
         xbox.skip_scene()
         memory.main.click_to_diag_progress(105)
         memory.main.wait_frames(15)
-        xbox.tap_b()
+        xbox.tap_confirm()
         memory.main.wait_frames(15)
         xbox.skip_scene()
 
     while not memory.main.user_control():
-        if memory.main.diag_skip_possible():
+        if memory.main.diag_skip_possible() and not game_vars.story_mode():
             xbox.tap_b()
         elif memory.main.cutscene_skip_possible():
             xbox.skip_scene()

@@ -45,8 +45,8 @@ def approach(do_grid=True):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
     FFXC.set_neutral()
     memory.main.await_control()
     if do_grid:
@@ -72,6 +72,8 @@ def arrival():
                 save_sphere.touch_and_go()
             elif checkpoint == 2 and game_vars.csr():
                 checkpoint = 11
+            elif checkpoint == 2 and game_vars.story_mode():
+                checkpoint = 20
             elif checkpoint == 4:  # Talking to Trommell
                 memory.main.click_to_event_temple(6)
                 if memory.main.get_coords()[0] < 23.5:
@@ -109,11 +111,15 @@ def arrival():
                 FFXC.set_neutral()
                 checkpoint += 1
                 memory.main.click_to_control_3()
-            elif checkpoint == 6:
+            elif checkpoint == 6 and not game_vars.story_mode():
                 checkpoint = 11
             elif checkpoint == 11:
                 logger.info("Check if skip is online")
-                if game_vars.csr():
+                if game_vars.story_mode():
+                    jyscal_skip_status = False
+                    checkpoint = 20
+                    skip_status = False
+                elif game_vars.csr():
                     jyscal_skip_status = True
                     checkpoint += 1
                 elif memory.main.get_story_progress() < 1505:
@@ -124,25 +130,20 @@ def arrival():
                     checkpoint = 20
                     skip_status = False
                 logger.info(f"Jyscal Skip results: {skip_status}")
-            elif checkpoint == 14 and game_vars.csr():
-                FFXC.set_movement(0, 1)
-                memory.main.await_event()
-                FFXC.set_neutral()
-                checkpoint += 1
-            elif checkpoint == 14:  # Pause so we don't mess up the skip
-                if skip_status:
+            elif checkpoint == 14:
+                if not game_vars.csr():
                     FFXC.set_neutral()
                     xbox.skip_dialog(5)
-                    FFXC.set_movement(0, -1)
-                    memory.main.await_event()
-                    FFXC.set_neutral()
+                pathing.approach_coords([-1,160],click_through=not game_vars.story_mode())
+                FFXC.set_neutral()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint < 16 and memory.main.get_map() == 239:
                 checkpoint = 16
 
             # Recovery items
             elif checkpoint == 23:  # Door, Jyscal room
-                memory.main.click_to_event_temple(0)
+                memory.main.click_to_event_temple(0,story_mode_dialog=True)
                 checkpoint += 1
             elif checkpoint == 24:  # Back to the main room
                 memory.main.click_to_event_temple(5)
@@ -156,7 +157,7 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
     return jyscal_skip_status
 
@@ -351,16 +352,16 @@ def trials(destro=False):
 
 
 def escape(dark_aeon:bool = False):
-    while not memory.main.user_control():
-        xbox.tap_b()
+    memory.main.click_to_control()
     
     logger.info("First, some menuing")
     menu_done = game_vars.get_blitz_win()
     if not dark_aeon:
+        menu.after_seymour()
         if game_vars.nemesis():
             memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
         else:
-            menu.after_seymour()
+            #menu.after_seymour()
             memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
         menu.equip_sonic_steel(full_menu_close=True)
 
@@ -416,7 +417,7 @@ def escape(dark_aeon:bool = False):
                     battle.main.flee_all()
             elif memory.main.menu_open():
                 xbox.tap_b()
-            elif memory.main.diag_skip_possible():
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
     logger.info("Done pathing. Now for the Wendigo fight.")
@@ -424,7 +425,13 @@ def escape(dark_aeon:bool = False):
 def attempt_wendigo():
     if battle.boss.wendigo():
         logger.info("Wendigo fight over")
-        memory.main.click_to_control_dumb()
+        while not memory.main.battle_wrap_up_active():
+            if not game_vars.story_mode():
+                xbox.tap_confirm()
+        while memory.main.battle_wrap_up_active():
+            xbox.set_confirm()
+        xbox.release_confirm()
+        memory.main.click_to_control()
         return True
     else:
         logger.warning("Wendigo fight fail! Reset!")
@@ -452,10 +459,9 @@ def under_lake():
                 checkpoint += 1
             elif checkpoint == 15:
                 while memory.main.user_control():
-                    pathing.set_movement([-4, -8])
-                    xbox.tap_b()
+                    pathing.approach_coords([-4, -8], quick_return=True)
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
 
             # General pathing
@@ -464,64 +470,8 @@ def under_lake():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_control()
 
-
-# TODO: This is unused, remove?
-def under_lake_old():
-    memory.main.click_to_control()
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 1)
-    FFXC.set_movement(-1, 1)
-    memory.main.wait_frames(30 * 0.8)
-    FFXC.set_movement(1, 1)
-    memory.main.wait_frames(30 * 1)
-    FFXC.set_movement(0, 1)
-    memory.main.click_to_event()
-    FFXC.set_neutral()
-
-    memory.main.click_to_control()
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 1.5)  # Approach Yuna
-    FFXC.set_neutral()
-
-    memory.main.click_to_control()
-    while memory.main.get_coords()[1] > 110:
-        FFXC.set_movement(-1, 1)
-    while memory.main.get_coords()[1] > 85:
-        FFXC.set_movement(1, 1)
-    while memory.main.get_coords()[0] > -30:
-        if memory.main.get_coords()[1] < 110:
-            FFXC.set_movement(1, -1)
-        else:
-            FFXC.set_movement(1, 0)
-    FFXC.set_movement(1, 0)
-    memory.main.click_to_event()  # Chest with Lv.2 Key Sphere
-    FFXC.set_neutral()
-    xbox.skip_dialog(0.2)
-    memory.main.click_to_control()
-    FFXC.set_movement(-1, 0)
-    memory.main.wait_frames(30 * 0.25)
-    while memory.main.get_coords()[0] < -5:
-        FFXC.set_movement(-1, 1)
-    FFXC.set_movement(0, 1)
-    memory.main.wait_frames(30 * 1)  # To Auron
-    xbox.skip_dialog(1.5)
-    FFXC.set_movement(1, 0)
-    xbox.skip_dialog(0.4)
-    FFXC.set_movement(-1, 0)
-    xbox.skip_dialog(0.4)
-    FFXC.set_neutral()
-    memory.main.click_to_control()
-
-    while memory.main.get_map() != 129:
-        FFXC.set_movement(0, -1)
-        if memory.main.diag_skip_possible():
-            xbox.tap_b()
-        elif memory.main.cutscene_skip_possible():
-            xbox.skip_scene()
-    FFXC.set_neutral()
-    memory.main.click_to_control()

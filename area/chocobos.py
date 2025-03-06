@@ -2,7 +2,7 @@ import logging
 
 import battle.main
 import memory.main
-from memory.main import check_near_actors, actor_index, get_actor_angle
+from memory.main import check_near_actors, actor_index, get_actor_angle, set_game_speed
 import pathing
 from pathing import approach_coords
 import xbox
@@ -55,25 +55,26 @@ game_vars = vars.vars_handle()
 import random
 import load_game
 
-try_fourth_race = False
 
 
 
-def all_races():
-    write_custom_message("Showcase!")
-    air_ship_destination(dest_num=12)
-    memory.main.await_control()
 
-    # counter = 0
-    while not pathing.set_movement([-637, -246]):
-        pass
-    pathing.approach_actor_by_id(actor_id=20531)
-    FFXC.set_neutral()
-    memory.main.click_to_diag_progress(302)
-    memory.main.wait_frames(30)
-    xbox.menu_down()
-    xbox.menu_down()
-    xbox.tap_b()
+def all_races(skip_prep=False, try_fourth_race = False):
+    if not skip_prep:
+        #write_custom_message("Showcase!")
+        air_ship_destination(dest_num=12)
+        memory.main.await_control()
+
+        # counter = 0
+        while not pathing.set_movement([-637, -246]):
+            pass
+        pathing.approach_actor_by_id(actor_id=20531)
+        FFXC.set_neutral()
+        memory.main.click_to_diag_progress(302)
+        memory.main.wait_frames(30)
+        xbox.menu_down()
+        xbox.menu_down()
+        xbox.tap_b()
 
     wobbly_complete = False
     while not wobbly_complete:
@@ -81,6 +82,7 @@ def all_races():
 
     logger.debug("Wobbly Chocobo complete")
     next_race()
+    
     dodger_complete = False
     attempts = 0
     while not dodger_complete:
@@ -105,7 +107,7 @@ def all_races():
 
         logger.debug("Catcher Chocobo complete")
 
-def choco_tame_1():
+def choco_tame_1(race_to_race:bool = True):
     memory.main.click_to_diag_progress(43)
     logger.info("Race start!")
     race_left = memory.main.get_actor_coords(0)[0]
@@ -154,12 +156,25 @@ def choco_tame_1():
             last_flag = memory.main.diag_progress_flag()
     if memory.main.diag_progress_flag() in [51, 52, 53]:  # Success
         memory.main.click_to_diag_progress(77)
-        memory.main.wait_frames(12)
-        xbox.tap_up()  # Up for next race, down for quit
+        memory.main.wait_frames(3)
+        if race_to_race:
+            target=2  # let's try something else
+        else:
+            target=1  # I quit
+            
+        while memory.main.save_menu_cursor() != target:
+            while memory.main.save_menu_cursor() != target:
+                xbox.tap_up()
+            memory.main.wait_frames(2)
         xbox.tap_b()
-        memory.main.wait_frames(20)
-        xbox.tap_up()
-        xbox.tap_b()
+        if target == 2:
+            while memory.main.save_menu_cursor() != 0:
+                pass  # This resets it for the next screen.
+            while memory.main.save_menu_cursor() != 1:
+                while memory.main.save_menu_cursor() != 1:
+                    xbox.tap_up()  # Change to dodger chocobo
+                memory.main.wait_frames(2)
+            xbox.tap_b()
         return True
     else:
         memory.main.click_to_diag_progress(76)
@@ -169,6 +184,149 @@ def choco_tame_1():
 
 
 def choco_tame_2():
+    FFXC.set_neutral()
+    memory.main.click_to_diag_progress(40)
+    balls = []
+    for i in range(memory.main.get_actor_array_size()):
+        if memory.main.get_actor_id(i) == 16425:
+            logger.debug(f"Ball indices: {i}")
+            balls.append(i)
+    logger.debug(f"Tidus ID: {memory.main.get_actor_id(0)}")
+    memory.main.click_to_diag_progress(43)
+    bounce = "left"
+    mode = "straight"
+    mode_last = "straight"
+    last_dodge = "none"
+    last_ball = 0
+    min_angle = 1.4
+    max_angle = 1.6
+    angle = get_actor_angle(0)
+    near_end_reset = False
+    while memory.main.diag_progress_flag() not in [44, 74]:
+        position = memory.main.get_actor_coords(0)
+        angle = get_actor_angle(0)
+
+        if position[1] < -1180:  # Align first position
+            if position[0] < -60:
+                mode = "shallow_right"
+            elif position[0] < -40:
+                mode = "shallow_right"
+            else:
+                mode = "straight"
+        elif position[1] > -100:  # End, get to center.
+            if position[0] > -60:
+                mode = "hard_left"
+            if position[0] < -100:
+                mode = "hard_right"
+            else:
+                mode = "straight"
+        elif (
+            pathing.distance(balls[0]) < 550 and
+            memory.main.get_actor_coords(balls[0])[1] > position[1]
+        ):  # First ball approaching
+            if bounce == "left":
+                mode = "hard_left"
+            else:
+                mode = "hard_right"
+        elif (
+            memory.main.get_actor_coords(balls[0])[1] < position[1] and
+            memory.main.get_actor_coords(balls[2])[1] > position[1]
+        ):  # Between first and third balls
+            if bounce == "left":
+                mode = "shallow_left"
+            else:
+                mode = "shallow_right"
+        else:  # In between waves
+            if position[0] < -130:
+                mode = "shallow_right"
+                bounce = "right"
+            elif position[0] < -120:
+                mode = "straight"
+                bounce = "right"
+            elif position[0] < -80:
+                mode = "shallow_left"
+                bounce = "right"
+            elif position[0] < -40:
+                mode = "shallow_right"
+                bounce = "left"
+            elif position[0] < -30:
+                mode = "straight"
+                bounce = "left"
+            else:
+                mode = "shallow_left"
+                bounce = "left"
+        
+        #logger.debug(mode)
+        #logger.debug(f"{round(position[0],2):>8} | {section:>6} | {mode}")
+        
+        if mode_last != mode:
+            logger.debug(f"Mode change: {mode} | {round(position[1],2):>8} , {round(position[0],2):>8}")
+            mode_last = mode
+        
+        if mode == "hard_right":
+            min_angle = 0.1
+            max_angle = 0.4
+        elif mode == "hard_left":
+            min_angle = 2.4
+            max_angle = 2.6
+        elif mode == "shallow_right":
+            min_angle = 1.0
+            max_angle = 1.2
+        elif mode == "shallow_left":
+            min_angle = 1.9
+            max_angle = 2.1
+        #elif position[0] < -80:
+        else:
+            min_angle = 1.45
+            max_angle = 1.65
+        
+        #logger.debug(f"{mode}: {min_angle},{max_angle}")
+        
+        if angle > max_angle:
+            if FFXC.is_dpad_right():
+                FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 8)
+        elif angle < min_angle:
+            if FFXC.is_dpad_left():
+                FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 4)
+        else:
+            FFXC.set_value("d_pad", 0)
+    
+    
+    logger.debug("Race two end. Let's see if we did it.")
+    FFXC.set_neutral()
+
+    while memory.main.diag_progress_flag() not in [54, 69, 77]:
+        # 54 is success
+        xbox.tap_b()
+    if memory.main.diag_progress_flag() == 54:  # Success
+        memory.main.click_to_diag_progress(77)
+
+        target=2  # let's try something else
+            
+        while memory.main.save_menu_cursor() != target:
+            while memory.main.save_menu_cursor() != target:
+                xbox.tap_up()
+            memory.main.wait_frames(2)
+        xbox.tap_b()
+        while memory.main.save_menu_cursor() != 0:
+            pass  # This resets it for the next screen.
+        while memory.main.save_menu_cursor() != 2:
+            while memory.main.save_menu_cursor() != 2:
+                xbox.tap_up()  # Change to hyper dodger chocobo
+            memory.main.wait_frames(2)
+        xbox.tap_b()
+        return True
+    else:
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_b()
+        return False
+
+
+def choco_tame_2_v2():
+    FFXC.set_neutral()
     memory.main.click_to_diag_progress(40)
     balls = []
     for i in range(memory.main.get_actor_array_size()):
@@ -201,7 +359,7 @@ def choco_tame_2():
             else:
                 mode = "shallow_right"
         elif position[1] < -600 or position[1] > -300:
-            # The first bunch of dodges.
+            # Middle section
             if (
                 memory.main.get_actor_coords(balls[1])[1] < position[1] + 100 and
                 memory.main.get_actor_coords(balls[2])[1] > position[1]
@@ -220,8 +378,9 @@ def choco_tame_2():
                 mode = "shallow_left"
             else:
                 mode = "straight"
+
         else:
-            # Middle section.
+            # Starting movement
             if (
                 memory.main.get_actor_coords(balls[1])[1] < position[1] and
                 memory.main.get_actor_coords(balls[2])[1] > position[1]
@@ -244,7 +403,7 @@ def choco_tame_2():
         #logger.debug(f"{round(position[0],2):>8} | {section:>6} | {mode}")
         
         if mode_last != mode:
-            logger.debug(f"Mode change: {mode}")
+            logger.debug(f"Mode change: {mode} | {round(position[1],2):>8} , {round(position[0],2):>8}")
             mode_last = mode
         
         if mode == "hard_right":
@@ -267,10 +426,12 @@ def choco_tame_2():
         #logger.debug(f"{mode}: {min_angle},{max_angle}")
         
         if angle > max_angle:
-            FFXC.set_value("d_pad", 0)
+            if FFXC.is_dpad_right():
+                FFXC.set_value("d_pad", 0)
             FFXC.set_value("d_pad", 8)
         elif angle < min_angle:
-            FFXC.set_value("d_pad", 0)
+            if FFXC.is_dpad_left():
+                FFXC.set_value("d_pad", 0)
             FFXC.set_value("d_pad", 4)
         else:
             FFXC.set_value("d_pad", 0)
@@ -284,11 +445,20 @@ def choco_tame_2():
         xbox.tap_b()
     if memory.main.diag_progress_flag() == 54:  # Success
         memory.main.click_to_diag_progress(77)
-        memory.main.wait_frames(12)
-        xbox.tap_up()
+
+        target=2  # let's try something else
+            
+        while memory.main.save_menu_cursor() != target:
+            while memory.main.save_menu_cursor() != target:
+                xbox.tap_up()
+            memory.main.wait_frames(2)
         xbox.tap_b()
-        memory.main.wait_frames(30)
-        xbox.tap_up()
+        while memory.main.save_menu_cursor() != 0:
+            pass  # This resets it for the next screen.
+        while memory.main.save_menu_cursor() != 2:
+            while memory.main.save_menu_cursor() != 2:
+                xbox.tap_up()  # Change to hyper dodger chocobo
+            memory.main.wait_frames(2)
         xbox.tap_b()
         return True
     else:
@@ -387,7 +557,148 @@ def choco_tame_2_old():
         return False
 
 
-def choco_tame_3():
+def choco_tame_3(try_fourth_race=False):
+    FFXC.set_neutral()
+    memory.main.click_to_diag_progress(42)
+    FFXC.set_value("d_pad", 4)
+    while not memory.main.diag_progress_flag() == 43:
+        pass
+    checkpoint = 0
+    last_cp = 0
+    mode_last = "none"
+    while memory.main.diag_progress_flag() not in [44, 74]:
+        position = memory.main.get_actor_coords(0)
+        angle = get_actor_angle(0)
+        
+        # V3 logic
+        if position[1] > 100:  # Right at the end, force back to center.
+            #logger.debug("End - centralize")
+            if position[0] < -110:
+                mode = "hard_right"
+            elif position[0] > -50:
+                mode = "hard_left"
+            elif position[0] > -80:
+                mode = "shallow_left"
+            else:
+                mode = "straight"
+        elif position[1] < -1180:  # First movement.
+            if position[0] > -140:
+                mode = "shallow_left"
+            else:
+                mode = "straight"
+        elif position[1] < -1050:  # Juke right
+            if position[0] < -105:
+                mode = "hard_right"
+            elif position[0] > -90:
+                mode = "shallow_left"
+            else:
+                mode = "straight"
+        #elif position[1] < -940:
+        #    mode = "shallow_left"
+        elif position[1] < -900:  # Second juke right
+            if position[0] < -10:
+                mode = "hard_right"
+            elif position[0] > -1:
+                mode = "shallow_left"
+            else:
+                mode = "straight"
+        elif position[1] < -750:
+            mode = "shallow_right"
+        elif position[1] < -590:  # Juke left
+            if position[0] > -80:
+                mode = "hard_left"
+            else:
+                mode = "straight"
+        elif position[1] < -440:  # Juke right
+            if position[0] < -60:
+                mode = "hard_right"
+            else:
+                mode = "straight"
+        elif position[1] < -290:  # Juke left again!
+            if position[0] > -90:
+                mode = "hard_left"
+            else:
+                mode = "straight"
+        elif position[1] < -100:  # Juke right
+            if position[0] < -60:
+                mode = "hard_right"
+            else:
+                mode = "straight"
+        elif position[1] < 50:  # Shove face into the wall for an extra dodge.
+            mode = "hard_right"
+        else:
+            mode = "shallow_left"
+        #logger.debug(mode)
+        #logger.debug(f"{round(position[1],2):>8} , {round(position[0],2):>8} | {mode}")
+        
+        if mode_last != mode:
+            logger.debug(f"Mode change: {mode} | {round(position[1],2):>8} , {round(position[0],2):>8}")
+            mode_last = mode
+        
+        if mode == "hard_right":
+            min_angle = 0.3
+            max_angle = 0.5
+        elif mode == "hard_left":
+            min_angle = 2.4
+            max_angle = 2.6
+        elif mode == "shallow_right":
+            min_angle = 1.3
+            max_angle = 1.5
+        elif mode == "shallow_left":
+            min_angle = 1.8
+            max_angle = 2.0
+        #elif position[0] < -80:
+        else:
+            min_angle = 1.45
+            max_angle = 1.65
+        
+        #logger.debug(f"{mode}: {min_angle},{max_angle}")
+        
+        if angle > max_angle:
+            if FFXC.is_dpad_right():
+                FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 8)
+        elif angle < min_angle:
+            if FFXC.is_dpad_left():
+                FFXC.set_value("d_pad", 0)
+            FFXC.set_value("d_pad", 4)
+        else:
+            FFXC.set_value("d_pad", 0)
+    FFXC.set_neutral()
+
+    while memory.main.diag_progress_flag() not in [56, 69, 77]:
+        # 56 is success
+        xbox.tap_b()
+    if memory.main.diag_progress_flag() == 56:  # Success
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        if try_fourth_race:
+            target=2  # let's try something else
+        else:
+            target=1  # I quit
+            
+        while memory.main.save_menu_cursor() != target:
+            while memory.main.save_menu_cursor() != target:
+                xbox.tap_up()
+            memory.main.wait_frames(2)
+        xbox.tap_b()
+        if target == 2:
+            while memory.main.save_menu_cursor() != 0:
+                pass  # This resets it for the next screen.
+            while memory.main.save_menu_cursor() != 2:
+                while memory.main.save_menu_cursor() != 2:
+                    xbox.tap_up()  # Change to catcher chocobo
+                memory.main.wait_frames(2)
+            xbox.tap_b()
+        return True
+    else:
+        memory.main.click_to_diag_progress(77)
+        memory.main.wait_frames(12)
+        xbox.tap_b()
+        return False
+
+
+def choco_tame_3_old(try_fourth_race=False):
     memory.main.click_to_diag_progress(43)
     checkpoint = 0
     last_cp = 0
@@ -466,14 +777,22 @@ def choco_tame_3():
         memory.main.click_to_diag_progress(77)
         memory.main.wait_frames(12)
         if try_fourth_race:
-            xbox.tap_up()  # Up for something else, down for done.
-            # xbox.tap_down()  # Up for something else, down for done.
-            xbox.tap_b()
-            memory.main.wait_frames(30)
-            xbox.tap_up()
+            target=2  # let's try something else
         else:
-            xbox.tap_down()
+            target=1  # I quit
+            
+        while memory.main.save_menu_cursor() != target:
+            while memory.main.save_menu_cursor() != target:
+                xbox.tap_up()
+            memory.main.wait_frames(2)
         xbox.tap_b()
+        memory.main.wait_frames(3)
+        if target == 2:
+            while memory.main.save_menu_cursor() != 2:
+                while memory.main.save_menu_cursor() != 2:
+                    xbox.tap_up()  # Change to catcher chocobo
+                memory.main.wait_frames(2)
+            xbox.tap_b()
         return True
     else:
         memory.main.click_to_diag_progress(77)
@@ -493,7 +812,7 @@ def to_remiem(start_races:bool = True):
     logger.info("Let me ride one!")
     memory.main.click_to_control()
     logger.info("Heading to Remiem")
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
 
     pos = memory.main.get_actor_coords(0)
     if pos[0] > 1200 and pos[1] > -200:
@@ -524,7 +843,7 @@ def to_remiem(start_races:bool = True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
     
-    #memory.main.set_game_speed(0)
+    memory.main.set_game_speed(0)
     FFXC.set_neutral()
     
 
@@ -532,7 +851,6 @@ def remiem_races():
     logger.debug("Ready to start races")
     choco_race_1()
     logger.info("Cloudy Mirror obtained.")
-    # Shenef, don't remove these please. I want to play with them later.
     choco_race_2()
     logger.info("Obtained Wings to Discovery")
     choco_race_3()
@@ -671,7 +989,7 @@ def butterflies():
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    #memory.main.set_game_speed(1)
+    #set_game_speed(1)
     
     # Inside Rin travel agency
     while not pathing.set_movement([-3,-54]):
@@ -771,7 +1089,8 @@ def butterflies():
     ]
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
-            logger.debug(path[i])
+            #logger.debug(path[i])
+            pass
     
     # Open the chest!
     while memory.main.user_control():
@@ -856,7 +1175,8 @@ def butterflies():
     ]
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
-            logger.debug(path[i])
+            #logger.debug(path[i])
+            pass
     # Open the chest!
     while memory.main.user_control():
         pathing.set_movement([-52,-30])
@@ -896,19 +1216,20 @@ def butterflies():
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             pass
-    #memory.main.set_game_speed(0)
+    #set_game_speed(0)
     
 # How about getting the celestial mirror?
-def upgrade_mirror():
-    # Assume we have already arrived near the family.
-    while not pathing.set_movement([253,45]):
-        pass
-    #memory.main.set_game_speed(0)
-    while not pathing.set_movement([255,62]):
-        pass
-    while memory.main.user_control():  # Talk to lady
-        pathing.set_movement([245,62])
-        xbox.tap_b()
+def upgrade_mirror(to_airship:bool=False, skip_approach=False):
+    #set_game_speed(0)
+    if not skip_approach:
+        # Assume we have already arrived near the family.
+        while not pathing.set_movement([253,45]):
+            pass
+        while not pathing.set_movement([255,62]):
+            pass
+        while memory.main.user_control():  # Talk to lady
+            pathing.set_movement([245,62])
+            xbox.tap_b()
     memory.main.click_to_control()
     while not pathing.set_movement([250,70]):
         pass
@@ -1012,13 +1333,10 @@ def upgrade_mirror():
     
     memory.main.click_to_control()
     
-    leave_mirror_area(to_airship=False)
-    
-    #memory.main.set_game_speed(0)
+    leave_mirror_area(to_airship=to_airship)
     
 def leave_mirror_area(to_airship:bool = False):
     # Leave this area.
-    #memory.main.set_game_speed(2)
     path = [
         [-112,-15],
         [-62,-3]
@@ -1045,12 +1363,11 @@ def leave_mirror_area(to_airship:bool = False):
 
 def spirit_lance():
     # Assumes we start from Macalania Woods first screen.
-    ##memory.main.set_game_speed(1)
     
     dodge_count = memory.main.l_strike_count()
     start_count = dodge_count
     
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
     # Towards thunder plains
     path = [
         [431,-4],
@@ -1061,7 +1378,7 @@ def spirit_lance():
             pass
     while memory.main.user_control():
         pathing.set_movement([900,55])
-    #memory.main.set_game_speed(0)
+    #set_game_speed(0)
     
     logger.debug("Enter thunder plains north.")
     # Approach first cactuar stone
@@ -1078,10 +1395,10 @@ def spirit_lance():
     FFXC.set_neutral()
     logger.debug("Waiting for cactuar stone to change status.")
     
-    #memory.main.set_game_speed(2)
+    memory.main.set_game_speed(2)
     while not memory.main.cactuar_stone_4():
         logger.debug(f"Cactuar status: {memory.main.cactuar_stone_4()}")
-    #memory.main.set_game_speed(0)
+    memory.main.set_game_speed(0)
     
     for i in range(2):
         while not pathing.set_movement([-165,577]):
@@ -1090,7 +1407,6 @@ def spirit_lance():
         xbox.tap_x()
         logger.debug("Activating stone!")
         memory.main.click_to_control()
-    ##memory.main.set_game_speed(1)
     
     
     # South towards travel agency
@@ -1112,7 +1428,6 @@ def spirit_lance():
                 dodge_count = memory.main.l_strike_count()
                 
     logger.debug("Ready to dodge.")
-    ##memory.main.set_game_speed(1)
     run_count = 0
     while dodge_count < start_count + 200:
         if run_count % 3 == 0:
@@ -1122,12 +1437,11 @@ def spirit_lance():
             if pathing.set_movement([-137,-1020]):
                 run_count = random.choice(range(0, 1000))
         else:
-            if pathing.set_movement([-112,-971]):
+            if pathing.set_movement([-112,-961]):
                 run_count = random.choice(range(0, 1000))
         if memory.main.dodge_lightning(dodge_count):
             dodge_count = memory.main.l_strike_count()
             logger.debug(f"Dodges left: {start_count + 200 - dodge_count}")
-    #memory.main.set_game_speed(0)
     
     
     # Wrap up North map
@@ -1264,7 +1578,7 @@ def rusty_sword():
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
     
     # Ronso area
     path1 = [
@@ -1317,16 +1631,15 @@ def rusty_sword():
             pass
     FFXC.set_neutral()
     
-    #memory.main.set_game_speed(0)
+    #set_game_speed(0)
     
     for i in range(memory.main.get_actor_array_size()):
         if memory.main.get_actor_id(i) != 52685:
             logger.debug(f"Actor {i}: {memory.main.get_actor_id(i)}")
     pathing.approach_actor_by_id(20568)
     FFXC.set_neutral()
-    #memory.main.wait_frames(300)
     memory.main.click_to_control()
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
     
     # Return trip from the rusty sword
     for i in range(len(path3)-1, -1, -1):
@@ -1352,13 +1665,9 @@ def rusty_sword():
         while not pathing.set_movement(path1[i]):
             pass
     
-    #return_to_airship()
-    #memory.main.set_game_speed(0)
-    #memory.main.await_control()
-
 def masamune():
     air_ship_destination(dest_num=5)
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
     
     # Aftermath map
     path = [
@@ -1388,9 +1697,11 @@ def masamune():
         [-121,33]
     ]
     for i in range(len(path)):
+        if i == len(path) - 2:
+            #set_game_speed(0)
+            pass
         while not pathing.set_movement(path[i]):
             logger.debug(path[i])
-    #memory.main.set_game_speed(0)
     FFXC.set_neutral()
     xbox.tap_b()  # Lift
     xbox.tap_b()
@@ -1418,7 +1729,7 @@ def masamune():
     xbox.tap_b()
     xbox.tap_b()
     memory.main.click_to_control()
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
     
     # Back towards High/Low roads.
     path = [
@@ -1494,6 +1805,8 @@ def masamune():
         while not pathing.set_movement(path[i]):
             pass
     
+    #set_game_speed(0)
+
     FFXC.set_neutral()
     for i in range(memory.main.get_actor_array_size()):
         if memory.main.get_actor_id(i) != 52685:
@@ -1516,7 +1829,6 @@ def masamune():
             pass
     memory.main.click_to_control()
     
-    #memory.main.set_game_speed(0)
     return_to_airship()
 
 def saturn_crest():
@@ -1527,13 +1839,13 @@ def saturn_crest():
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    #memory.main.set_game_speed(2)
     
     #Teleporter pad.
     while not pathing.set_movement([54,107]):
         pass
     memory.main.click_to_event_temple(1)
     memory.main.click_to_control()
+    #set_game_speed(2)
     
     # Up the mountain.
     path = [
@@ -1561,6 +1873,7 @@ def saturn_crest():
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             pass
+    #set_game_speed(0)
     
     # Open chest
     for i in range(memory.main.get_actor_array_size()):
@@ -1573,7 +1886,6 @@ def saturn_crest():
     
     while not pathing.set_movement([154,-601]):
         pass
-    #memory.main.set_game_speed(0)
     return_to_airship()
     
     
@@ -1585,7 +1897,7 @@ def moon_crest():  # Not used in current route
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     else:
         memory.main.set_encounter_rate(0)
-    #memory.main.set_game_speed(2)
+    #set_game_speed(2)
     
     # To the chest, used both directions.
     path = [
@@ -1600,6 +1912,7 @@ def moon_crest():  # Not used in current route
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             pass
+    #set_game_speed(0)
     
     # Open chest
     for i in range(memory.main.get_actor_array_size()):
@@ -1610,12 +1923,13 @@ def moon_crest():  # Not used in current route
     FFXC.set_neutral()
     memory.main.click_to_control()
     
+    #set_game_speed(2)
     # Return trip
     for i in range(len(path)-1, -1, -1):
         while not pathing.set_movement(path[i]):
             pass
     
-    #memory.main.set_game_speed(0)
+    #set_game_speed(0)
     return_to_airship()
 
 def desert_path(start:int=4, end:int=55):
@@ -1899,7 +2213,7 @@ def engage_cactuar(cactuar_num:int = 99):
 def cactuars():
     # Assumes airship start.
     air_ship_destination(dest_num=10)
-    memory.main.update_formation(0, 3, 4)
+    memory.main.update_formation(0, 1, 4)
     memory.main.check_nea_armor()
     if game_vars.ne_armor() != 255:
         equip_armor(character=game_vars.ne_armor(), ability=0x801D)
@@ -2079,7 +2393,7 @@ def cactuars_finish():
     FFXC.set_neutral()
 
 def onion_knight():
-    unlock_omega(x=14,y=-60)  # Baaj temple
+    unlock_omega(x=15,y=-60)  # Baaj temple
     air_ship_destination(1)
     memory.main.await_control()
     
@@ -2268,12 +2582,11 @@ def belgemine(godhand:int = 1, baaj:int = 1):
         logger.warning(f"Belgemine Battle Number: {i}")
         if i == 4:  # Bahamut battle, can't run mirror matchup.
             battle.main.belgemine(use_aeon=2)
-        elif i == 5:
+        elif i in [3,5]:
             battle.main.belgemine(impulse=True)
         else:
             battle.main.belgemine()
         FFXC.set_neutral()
-        memory.main.click_to_control()
 
         
     # To the girls
@@ -2334,7 +2647,7 @@ def belgemine(godhand:int = 1, baaj:int = 1):
     
     while memory.main.user_control():
         pathing.set_movement([-10,0])
-    battle.main.belgemine(impulse=True)
+    battle.main.belgemine(impulse=True, special_end=True)
     FFXC.set_neutral()
 
     last_time = int(time.time())
@@ -2473,8 +2786,9 @@ def get_actor_indices(actor_id:int) -> []:
     return actors
 
 
-def sun_sigil(godhand:int = 1, baaj:int = 1):
+def sun_sigil(godhand:int = 1, baaj:int = 1, redo_training=False):
     # Assumes airship start.
+    logger.debug("Now to get the Sun Sigil.")
     
     air_ship_destination(dest_num=(12+godhand+baaj))
     memory.main.check_nea_armor()
@@ -2494,14 +2808,19 @@ def sun_sigil(godhand:int = 1, baaj:int = 1):
     xbox.menu_down()
     xbox.menu_down()
     xbox.tap_b()
-    memory.main.click_to_diag_progress(3)
-    memory.main.wait_frames(30)
-    xbox.menu_up()
-    xbox.tap_b()
-    
-    catcher_complete = False
-    while not catcher_complete:
-        catcher_complete = choco_tame_4()
+
+    if redo_training:
+        all_races(skip_prep=True, try_fourth_race = True)
+    else:
+        memory.main.wait_seconds(8)
+        xbox.tap_b()
+        memory.main.wait_seconds(10)
+        xbox.menu_up()
+        xbox.tap_b()
+        #memory.main.wait_seconds(30)
+        catcher_complete = False
+        while not catcher_complete:
+            catcher_complete = choco_tame_4()
 
     logger.debug("Catcher Chocobo complete. Let's get our prize!")
     memory.main.await_control()
@@ -3551,7 +3870,7 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
     #memory.main.set_game_speed(0)
     return_to_airship()
 
-def upgrade_celestials(godhand:int=1, baaj:int=1, Yuna:bool=False, Wakka:bool=False):
+def upgrade_celestials(godhand:int=1, baaj:int=1, Yuna:bool=False, Wakka:bool=False,Tidus_only=False):
     air_ship_destination(dest_num=(9+godhand+baaj))
     memory.main.await_control()
     
@@ -3612,25 +3931,93 @@ def upgrade_celestials(godhand:int=1, baaj:int=1, Yuna:bool=False, Wakka:bool=Fa
         xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_diag_progress(33)
-    
-    for i in range(7):
-        if i == 1 and not Yuna:
-            pass
-        elif i == 4 and not Wakka:
-            pass
-        else:
-            upgrade_engage(i)
+    if Tidus_only:
+        upgrade_engage(0,force_end=True)
+    else:
+        for i in range(7):
+            if i == 1 and not Yuna:
+                pass
+            elif i == 4 and not Wakka:
+                pass
+            else:
+                upgrade_engage(i)
     leave_mirror_area(True)
+    pass
+
+
+def end_showcase(godhand:bool=False, baaj:bool=False):
+    air_ship_destination(dest_num=14+godhand+baaj)
+    memory.main.click_to_control()
+    memory.main.check_nea_armor()
+    if game_vars.ne_armor() != 255:
+        equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+    else:
+        memory.main.set_encounter_rate(0)
+    
+    #Teleporter pad.
+    while not pathing.set_movement([54,107]):
+        pass
+    FFXC.set_neutral()
+    approach_coords([70,120], click_through=False)
+    FFXC.set_neutral()
+    memory.main.wait_frames(90)
+    xbox.menu_down()
+    xbox.menu_down()
+    xbox.tap_confirm()
+    memory.main.click_to_control()
+    
+    # Up the mountain.
+    path = [
+        [-71,146],
+        [-187,231],
+        [-231,229]
+    ]
+    for i in range(len(path)):
+        while not pathing.set_movement(path[i]):
+            pass
+    while memory.main.get_map() == 272:
+        pathing.set_movement([-350,200])
+    memory.main.click_to_control()
+    
+    # Flashback mountain!
+    path = [
+        [1044,-1076],
+        [899,-1043],
+        [854,-977],
+        [776,-872],
+        [787,-781],
+        [802,-606],
+        [834,-567]
+    ]
+    for i in range(len(path)):
+        while not pathing.set_movement(path[i]):
+            pass
+    while memory.main.get_map() == 361:
+        pathing.set_movement([880,-400])
+    memory.main.click_to_control()
+    
+    # To the lookout
+    path = [
+        [-201,-602],
+        [-172,-546]
+    ]
+    for i in range(len(path)):
+        while not pathing.set_movement(path[i]):
+            pass
+    
+    FFXC.set_neutral()
+    # Showcase ends here.
+
     
 
-def upgrade_engage(menu_id:int):
+def upgrade_engage(menu_id:int, force_end=False):
     for i in range(2):
         memory.main.wait_frames(15)
         while memory.main.save_menu_cursor() != menu_id:
             xbox.menu_down()
         xbox.menu_b()
         xbox.menu_b()
-        if i % 2 == 1 and menu_id==6:
+        if i % 2 == 1 and (menu_id==6 or force_end):
             memory.main.click_to_diag_progress(62)
             memory.main.wait_frames(15)
             xbox.menu_a()

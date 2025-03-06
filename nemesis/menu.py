@@ -3,6 +3,7 @@ import logging
 import memory.main
 import menu
 import menu_grid
+from menu_grid import grid_up, grid_down, grid_left, grid_right
 import vars
 import xbox
 
@@ -10,22 +11,6 @@ logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
-
-
-def grid_up():
-    menu_grid.grid_up()
-
-
-def grid_down():
-    menu_grid.grid_down()
-
-
-def grid_left():
-    menu_grid.grid_left()
-
-
-def grid_right():
-    menu_grid.grid_right()
 
 
 def await_move():
@@ -136,7 +121,7 @@ def perform_next_grid(limit: int = 255):
     # If the above checks are passed, check Tidus level and do sphere grid.
     if memory.main.get_tidus_slvl() >= next_ap_needed(game_vars.nem_checkpoint_ap()):
         performed = False
-        logger.debug(f"Attemping Nemesis Grid #{game_vars.nem_checkpoint_ap()}")
+        logger.info(f"Attemping Nemesis Grid #{game_vars.nem_checkpoint_ap()}")
         if game_vars.nem_checkpoint_ap() == 1:
             if nem_gridding_1():
                 performed = True
@@ -217,7 +202,7 @@ def perform_next_grid(limit: int = 255):
                 performed = True
         else:
             performed = False
-            logger.debug("End of sphere grid, no further grid logic programmed.")
+            logger.info("End of sphere grid, no further grid logic programmed.")
             game_vars.set_nem_checkpoint_ap(
                 game_vars.nem_checkpoint_ap() - 1
             )  # Decrement
@@ -279,7 +264,7 @@ def next_ap_needed(checkpoint):
     if checkpoint == 25:
         return 22
     if checkpoint == 26:
-        return 43
+        return 60
     return 100  # If no further grids are possible, continue indefinitely.
 
 
@@ -654,10 +639,12 @@ def nem_gridding_12():  # Through Kimahri's grid to Rikku's.
     grid_down()
     grid_down()
     grid_down()
-    grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_move()
+    grid_down()
     grid_left()
     grid_left()
     grid_left()
@@ -696,6 +683,8 @@ def nem_gridding_14():
     grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_move()
     grid_down()
     grid_down()
@@ -723,6 +712,7 @@ def nem_gridding_14():
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
+    kimahri_dispel()
     memory.main.close_menu()
     return True
 
@@ -1140,15 +1130,21 @@ def nem_gridding_26():
     grid_up()
     grid_up()
     menu_grid.move_and_use()
-    menu_grid.sel_sphere("lv4", "none")
+    menu_grid.sel_sphere("mp", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_move()
+    #grid_down()
+    #grid_right()
+    grid_up()
+    grid_up()
+    grid_right()
+    grid_right()
     grid_down()
-    grid_right()
-    grid_up()
-    grid_up()
-    grid_right()
-    grid_right()
-    grid_up()
+    #grid_up()
+    #grid_right()
+    #grid_left()
+    #grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
@@ -1232,9 +1228,80 @@ def rikku_provoke():
     memory.main.close_menu()
 
 
+def kimahri_dispel():
+    open_grid(3)
+    menu_grid.move_first()
+    grid_up()
+    grid_left()
+    grid_left()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("lv2", "none")
+    menu_grid.use_and_move()
+    grid_left()
+    grid_down()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+
+
+def yuna_use_command():
+    open_grid(1)
+    menu_grid.use_first()
+    menu_grid.sel_sphere("friend", "none")
+    menu_grid.use_and_move()
+    grid_right()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("ability", "none")
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+
+
+def wakka_aim_command():
+    open_grid(4)
+    menu_grid.move_first()
+    grid_right()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+
+
+def rikku_nulblaze():
+    open_grid(6)
+    menu_grid.move_first()
+    grid_down()
+    grid_down()
+    grid_left()
+    grid_left()
+    grid_left()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("lv2", "none")
+    menu_grid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_up()
+    grid_left()
+    grid_left()
+    grid_down()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+
+
 def str_boost():
     open_grid(0)
-    menu_grid.move_first()
+    menu_grid.use_first()
+    menu_grid.sel_sphere("strength", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_move()
     grid_right()
     grid_right()
     grid_up()
@@ -1267,6 +1334,20 @@ def str_boost():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
+    '''
+    menu_grid.use_and_move()
+    grid_left()
+    grid_up()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("strength", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("strength", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("power", "none")
+    '''
     menu_grid.use_and_quit()
     memory.main.close_menu()
 

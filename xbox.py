@@ -17,6 +17,8 @@ game_vars = vars.vars_handle()
 class VgTranslator:
     def __init__(self):
         self.gamepad = vg.VX360Gamepad()
+        self.dpad_left = False
+        self.dpad_right = False
 
     def set_value(self, x_key, value):
         # Buttons, pressing
@@ -42,8 +44,10 @@ class VgTranslator:
             self.gamepad.press_button(button=0x0002)
         elif x_key == "d_pad" and value == 4:  # d_pad left
             self.gamepad.press_button(button=0x0004)
+            self.dpad_left = True
         elif x_key == "d_pad" and value == 8:  # d_pad right
             self.gamepad.press_button(button=0x0008)
+            self.dpad_right = True
         elif x_key == "trigger_l" and value == 1:
             self.gamepad.left_trigger_float(value_float=1.0)
         elif x_key == "trigger_r" and value == 1:
@@ -71,6 +75,8 @@ class VgTranslator:
             self.gamepad.release_button(button=0x0002)
             self.gamepad.release_button(button=0x0004)
             self.gamepad.release_button(button=0x0008)
+            self.dpad_left = False
+            self.dpad_right = False
         elif x_key == "trigger_l" and value == 0:
             self.gamepad.left_trigger_float(value_float=0.0)
         elif x_key == "trigger_r" and value == 0:
@@ -86,6 +92,13 @@ class VgTranslator:
         self.gamepad.update()
         # For additional details, review this website:
         # https://pypi.org/project/vgamepad/
+
+    def is_dpad_left(self):
+        return self.dpad_left
+
+    def is_dpad_right(self):
+        """Returns True if only the D-pad right is pressed, False otherwise."""
+        return self.dpad_right
 
     def set_movement(self, x, y):
         if x > 1:
@@ -106,22 +119,16 @@ class VgTranslator:
     def set_neutral(self):
         self.gamepad.reset()
         self.gamepad.update()
+        self.dpad_left = False
+        self.dpad_right = False
         
     def tap_confirm(self):
-        if game_vars.get_invert_confirm():
-            FFXC.set_value("btn_a", 1)
-            memory.main.wait_frames(1)
-            FFXC.set_value("btn_a", 0)
+        self.set_confirm()
+        memory.main.wait_frames(1)
+        self.release_confirm()
+        memory.main.wait_frames(2)
+        if game_vars.use_pause():
             memory.main.wait_frames(2)
-            if game_vars.use_pause():
-                memory.main.wait_frames(2)
-        else:
-            FFXC.set_value("btn_b", 1)
-            memory.main.wait_frames(1)
-            FFXC.set_value("btn_b", 0)
-            memory.main.wait_frames(2)
-            if game_vars.use_pause():
-                memory.main.wait_frames(3)
     
     def set_confirm(self):
         if game_vars.get_invert_confirm():
@@ -136,20 +143,12 @@ class VgTranslator:
             FFXC.set_value("btn_b", 0)
                 
     def tap_back(self):
-        if game_vars.get_invert_confirm():
-            FFXC.set_value("btn_b", 1)
-            memory.main.wait_frames(1)
-            FFXC.set_value("btn_b", 0)
-            memory.main.wait_frames(2)
-            if game_vars.use_pause():
-                memory.main.wait_frames(3)
-        else:
-            FFXC.set_value("btn_a", 1)
-            memory.main.wait_frames(1)
-            FFXC.set_value("btn_a", 0)
-            memory.main.wait_frames(2)
-            if game_vars.use_pause():
-                memory.main.wait_frames(2)
+        self.set_back()
+        memory.main.wait_frames(1)
+        self.release_back()
+        memory.main.wait_frames(2)
+        if game_vars.use_pause():
+            memory.main.wait_frames(3)
     
     def set_back(self):
         if game_vars.get_invert_confirm():
@@ -176,6 +175,8 @@ processed_cutscenes = set()
 
 
 def skip_scene(fast_mode: bool = False):
+    if game_vars.story_mode():
+        return
     cutscene_id = memory.get.cutscene_id()
     logger.info(f"Cutscene ID: {cutscene_id}")
     if not fast_mode or cutscene_id not in processed_cutscenes:
@@ -192,6 +193,8 @@ def skip_scene(fast_mode: bool = False):
 
 
 def skip_scene_spec():
+    if game_vars.story_mode():
+        return
     logger.debug("Skip cutscene and store an additional skip for a future scene")
     FFXC.set_value("btn_start", 1)  # Generate button to skip
     memory.main.wait_frames(2)
@@ -208,6 +211,8 @@ def skip_scene_spec():
 
 
 def skip_stored_scene(skip_timer: int = 3):
+    if game_vars.story_mode():
+        return
     logger.debug("Mashing skip button")
     current_time = time.time()
     logger.debug(f"Current Time: {current_time}")
@@ -257,6 +262,8 @@ def touch_save_sphere():
 
 
 def skip_dialog(keystrokes):
+    if game_vars.story_mode():
+        return
     # 2 frames per button mash
     num_repetitions = math.ceil(round(keystrokes * 30) / 2)
     logger.debug(f"Mashing B {num_repetitions} times.")
@@ -265,16 +272,28 @@ def skip_dialog(keystrokes):
     logger.debug("Mashing B - Complete")
 
 
-def skip_dialog_special(keystrokes):
-    num_repetitions = math.ceil(round(keystrokes * 30) / 2)
-    logger.debug(f"Mashing A and B {num_repetitions} times.")
-    for _ in range(num_repetitions):
-        FFXC.set_value("btn_b", 1)
-        FFXC.set_value("btn_a", 1)
-        memory.main.wait_frames(1)
-        FFXC.set_value("btn_b", 0)
-        FFXC.set_value("btn_a", 0)
-        memory.main.wait_frames(1)
+def skip_dialog_special(keystrokes:int = 0):
+    if game_vars.story_mode():
+        return
+    if keystrokes != 0:
+        num_repetitions = math.ceil(round(keystrokes * 30) / 2)
+        logger.debug(f"Mashing A and B {num_repetitions} times.")
+        for _ in range(num_repetitions):
+            FFXC.set_value("btn_b", 1)
+            FFXC.set_value("btn_a", 1)
+            memory.main.wait_frames(1)
+            FFXC.set_value("btn_b", 0)
+            FFXC.set_value("btn_a", 0)
+            memory.main.wait_frames(1)
+    else:
+        while not (memory.main.user_control() or memory.main.battle_active()):
+            FFXC.set_value("btn_b", 1)
+            FFXC.set_value("btn_a", 1)
+            memory.main.wait_frames(1)
+            FFXC.set_value("btn_b", 0)
+            FFXC.set_value("btn_a", 0)
+            memory.main.wait_frames(1)
+
     logger.debug("Mashing A and B - Complete")
 
 
@@ -398,6 +417,18 @@ def tap_confirm():
 
 def tap_b():
     FFXC.tap_confirm()
+
+def set_confirm():
+    FFXC.set_confirm()
+
+def release_confirm():
+    FFXC.release_confirm()
+
+def set_back():
+    FFXC.set_back()
+
+def release_back():
+    FFXC.release_back()
 
 
 def menu_x():
@@ -572,7 +603,12 @@ def grid_right():
 def click_to_battle():
     logger.debug("Mashing A until first turn in battle")
     FFXC.set_neutral()
+    last_dialog = memory.main.diag_progress_flag()
+    logger.debug(f"Dialog progress initialize: {memory.main.get_story_progress()}|{last_dialog}")
     while not (memory.main.battle_active() and memory.main.turn_ready()):
+        if last_dialog != memory.main.diag_progress_flag():
+            last_dialog = memory.main.diag_progress_flag()
+            logger.debug(f"Dialog progress change: {memory.main.get_story_progress()}|{last_dialog}")
         if memory.main.user_control():
             break
         elif (
@@ -580,6 +616,10 @@ def click_to_battle():
             and not memory.main.auditory_dialog_playing()
         ):
             tap_b()
+        elif game_vars.story_mode():
+            pass
+            #if memory.main.diag_skip_possible():
+            #    logger.debug(f"Mark: {memory.main.get_story_progress()}|{last_dialog}")
         elif memory.main.diag_skip_possible():
             tap_b()
 
@@ -688,8 +728,10 @@ def name_aeon(character=""):
     logger.info("Waiting for aeon naming screen")
 
     while not memory.main.name_aeon_ready():
-        if memory.main.diag_skip_possible() or memory.main.menu_open():
-            tap_b()
+        if memory.main.menu_open():
+            tap_confirm()
+        elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+            tap_confirm()
     if character:
         with open("character_names.json") as fp:
             custom_name = json.load(fp)[character]

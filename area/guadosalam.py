@@ -20,7 +20,9 @@ def arrival():
     logger.info("Starting Guadosalam section")
     checkpoint = 0
     FFXC.set_neutral()
-    memory.main.click_to_control()
+    if game_vars.story_mode() and not game_vars.create_saves():
+        memory.main.wait_seconds(69)
+    memory.main.click_to_control_3()
     while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():
             if checkpoint == 4:
@@ -48,7 +50,8 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            xbox.tap_b()
+            if not game_vars.story_mode():
+                xbox.tap_confirm()
 
     # Checkpoint carries over.
     # We skip the first movement checkpoint, replaced by the approach feature.
@@ -86,7 +89,7 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 memory.main.wait_frames(9)
@@ -101,6 +104,7 @@ def after_speech(checkpoint=0):
     memory.main.click_to_control()  # Skips through the long cutscene
     logger.debug("Starting movement.")
     logger.debug(f"Starting Checkpoint {checkpoint}")
+    farplane_lulu = game_vars.story_mode()
 
     if checkpoint == 0:
         memory.main.click_to_event_temple(4)
@@ -110,23 +114,44 @@ def after_speech(checkpoint=0):
             if checkpoint > 17 and checkpoint < 26 and memory.main.get_map() == 135:
                 checkpoint = 26
             elif checkpoint == 1:
-                memory.main.click_to_event_temple(4)
+                memory.main.click_to_event_temple(4, story_mode_dialog=True)
                 checkpoint += 1
-            elif checkpoint in [12, 16, 21, 33]:
-                memory.main.click_to_event_temple(0)
+            elif checkpoint in [12, 16, 21]:
+                memory.main.click_to_event_temple(0, story_mode_dialog=True)
+                checkpoint += 1
+            elif checkpoint == 33:
+                if game_vars.story_mode():
+                    FFXC.set_movement(0,1)
+                    memory.main.await_event()
+                    FFXC.set_neutral()
+                    memory.main.wait_seconds(32)
+                    xbox.tap_down()
+                    xbox.tap_confirm()  # I guess you're right (big chance with Yuna)
+                    #xbox.tap_up()
+                    #xbox.tap_confirm()  # I'd rather have you, Rikku.
+                    memory.main.await_control()
+                else:
+                    memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 17:
                 if not game_vars.csr():
-                    memory.main.click_to_event_temple(0)
+                    memory.main.click_to_event_temple(0, story_mode_dialog=True)
                 checkpoint += 1
             elif checkpoint == 14:
                 memory.main.click_to_event_temple(5)
                 checkpoint += 1
             elif checkpoint == 23:
-                memory.main.click_to_event_temple(2)
+                logger.warning("Approaching Wakka")
+                memory.main.click_to_event_temple(2, story_mode_dialog=True)
                 checkpoint += 1
+            #elif checkpoint == 24 and farplane_lulu:
+            #    memory.main.check_near_actors()
+            #    logger.warning("Approaching Lulu")
+            #    memory.main.click_to_event_temple(1, story_mode_dialog=True)
+            #    farplane_lulu = False
             elif checkpoint == 25:
-                memory.main.click_to_event_temple(7)
+                logger.warning("Approaching Yuna")
+                memory.main.click_to_event_temple(7, story_mode_dialog=True)
                 checkpoint += 1
 
             elif pathing.set_movement(GuadoStoryline.execute(checkpoint)):
@@ -134,12 +159,16 @@ def after_speech(checkpoint=0):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif memory.main.get_story_progress() == 1190 and memory.main.diag_progress_flag() == 82:
+                xbox.tap_confirm()
+    logger.debug("End of farplane section.")
+
 
 
 def guado_skip():
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     FFXC.set_movement(-1, -1)
     pos = memory.main.get_coords()
     while pos[0] > -85:
@@ -263,11 +292,11 @@ def guado_skip():
                     checkpoint = 18
             elif checkpoint == 21:  # Shelinda conversation
                 logger.debug("Shelinda")
-                memory.main.click_to_event_temple(0)
+                memory.main.click_to_event_temple(0, story_mode_dialog=True)
                 checkpoint += 1
             elif checkpoint == 24:  # Back to party
                 logger.debug("Back to party")
-                memory.main.click_to_event_temple(7)
+                memory.main.click_to_event_temple(7, story_mode_dialog=True)
                 checkpoint += 1
 
             # General pathing
@@ -277,7 +306,8 @@ def guado_skip():
                     logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
     FFXC.set_neutral()
+    logger.debug("End of Guadosalam section.")
     return guado_skip_status

@@ -22,6 +22,7 @@ import rng_track
 import save_sphere
 import vars
 import xbox
+from json_ai_files.write_seed import write_custom_message
 from paths.nem import (
     BikanelFarm,
     CalmFarm,
@@ -38,6 +39,7 @@ from paths.nem import (
     YojimboFarm,
 )
 from players import Lulu, Rikku, Tidus, Wakka, Yuna
+from gamestate import game
 import json
 
 logger = logging.getLogger(__name__)
@@ -254,12 +256,28 @@ def report_remaining(phase: int = 3):
         current_count = memory.main.arena_array()[check_mon]
         total_need += check_count
         complete_count += min(check_count, current_count)
-        if current_count < check_count:
-            logger.debug(f"{key}: {current_count} / {check_count} | {area}")
+        #if current_count < check_count:
+        #    logger.debug(f"{key}: {current_count} / {check_count} | {area}")
 
     complete_percent = int(complete_count / total_need * 100)
     logger.info(f"== Total: {complete_count} / {total_need} | {complete_percent}%")
     logger.debug("==============================")
+    if phase == 4:
+        write_custom_message(f"Nemesis stage 4 farm {complete_percent}%\n" + \
+            f"Three Stars for One MP weap\nStam Tonics for gil manip\n" + \
+            f"{game.state} | {game.step}")
+    if phase == 5:
+        write_custom_message(f"Nemesis stage 5 farm {complete_percent}%\n" + \
+            f"Substage 1 of 3\nTen of each monster\n" + \
+            f"{game.state} | {game.step}")
+    if phase == 6:
+        write_custom_message(f"Nemesis stage 5 farm {complete_percent}%\n" + \
+            f"Ten of each pokemon\nSubstage 2 of 3\nTen of each monster\n" + \
+            f"{game.state} | {game.step}")
+    if phase == 7:
+        write_custom_message(f"Nemesis stage 5 farm {complete_percent}%\n" + \
+            f"Ten of each pokemon\nSubstage 3 of 3\n{complete_percent}%" + \
+            f"{game.state} | {game.step}")
 
 
 def report_need_single(phase: int, mon_name: str):
@@ -401,7 +419,8 @@ def full_farm(phase: int):
             menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             logger.debug("== Out of mana, returning to save sphere.")
             path_to_save(zone=last_zone)
-            return_to_airship()
+            force_save = phase == 5
+            return_to_airship(extra_save=force_save)
             if len(memory.main.all_equipment()) > 150:
                 rin_equip_dump()
         elif adjacent[0]:
@@ -428,8 +447,8 @@ def full_farm(phase: int):
     if get_map() != 374:
         path_to_save(zone=last_zone)
         return_to_airship()
-    if len(memory.main.all_equipment()) > 150:
-        rin_equip_dump()
+    if len(memory.main.all_equipment()) > 150 or phase in [5,6,7]:
+        rin_equip_dump(sell_nea=True)
 
 
 def zone_to_zone(last_zone: str, next_zone: str):
@@ -880,12 +899,15 @@ def battle_start(zone: str):
                         else:
                             checkpoint -= 1
                     logger.debug(f"Checkpoint {checkpoint}")
-
+    results = False
     if get_map() in [203, 204, 258]:
-        advanced_battle_logic()
+        results = advanced_battle_logic()
     else:
-        battle_farm_all()
-    battle.main.wrap_up()
+        results = battle_farm_all()
+    if results:
+        battle.main.wrap_up()
+    else:
+        menu.remove_all_nea()
 
 
 def path_to_yojimbo():

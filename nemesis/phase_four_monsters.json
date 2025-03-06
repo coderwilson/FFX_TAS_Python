@@ -332,7 +332,7 @@
 		"zone1": "thunder_plains_(north)_(2_stones)",
 		"zone2": "thunder_plains_(south)_(2_stones)",
 		"zone3": "none",
-		"prio": 10,
+		"prio": 70,
 		"need": 10
 	}
 }

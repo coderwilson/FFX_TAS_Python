@@ -218,21 +218,21 @@ class KilikaTrials(AreaMovementBase):
         # These are for destro sphere
         60: [-24, -25],
         # Place Kilika sphere
-        62: [-30,-36],
-        63: [-18,-52],
-        64: [-19,-37.3],
-        # Push pedestol to wall
-        66: [-24,9],
-        67: [-27,18.5],
-        68: [-27,18.5],
-        # Push pedestol to center
-        70: [-9,8],
-        71: [-2,-1],
-        72: [0,12],
-        # Push pedestol North, long push.
-        74: [-8,176],
-        75: [-10,185],
-        76: [-10,187],
+        62: [-2, 15],
+        63: [1, 34],
+        64: [8, 133],
+        65: [30, 165],
+        66: [50, 189],
+        67: [50, 197],
+        # Reset glyph
+        69: [47, 178],
+        70: [5,121],
+        71: [1,137],  # Stutter step to position, then push
+        72: [-8,172],
+        73: [-17,187],
+        74: [-7,188],
+        75: [-7,188],
+        76: [-7,188],
         # Push east towards hidden room
         78: [42,177],
         79: [50,172],

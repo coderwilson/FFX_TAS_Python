@@ -23,6 +23,28 @@ class CalmLands(AreaMovementBase):
     }
 
 
+class CalmLandsNemesis(AreaMovementBase):
+    checkpoint_coordiantes = {
+        0: [-332, -1612],
+        1: [-437, -1603],
+        2: [-640, -1591],
+        3: [-757, -1530],
+        4: [-777, -1478],
+        # Southeast of agency, northeast of the turn.
+        5: [-186, -715],
+        6: [586, -392],
+        7: [1380, -119],
+        8: [1500, -200],
+        9: [1298, -8],
+        10: [1347, 489],
+        11: [1422, 663],
+        12: [1440, 724],
+        13: [1466, 841],
+        14: [1549, 1059],
+        15: [1630, 1230],
+    }
+
+
 class DefenderX(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [62, -66],

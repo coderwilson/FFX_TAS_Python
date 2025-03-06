@@ -176,5 +176,66 @@
     },
     "112": {
         "kimahri_force_heal": "True"
+    },
+    "42": {
+        "highroad_heals": {
+            "7": "True"
+        }
+    },
+    "82": {
+        "highroad_heals": {
+            "8": "True"
+        }
+    },
+    "176": {
+        "kimahri_force_heal": "True"
+    },
+    "48": {
+        "highroad_heals": {
+            "-1": "True"
+        }
+    },
+    "151": {
+        "highroad_heals": {
+            "-1": "True"
+        }
+    },
+    "124": {
+        "highroad_heals": {
+            "-1": "True"
+        }
+    },
+    "111": {
+        "highroad_heals": {
+            "-1": "True"
+        }
+    },
+    "256": {
+        "zan_luck": "False"
+    },
+    "85": {
+        "zan_luck": "False"
+    },
+    "41": {
+        "kimahri_force_heal": "True"
+    },
+    "47": {
+        "zan_luck": "False"
+    },
+    "183": {
+        "kimahri_force_heal": "True"
+    },
+    "50": {
+        "zan_luck": "False"
+    },
+    "110": {
+        "kimahri_force_heal": "True",
+        "zan_luck": "False"
+    },
+    "138": {
+        "kimahri_force_heal": "True"
+    },
+    "187": {
+        "zan_luck": "False"
     }
 }

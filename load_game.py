@@ -25,7 +25,9 @@ game_vars = vars.vars_handle()
 
 
 def move_after_load(spec_move: str):
-    if spec_move == "miihen_laugh":
+    if spec_move == "besaid_trials":
+        besaid_trials()
+    elif spec_move == "miihen_laugh":
         load_miihen_start_laugh()
     elif spec_move == "miihen_no_laugh":
         load_miihen_start()
@@ -82,6 +84,13 @@ def load_into_game(gamestate: str, step_counter: str):
         
         if gamestate == "Nem_Farm":
             game_vars.nemesis_set(True)
+        
+        if game_vars.nemesis():
+            game_mode = "Nemesis"
+        elif game_vars.story_mode():
+            game_mode = "Story"
+        else:
+            game_mode = "Speed"
 
         # Init variables so we don't crash later
         save_num_conf = 0
@@ -94,11 +103,11 @@ def load_into_game(gamestate: str, step_counter: str):
         logger.debug(results[gamestate][step_counter].keys())
         for key in results[gamestate][step_counter]:
             save_num = int(results[gamestate][step_counter][key]["save_num"])
-            logger.debug(f"Save number check for Nemesis {key} : {save_num}")
+            logger.debug(f"Save number check for Mode {key} : {save_num}")
 
             if save_num > 200:
                 pass  # FFX only allows 200 saves.
-            elif key != str(game_vars.nemesis()):
+            elif key != game_mode:
                 pass  # Wrong version of the run.
             else:
                 nemesis = key

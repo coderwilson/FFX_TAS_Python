@@ -1,4 +1,6 @@
-def write_seed_num(seed: int):
+from gamestate import game
+
+def write_seed_num(seed: int=999):
     f = open("json_ai_files\current_seed.txt", "w")
     f.write(f"Seed num: {seed}\nBlitz Win: TBD\nReturn spheres: none")
     f.close()
@@ -29,16 +31,42 @@ def write_seed_err():
 
 def write_state_step(state: str, step: str):
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write(f"Test: {state}={step}")
+    f.write(f"Mid-run test started\n{state} {step}")
     f.close()
 
 
-def write_new_game():
+def update_state_step(state: str, step: str):
+    f = open("json_ai_files\current_seed.txt")
+    new_str = f.read()
+    f.close()
+    split_str = new_str.split("\n")
+    split_str[0] = f"TAS Stage {game.state}, Step {game.step}\n"
+    final_str = ""
+    for i in range(len(split_str)):
+        final_str += split_str[i]
+
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write("New Run! GL\nBlitz Win: TBD")
+    f.write(final_str)
+    f.close()
+
+
+def write_new_game(seed: int):
+    f = open("json_ai_files\current_seed.txt", "w")
+    f.write(f"New Run! GL\nSeed num: {seed}\nBlitz Win: TBD\nReturn spheres: none")
     f.close()
 
 def write_custom_message(msg:str):
     f = open("json_ai_files\current_seed.txt", "w")
+    f.write(msg)
+    f.close()
+
+
+def current_big_text() -> str:
+    with open("json_ai_files\\big_text.txt", "r") as f:
+        return f.read()
+
+
+def write_big_text(msg:str):
+    f = open("json_ai_files\\big_text.txt", "w")
     f.write(msg)
     f.close()

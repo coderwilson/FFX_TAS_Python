@@ -1,13 +1,16 @@
 import logging
 
 import area.gagazet
+from area.chocobos import choco_tame_1,choco_tame_2,choco_tame_3
 import battle.main
 import memory.main
 import nemesis.menu
+#from nemesis.arena_prep import arena_npc
 import pathing
 import rng_track
 import vars
 import xbox
+from save_sphere import touch_and_go
 from paths.nem import CalmLands1, CalmLands2, LeaveRemiem, Race1, Race2, Race3, ToRemiem
 from players import Auron, Kimahri, Rikku, Tidus, Yuna
 
@@ -22,6 +25,7 @@ FFXC = xbox.controller_handle()
 
 def arena_npc():
     memory.main.await_control()
+    report_actors = True
     if memory.main.get_map() != 307:
         return
     while not (
@@ -32,8 +36,12 @@ def arena_npc():
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(1)
             else:
-                pathing.set_movement([2, -15])
-                xbox.tap_b()
+                if report_actors:
+                    memory.main.check_near_actors()
+                    report_actors = False
+                pathing.approach_actor_by_id(8241)
+                return
+                # 8241 or 20482
         else:
             FFXC.set_neutral()
             if memory.main.diag_progress_flag() == 59:
@@ -70,48 +78,60 @@ def gagazet_lv_4_chest():
     ]
     i = 0
     while i < len(steps):
-        if i == 5:
-            memory.main.click_to_event_temple(1)
-            i += 1
-        elif pathing.set_movement(steps[i]):
-            i += 1
+        if memory.main.user_control():
+            if i == 5:
+                if pathing.approach_actor_by_index(16):
+                    i += 1
+            elif pathing.set_movement(steps[i]):
+                i += 1
+                if i == 5:
+                    memory.main.check_near_actors()
+        else:
+            FFXC.set_neutral()
+            if memory.main.battle_active():
+                battle.main.flee_all()
+            else:
+                xbox.tap_confirm()
 
 
 def calm_lands():
+    if memory.main.get_map() == 329:
+        while memory.main.get_map() != 223:
+            pathing.set_movement([35,200])
+    FFXC.set_neutral()
     # Start chocobo races
     calm_lands_1()
+    logger.info("Let's train a chocobo!")
 
     FFXC.set_neutral()
-    memory.main.click_to_diag_progress(28)
-    memory.main.wait_frames(9)
+    memory.main.click_to_diag_progress(302)
+    memory.main.wait_frames(18)
+    xbox.menu_down()
+    xbox.menu_down()
     xbox.tap_b()
+
     wobbly_complete = False
     while not wobbly_complete:
         wobbly_complete = choco_tame_1()
 
     logger.debug("Wobbly Chocobo complete")
-    # Shenef don't remove these please.
-    # next_race()
-    # dodger_complete = False
-    # while not dodger_complete:
-    #     dodger_complete = choco_tame_2()
+    dodger_complete = False
+    while not dodger_complete:
+        dodger_complete = choco_tame_2()
 
-    # logger.debug("Dodger Chocobo complete")
-    # next_race()
+    logger.debug("Dodger Chocobo complete")
 
-    # hyper_complete = False
-    # while not hyper_complete:
-    #     hyper_complete = choco_tame_3()
+    hyper_complete = False
+    while not hyper_complete:
+        hyper_complete = choco_tame_3()
 
-    # logger.debug("Hyper Chocobo complete")
+    logger.debug("Hyper Chocobo complete")
 
     # catcher_complete = False
     # while not catcher_complete:
     #     catcher_complete = choco_tame_4()
 
     # logger.debug("Catcher Chocobo complete")
-
-    to_remiem()
 
 
 def calm_lands_1():
@@ -130,9 +150,9 @@ def calm_lands_1():
     checkpoint = 0
     while memory.main.get_map() != 307:
         if memory.main.user_control():
-            # if checkpoint == 10:
-            #     if area.gagazet.check_gems() < 2:
-            #         checkpoint -= 2
+            if checkpoint == 10:
+                if area.gagazet.check_gems() < 2:
+                    checkpoint -= 2
             if pathing.set_movement(CalmLands1.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
@@ -150,12 +170,12 @@ def calm_lands_1():
                 xbox.tap_b()
 
     logger.debug("Now talk to NPC")
-    # arena_npc()
-    # arena_purchase()
-    # memory.wait_frames(6)
-    # xbox.tap_b() #I want to ride a chocobo.
+    arena_npc()
+    arena_purchase()
+    defender_x_nemesis()
+    #back_to_chocobo_spawn()
 
-
+'''
 def choco_tame_1():
     memory.main.click_to_diag_progress(43)
     while memory.main.diag_progress_flag() not in [44, 74]:
@@ -425,18 +445,22 @@ def choco_tame_4():
         memory.main.wait_frames(12)
         xbox.tap_b()
         return False
-
+'''
 
 def to_remiem():
-    memory.main.click_to_control()
-    while memory.main.user_control():
-        pathing.set_movement([-1565, 434])
-        xbox.tap_b()
-        logger.debug("Near chocobo lady")
+    # Assumes we just finished training.
+    memory.main.click_to_control_3()
+    pathing.approach_actor_by_id(20531)
     FFXC.set_neutral()
     memory.main.click_to_control_3()
+    while not pathing.set_movement([1500,883]):
+        pass
+    while not pathing.set_movement([1486,589]):
+        pass
+    while not pathing.set_movement([1121,-280]):
+        pass
 
-    checkpoint = 0
+    checkpoint = 2
     while checkpoint < 35:
         if memory.main.user_control():
             if memory.main.get_map() == 290 and checkpoint < 13:
@@ -462,7 +486,6 @@ def remiem_races():
     logger.debug("Ready to start races")
     choco_race_1()
     logger.debug("Cloudy Mirror obtained.")
-    # Shenef, don't remove these please. I want to play with them later.
     choco_race_2()
     logger.debug("Obtained")
     choco_race_3()
@@ -573,10 +596,10 @@ def choco_race_3():
     memory.main.click_to_control_3()
 
 
-def temple_to_arena():
+def temple_to_Gagazet():
     memory.main.click_to_control_3()
     checkpoint = 0
-    while memory.main.get_map() != 307:
+    while memory.main.get_map() != 279:
         if memory.main.user_control():
             if memory.main.get_map() == 223 and checkpoint < 18:
                 checkpoint = 18
@@ -600,15 +623,24 @@ def temple_to_arena():
             elif pathing.set_movement(LeaveRemiem.execute(checkpoint)) is True:
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+    touch_and_go()
+    while not pathing.set_movement([69,-329]):
+        pass
+    while not pathing.set_movement([66,-234]):
+        pass
+    while not pathing.set_movement([66,-140]):
+        pass
+    
+    logger.info("Nemesis change - Now on Defender X map. Rejoining normal path.")
 
 
 def arena_purchase():
-    memory.main.click_to_control()
+    #memory.main.click_to_control()
 
-    logger.debug("Straight forward to the guy")
-    FFXC.set_movement(0, 1)
-    memory.main.click_to_event()
-    FFXC.set_neutral()
+    #logger.debug("Straight forward to the guy")
+    #FFXC.set_movement(0, 1)
+    #memory.main.click_to_event()
+    #FFXC.set_neutral()
     logger.debug("Now for dialog")
     memory.main.click_to_diag_progress(65)
     logger.debug("Select Sure")
@@ -632,6 +664,7 @@ def arena_purchase():
     FFXC.set_neutral()
     memory.main.await_control()
 
+def defender_x_nemesis():
     checkpoint = 0
     while memory.main.get_map() != 279:
         if memory.main.user_control():
@@ -650,6 +683,27 @@ def arena_purchase():
                 memory.main.update_formation(Tidus, Yuna, Auron)
             elif memory.main.menu_open() or memory.main.diag_skip_possible():
                 xbox.tap_b()
+
+    memory.main.await_control()
+    area.gagazet.defender_x()
+
+def back_to_chocobo_spawn():
+    # Assumes Defender X was just defeated.
+    memory.main.click_to_control()
+    while not pathing.set_movement([67,-144]):
+        pass
+    while not pathing.set_movement([65,-256]):
+        pass
+    while not pathing.set_movement([57,-403]):
+        pass
+    while memory.main.get_map() == 279:
+        pathing.set_movement([57,-550])
+    memory.main.await_control()
+    while not pathing.set_movement([1405,923]):
+        pass
+    memory.main.check_near_actors()
+    pathing.approach_actor_by_id(20531)
+
 
 
 def arena_purchase_with_chocobo():

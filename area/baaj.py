@@ -207,12 +207,20 @@ def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_k
     #while not Rikku.is_turn():
     #    Tidus.attack()
     # Possibly replace with the following, for less error messages.
-    while not Rikku.is_turn():
-        if memory.main.battle_active() and Tidus.is_turn():
+    while memory.main.battle_active():
+        if Tidus.is_turn():
             Tidus.attack()
 
-    xbox.click_to_battle()
-    screen.await_turn()
+    if game_vars.story_mode():
+        memory.main.wait_seconds(51)
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        memory.main.wait_seconds(1)
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        screen.await_turn()
+    else:
+        xbox.click_to_battle()
     battle.boss.klikk(tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, klikk_steals)
 
 
@@ -230,7 +238,22 @@ def ab_boat_1():
     logger.info("Start of Al Bhed boat section.")
     logger.debug("Control restored.")
     logger.info("On the boat!")
+    tutorial_done = False
     while memory.main.get_actor_coords(actor_index=0)[0] > -50:
+        if memory.main.user_control():
+            memory.main.check_near_actors()
+            pathing.approach_actor_by_id(41)
+            if game_vars.story_mode() and not tutorial_done:
+                memory.main.wait_seconds(8)
+                xbox.tap_confirm()
+                xbox.tap_confirm()
+                tutorial_done = True
+        elif not game_vars.story_mode():
+            xbox.tap_confirm()
+        elif memory.main.menu_open():
+            xbox.menu_a()
+            xbox.menu_b()
+        '''
         rikku_num = memory.main.actor_index(actor_num=41)
         target = memory.main.get_actor_coords(actor_index=rikku_num)
         pathing.set_movement(target)
@@ -239,6 +262,7 @@ def ab_boat_1():
         elif memory.main.menu_open():
             xbox.menu_a()
             xbox.menu_b()
+        '''
     logger.info("In the water!")
     FFXC.set_back()
     while not memory.main.user_control():
@@ -475,13 +499,15 @@ def ab_swimming_2(ruins_encounter_strat: int):
     screen.await_turn()
     # Final group of Piranhas
     battle.main.ruins_encounter(strat=ruins_encounter_strat)
-    memory.main.click_to_control()
+    FFXC.set_neutral()
     memory.main.await_control()
-    FFXC.set_movement(0, 1)
+    logger.debug("TEST")
+    memory.main.wait_frames(3)
+    pathing.approach_coords([0, 421], click_through=not game_vars.story_mode())
     logger.info("Technical Support Tidus")
-    xbox.skip_dialog(2)
-    FFXC.set_movement(0, 0)
-    memory.main.click_to_control()
+    #FFXC.set_neutral()
+    #xbox.skip_dialog(2)
+    #memory.main.click_to_control()
 
     rng01_array_enemy_formation = memory.main.rng_array_from_index(index=1, array_len=10)
     preempt_roll = rng01_array_enemy_formation[1] % 256
@@ -526,18 +552,20 @@ def ab_swimming_2(ruins_encounter_strat: int):
             elif memory.main.get_map() == 380:
                 pathing.set_movement([700, 300])
             elif memory.main.get_map() == 71:
-                rikku_num = memory.main.actor_index(actor_num=41)
-                pathing.set_movement(memory.main.get_actor_coords(rikku_num))
-                if distance(0, rikku_num) < 30:
-                    xbox.tap_b()
+                memory.main.check_near_actors()
+                pathing.approach_actor_by_id(41)
+                #rikku_num = memory.main.actor_index(actor_num=41)
+                #pathing.set_movement(memory.main.get_actor_coords(rikku_num))
+                #if distance(0, rikku_num) < 30:
+                #    xbox.tap_b()
         else:
             FFXC.set_neutral()
             if memory.main.diag_progress_flag() == 109:
                 memory.main.csr_baaj_save_clear()
-            elif memory.main.diag_skip_possible() and not game_vars.csr():
+            elif memory.main.diag_skip_possible() and not game_vars.csr() and not game_vars.story_mode():
                 xbox.tap_b()
 
     logger.info("Should now be ready for Besaid")
 
-    if not game_vars.csr():
+    if game_vars.story_mode() or not game_vars.csr():
         xbox.clear_save_popup(0)
