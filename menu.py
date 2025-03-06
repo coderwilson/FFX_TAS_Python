@@ -4,6 +4,7 @@ from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
 import memory.main
+from memory.main import equip_sell_row
 import menu_grid
 import vars
 import xbox
@@ -14,7 +15,6 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 logger = logging.getLogger(__name__)
-import tts
 
 
 def grid_up():
@@ -194,7 +194,7 @@ def woods_menuing():
     xbox.menu_b()
     xbox.menu_b()  # Sphere grid on Tidus
     menu_grid.move_first()
-    start_node = memory.main.s_grid_node_selected()[0]
+    start_node = memory.main.s_grid_cursor_coords()[0]
     if start_node == 242:
         agi_need = 2
     else:
@@ -213,7 +213,7 @@ def woods_menuing():
     if full_menu:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
-        game_vars.complete_full_klikk_menu()
+        game_vars.complete_full_kilika_menu()
     menu_grid.use_and_quit()
     # Reorder the party
 
@@ -277,8 +277,33 @@ def late_haste():
     menu_grid.use_and_quit()
 
 
+def mrr_grid_1_story():
+    open_grid(character=4)
+    menu_grid.move_first()
+    grid_left()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("lv1", "none")
+    menu_grid.use_and_move()
+    grid_left()
+    grid_left()
+    grid_left()
+    grid_left()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("power", "up")
+    wakka_late_menu = True
+
+    menu_grid.use_and_quit()
+
+    memory.main.close_menu()
+
+    game_vars.wakka_late_menu_set(wakka_late_menu)
+
+
 def mrr_grid_1():
     logger.info("Menuing: start of MRR ")
+    if game_vars.story_mode():
+        mrr_grid_1_story()
+        return
     open_grid(character=4)
     menu_grid.move_first()
     grid_right()
@@ -307,8 +332,29 @@ def mrr_grid_1():
     game_vars.wakka_late_menu_set(wakka_late_menu)
 
 
-def mrr_grid_2():
+def mrr_grid_2_story():
     if memory.main.get_slvl_wakka() >= 3:
+        logger.debug("Catching up Wakkas sphere grid.")
+        open_grid(character=4)
+
+        menu_grid.move_first()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "left")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_quit()
+        game_vars.wakka_late_menu_set(False)
+        logger.debug(f"Wakka late menu updated: {game_vars.wakka_late_menu()}")
+    else:
+        logger.debug("Wakka: Not enough sphere levels yet.")
+
+
+def mrr_grid_2():
+    if game_vars.story_mode():
+        mrr_grid_2_story()
+        return
+    if memory.main.get_slvl_wakka() >= 7:
         logger.debug("Catching up Wakkas sphere grid.")
         open_grid(character=4)
 
@@ -324,52 +370,51 @@ def mrr_grid_2():
         game_vars.wakka_late_menu_set(False)
         logger.debug(f"Wakka late menu updated: {game_vars.wakka_late_menu()}")
     else:
-        logger.debug("Not enough sphere levels yet.")
+        logger.debug("Wakka: Not enough sphere levels yet.")
 
 
 def mrr_grid_yuna():
-    # Removed thanks to Terra skip
-    pass
-    '''
-    logger.debug("Yuna levels good to level up.")
-    open_grid(character=1)
-    menu_grid.use_first()  # Sphere grid on Yuna first
-    menu_grid.sel_sphere("magic", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("mana", "none")
-    menu_grid.use_and_move()
-    grid_right()
-    grid_right()
-    grid_right()
-    grid_right()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("mana", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("mana", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("mana", "none")
-    menu_grid.use_and_quit()
-    '''
+    # Removed thanks to Terra skip, only done during story mode.
+    if game_vars.story_mode():
+        logger.debug("Yuna levels good to level up.")
+        open_grid(character=1)
+        menu_grid.use_first()  # Sphere grid on Yuna first
+        menu_grid.sel_sphere("magic", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("mana", "none")
+        menu_grid.use_and_move()
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("mana", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("mana", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("mana", "none")
+        menu_grid.use_and_quit()
+    
 
 
 def battle_site_grid():
     logger.debug("Doing the menu stuff")
-    '''
-    # Removed thanks to Terra skip
-    open_grid(character=1)
-    menu_grid.move_first()
-    grid_left()
-    grid_down()
-    grid_down()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("mana", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("speed", "none")
+    if game_vars.story_mode():
+        # Removed if doing to Terra skip
+        open_grid(character=1)
+        menu_grid.move_first()
+        grid_left()
+        grid_down()
+        grid_down()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("mana", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("speed", "none")
 
-    menu_grid.use_shift_left("Kimahri")  # Sphere grid on Kimahri
-    '''
+        menu_grid.use_shift_left("Kimahri")  # Sphere grid on Kimahri
     
-    open_grid(character=3)
+    else:
+        open_grid(character=3)
     menu_grid.move_first()
     grid_right()
     menu_grid.move_and_use()
@@ -411,6 +456,23 @@ def _navigate_to_position(position, battle_cursor):
                 xbox.tap_down()
 
 
+def battle_site_equip_sort():
+    memory.main.open_menu()
+    while memory.main.get_menu_cursor_pos() != 1:
+        memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 1, 11)
+    xbox.tap_confirm()
+    memory.main.wait_frames(15)
+    xbox.tap_back()
+    memory.main.wait_frames(3)
+    xbox.tap_right()
+    xbox.tap_right()
+    xbox.tap_confirm()  # Equipment
+    memory.main.wait_frames(15)
+    xbox.tap_right()
+    xbox.tap_confirm()  # Auto sort
+    memory.main.close_menu()
+
+
 def battle_site_oaka_1():
     memory.main.click_to_diag_progress(96)
     while memory.main.shop_menu_dialogue_row() != 1:
@@ -424,6 +486,7 @@ def battle_site_oaka_1():
         if game_vars.use_pause():
             memory.main.wait_frames(2)
 
+    
     item_order = memory.main.get_items_order()
     if memory.main.rng_seed() != 160:
         items_to_sell = [(i, v) for i, v in enumerate(item_order) if v in [0, 1, 2, 8]]
@@ -450,23 +513,43 @@ def battle_site_oaka_1():
                 xbox.tap_left()
         while memory.main.item_shop_menu() != 21:
             xbox.tap_b()
+    
     memory.main.close_menu()
 
 
 def battle_site_oaka_2():
+    FFXC.set_neutral()
+    logger.debug("Engage O'aka again")
     memory.main.click_to_diag_progress(74)
     memory.main.click_to_diag_progress(96)
     if memory.main.get_gil_value() < 10890:
-        all_equipment = memory.main.all_equipment()
-        other_slots = [
-            i
-            for i, handle in enumerate(all_equipment)
-            if (i > 5 and handle.equip_status == 255 and not handle.is_brotherhood())
-        ]
-        for cur in other_slots:
-            sell_weapon(cur)
-            if memory.main.get_gil_value() >= 10890:
-                break
+        logger.warning("Ready to start selling.")
+
+        from pathing import approach_actor_by_id
+        from memory.main import wait_seconds
+        approach_actor_by_id(8410)
+        FFXC.set_neutral()
+        memory.main.wait_seconds(5)
+        xbox.tap_confirm()
+        memory.main.wait_seconds(3)
+        xbox.tap_right()
+        xbox.tap_confirm()
+        memory.main.wait_seconds(1)
+        #logger.debug("Returning for test mode.")
+        #quit()
+        #exit()
+        sell_all(tstrike=False, gil_need=10890)
+        logger.warning("Sell complete")
+        #all_equipment = memory.main.all_equipment()
+        #other_slots = [
+        #    i
+        #    for i, handle in enumerate(all_equipment)
+        #    if (i > 5 and handle.equip_status == 255 and not handle.is_brotherhood())
+        #]
+        #for cur in other_slots:
+        #    sell_weapon(cur)
+        #    if memory.main.get_gil_value() >= 10890:
+        #        break
     buy_weapon(2, equip=True)
     memory.main.close_menu()
 
@@ -530,9 +613,19 @@ def sell_weapon(location):
 
 
 def djose_temple():
-    if game_vars.skip_kilika_luck():
+    if not game_vars.mrr_skip_val():
+        open_grid(character=4)
+        menu_grid.move_first()
+        grid_right()
+        grid_left()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "up")
+        menu_grid.use_and_quit()
+        memory.main.close_menu()
+    elif game_vars.skip_kilika_luck():
         return
-    if memory.main.get_slvl_wakka() >= 7:
+    elif memory.main.get_slvl_wakka() >= 7:
         open_grid(character=4)
         menu_grid.move_first()
 
@@ -679,13 +772,17 @@ def yuna_terra_skip_recover():
 
 def m_woods():
     while not memory.main.menu_open():
-        xbox.tap_b()  # Talking through O'aka's conversation.
+        xbox.tap_confirm()  # Talking through O'aka's conversation.
     if memory.main.get_gil_value() < 15400:
         memory.main.close_menu()
-        memory.main.click_to_diag_progress(14)
-        memory.main.click_to_diag_progress(12)
+        if game_vars.story_mode():
+            memory.main.wait_seconds(5)
+            xbox.tap_confirm()
+        else:
+            memory.main.click_to_diag_progress(14)
+            memory.main.click_to_diag_progress(12)
         while not memory.main.menu_open():
-            xbox.tap_b()
+            xbox.tap_confirm()
         if memory.main.get_gil_value() < 11550:
             memory.main.wait_frames(8)
             xbox.menu_right()
@@ -839,6 +936,8 @@ def mac_temple():
         menu_grid.sel_sphere("strength", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "right")
         menu_grid.use_and_move()
         grid_down()
         grid_right()
@@ -868,17 +967,18 @@ def mac_temple():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
     
-    # Add Kimahri for terra skip.
-    menu_grid.use_shift_left("Kimahri")
-    menu_grid.move_first()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("power", "none")  # Should be HP +200
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("speed", "none")  # Should be speed +4
+    if not game_vars.story_mode():
+        # Add Kimahri for terra skip.
+        menu_grid.use_shift_left("Kimahri")
+        menu_grid.move_first()
+        grid_down()
+        grid_down()
+        grid_down()
+        grid_down()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")  # Should be HP +200
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("speed", "none")  # Should be speed +4
     
     
     menu_grid.use_and_quit()
@@ -990,7 +1090,9 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
     memory.main.await_control()
 
     weapon_handles = memory.main.weapon_array_character(character)
-    logger.debug(len(weapon_handles))
+    #logger.debug(len(weapon_handles))
+    for i in range(len(weapon_handles)):
+        logger.debug(weapon_handles[i].abilities())
     weapon_num = 255
 
     abilityarray = []
@@ -1058,6 +1160,8 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
             xbox.tap_down()
         else:
             xbox.tap_up()
+        if memory.main.equip_weap_cursor() == weapon_num:
+            memory.main.wait_frames(2)
     while memory.main.equip_menu_open_from_char():
         xbox.menu_b()
 
@@ -1133,11 +1237,15 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
                     target_pos,
                     len(memory.main.get_order_seven()),
                 )
-            memory.main.wait_frames(1)
+            if memory.main.get_char_cursor_pos() == target_pos:
+                memory.main.wait_frames(2)
         memory.main.wait_frames(1)
         xbox.menu_b()
-        memory.main.wait_frames(19)
-        xbox.tap_down()
+        memory.main.wait_frames(9)
+        while memory.main.weapon_armor_cursor() != 1:
+            while memory.main.weapon_armor_cursor() != 1:
+                xbox.tap_down()
+            memory.main.wait_frames(2)
         while memory.main.menu_number() != 26:
             xbox.tap_b()
     while not memory.main.equip_menu_open_from_char():
@@ -1163,6 +1271,35 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
     return True
 
 
+def via_from_battle_site():
+    # This assumes pass from parent function via_purifico()
+    # It should only be called after Yuna is active on the grid.
+    # It assumes we performed gridding before fighting Gui.
+    grid_up()
+    grid_up()
+    grid_up()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("Lv2", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_move()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_move()
+    grid_up()
+    grid_up()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("power", "none")
+    menu_grid.use_and_use_again()
+    menu_grid.sel_sphere("speed", "none")
+
+
 def via_purifico():
     open_grid(character=2)  # Auron
 
@@ -1183,9 +1320,9 @@ def via_purifico():
     grid_up()
     grid_up()
     memory.main.wait_frames(30 * 0.3)
-    grid_location = memory.main.s_grid_node_selected()
+    grid_location = memory.main.s_grid_cursor_coords()
     # We have extra levels, changes the path slightly.
-    if grid_location[0] != 242:
+    if grid_location != [789,-485]:
         grid_up()
         grid_left()
     menu_grid.move_and_use()
@@ -1196,25 +1333,28 @@ def via_purifico():
     
     # This section updated for terra skip.
     menu_grid.move_first()
-    grid_up()
-    grid_up()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("Lv4", "none")
-    menu_grid.use_and_move()
-    grid_right()
-    grid_right()
-    grid_right()
-    grid_right()
-    grid_left()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("power", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("power", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("power", "none")
-    menu_grid.use_and_use_again()
-    # End of new Terra Skip logic.
+    if not game_vars.mrr_skip_val():
+        via_from_battle_site()
     
+    else:
+        grid_up()
+        grid_up()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("Lv4", "none")
+        menu_grid.use_and_move()
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_right()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "none")
+    
+    menu_grid.use_and_use_again()
     menu_grid.sel_sphere("tele", "up")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("magic", "none")
@@ -1249,19 +1389,11 @@ def via_purifico():
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_use_again()
-    # menu_grid.sel_sphere("power", "none")
-    # menu_grid.use_and_use_again()
     menu_grid.sel_sphere("mana", "none")  # Terra. Used to be str+4
 
     menu_grid.use_and_move()
     grid_left()
     grid_down()
-    # Terra change.
-    #menu_grid.move_and_use()
-    #menu_grid.sel_sphere("mana", "none")
-    #menu_grid.use_and_move()
-    #grid_left()
-    #grid_down()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
@@ -1274,14 +1406,47 @@ def via_purifico():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
-    
-    # More Terra updates, for the rest of this function.
+
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("Lv1", "none")
     
-    menu_grid.use_and_move()
+    need_completion = True
+    if game_vars.mrr_skip_val():
+        need_completion = False
+        menu_grid.use_and_move()
+        grid_right()
+        grid_down()
+        grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("speed", "none")
+        menu_grid.use_and_move()
+        grid_left()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_move()
+        grid_down()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("speed", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("mana", "none")
+        
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+    return need_completion
+
+
+def via_purifico_noTerra_recovery():
+    memory.main.click_to_control_3()
+    open_grid(character=1)  # Yuna
+
+    menu_grid.move_first()
     grid_right()
     grid_down()
     grid_right()
@@ -1302,14 +1467,19 @@ def via_purifico():
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("mana", "none")
-    
-    
+        
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
 
+
+
 def seymour_natus_blitz_win():
     open_grid(character=1)
+    yuna_levels = memory.main.get_yuna_slvl()
+    logger.warning(f"Sphere levels: {yuna_levels}")
+    if yuna_levels <= 9:
+        game_vars.update_calm_levels_needed(5)
 
     menu_grid.use_first()
     menu_grid.sel_sphere("tele", "up2")
@@ -1356,10 +1526,6 @@ def seymour_natus_blitz_win():
     grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
-    
-    if game_vars.nemesis():
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("power", "none")
         
     '''
     # Removed for Terra skip
@@ -1370,7 +1536,7 @@ def seymour_natus_blitz_win():
     grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
-    if game_vars.nemesis():
+    if game_vars.nemesis() or game_vars.story_mode():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("mana", "none")
     '''
@@ -1380,6 +1546,10 @@ def seymour_natus_blitz_win():
 
 def seymour_natus_blitz_loss():
     open_grid(character=1)
+    yuna_levels = memory.main.get_yuna_slvl()
+    logger.warning(f"Sphere levels: {yuna_levels}")
+    if yuna_levels <= 9:
+        game_vars.update_calm_levels_needed(5)
 
     menu_grid.use_first()
     menu_grid.sel_sphere("tele", "left")  # Str+4 by mental break
@@ -1417,21 +1587,31 @@ def seymour_natus_blitz_loss():
 
 def prep_calm_lands():
     open_grid(character=1)
+    yuna_levels = memory.main.get_yuna_slvl()
+    logger.warning(f"Sphere levels: {yuna_levels}")
     if game_vars.get_blitz_win():
         menu_grid.move_first()
         
         # Update for Terra Skip logic
         grid_left()
+    
+        if game_vars.nemesis():
+            menu_grid.move_and_use()
+            menu_grid.sel_sphere("power", "none")
+            menu_grid.use_and_move()
         grid_left()
         grid_left()
         grid_left()
         menu_grid.move_and_use()
+        if game_vars.story_mode():
+            memory.main.wait_frames(9)
+            logger.warning(memory.main.s_grid_cursor_coords())
         menu_grid.sel_sphere("power", "none")
         
     else:
         menu_grid.move_first()
         '''
-        if game_vars.nemesis():
+        if game_vars.nemesis() or game_vars.story_mode():
             grid_up()
             grid_up()
             grid_left()
@@ -1497,18 +1677,27 @@ def after_ronso():
         menu_grid.move_shift_left("yuna")
         if game_vars.nemesis():
             menu_grid.use_first()
-            menu_grid.sel_sphere("mana", "none")
+            menu_grid.sel_sphere("mana", "left")
             menu_grid.use_and_move()
         else:
             menu_grid.move_first()
-        grid_up()
-        grid_up()
+        while memory.main.s_grid_cursor_coords()[0] > 140:
+            grid_left()  # Move to empty node left of HP, or filled with MP in nem route
         if game_vars.nemesis():
+            while memory.main.s_grid_cursor_coords()[1] > -1204:
+                grid_up()
             menu_grid.move_and_use()
             menu_grid.sel_sphere("mana", "none")
             menu_grid.use_and_move()
-        grid_down()
-        grid_down()
+        
+        while memory.main.s_grid_cursor_coords() != [-30,-1100]:
+            if memory.main.s_grid_cursor_coords()[0] > -30:
+                grid_left()
+            elif memory.main.s_grid_cursor_coords()[1] < -1100:
+                grid_down()
+            else:
+                grid_up()
+            #memory.main.wait_frames(6)
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
@@ -1642,7 +1831,7 @@ def after_ronso_blitz_loss():
     elif game_vars.end_game_version() == 4:
         menu_grid.move_shift_right("Yuna")
         menu_grid.use_first()
-        menu_grid.sel_sphere("ret", "up2")
+        menu_grid.sel_sphere("ret", "up")
         menu_grid.use_and_move()
         grid_right()
         grid_right()
@@ -1882,13 +2071,34 @@ def tidus_slayer(od_pos: int = 2):
     while memory.main.menu_number() == 5:
         xbox.tap_b()
     memory.main.wait_frames(10)
+
+    # Select Tidus
+    while memory.main.get_menu_2_char_num() != 0:
+        while memory.main.get_menu_2_char_num() != 0:
+            logger.warning(f"Cursor check: {memory.main.get_menu_2_char_num()}")
+            xbox.tap_down()
+        memory.main.wait_frames(3)
     xbox.tap_b()
     memory.main.wait_frames(10)
+
+    # Change overdrive mode
     xbox.menu_a()
     xbox.tap_right()
     xbox.menu_b()
+    xbox.menu_up()
+    xbox.menu_up()
+    xbox.menu_left()
+    
     if od_pos == 2:
         xbox.menu_down()
+    elif od_pos == 1:
+        xbox.menu_right()
+    elif od_pos == 5:
+        memory.main.wait_frames(20)
+        xbox.menu_right()
+        xbox.menu_down()
+        xbox.menu_down()
+
     else:
         xbox.menu_up()
     xbox.menu_b()
@@ -1900,22 +2110,19 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
     # Assume already on the sell items screen, index zero
     full_array = memory.main.all_equipment()
     sell_item = True
-    #xbox.menu_up()
-    #memory.main.wait_frames(9)
+    sell_row = memory.main.equip_sell_row()  # Starts with first non-equipped equipment.
 
     with logging_redirect_tqdm():
         with tqdm(total=len(full_array)) as pbar:
             while memory.main.equip_sell_row() + 1 < len(full_array):
-                last_row = memory.main.equip_sell_row()
-                while last_row == memory.main.equip_sell_row():
-                    #if memory.main.equip_sell_row() > 8:
-                    #    xbox.menu_down()
-                    #    memory.main.wait_frames(15)
-                    #else:
-                    xbox.tap_down()
-                    #memory.main.wait_frames(1)
+                while sell_row != memory.main.equip_sell_row():
+                    if sell_row < memory.main.equip_sell_row():
+                        xbox.tap_up()
+                    else:
+                        xbox.tap_down()
+                    memory.main.wait_frames(1)
                 if memory.main.equip_sell_row() > 8:
-                    memory.main.wait_frames(9)
+                    memory.main.wait_frames(11)
                 if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
                     # Currently equipped
                     sell_item = False
@@ -1961,13 +2168,21 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
                 ]:
                     # Brotherhood
                     sell_item = False
+                if full_array[memory.main.equip_sell_row()].abilities() == [
+                    32793, 32783, 32772, 32773,
+                ]:
+                    # Brotherhood
+                    sell_item = False
 
                 if sell_item:
                     xbox.menu_b()
                     memory.main.wait_frames(4)
                     xbox.tap_up()
                     xbox.menu_b()
-                    memory.main.wait_frames(6)
+                    memory.main.wait_frames(4)
+                    if memory.main.equipment_sell_prompt_open():
+                        xbox.menu_a()
+                        memory.main.wait_frames(6)
                     if game_vars.use_pause():
                         memory.main.wait_frames(2)
                 else:
@@ -1976,6 +2191,8 @@ def sell_all(nea: bool = False, tstrike: bool = True, gil_need: int = None):
                 pbar.update(1)
                 if gil_need is not None and memory.main.get_gil_value() > gil_need:
                     return
+                else:
+                    sell_row += 1
 
 
 def after_flux():  # Possibly no longer used. Needs review.
@@ -2044,19 +2261,30 @@ def bfa():
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "none")
         menu_grid.use_and_move()
-        grid_left()
-        grid_left()
-        grid_left()
-        grid_left()
-        grid_left()
-        grid_left()
-        if game_vars.end_game_version() != 4:
+        grid_pos = memory.main.s_grid_cursor_coords()
+        while grid_pos[0] > -885:
             grid_left()
-            grid_left()
-            grid_left()
-        grid_down()
-        if game_vars.end_game_version() != 4:
-            grid_up()
+            logger.debug(f"(A): {grid_pos}")
+            grid_pos = memory.main.s_grid_cursor_coords()
+        memory.main.wait_frames(6)
+        while grid_pos != [-888,643]:
+            if grid_pos == [-848,603]:
+                grid_left()
+            elif grid_pos == [-888,563]:
+                grid_left()
+            elif grid_pos == [-922,529]:
+                grid_left()
+            elif grid_pos == [-952,603]:
+                grid_down()
+            elif grid_pos == [-922,678]:
+                grid_right()
+            else:
+                logger.warning(f"Warning!!! Grid not identified: {grid_pos}")
+            memory.main.wait_frames(6)
+            grid_pos = memory.main.s_grid_cursor_coords()
+            logger.debug(f"(B): {grid_pos}")
+
+
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "left")
         menu_grid.use_and_move()
@@ -2301,7 +2529,10 @@ def sk_return_2():
     menu_grid.use_first()
     menu_grid.sel_sphere("bmag", "up")
     menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("ret", "left_down")
+    if game_vars.get_skip_zan_luck():
+        menu_grid.sel_sphere("ret", "left_down")
+    else:  # Battle Site adjustment
+        menu_grid.sel_sphere("ret", "up")
     menu_grid.use_and_move()
     grid_left()
     grid_left()
@@ -2411,11 +2642,11 @@ def remove_all_nea():
                     equip_armor(character=i, ability=0x8056)  # Auto-Haste
                 else:
                     equip_armor(character=i, ability=99)  # Remove equipment
-            elif i in [4, 6]:
+            elif i == 4:
                 if memory.main.check_ability_armor(ability=0x800A)[i]:
                     equip_armor(character=i, ability=0x800A)  # Auto-Phoenix
                 elif memory.main.check_ability_armor(ability=0x8072, slot_count=4)[i]:
-                    equip_armor(character=i, ability=0x8072, slot_count=4)
+                    equip_armor(character=i, ability=0x8072, slot_count=4) # HP +5% (purchased)
                 else:
                     equip_armor(character=i, ability=99)  # Remove equipment
             elif i == 1 and memory.main.check_ability_armor(ability=0x800A)[i]:

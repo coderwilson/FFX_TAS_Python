@@ -36,12 +36,15 @@ class Aeon(Player):
         self._tap_targeting()
 
     def shield(self):
+        logger.debug("Using Aeon Shield command")
         self._aeon_side_menu(0)
 
     def boost(self):
+        logger.debug("Using Aeon Boost command")
         self._aeon_side_menu(1)
 
     def dismiss(self):
+        logger.debug("Dismissing Aeon")
         self._aeon_side_menu(2)
 
     def overdrive(self, overdrive_num: int):

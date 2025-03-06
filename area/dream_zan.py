@@ -14,7 +14,7 @@ import vars
 import xbox
 from paths import AllStartsHere, TidusHomeMovement
 from players import Auron, CurrentPlayer, Tidus
-from json_ai_files.write_seed import write_seed_num, write_seed_err
+from json_ai_files.write_seed import write_seed_num, write_seed_err, write_big_text
 
 game_vars = vars.vars_handle()
 
@@ -55,14 +55,14 @@ def new_game(gamestate):
                     logger.info("New Game is selected. Starting game.")
                 xbox.menu_b()
         if game_vars.use_legacy_soundtrack():
-            memory.main.click_to_diag_progress(6)
+            memory.main.click_to_diag_progress(6,force=True)
             # tts.message("Setting original soundtrack")
             memory.main.wait_frames(3)
             xbox.tap_down()
             memory.main.wait_frames(3)
-            memory.main.click_to_diag_progress(8)
+            memory.main.click_to_diag_progress(8,force=True)
         else:
-            memory.main.click_to_diag_progress(7)
+            memory.main.click_to_diag_progress(7,force=True)
             for i in range(8):
                 xbox.tap_b()
     else:  # Load Game
@@ -112,7 +112,9 @@ def listen_story():
                 memory.main.wait_frames(1)
 
     logger.info(f"### CSR check: {game_vars.csr()}")
+    write_big_text("")
     checkpoint = 0
+    zanar_wait = game_vars.story_mode()
     while memory.main.get_encounter_id() != 414:  # First Sinspawn
         if memory.main.user_control():
             # Events
@@ -147,6 +149,10 @@ def listen_story():
                 checkpoint += 1
             elif checkpoint < 11 and memory.main.get_story_progress() >= 5:
                 checkpoint = 11
+                if zanar_wait:  # Story mode only
+                    zanar_wait = False
+                    FFXC.set_neutral()
+                    memory.main.wait_seconds(50)
             elif checkpoint < 21 and memory.main.get_map() == 371:
                 checkpoint = 21
             elif checkpoint < 25 and memory.main.get_map() == 370:
@@ -162,9 +168,9 @@ def listen_story():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
-            elif memory.main.cutscene_skip_possible():
+            elif memory.main.cutscene_skip_possible() and not game_vars.story_mode():
                 if (
                     memory.main.get_story_progress() == 10
                     and memory.main.diag_progress_flag() == 2
@@ -264,9 +270,12 @@ def ammes_battle(tidus_total_attacks: int, tidus_potion: bool):
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
     logger.debug("Clicking to battle.")
-    xbox.click_to_battle()
-    logger.debug("Waiting for Auron's Turn")
-    logger.debug("At Overdrive")
+    if game_vars.story_mode():
+        memory.main.wait_seconds(42)
+        FFXC.tap_confirm()
+        FFXC.tap_confirm()
+    else:
+        xbox.click_to_battle()
     # Auron overdrive tutorial
     Auron.overdrive()
 

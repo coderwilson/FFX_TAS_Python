@@ -1,6 +1,7 @@
 import logging
 
 import memory.main
+from memory.main import s_grid_cursor_coords
 import vars
 import xbox
 
@@ -169,7 +170,7 @@ def quit_grid_ready():
 
 
 def use_first():
-    logger.debug("use first")
+    logger.debug(f"use first - {s_grid_cursor_coords()}")
     while not ready_select_sphere():
         if first_position():
             xbox.menu_b()
@@ -181,7 +182,7 @@ def use_first():
 
 
 def move_first():
-    logger.debug("move first")
+    logger.debug(f"move first - {s_grid_cursor_coords()}")
     while not move_active():
         if first_position():
             xbox.menu_b()
@@ -194,7 +195,7 @@ def move_first():
 
 
 def move_and_use():
-    logger.debug("move and use")
+    logger.debug(f"move and use - {s_grid_cursor_coords()}")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
@@ -209,7 +210,7 @@ def move_and_use():
 
 
 def use_and_move():
-    logger.debug("use and move")
+    logger.debug(f"use and move - {s_grid_cursor_coords()}")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
@@ -226,7 +227,7 @@ def use_and_move():
 
 
 def use_and_use_again():
-    logger.debug("use and use again")
+    logger.debug(f"use and use again - {s_grid_cursor_coords()}")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
@@ -243,7 +244,7 @@ def use_and_use_again():
 
 
 def use_shift_left(toon):
-    logger.debug("use and shift")
+    logger.debug(f"use and shift - {s_grid_cursor_coords()}")
     memory.main.wait_frames(1)
     xbox.menu_b()
     toon = toon.lower()
@@ -303,11 +304,11 @@ def use_shift_left(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_left()
-    logger.debug(f"Ready for grid: {toon}")
+    logger.debug(f"Ready for grid: {toon} - {s_grid_cursor_coords()}")
 
 
 def use_shift_right(toon):
-    logger.debug("use and shift")
+    logger.debug(f"use and shift - {s_grid_cursor_coords()}")
     xbox.menu_b()
     toon = toon.lower()
     if toon == "yuna":
@@ -367,11 +368,11 @@ def use_shift_right(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_right()
-    logger.debug(f"Ready for grid: {toon}")
+    logger.debug(f"Ready for grid: {toon} - {s_grid_cursor_coords()}")
 
 
 def move_shift_left(toon):
-    logger.debug("Move and shift, left")
+    logger.debug(f"Move and shift, left - {s_grid_cursor_coords()}")
     memory.main.wait_frames(2)
     xbox.menu_b()
     memory.main.wait_frames(2)
@@ -408,11 +409,11 @@ def move_shift_left(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_left()
-    logger.debug(f"Ready for grid: {toon}")
+    logger.debug(f"Ready for grid: {toon} - {s_grid_cursor_coords()}")
 
 
 def move_shift_right(toon):
-    logger.debug("Move and shift, right")
+    logger.debug(f"Move and shift, right - {s_grid_cursor_coords()}")
     memory.main.wait_frames(2)
     xbox.menu_b()
     memory.main.wait_frames(2)
@@ -449,11 +450,11 @@ def move_shift_right(toon):
                 xbox.menu_back()
             elif first_position():
                 xbox.shoulder_right()
-    logger.debug(f"Ready for grid: {toon}")
+    logger.debug(f"Ready for grid: {toon} - {s_grid_cursor_coords()}")
 
 
 def move_and_quit():
-    logger.debug("move and quit")
+    logger.debug(f"move and quit - {s_grid_cursor_coords()}")
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)

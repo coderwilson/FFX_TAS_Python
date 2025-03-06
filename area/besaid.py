@@ -60,6 +60,8 @@ def beach(lagoon_strats):
                 memory.main.wait_frames(20)
                 xbox.menu_down()
                 xbox.menu_b()
+                xbox.menu_b()
+                xbox.menu_b()
             checkpoint = 29
         elif checkpoint == 36 and memory.main.get_map() == 17:
             checkpoint = 37
@@ -77,7 +79,12 @@ def beach(lagoon_strats):
                     pathing.set_movement([15, 16])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                if game_vars.story_mode():
+                    logger.debug("Static time click")
+                    memory.main.wait_seconds(10)
+                    xbox.tap_confirm()
+                    logger.debug("Click")
+                memory.main.click_to_control() # Allows for story mode.
                 checkpoint += 1
             elif checkpoint == 45:  # Exiting tent
                 logger.info("Exiting tent")
@@ -100,7 +107,8 @@ def beach(lagoon_strats):
                 ):
                     good_battles += 1
             elif memory.main.diag_skip_possible() or memory.main.menu_open():
-                xbox.tap_b()
+                if not game_vars.story_mode():
+                    xbox.tap_b()
     logs.write_stats("piranha battles:")
     logs.write_stats(str(besaid_battles))
     # logs.write_stats("Optimal piranha battles:")
@@ -108,28 +116,58 @@ def beach(lagoon_strats):
 
 
 def night_scene():
-    memory.main.await_control()
-    while not pathing.set_movement([18,186]):
-        pass
-    memory.main.check_near_actors(False)
-    FFXC.set_movement(-1, -1)
-    memory.main.await_event()
-    FFXC.set_neutral()
-    memory.main.click_to_control()
-    pathing.approach_actor_by_id(5)
-    FFXC.set_neutral()
-    memory.main.click_to_control()
-    
+    while memory.main.get_story_progress() < 190:
+        if memory.main.user_control():
+            if memory.main.get_story_progress() == 182:
+                # Move towards Yuna.
+                pathing.set_movement([60,230])
+            else:
+                # Move towards Wakka for sleep.
+                pathing.approach_actor_by_id(5)
+                FFXC.set_neutral()
+        else:
+            FFXC.set_neutral()
+            story = memory.main.get_story_progress()
+            dialog = memory.main.diag_progress_flag()
+            #logger.debug(f"Story: {story} | dialog: {dialog}")
+            if story == 182 and dialog == 47:  # She's cute, ya?
+                memory.main.wait_frames(30)
+                xbox.tap_down()
+                xbox.tap_confirm()
+                memory.main.wait_frames(3)
+            elif story == 184 and dialog == 56:  # Ready for bed?
+                xbox.tap_confirm()
+            elif game_vars.story_mode():  # All other dialog, do not skip in story mode.
+                pass
+            else:  # All other scenarios, mash skip.
+                xbox.tap_confirm()
+
+
+def _distance(n1, n2):
+    try:
+        player1 = n1
+        player2 = n2
+        return abs(player1[1] - player2[1]) + abs(player1[0] - player2[0])
+    except Exception as x:
+        logger.exception(x)
+        return 999
 
 
 def trials(destro:bool=False):
     checkpoint = 0
+    if game_vars.story_mode():
+        destro=True
+        memory.main.wait_seconds(7)
+        xbox.tap_confirm()
+    else:
+        FFXC.set_neutral()
 
-    while memory.main.get_map() != 60:
+    while memory.main.get_map() == 122:
         if memory.main.user_control():
             # Spheres, glyphs, and pedestals
             if checkpoint == 1:  # First glyph
-                memory.main.click_to_event_temple(0)
+                pathing.approach_coords([-26, 141])
+
                 checkpoint += 1
             elif checkpoint == 3:  # Second glyph
                 memory.main.click_to_event_temple(2)
@@ -144,17 +182,30 @@ def trials(destro:bool=False):
                 else:
                     checkpoint += 1
             elif checkpoint == 20:  # Touch the hidden door glyph
+                logger.debug(f"Mark {checkpoint}")
                 while memory.main.user_control():
                     pathing.set_movement([-13, -33])
                     xbox.tap_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                logger.debug(f"Mark {checkpoint}")
+                while not memory.main.user_control():
+                    xbox.tap_confirm()
+                logger.debug(f"Mark {checkpoint}")
+                #memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 23:  # Second Besaid sphere
-                pathing.approach_coords([-14, 31])
+                logger.debug(f"Mark {checkpoint}")
+                pathing.approach_coords([-14, 31], quick_return=True)
+                FFXC.set_neutral()
+                logger.debug(f"Mark {checkpoint}")
+                memory.main.click_to_control_3()
+                logger.debug(f"Mark {checkpoint}")
                 checkpoint += 1
             elif checkpoint == 26:  # Insert Besaid sphere, and push to completion
-                pathing.approach_coords([-13, -60])
+                logger.debug(f"Mark {checkpoint}")
+                pathing.approach_coords([-13, -63], quick_return=True)
+                logger.debug(f"Mark {checkpoint}")
+                memory.main.click_to_control_3()
                 if destro:
                     checkpoint = 54
                 else:
@@ -162,6 +213,7 @@ def trials(destro:bool=False):
                         FFXC.set_movement(0, 1)
                     FFXC.set_neutral()
                     checkpoint += 1
+                logger.debug(f"Mark {checkpoint}")
             elif memory.main.get_map() == 100:
                 night_scene()
                 checkpoint = 35
@@ -173,72 +225,107 @@ def trials(destro:bool=False):
                 FFXC.set_neutral()
                 memory.main.check_near_actors(False)
                 pathing.approach_actor_by_id(20597)
+                if game_vars.story_mode():
+                    memory.main.click_to_control_3()
                 checkpoint = 14
             elif checkpoint == 53:
-                pathing.approach_coords([67, 3])
+                pathing.approach_coords([67, 3], quick_return=True)
+                if game_vars.story_mode():
+                    memory.main.click_to_control_3()
                 checkpoint = 17
+            elif checkpoint == 55:
+                checkpoint += 1
             elif checkpoint == 58:
-                pathing.approach_coords([93, 4])
+                pathing.approach_coords([93, 4], quick_return=True)
+                if game_vars.story_mode():
+                    memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 63:
-                pathing.approach_coords([-14, 32])
+                pathing.approach_coords([-14, 32], quick_return=True)
+                if game_vars.story_mode():
+                    memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 68:
-                pathing.approach_coords([-72, 75])
+                pathing.approach_coords([-72, 75], quick_return=True)
+                if game_vars.story_mode():
+                    memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 72:
+                # Line up to finish pushing.
                 FFXC.set_neutral()
+                memory.main.check_near_actors(False, max_dist=50)
                 memory.main.wait_frames(16)
-                while memory.main.get_map() != 103:
-                    FFXC.set_movement(-1,0)
+                #while _distance(memory.main.get_coords(), BesaidTrials.execute(checkpoint)) > 1.5:
+                while pathing.distance(1) > 9:
+                    logger.debug(memory.main.get_coords())
+                    pathing.set_movement(BesaidTrials.execute(checkpoint))
+                    memory.main.wait_frames(2)
+                    FFXC.set_neutral()
+                    memory.main.wait_frames(3)
+
+                while memory.main.get_map() == 122:
+                    pathing.set_movement([-14,-150])
                 FFXC.set_neutral()
                 if memory.main.get_story_progress() > 2000:
                     return
                 else:
                     checkpoint = 27
 
-
-            # After trials pieces
-            elif checkpoint == 34:  # Night, talk to Yuna and Wakka
-                FFXC.set_movement(-1, -1)
-                memory.main.await_event()
-                FFXC.set_neutral()
-
-                memory.main.click_to_diag_progress(47)  # Wakka, "She's cute, ya?"
-                while memory.main.shop_menu_dialogue_row() != 1:
-                    xbox.tap_down()
-                xbox.tap_b()
-                checkpoint += 1
-            elif checkpoint == 36:  # Sleep tight
-                memory.main.click_to_event_temple(3)
-                checkpoint += 1
-            elif checkpoint > 15 and checkpoint < 37 and memory.main.get_map() == 252:
-                checkpoint = 37
-            elif checkpoint == 39:  # Dream about girls
-                memory.main.click_to_event_temple(7)
-                checkpoint += 1
-
             # General pathing
             elif pathing.set_movement(BesaidTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+                if checkpoint in [70,71,72]:
+                    memory.main.check_near_actors(False)
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
 
+    logger.debug("Besaid Trials complete. Let's go meet the summoner!")
+    while memory.main.get_map() != 252:
+        if memory.main.user_control():
+            if memory.main.get_map() == 100:
+                night_scene()
+                checkpoint = 35
+            
+            # General pathing
+            if pathing.set_movement(BesaidTrials.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
             elif checkpoint == 32 and memory.main.menu_open():
                 # Name for Valefor
+                logger.debug("Waiting for Valefor naming screen.")
                 xbox.name_aeon("Valefor")
                 checkpoint += 1  # To the night scene
+                logger.debug(f"Checkpoint {checkpoint}")
 
             # map changes
             elif checkpoint < 29 and memory.main.get_map() == 83:
                 checkpoint = 29
 
+    
+    logger.debug("Mark - start of dream sequence")
+    memory.main.await_control()
+    while not pathing.set_movement([336,73]):
+        pass
+    while not pathing.set_movement([341,110]):
+        pass
+    while memory.main.user_control():
+        FFXC.set_movement(0,1)
+    FFXC.set_neutral()
+    if not game_vars.story_mode():
+        memory.main.click_to_control()
+
 
 def leaving(checkpoint = 17):
     logger.info("Ready to leave Besaid")
+    if game_vars.story_mode():
+        checkpoint = 0
+        memory.main.await_control()
     memory.main.click_to_control()
     while not pathing.set_movement([0, 23]):
         pass
@@ -302,19 +389,24 @@ def leaving(checkpoint = 17):
                 FFXC.set_neutral()
                 checkpoint += 1
             elif checkpoint == 24:  # Hilltop
-                memory.main.click_to_event_temple(2)
+                FFXC.set_movement(1,0)
+                memory.main.await_event()
+                FFXC.set_neutral()
+                if game_vars.story_mode():
+                    memory.main.await_control()
+                    pathing.approach_coords([5,-47],quick_return=True)
+                    FFXC.set_neutral()
+                    memory.main.wait_seconds(21)
+                    xbox.tap_confirm()
+                    memory.main.await_control()
+                else:
+                    memory.main.click_to_control()
                 logger.debug(f"Ready for SS Liki menu: {game_vars.early_tidus_grid()}")
                 if memory.main.get_tidus_slvl() >= 3:
                     menu.liki()
                     game_vars.early_tidus_grid_set_true()
-                logs.write_rng_track("###########################")
-                logs.write_rng_track("Pre-Kimahri array")
-                logs.write_rng_track(memory.main.rng_10_array(array_len=1))
                 checkpoint += 1
             elif checkpoint in [59]:  # Beach, save sphere
-                logs.write_rng_track("###########################")
-                logs.write_rng_track("Pre-Sin array")
-                logs.write_rng_track(memory.main.rng_10_array(array_len=1))
                 checkpoint += 1
             elif checkpoint in [60]:  # Beach, save sphere
                 # here
@@ -323,7 +415,7 @@ def leaving(checkpoint = 17):
             elif checkpoint == 65 and not gil_guy:
                 pathing.approach_actor_by_index(13)
                 gil_guy = True
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
             elif checkpoint == 70:
                 checkpoint -= 2
 
@@ -333,7 +425,7 @@ def leaving(checkpoint = 17):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 xbox.skip_scene(fast_mode=True)
@@ -345,16 +437,16 @@ def leaving(checkpoint = 17):
             # Valefor summon tutorial
             elif (
                 checkpoint in [31, 32, 33, 34, 35, 36, 37, 38]
-                and screen.battle_screen()
+                and memory.main.battle_active()
             ):
                 battle.boss.summon_tutorial()
                 logger.info("Now to open the menu")
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Yuna, Lulu)
                 checkpoint += 1
             elif checkpoint == 39 and screen.battle_screen():  # Dark Attack tutorial
                 battle.boss.dark_attack_tutorial()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Wakka, Lulu)
                 checkpoint += 1
             # One forced battle on the way out of Besaid

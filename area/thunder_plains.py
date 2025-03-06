@@ -11,6 +11,7 @@ import screen
 import vars
 import xbox
 import save_sphere
+from json_ai_files.write_seed import write_big_text
 from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 from players import Auron, Tidus, Wakka
 
@@ -21,7 +22,9 @@ FFXC = xbox.controller_handle()
 
 
 def south_pathing():
-    memory.main.click_to_control()
+    if game_vars.story_mode():
+        memory.main.wait_seconds(62)
+    memory.main.click_to_control_3()
     next_enc_dist = memory.main.distance_to_encounter()
     #next_enc_dist = 380  # Testing only
     logger.warning(f"Next encounter distance: {next_enc_dist}")
@@ -45,6 +48,7 @@ def south_pathing():
                         if checkpoint == 34:
                             count50 += 1
                             pbar.update(1)
+                            write_big_text(f"Dodging {count50}/50")
                     elif checkpoint == 2 and game_vars.nemesis():
                         checkpoint = 20
                     elif checkpoint == 3 and not save_touched:
@@ -82,19 +86,23 @@ def south_pathing():
                             FFXC.set_neutral()
                     elif checkpoint == 39:  # Back to the normal path
                         checkpoint = 10
+                        write_big_text("")
 
                     # General pathing
                     elif memory.main.user_control():
                         if pathing.set_movement(ThunderPlainsSouth.execute(checkpoint)):
                             checkpoint += 1
                             logger.debug(f"Checkpoint {checkpoint}")
+                            if checkpoint == 34:
+                                write_big_text("Dodging 0/50")
                 else:
                     FFXC.set_neutral()
                     if (
                         memory.main.diag_skip_possible()
                         and not memory.main.battle_active()
+                        and not game_vars.story_mode()
                     ):
-                        xbox.menu_b()
+                        xbox.tap_confirm()
                     elif memory.main.battle_active():
                         result = battle.main.thunder_plains(
                             1, battle_count=battle_count
@@ -107,15 +115,16 @@ def south_pathing():
                         return 999
 
     memory.main.await_control()
+    logger.warning("Outside agency")
     while not pathing.set_movement([-73, 14]):
-        if memory.main.diag_skip_possible():
+        if memory.main.diag_skip_possible() and not game_vars.story_mode():
             xbox.menu_b()
     while not pathing.set_movement([-83, 29]):
-        if memory.main.diag_skip_possible():
+        if memory.main.diag_skip_possible() and not game_vars.story_mode():
             xbox.menu_b()
     while not memory.main.get_map() == 263:
         FFXC.set_movement(-1, 1)
-        if memory.main.diag_skip_possible():
+        if memory.main.diag_skip_possible() and not game_vars.story_mode():
             xbox.menu_b()
     FFXC.set_neutral()
     # menu.auto_sort_equipment()
@@ -136,7 +145,11 @@ def agency_shop():
     # Don't panic if we have more grenades than expected.
     if total_grenades_needed < 0:
         total_grenades_needed = 0
-    memory.main.click_to_diag_progress(92)
+    if game_vars.story_mode():
+        memory.main.wait_seconds(1)
+        xbox.tap_confirm()
+    else:
+        memory.main.click_to_diag_progress(92)
     while memory.main.shop_menu_dialogue_row() != 2:
         xbox.tap_down()  # Select "Got any items?"
     while not memory.main.item_shop_menu() == 7:
@@ -232,7 +245,7 @@ def agency_shop_part_2():  # We'll grab Auron's weapon from O'aka, Macalania Woo
 def agency():
     logger.info("Arriving at travel agency")
     # Arrive at the travel agency
-    memory.main.click_to_control_3()
+    memory.main.click_to_control()
     checkpoint = 0
 
     while memory.main.get_map() != 162:
@@ -250,7 +263,7 @@ def agency():
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 7:
                 if not game_vars.csr():
@@ -263,11 +276,12 @@ def agency():
                     logger.debug(memory.main.affection_array())
                 checkpoint += 1
             elif checkpoint == 8:
-                while not memory.main.get_map() == 256:
+                while memory.main.user_control():
                     pathing.set_movement([3, -52])
                     xbox.tap_b()
+                FFXC.set_neutral()
                 memory.main.click_to_control()
-                if game_vars.nemesis():# or not game_vars.get_blitz_win():
+                if game_vars.nemesis():
                     # Back in and out to spawn the chest
                     FFXC.set_movement(-1, 1)
                     while memory.main.get_map() != 263:
@@ -282,7 +296,7 @@ def agency():
                 checkpoint += 1
             elif (
                 checkpoint == 9
-                and game_vars.nemesis()# or not game_vars.get_blitz_win())
+                and game_vars.nemesis()
                 and str_count < 3
             ):
                 pathing.set_movement([-73, 45])
@@ -297,8 +311,10 @@ def agency():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif checkpoint in [9,11]:
+                xbox.tap_confirm()
 
 
 def north_pathing(battle_count: int):
@@ -328,9 +344,9 @@ def north_pathing(battle_count: int):
                     logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible() and not memory.main.battle_active():
+            if memory.main.diag_skip_possible() and not memory.main.battle_active() and not game_vars.story_mode():
                 xbox.menu_b()
-            if screen.battle_screen():
+            if memory.main.battle_active():
                 result = battle.main.thunder_plains(1, battle_count=battle_count)
                 if not result:
                     return False
@@ -343,7 +359,7 @@ def north_pathing(battle_count: int):
     FFXC.set_neutral()
     memory.main.await_control()
     logger.info("Thunder Plains North complete. Moving to the Macalania save sphere.")
-    if not game_vars.csr():
+    if not game_vars.csr() and not game_vars.story_mode():
         FFXC.set_movement(0, 1)
         xbox.skip_dialog(6)
         FFXC.set_neutral()

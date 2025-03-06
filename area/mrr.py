@@ -28,10 +28,12 @@ def arrival():
     checkpoint = 0
     while memory.main.get_map() != 92:
         if memory.main.user_control():
-            if game_vars.csr() and checkpoint == 1:
+            if checkpoint == 1 and (game_vars.story_mode() or game_vars.csr()):
                 logger.debug("CSR, skipping forward")
                 checkpoint = 4
                 logger.debug(f"Checkpoint {checkpoint}")
+            elif checkpoint == 6 and game_vars.story_mode():
+                checkpoint = 7
             elif checkpoint == 6 and not game_vars.csr():
                 return 1  # Indicates we are attempting Terra skip.
                 '''
@@ -80,7 +82,7 @@ def arrival():
                 memory.main.click_to_control()
                 FFXC.set_neutral()
                 memory.main.wait_frames(3)
-                game_vars.mrr_skip_set(1)
+                #game_vars.mrr_skip_set(1)
                 return 1
                 checkpoint += 1
             elif pathing.set_movement(MRRStart.execute(checkpoint)):
@@ -92,31 +94,18 @@ def arrival():
                 battle.main.flee_all()
                 if memory.main.game_over():
                     return 999
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 if memory.main.get_hp()[0] < 520:
                     battle.main.heal_up(full_menu_close=False)
                 elif 1 in memory.main.ambushes():
                     battle.main.heal_up(full_menu_close=False)
                 memory.main.update_formation(Tidus, Wakka, Auron)
                 memory.main.close_menu()
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
     FFXC.set_neutral()
-    '''
-    if game_vars.csr():
-        # Logic for Terra Skip. Moved to area.mrr_skip file
-        memory.main.await_control()
-        FFXC.set_movement(1, -1)
-        memory.main.await_event()
-        FFXC.set_neutral()
-        memory.main.await_control()
-        skip_prep()
-        attempt_skip()
-        advance_to_aftermath()
-        game_vars.mrr_skip_set(True)
-        return True
-    logger.info("Done with prelim MRR area, now for the real deal.")
-    '''
     return 1
 
 
@@ -135,6 +124,8 @@ def main_path():
     last_gil_value = 0
     checkpoint = 0
     battle_count = 0
+    yuna_levels = 11
+    wakka_stage = 0
     while memory.main.get_map() != 119:
         if status[0] == 1 and status[1] == 1 and status[2] == 0:
             status[2] = 2  # No need to do Valefor's overdrive and recharge.
@@ -148,7 +139,11 @@ def main_path():
                 checkpoint += 1
             elif checkpoint == 4:
                 logger.info("Up the first lift")
-                xbox.skip_dialog(1)
+                FFXC.set_neutral()
+                xbox.tap_confirm()
+                xbox.tap_confirm()
+                xbox.tap_confirm()
+                xbox.tap_confirm()
                 checkpoint += 1
             elif checkpoint == 45:
                 if status[0] == 0 or status[1] == 0 or status[2] != 2:
@@ -161,7 +156,10 @@ def main_path():
             elif checkpoint == 46:
                 logger.info("Up the second lift.")
                 FFXC.set_neutral()
-                xbox.skip_dialog(1)
+                xbox.tap_confirm()
+                xbox.tap_confirm()
+                xbox.tap_confirm()
+                xbox.tap_confirm()
                 checkpoint += 1
                 logger.debug(f"Lift Checkpoint {checkpoint}")
             elif checkpoint == 48:  # X-potion for safety
@@ -186,10 +184,12 @@ def main_path():
                 logger.info("Up the third lift")
                 while memory.main.user_control():
                     pathing.set_movement([29, 227])
-                    xbox.tap_b()
+                    xbox.tap_confirm()
                 checkpoint += 1
             elif checkpoint == 66:
-                xbox.skip_dialog(1)
+                FFXC.set_neutral()
+                while memory.main.user_control():
+                    xbox.tap_confirm()
                 logger.info("Up the final lift")
                 log_mrr_kimahri_crit_chance()
                 checkpoint += 1
@@ -226,7 +226,6 @@ def main_path():
                 logger.info("Starting battle MRR")
                 if checkpoint < 47:
                     status = battle.main.mrr_battle(status)
-                    logger.debug(f"Status update: {status}")
                     status[3] += 1
                 else:
                     if battle.main.mrr_manip(kim_max_advance=9):
@@ -235,18 +234,45 @@ def main_path():
                 if memory.main.get_yuna_slvl() >= 8 and status[4] == 0:
                     logger.info("Yuna has enough levels now. Going to do her grid.")
                     menu.mrr_grid_yuna()
+                    yuna_levels -= 8
                     logger.info("Yunas gridding is complete for now.")
                     status[4] = 1
-                if memory.main.get_slvl_wakka() >= 7:
-                    menu.mrr_grid_2()
+                if game_vars.story_mode():
+                    if memory.main.get_slvl_wakka() >= 6 and wakka_stage == 0:
+                        menu.mrr_grid_1()
+                        wakka_stage += 1
+                    elif memory.main.get_slvl_wakka() >= 3 and wakka_stage == 1:
+                        menu.mrr_grid_2()
+                        wakka_stage += 1
+                else:
+                    if memory.main.get_slvl_wakka() >= 7:
+                        menu.mrr_grid_2()
                 memory.main.close_menu()
                 logger.info("MRR battle complete")
+
+                # Check on sphere levels for our two heroes
+                if status[0] == 0:
+                    if memory.main.get_slvl_yuna() >= yuna_levels:
+                        status[0] = 1
+                if status[1] == 0:
+                    if memory.main.get_slvl_kim() >= 6:  # Check this later, might need 8.
+                        status[1] = 1
+                if status[5] == 2:  # Last phase is to level Yuna and Kimahri
+                    # Both Yuna and Kimahri have levels, good to go.
+                    if status[0] == 1 and status[1] == 1:
+                        status[5] = 3
+                
+                logger.warning(f"Status check: {status}")
                 log_mrr_kimahri_crit_chance()
                 battle_count += 1
             elif memory.main.menu_open():
                 xbox.tap_b()
-            elif memory.main.diag_skip_possible():
-                memory.main.click_to_control_3()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and checkpoint in [54,55,56]:
+                xbox.tap_confirm()
 
             # Map changes
             elif checkpoint < 47 and memory.main.get_map() == 128:
@@ -279,16 +305,23 @@ def battle_site():
     checkpoint = 4
     while checkpoint < 99:
         if memory.main.user_control():
-            if checkpoint == 5:
+            if checkpoint in [4,5]:
                 logger.info("O'aka menu section")
-                while memory.main.user_control():
-                    pathing.set_movement([-45, 3425])
-                    xbox.tap_b()
-                FFXC.set_neutral()
+                menu.battle_site_equip_sort()
+                memory.main.check_near_actors(max_dist=2000)
+                pathing.approach_actor_by_id(8410)
+                #while memory.main.user_control():
+                #    pathing.set_movement([-45, 3425])
+                #    xbox.tap_b()
+                #FFXC.set_neutral()
                 menu.battle_site_oaka_1()
                 menu.battle_site_oaka_2()
+                FFXC.set_movement(0,-1)
+                memory.main.wait_frames(15)
+                FFXC.set_neutral()
+                menu.battle_site_equip_sort()
                 log_mrr_kimahri_crit_chance()
-                checkpoint += 1
+                checkpoint = 6
             elif checkpoint == 8:
                 save_sphere.touch_and_go()
                 log_mrr_kimahri_crit_chance()
@@ -313,13 +346,13 @@ def battle_site():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
     battle.boss.gui()
 
 
 def aftermath():
-    memory.main.click_to_control_dumb()
+    memory.main.click_to_control()
     checkpoint = 0
     while memory.main.get_map() != 93:
         if memory.main.user_control():
@@ -342,4 +375,4 @@ def aftermath():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            memory.main.click_to_control_3()
+            memory.main.click_to_control()

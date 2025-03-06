@@ -50,12 +50,15 @@ def await_turn():
     with tqdm(bar_format=fmt) as pbar:
         while not (battle_screen() or memory.main.user_control()):
             pbar.update()
+            if memory.main.battle_wrap_up_active():
+                return False
             if not memory.main.battle_active():
                 pass
             if memory.main.game_over():
                 return False
         while not memory.main.main_battle_menu():
-            pass
+            if memory.main.battle_wrap_up_active():
+                return False
     return True
 
 

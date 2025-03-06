@@ -62,6 +62,8 @@ def arrival():
     logger.info("Waiting for Yuna/Tidus to stop laughing.")
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
+    if not game_vars.story_mode():
+        game_vars.self_destruct_learned()
     logger.info("Now onward to scenes and Mi'ihen skip. Good luck!")
     miihen_skip = False
     battle_count = 0
@@ -71,7 +73,7 @@ def arrival():
         if memory.main.user_control():
             # Miihen skip attempt
             if checkpoint > 3 and checkpoint < 11:
-                if game_vars.csr():
+                if game_vars.csr() or game_vars.story_mode():
                     # Only run this branch if CSR is online.
                     tidus_coords = memory.main.get_coords()
                     hunter_coords = memory.main.miihen_guy_coords()
@@ -179,6 +181,7 @@ def arrival():
                             except Exception:
                                 miihen_skip = False
                             logger.debug(f"Skip successful: {miihen_skip}")
+                            
                             checkpoint += 1
                     elif pathing.set_movement(Miihen1.execute(checkpoint)):
                         checkpoint += 1
@@ -202,20 +205,22 @@ def arrival():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                logger.debug("Miihen battle check")
-                if checkpoint < 4:  # Tutorial battle with Auron
-                    while memory.main.battle_active():
+                logger.debug(f"Miihen battle check: {memory.main.get_encounter_id()}")
+                if memory.main.get_encounter_id() == 57:  # Tutorial battle with Auron
+                    while not memory.main.battle_wrap_up_active():
                         if memory.main.turn_ready():
                             Tidus.attack()
+                        elif not game_vars.story_mode():
+                            xbox.tap_confirm()
                     FFXC.set_movement(0, 1)
                     while not memory.main.user_control():
-                        xbox.tap_b()
+                        xbox.tap_confirm()
                     post_battle_logic()
                     FFXC.set_neutral()
-                elif checkpoint == 25 and not memory.main.battle_active():
-                    # Shelinda dialog
-                    FFXC.set_neutral()
-                    xbox.tap_b()
+                #elif checkpoint == 25 and not memory.main.battle_active():
+                #    # Shelinda dialog
+                #    FFXC.set_neutral()
+                #    xbox.tap_b()
                 else:
                     FFXC.set_neutral()
                     logger.debug("Starting battle")
@@ -237,7 +242,7 @@ def arrival():
                 #    character=3, char_luck=18, enemy_luck=15
                 #)
                 #logger.debug(f"Next Kimahri crit: {next_crit_kim}")
-            elif memory.main.game_over():
+            elif memory.main.game_over() and checkpoint >= 4:
                 logger.warning("Game-over state identified in Miihen via ambush.")
                 seed_str = str(memory.main.rng_seed())
                 avina_memory.add_battle_to_memory(
@@ -253,11 +258,13 @@ def arrival():
                     memory.main.wait_frames(2)
                     FFXC.release_confirm()
                     memory.main.wait_frames(3)
-                elif memory.main.diag_skip_possible():
+                elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                     FFXC.set_confirm()
                     memory.main.wait_frames(2)
                     FFXC.release_confirm()
                     memory.main.wait_frames(3)
+                elif memory.main.diag_progress_flag() == 79:
+                    xbox.tap_confirm()
     logger.debug(f"Mi'ihen skip status: {miihen_skip}")
     return [game_vars.self_destruct_get(), battle_count, True, miihen_skip]
 
@@ -285,28 +292,32 @@ def arrival_2(self_destruct, battle_count):
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
+            if memory.main.battle_active():
                 battle_count += 1
-                if (
-                    checkpoint == 27 and not memory.main.battle_active()
-                ):  # Shelinda dialog
-                    xbox.tap_b()
-                else:
-                    logger.debug("Starting battle")
-                    battle.main.miihen_road()
-                    if memory.main.game_over():
-                        seed_str = str(memory.main.rng_seed())
-                        avina_memory.add_battle_to_memory(
-                            seed=seed_str,
-                            area="highroad_heals",
-                            battle_num=battle_count - 1,
-                        )
-                        return [False, 0, False, False]
-                    logger.debug("Battle complete")
-                    post_battle_logic()
+                logger.debug("Starting battle")
+                battle.main.miihen_road()
+                if memory.main.game_over():
+                    seed_str = str(memory.main.rng_seed())
+                    avina_memory.add_battle_to_memory(
+                        seed=seed_str,
+                        area="highroad_heals",
+                        battle_num=battle_count - 1,
+                    )
+                    return [False, 0, False, False]
+                logger.debug("Battle complete")
+                post_battle_logic()
+            elif memory.main.game_over():
+                logger.warning("Game-over state identified in Miihen via ambush.")
+                seed_str = str(memory.main.rng_seed())
+                avina_memory.add_battle_to_memory(
+                    seed=seed_str,
+                    area="highroad_heals",
+                    battle_num=battle_count - 1,
+                )
+                return [False, 0, False, False]
             elif memory.main.menu_open():
                 xbox.tap_b()
-            elif memory.main.diag_skip_possible():  # Exclude during the Miihen skip.
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():  # Exclude during the Miihen skip.
                 if checkpoint < 6 or checkpoint > 12:
                     xbox.tap_b()
 
@@ -322,6 +333,7 @@ def arrival_2(self_destruct, battle_count):
 
 def mid_point():
     checkpoint = 0
+    story_mode_phase = 0
     while memory.main.get_map() != 115:
         if memory.main.user_control():
             if memory.main.get_map() == 58:
@@ -341,13 +353,29 @@ def mid_point():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
-                xbox.tap_b()
-            elif memory.main.battle_active():
-                FFXC.set_neutral()
+            if memory.main.battle_active():
                 logger.info("Mi'ihen - ready for Chocobo Eater")
                 battle.boss.chocobo_eater()
                 logger.info("Mi'ihen - Chocobo Eater complete")
+            elif game_vars.story_mode():
+                if memory.main.get_story_progress() == 760:
+                    logger.debug(f"Story check: {story_mode_phase} | {memory.main.get_story_progress()}")
+                    while not memory.main.user_control():
+                        xbox.tap_confirm()
+                elif memory.main.get_story_progress() == 762:
+                    logger.debug(f"Story check: {story_mode_phase} | {memory.main.get_story_progress()}")
+                    if story_mode_phase == 0:
+                        memory.main.wait_seconds(56)
+                        for i in range(4):
+                            xbox.tap_confirm()
+                            memory.main.wait_seconds(2)
+                        memory.main.wait_seconds(24)
+                        xbox.tap_confirm()
+                        memory.main.click_to_control()
+                    story_mode_phase += 1
+
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
 
 
 # Starts just after the save sphere.
@@ -369,7 +397,7 @@ def low_road(self_destruct, battle_count):
                 memory.main.await_event()
                 FFXC.set_neutral()
                 memory.main.wait_frames(30 * 0.2)
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 FFXC.set_movement(0, -1)
                 memory.main.wait_frames(10)
                 memory.main.await_event()
@@ -409,7 +437,7 @@ def low_road(self_destruct, battle_count):
                 post_battle_logic(battle_num=battle_count)
             elif memory.main.menu_open():
                 xbox.tap_b()
-            elif memory.main.diag_skip_possible():
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 if checkpoint < 6 or checkpoint > 12:
                     xbox.tap_b()
     # logs.write_stats('Miihen encounters:')

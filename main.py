@@ -51,6 +51,7 @@ from gamestate import game
 from image_to_text import maybe_show_image
 from json_ai_files.write_seed_results import add_to_seed_results, check_ml_heals
 from json_ai_files.update_leaderboard import new_leaderboard
+from json_ai_files.write_seed import write_big_text, current_big_text
 
 import manip_planning.rng
 import manip_planning.ammes
@@ -80,6 +81,9 @@ def configuration_setup():
     parser.add_argument("-step")
     parser.add_argument("-train_blitz")
     parser.add_argument("-godrng")
+    parser.add_argument("-story")
+    parser.add_argument("-classic")
+    parser.add_argument("-nemesis")
     args = parser.parse_args()
 
     global truerng
@@ -112,7 +116,21 @@ def configuration_setup():
         game_length = "Seed set via Twitch chat"
     if args.godrng is not None:
         game_vars.activate_god_rng()
-    elif game.state != "none":  # Loading a save file, no RNG manip here
+    logger.warning(f"Story Mode check: {args.story}")
+    if args.classic == "True":
+        logger.warning("Running classic speed run! (No CSR)")
+    elif args.story == "True":
+        logger.warning("Running in story mode!!!")
+        game_vars.activate_story_mode()
+    elif args.nemesis == "True":
+        logger.warning("Running Nemesis mode.")
+        write_big_text("New game, Nemesis run")
+        game_vars.nemesis_set(True)
+    else:
+        logger.warning("Running a regular CSR speed run.")
+        write_big_text("New game, CSR speedrun")
+    if game.state != "none":  # Loading a save file, no RNG manip here
+        write_big_text(current_big_text().replace("New game", "Load game"))
         game_vars.rng_seed_num_set(256)
         game_length = "Loading mid point for testing."
     elif game_vars.rng_mode() == "set":
@@ -136,14 +154,17 @@ def configuration_setup():
 
 
 def set_confirm_button():
+    last_big_text = current_big_text()
+    write_big_text("Checking controls")
     logger.manip("Now checking control scheme. Stand by.")
     game_vars = vars.vars_handle()
-    while memory.main.get_map() != 23:
-        logger.warning("Cannot check confirm button. Wrong map is active.")
-        memory.main.wait_frames(10)
 
     last_click = "none"
     while not memory.main.save_menu_open():
+        if memory.main.get_map() in [348, 349]:
+            logger.debug("Skip idle screen (B)")
+            xbox.tap_start()
+            xbox.tap_back()
         if memory.main.save_menu_cursor() != 1:
             xbox.tap_down()
         elif last_click == "back":
@@ -152,7 +173,7 @@ def set_confirm_button():
         else:
             last_click = "back"
             xbox.tap_back()
-        memory.main.wait_frames(90)
+        memory.main.wait_frames(150)
     
     if last_click == "back":
         logger.warning(f"Check: {game_vars.get_invert_confirm()}")
@@ -162,10 +183,11 @@ def set_confirm_button():
     else:
         logger.warning("B is confirm. Controls set correctly. No TAS change.")
     
-    memory.main.wait_frames(90)
-    xbox.tap_back()
-    xbox.tap_back()
-    xbox.tap_back()
+    while memory.main.save_menu_open():
+        xbox.menu_a()
+        xbox.menu_a()
+        xbox.menu_a()
+    write_big_text(last_big_text)
     
 
 
@@ -206,9 +228,11 @@ def load_game_state():
     write_state_step(state=game.state, step=game.step)
     load_game.load_into_game(gamestate=game.state, step_counter=game.step)
     game.start_time = logs.time_stamp()
+    write_big_text("")
 
 
 def maybe_create_save(save_num: int):
+    FFXC.set_neutral()
     memory.main.await_control()
     memory.main.wait_frames(6)
     game_vars = vars.vars_handle()
@@ -221,7 +245,7 @@ def maybe_create_save(save_num: int):
 def perform_TAS():
     # Force looping on Blitzball only.
     if game.state == "Luca" and game.step == 3:
-        only_play_blitz = True
+        only_play_blitz = False  # Normally this would be True, but something bugged.
         logger.warning("Who's ready to play some Blitzball?")
     else:
         only_play_blitz = False
@@ -239,6 +263,9 @@ def perform_TAS():
 
     while game.state != "End":
         try:
+            strats = manip_planning.baaj_to_tros.plan_manips(klikk_steals=0)
+            klikk_steals, tanker_sinscale_kill = manip_planning.baaj_to_tros.plan_klikk_steals()
+            # If not starting from dream zan, must first initialize strats variable.
             if game_vars.rng_seed_num() > 256:
                 game.state = "End"
 
@@ -246,22 +273,27 @@ def perform_TAS():
             if game.state == "none" and game.step == 1:
                 from json_ai_files.write_seed import write_new_game
 
-                write_new_game()
+                write_new_game(game_vars.rng_seed_num())
                 game_vars.set_csr(True)
-                try:
-                    results_mod, use_heals = check_ml_heals(seed_num=game_vars.rng_seed_num())
-                    logger.warning(f"Response check: {results_mod}, {use_heals}")
-
-                    if use_heals:
-                        game_vars.set_ml_heals(True)
-                        logger.warning("Setting to use aVIna heal method!")
-                    else:
-                        game_vars.set_ml_heals(False)
-                        logger.warning("No aVIna heal method. Set to heal always.")
-                except Exception as e:
-                    logger.warning(f"Response check 2: {e}")
+                if game_vars.story_mode():
                     game_vars.set_ml_heals(False)
-                    results_mod = "standard"
+                    results_mod = "story"
+                    use_heals = False
+                else:
+                    try:
+                        results_mod, use_heals = check_ml_heals(seed_num=game_vars.rng_seed_num())
+                        logger.warning(f"Response check: {results_mod}, {use_heals}")
+
+                        if use_heals:
+                            game_vars.set_ml_heals(True)
+                            logger.warning("Setting to use aVIna heal method!")
+                        else:
+                            game_vars.set_ml_heals(False)
+                            logger.warning("No aVIna heal method. Set to heal always.")
+                    except Exception as e:
+                        logger.warning(f"Response check 2: {e}")
+                        game_vars.set_ml_heals(False)
+                        results_mod = "standard"
                 logger.warning(f"Response check 3: {results_mod}, {use_heals}")
                 game_vars.set_run_modifier(results_mod)
                 logger.warning(f"Run modifier: {game_vars.run_modifier()}")
@@ -390,12 +422,12 @@ def perform_TAS():
                 if game.step == 1:
                     area.besaid.beach(lagoon_strats=strats["lagoon_strats"])
                     game.step = 2
-                    # maybe_create_save(save_num=22)
+                    #maybe_create_save(save_num=22)
 
                 if game.step == 2:
                     area.besaid.trials()
                     game.step = 3
-                    maybe_create_save(save_num=79)
+                    maybe_create_save(save_num=22)
 
                 if game.step == 3:
                     kim_success = area.besaid.leaving()
@@ -438,9 +470,12 @@ def perform_TAS():
                 game.state = "Boat3"
 
             if game.state == "Boat3":
-                area.boats.ss_winno_2()
+                if game_vars.story_mode():
+                    area.boats.ss_winno_2_story()
+                else:
+                    area.boats.ss_winno_2()
                 game.state = "Luca"
-                maybe_create_save(save_num=81)
+                maybe_create_save(save_num=24)
 
             if game.state == "Luca":
                 if game.step == 1:
@@ -454,7 +489,7 @@ def perform_TAS():
                     logs.write_stats("Pre Blitz time:")
                     logs.write_stats(total_time)
                     game.step = 3
-                    maybe_create_save(save_num=24)
+                    maybe_create_save(save_num=25)
 
                 if game.step == 3:
                     area.luca.blitz_start()
@@ -513,7 +548,7 @@ def perform_TAS():
                     area.luca.after_blitz()
                     game.step = 1
                     game.state = "Miihen"
-                    maybe_create_save(save_num=25)
+                    maybe_create_save(save_num=26)
 
             # Just to make sure we set this variable somewhere.
             if game.state == "Miihen":
@@ -535,7 +570,7 @@ def perform_TAS():
                         area.miihen.mid_point()
                         logger.info("End of Mi'ihen mid point section.")
                         game.step = 3
-                        maybe_create_save(save_num=26)
+                        maybe_create_save(save_num=27)
 
                 if game.step == 3:
                     return_val = area.miihen.low_road(return_array[0], return_array[1])
@@ -556,8 +591,11 @@ def perform_TAS():
             if game.state == "MRR":
                 if game.step == 1:
                     if area.mrr.arrival() == 1:  # Perform section before Terra skip attempt.
-                        game_vars.mrr_skip_set(True)
-                        if not game_vars.csr():
+                        if game_vars.story_mode():
+                            game.step = 12
+                            game_vars.mrr_skip_set(False)
+                        elif not game_vars.csr():
+                            game_vars.mrr_skip_set(True)
                             #skip_prep()
                             if attempt_skip():  # i.e. if this step is successful
                                 if advance_to_aftermath():  # i.e. if this step is successful
@@ -569,6 +607,7 @@ def perform_TAS():
                                     # Do not change game.state or game.step. Will restart this section.
                         
                         else:
+                            game_vars.mrr_skip_set(True)
                             game.step = 2
                     else:
                         reset.reset_to_main_menu()
@@ -606,8 +645,8 @@ def perform_TAS():
                     area.mrr.main_path()
                     if memory.main.game_over():
                         game.state = "game_over_error"
-                    game.step = 3
-                    maybe_create_save(save_num=88)
+                    game.step = 13
+                    maybe_create_save(save_num=28)
 
                 if game.step == 13:
                     # Formerly step 3, this was the entire battle site logic.
@@ -623,7 +662,7 @@ def perform_TAS():
                     logs.write_stats(total_time)
                     game.state = "Djose"
                     game.step = 1
-                    maybe_create_save(save_num=28)
+                    maybe_create_save(save_num=29)
 
             if game.state == "Djose":
                 if game.step == 1:
@@ -637,7 +676,7 @@ def perform_TAS():
                     if game_vars.create_saves():
                         while not pathing.set_movement([66, -227]):
                             pass
-                        maybe_create_save(save_num=29)
+                        maybe_create_save(save_num=30)
 
                 if game.step == 3:
                     area.djose.leaving_djose()
@@ -649,18 +688,20 @@ def perform_TAS():
                     area.moonflow.arrival()
                     area.moonflow.south_bank()
                     game.step = 2
-                    maybe_create_save(save_num=30)
+                    maybe_create_save(save_num=31)
 
                 if game.step == 2:
                     area.moonflow.north_bank()
                     game.step = 1
                     game.state = "Guadosalam"
                     if game_vars.create_saves():
+                        logger.warning("Special logic to save the game in Guadosalam!")
+                        memory.main.click_to_control_3()
                         while memory.main.get_map() != 243:
                             FFXC.set_movement(1, 1)
                         FFXC.set_neutral()
                         memory.main.await_control()
-                        maybe_create_save(save_num=31)
+                        maybe_create_save(save_num=32)
                         while memory.main.get_map() != 135:
                             FFXC.set_movement(1, -1)
                         FFXC.set_neutral()
@@ -672,7 +713,6 @@ def perform_TAS():
                     area.guadosalam.arrival()
                     area.guadosalam.after_speech()
                     game.step = 2
-                    # maybe_create_save(save_num=32)
 
                 if game.step == 2:
                     area.guadosalam.guado_skip()
@@ -830,7 +870,10 @@ def perform_TAS():
                         game.step = 10
                     else:
                         game.step = 1
+                    game.step = 1
                     if game_vars.create_saves():
+                        maybe_create_save(save_num=44)
+                        '''
                         FFXC.set_movement(0, -1)
                         memory.main.await_event()
                         FFXC.set_neutral()
@@ -839,11 +882,16 @@ def perform_TAS():
                         FFXC.set_movement(1, 1)
                         memory.main.await_event()
                         FFXC.set_neutral()
+                        '''
 
             # Gagazet section
             if game.state == "Gagazet":
                 if game.step == 1:
                     area.gagazet.calm_lands()
+                    if game_vars.nemesis():
+                            nemesis.changes.arena_npc()
+                            nemesis.changes.arena_purchase()
+                            area.gagazet.calm_lands(checkpoint=9)
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
@@ -895,7 +943,7 @@ def perform_TAS():
                     # Must be created manually.
 
                 if game.step == 4:
-                    area.gagazet.gagazet_gates()
+                    area.gagazet.gagazet_climb()
                     area.gagazet.flux()
                     game.step = 5
                     maybe_create_save(save_num=46)
@@ -910,6 +958,15 @@ def perform_TAS():
                     game.step = 1
                     game.state = "Zanarkand"
                     maybe_create_save(save_num=47)
+                
+                if game.step == 10:
+                    nemesis.changes.calm_lands_1()
+                    success,direct = rng_track.final_nea_check()
+                    _,indirect = rng_track.final_nea_check(with_ronso=True)
+                    if success and direct <= indirect:
+                        game.step = 2
+                    else:
+                        game.step = 3
 
             # Zanarkand section
             if game.state == "Zanarkand":
@@ -927,9 +984,9 @@ def perform_TAS():
 
                 if game.step == 4:
                     if area.zanarkand.sanctuary_keeper():
+                        area.zanarkand.yunalesca_prep()
                         game.step = 5
                         maybe_create_save(save_num=48)
-                        area.zanarkand.yunalesca_prep()
                     else:
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
@@ -1030,6 +1087,7 @@ def perform_TAS():
             # Nemesis farming section
             if game.state == "Nem_Farm":
                 if game.step == 1:
+                    #nemesis.arena_prep.Macalania_pass(approach="family")  # Performed later.
                     nemesis.arena_prep.transition()
                     nemesis.arena_prep.unlock_omega()
                     while not nemesis.arena_prep.t_plains(cap_num=1):
@@ -1084,6 +1142,7 @@ def perform_TAS():
                 if game.step == 9:
                     nemesis.arena_prep.kilika_money()
                     nemesis.arena_prep.arena_return()
+                    nemesis.arena_prep.lv1_bribe()
                     nemesis.arena_prep.quick_levels(force_levels=27, mon="don_tonberry")
                     nemesis.arena_prep.one_mp_weapon()
                     # Phase 5 farm
@@ -1104,29 +1163,50 @@ def perform_TAS():
                 if game.step == 12:
                     nemesis.advanced_farm.full_farm(phase=6)
                     game.step = 13
+                    nemesis.arena_prep.split_timer()
                     maybe_create_save(save_num=62)
 
                 if game.step == 13:
-                    nemesis.arena_prep.kilika_final_shop()
-                    nemesis.arena_prep.arena_return()
-                    nemesis.arena_prep.final_weapon()
+                    nemesis.arena_prep.final_push_updates(stage=0)
+                    area.chocobos.all_races()
+                    area.chocobos.to_remiem()
+                    area.chocobos.remiem_races()
+                    nemesis.arena_prep.final_push_updates(stage=1)
+                    area.chocobos.leave_temple()
+                    nemesis.arena_prep.Macalania_pass(approach="family")
+                    nemesis.arena_prep.final_push_updates(stage=2)
+                    #nemesis.arena_prep.Macalania_pass(approach="Wantz")
+                    area.chocobos.sun_sigil(godhand=0, baaj=0)
+                    nemesis.arena_prep.final_push_updates(stage=3)
+                    area.chocobos.upgrade_celestials(godhand=0, baaj=0, Tidus_only=True)
+                    game.step = 14
+                    maybe_create_save(save_num=63)
+
+                if game.step == 14:
+                    nemesis.arena_prep.final_push_updates(stage=4)
+                    nemesis.arena_prep.final_armor()
+                    nemesis.arena_prep.final_push_updates(stage=5)
+                    logger.info("Nemesis Prep is complete. Ready to start battles. (1)")
+                    nemesis.arena_prep.split_timer()
+
                     game.state = "Nem_Arena"
                     game.step = 1
 
             # Nemesis Arena section
             if game.state == "Nem_Arena":
                 if game.step == 1:
+                    logger.info("Nemesis Prep is complete. Ready to start battles. (2)")
                     nemesis.arena_battles.battles_1()
                     game_vars.print_arena_status()
                     game.step = 2
 
                 if game.step == 2:
-                    nemesis.arena_battles.battles_2()
+                    nemesis.arena_battles.juggernaut_farm()
                     game_vars.print_arena_status()
                     game.step = 3
 
                 if game.step == 3:
-                    nemesis.arena_battles.juggernaut_farm()
+                    nemesis.arena_battles.battles_2()
                     game_vars.print_arena_status()
                     game.step = 4
 
@@ -1144,6 +1224,7 @@ def perform_TAS():
                     nemesis.arena_battles.nemesis_battle()
                     game.step = 7
                     maybe_create_save(save_num=63)
+                    nemesis.arena_prep.split_timer()
 
                 if game.step == 7:
                     nemesis.arena_battles.return_to_sin()
@@ -1222,6 +1303,7 @@ def perform_TAS():
     logger.info("That's the end of the run, but we have one more thing to do.")
     memory.main.wait_frames(90)
     xbox.tap_a()
+    game_vars.deactivate_story_mode()
     memory.main.wait_frames(90)
 
     import z_choco_races_test

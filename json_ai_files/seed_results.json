@@ -65,6 +65,11 @@
                 "raw_time": "3:11:05.506433",
                 "blitz_time": "401",
                 "adjusted_time": "3:04:24"
+            },
+            "True": {
+                "raw_time": "3:19:43.336455",
+                "blitz_time": "425",
+                "adjusted_time": "3:12:38"
             }
         }
     },
@@ -90,6 +95,13 @@
                 "raw_time": "3:20:42.469203",
                 "blitz_time": "518",
                 "adjusted_time": "3:12:04"
+            }
+        },
+        "flip_lowroad": {
+            "False": {
+                "raw_time": "3:20:24.943647",
+                "blitz_time": "415",
+                "adjusted_time": "3:13:29"
             }
         }
     },
@@ -240,6 +252,11 @@
                 "raw_time": "3:14:08.174961",
                 "blitz_time": "519",
                 "adjusted_time": "3:05:29"
+            },
+            "True": {
+                "raw_time": "3:41:55.661436",
+                "blitz_time": "414",
+                "adjusted_time": "3:35:01"
             }
         }
     },
@@ -270,6 +287,11 @@
                 "raw_time": "3:13:35.977023",
                 "blitz_time": "574",
                 "adjusted_time": "3:04:01"
+            },
+            "True": {
+                "raw_time": "3:32:22.933434",
+                "blitz_time": "1119",
+                "adjusted_time": "3:13:43"
             }
         }
     },
@@ -393,6 +415,13 @@
                 "blitz_time": "470",
                 "adjusted_time": "3:05:09"
             }
+        },
+        "flip_lowroad": {
+            "False": {
+                "raw_time": "3:18:57.764204",
+                "blitz_time": "457",
+                "adjusted_time": "3:11:20"
+            }
         }
     },
     "28": {
@@ -506,12 +535,17 @@
         }
     },
     "254": {
-        "best_adj": "3:08:24",
+        "best_adj": "3:03:22",
         "standard": {
             "False": {
                 "raw_time": "3:18:00.909802",
                 "blitz_time": "576",
                 "adjusted_time": "3:08:24"
+            },
+            "True": {
+                "raw_time": "3:10:15.429600",
+                "blitz_time": "413",
+                "adjusted_time": "3:03:22"
             }
         }
     },
@@ -606,12 +640,17 @@
         }
     },
     "143": {
-        "best_adj": "3:05:36",
+        "best_adj": "3:03:15",
         "standard": {
             "False": {
                 "raw_time": "3:13:22.567026",
                 "blitz_time": "466",
                 "adjusted_time": "3:05:36"
+            },
+            "True": {
+                "raw_time": "3:10:50.886668",
+                "blitz_time": "455",
+                "adjusted_time": "3:03:15"
             }
         }
     },
@@ -788,6 +827,13 @@
                 "blitz_time": "527",
                 "adjusted_time": "3:13:20"
             }
+        },
+        "flip_lowroad": {
+            "False": {
+                "raw_time": "3:29:03.348785",
+                "blitz_time": "477",
+                "adjusted_time": "3:21:06"
+            }
         }
     },
     "153": {
@@ -847,6 +893,11 @@
                 "raw_time": "3:15:25.074728",
                 "blitz_time": "406",
                 "adjusted_time": "3:08:39"
+            },
+            "True": {
+                "raw_time": "3:19:35.978132",
+                "blitz_time": "563",
+                "adjusted_time": "3:10:12"
             }
         }
     },
@@ -897,16 +948,26 @@
                 "raw_time": "3:15:43.099087",
                 "blitz_time": "470",
                 "adjusted_time": "3:07:53"
+            },
+            "True": {
+                "raw_time": "3:23:51.476627",
+                "blitz_time": "557",
+                "adjusted_time": "3:14:34"
             }
         }
     },
     "29": {
-        "best_adj": "3:03:22",
+        "best_adj": "3:02:38",
         "standard": {
             "False": {
                 "raw_time": "3:11:39.642068",
                 "blitz_time": "497",
                 "adjusted_time": "3:03:22"
+            },
+            "True": {
+                "raw_time": "3:11:14.532141",
+                "blitz_time": "516",
+                "adjusted_time": "3:02:38"
             }
         }
     },
@@ -1003,6 +1064,13 @@
                 "blitz_time": "570",
                 "adjusted_time": "3:05:31"
             }
+        },
+        "flip_lowroad": {
+            "False": {
+                "raw_time": "3:18:07.823229",
+                "blitz_time": "395",
+                "adjusted_time": "3:11:32"
+            }
         }
     },
     "122": {
@@ -1082,6 +1150,231 @@
                 "raw_time": "3:13:22.930507",
                 "blitz_time": "441",
                 "adjusted_time": "3:06:01"
+            }
+        }
+    },
+    "34": {
+        "best_adj": "9:00:32",
+        "standard": {
+            "False": {
+                "raw_time": "9:13:55.944041",
+                "blitz_time": "803",
+                "adjusted_time": "9:00:32"
+            }
+        }
+    },
+    "184": {
+        "best_adj": "3:10:46",
+        "standard": {
+            "False": {
+                "raw_time": "3:17:59.459526",
+                "blitz_time": "433",
+                "adjusted_time": "3:10:46"
+            }
+        }
+    },
+    "85": {
+        "best_adj": "3:13:05",
+        "standard": {
+            "False": {
+                "raw_time": "3:20:20.791285",
+                "blitz_time": "435",
+                "adjusted_time": "3:13:05"
+            }
+        }
+    },
+    "18": {
+        "best_adj": "3:03:54",
+        "standard": {
+            "False": {
+                "raw_time": "3:11:39.096637",
+                "blitz_time": "465",
+                "adjusted_time": "3:03:54"
+            }
+        }
+    },
+    "35": {
+        "best_adj": "3:23:29",
+        "standard": {
+            "False": {
+                "raw_time": "3:30:05.324533",
+                "blitz_time": "396",
+                "adjusted_time": "3:23:29"
+            }
+        }
+    },
+    "127": {
+        "best_adj": "3:03:03",
+        "standard": {
+            "False": {
+                "raw_time": "3:10:17.676019",
+                "blitz_time": "434",
+                "adjusted_time": "3:03:03"
+            }
+        }
+    },
+    "256": {
+        "best_adj": "0:18:23",
+        "standard": {
+            "False": {
+                "raw_time": "0:18:23.080775",
+                "blitz_time": "0",
+                "adjusted_time": "0:18:23"
+            }
+        }
+    },
+    "152": {
+        "best_adj": "3:17:28",
+        "standard": {
+            "False": {
+                "raw_time": "3:24:53.804284",
+                "blitz_time": "445",
+                "adjusted_time": "3:17:28"
+            }
+        }
+    },
+    "196": {
+        "best_adj": "3:02:42",
+        "standard": {
+            "False": {
+                "raw_time": "3:10:17.728074",
+                "blitz_time": "455",
+                "adjusted_time": "3:02:42"
+            }
+        }
+    },
+    "13": {
+        "best_adj": "3:13:04",
+        "standard": {
+            "False": {
+                "raw_time": "3:20:14.267260",
+                "blitz_time": "430",
+                "adjusted_time": "3:13:04"
+            }
+        }
+    },
+    "40": {
+        "best_adj": "3:10:50",
+        "standard": {
+            "False": {
+                "raw_time": "3:24:06.028543",
+                "blitz_time": "796",
+                "adjusted_time": "3:10:50"
+            }
+        }
+    },
+    "5": {
+        "best_adj": "3:13:30",
+        "standard": {
+            "False": {
+                "raw_time": "3:20:26.632245",
+                "blitz_time": "416",
+                "adjusted_time": "3:13:30"
+            }
+        }
+    },
+    "205": {
+        "best_adj": "3:05:36",
+        "standard": {
+            "False": {
+                "raw_time": "3:15:41.862502",
+                "blitz_time": "605",
+                "adjusted_time": "3:05:36"
+            }
+        }
+    },
+    "231": {
+        "best_adj": "3:12:16",
+        "standard": {
+            "False": {
+                "raw_time": "3:19:35.065941",
+                "blitz_time": "439",
+                "adjusted_time": "3:12:16"
+            }
+        }
+    },
+    "255": {
+        "best_adj": "3:04:47",
+        "standard": {
+            "False": {
+                "raw_time": "3:12:47.265108",
+                "blitz_time": "480",
+                "adjusted_time": "3:04:47"
+            }
+        }
+    },
+    "168": {
+        "best_adj": "3:09:31",
+        "standard": {
+            "False": {
+                "raw_time": "3:18:39.431416",
+                "blitz_time": "548",
+                "adjusted_time": "3:09:31"
+            }
+        }
+    },
+    "86": {
+        "best_adj": "3:06:03",
+        "standard": {
+            "False": {
+                "raw_time": "3:15:26.120903",
+                "blitz_time": "563",
+                "adjusted_time": "3:06:03"
+            }
+        }
+    },
+    "6": {
+        "best_adj": "3:19:57",
+        "standard": {
+            "False": {
+                "raw_time": "3:27:02.470247",
+                "blitz_time": "425",
+                "adjusted_time": "3:19:57"
+            }
+        }
+    },
+    "121": {
+        "best_adj": "3:12:00",
+        "standard": {
+            "False": {
+                "raw_time": "3:20:08.736376",
+                "blitz_time": "488",
+                "adjusted_time": "3:12:00"
+            }
+        }
+    },
+    "105": {
+        "best_adj": "3:08:01",
+        "standard": {
+            "False": {
+                "raw_time": "3:22:21.561933",
+                "blitz_time": "387",
+                "adjusted_time": "3:15:54"
+            },
+            "True": {
+                "raw_time": "3:14:52.388954",
+                "blitz_time": "411",
+                "adjusted_time": "3:08:01"
+            }
+        }
+    },
+    "116": {
+        "best_adj": "3:04:43",
+        "standard": {
+            "False": {
+                "raw_time": "3:12:46.110157",
+                "blitz_time": "483",
+                "adjusted_time": "3:04:43"
+            }
+        }
+    },
+    "16": {
+        "best_adj": "8:57:09",
+        "standard": {
+            "False": {
+                "raw_time": "9:07:14.714396",
+                "blitz_time": "605",
+                "adjusted_time": "8:57:09"
             }
         }
     }

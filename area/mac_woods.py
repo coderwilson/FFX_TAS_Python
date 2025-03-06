@@ -159,8 +159,10 @@ def arrival(rikku_charged):
                 memory.main.close_menu()
                 if checkpoint == 61:
                     checkpoint = 60
-            elif not memory.main.battle_active() and memory.main.diag_skip_possible():
-                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif checkpoint in [14,36]:  # First chest, then butterfly guy
+                xbox.tap_confirm()
 
     # Save sphere
     FFXC.set_movement(-1, 1)
@@ -211,7 +213,7 @@ def lake_road():
                     pathing.set_movement([-1, 100])
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
     FFXC.set_neutral()  # Engage Spherimorph
@@ -219,28 +221,109 @@ def lake_road():
     logger.info("Battle against the Spherimorph")
     battle.boss.spherimorph()
     logger.info("Battle is over.")
-    memory.main.click_to_control()  # Jecht's memories
+    if game_vars.story_mode():
+        while not memory.main.battle_wrap_up_active():
+            pass
+        FFXC.set_confirm()
+        while memory.main.battle_wrap_up_active():
+            pass
+        FFXC.release_confirm()
+        while memory.main.get_story_progress() < 1455:
+            pass
+    memory.main.click_to_control_3()  # Jecht's memories
+    logger.debug("Jecht should be done talking now.")
 
 
 def lake_road_2():
+    path = [
+        [-6, 25],
+        [-4, -50],
+        [-45, -212],
+        [-49, -245],
+        [-145, -358],
+        [-245,-450]
+    ]
+
+    checkpoint = 0
+    story = memory.main.get_story_progress()
+    logger.debug(f"Checkpoint initialized: {checkpoint} (story: {story})")
+    auron_affection = memory.main.affection_array()[2]
+    logger.manip(f"Auron affection initialized: {auron_affection}")
+    actors_report = True
+    last_dialog = memory.main.diag_progress_flag()
+    while memory.main.get_map() != 221:
+        if memory.main.user_control():
+            auron_index = memory.main.actor_index(103)
+            #auron_index = memory.main.actor_index(2)
+            #auron_index = 3
+            if memory.main.affection_array()[2] != auron_affection:
+                #auron_affection = memory.main.affection_array()[2]
+                logger.manip(f"Auron affection updated: {memory.main.affection_array()[2]}")
+                logger.manip(memory.main.affection_array())
+                auron_affection = memory.main.affection_array()[2]
+            if (
+                checkpoint == 5 and
+                memory.main.affection_array()[2] == auron_affection  # and
+                #memory.main.distance(auron_index) < 30
+            ):
+                logger.warning("Attempting to approach Auron.")
+                while (
+                    memory.main.get_map() != 221 and
+                    memory.main.affection_array()[2] == auron_affection
+                ):
+                    FFXC.set_movement(-1,-1)
+                    xbox.tap_confirm()
+                #temp_coords = memory.main.get_actor_coords(auron_index)
+                #tar_coords = [round(temp_coords[0],2),round(temp_coords[1],2)]
+                #logger.debug(f"Approaching coords: {tar_coords}")
+                #pathing.set_movement(tar_coords)
+                #xbox.tap_confirm()
+                logger.warning(f"Break {logger.manip(memory.main.affection_array())}")
+            elif pathing.set_movement(path[checkpoint]):
+                checkpoint += 1
+                story = memory.main.get_story_progress()
+                logger.debug(f"Checkpoint updated: {checkpoint} (story: {story})")
+            if checkpoint == 5 and actors_report:
+                memory.main.check_near_actors(False,super_coords=True,max_dist=2000)
+                #memory.main.check_moving_actors()
+                actors_report = False
+        else:
+            FFXC.set_neutral()
+            if last_dialog != memory.main.diag_progress_flag():
+                last_dialog = memory.main.diag_progress_flag()
+                story_state = memory.main.get_story_progress()
+                logger.debug(f"Dialog change: {last_dialog} (story: {story_state})")
+            if game_vars.story_mode():
+                if memory.main.diag_skip_possible() and last_dialog in [43,44]:
+                    xbox.tap_confirm()
+            else:
+                xbox.tap_confirm()
+    memory.main.await_control()
+    FFXC.set_movement(-1, 1)
+    memory.main.wait_frames(2)
+    memory.main.await_event()
+    FFXC.set_neutral()
+
+
+def lake_road_2_old():
     FFXC.set_movement(0, -1)
     if game_vars.csr():
         checkpoint = 0
         while checkpoint < 5:
             if checkpoint == 0:
-                if pathing.set_movement([-6, 25]):
+                if pathing.set_movement():
                     checkpoint += 1
             elif checkpoint == 1:
-                if pathing.set_movement([-4, -50]):
+                if pathing.set_movement():
                     checkpoint += 1
             elif checkpoint == 2:
-                if pathing.set_movement([-45, -212]):
+                if pathing.set_movement():
                     checkpoint += 1
             elif checkpoint == 3:
-                if pathing.set_movement([-49, -245]):
+                if pathing.set_movement():
                     checkpoint += 1
             else:
-                if pathing.set_movement([-145, -358]):
+                if pathing.set_movement():
                     checkpoint += 1
 
     else:
@@ -292,9 +375,15 @@ def lake():
             FFXC.set_neutral()
             if memory.main.battle_active() and memory.main.get_encounter_id() != 194:
                 battle.main.flee_all()
-            elif memory.main.diag_skip_possible() or memory.main.menu_open():
-                xbox.menu_b()
-    xbox.click_to_battle()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+    if game_vars.story_mode():
+        memory.main.wait_seconds(12)
+        xbox.tap_confirm()
+    else:
+        xbox.click_to_battle()
     battle.boss.crawler()
 
 

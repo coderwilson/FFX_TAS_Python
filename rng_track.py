@@ -242,6 +242,7 @@ def item_to_be_dropped(
     pre_advance_12: int = 0,
     pre_advance_13: int = 0,
     party_size: int = 7,
+    report:bool = True
 ):
     test_mode = False
     slot_mod = slot_modifier(enemy=enemy)
@@ -1088,7 +1089,7 @@ def purifico_to_nea(
     parent_array = [],
     ptr = 3,
     stage=0,  # used to skip forward, reassess in Calm or after defender X.
-    report=True
+    report=False
 ):
     # parent_array passes in enemies that will drop earlier, passed from earlier in the run.
     # ptr is our position on the RNG10 array. Needs to be pre-advanced to last check +3.
@@ -1144,22 +1145,6 @@ def purifico_to_nea(
         #ptr+15
         
         ptr += 15
-        
-        '''
-        results[0].append("evrae_altana")
-        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
-            results[1].append("maze_larva")
-            logger.debug("Third larvae drops item.")
-        ptr += 3  # Bypass aeons
-        results[1].append("evrae_altana")  # Add altana
-        ptr += 9  # Bypass aeons
-        # This is to offset the third larvae.
-        chance = 30
-        if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
-            results[0].append("ykt-63")
-            logger.debug("Robot 1 drops item")
-        ptr += 3
-        '''
     
     if stage <= 1:  # Highbridge start
         chance = 30
@@ -1202,15 +1187,6 @@ def purifico_to_nea(
     quality = 0
     preferred_result = [0,4,6,9]
     for i in range(len(results)):
-        if stage == 1:
-            report = True
-        #else:
-        #    report = False
-        '''
-        if report:
-            logger.manip("=========================")
-            logger.manip(f"Line start: {results[i]}")
-        '''
         success,equip1,_ = rng_alignment_before_nea(enemies=results[i], report=report)  # here
         if success:
             quality += 1
@@ -1298,16 +1274,16 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
             condition2 = "with"
         if equipment.has_ability(32797) and enemies[i] == "ghost":
             #logger.warning("Found one!")
-            if report:
-                logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.")
+            #if report:
+                #logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.")
                 #logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
             if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
                 return (True, equipment, extras)
                 
         ptr12 += 4
         ptr13 += advances
-    if report:
-        logger.manip(f"No drop identified for this version: Owner: {e_owner}, Type: {e_type}, {equipment.abilities()}")
+    #if report:
+    #    logger.manip(f"No drop identified for this version: Owner: {e_owner}, Type: {e_type}, {equipment.abilities()}")
     return (False, equipment, extras)
 
 
@@ -1321,15 +1297,16 @@ def final_nea_check(with_ronso:bool = False):
     result_possible = False
     for i in range(max_drop+1):
         results = ronso_array + epaaj_array + ghost_array
-        result_possible, _, _ = rng_alignment_before_nea(enemies=results)
+        result_possible, _, _ = rng_alignment_before_nea(enemies=results, report=False)
         if result_possible:
             if len(ronso_array) == 0:
                 check = "without"
             else:
                 check = "with"
-            logger.manip(f"===  Final check found with {i} extra Epaaj drops, {check} ronso first.  ===")
+            logger.warning(f"===  Final check found with {i} extra Epaaj drops, {check} ronso first.  ===")
             return (result_possible, i)
         epaaj_array.append("epaaj")
+    logger.warning(f"===  Final check NOT found!!!  ===")
     return (result_possible, 99)
 
 def next_action_escape(character: int = 0):

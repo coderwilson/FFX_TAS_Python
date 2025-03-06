@@ -17,6 +17,11 @@ FFXC = xbox.controller_handle()
 def air_ship_path(version, checkpoint:int = 0):
     memory.main.click_to_control()
     distiller_purchase = False
+    power_need = 28
+    speed_need = 10
+    if game_vars.nemesis():
+        power_need += 6
+        speed_need -= 3
 
     complete = False
     while not complete:
@@ -30,8 +35,8 @@ def air_ship_path(version, checkpoint:int = 0):
                 and not distiller_purchase
                 and checkpoint == 5
                 and (
-                    memory.main.get_speed() < 10 or 
-                    memory.main.get_power() < 28 or
+                    memory.main.get_speed() < speed_need or 
+                    memory.main.get_power() < power_need or
                     memory.main.get_mana() < 8
                 )
             ):
@@ -57,7 +62,7 @@ def air_ship_path(version, checkpoint:int = 0):
 
 
                 #  Power spheres
-                if memory.main.get_power() < 28:
+                if memory.main.get_power() < power_need:
                     while memory.main.equip_buy_row() != 7:
                         if memory.main.equip_buy_row() < 7:
                             xbox.tap_down()
@@ -66,10 +71,10 @@ def air_ship_path(version, checkpoint:int = 0):
                     while not memory.main.item_shop_menu() == 16:
                         xbox.menu_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((28 - memory.main.get_power()) / 2), 3
+                        math.ceil((power_need - memory.main.get_power()) / 2), 3
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((28 - memory.main.get_power()) / 2), 3
+                            math.ceil((power_need - memory.main.get_power()) / 2), 3
                         ):
                             xbox.tap_right()
                         else:
@@ -97,7 +102,7 @@ def air_ship_path(version, checkpoint:int = 0):
                     xbox.menu_b()
 
                 #  Speed spheres
-                if memory.main.get_speed() < 10:
+                if memory.main.get_speed() < speed_need:
                     while memory.main.equip_buy_row() != 9:
                         if memory.main.equip_buy_row() < 9:
                             xbox.tap_down()
@@ -106,10 +111,10 @@ def air_ship_path(version, checkpoint:int = 0):
                     while not memory.main.item_shop_menu() == 16:
                         xbox.tap_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((10 - memory.main.get_speed()) / 2), 3
+                        math.ceil((speed_need - memory.main.get_speed()) / 2), 3
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((10 - memory.main.get_speed()) / 2), 3
+                            math.ceil((speed_need - memory.main.get_speed()) / 2), 3
                         ):
                             xbox.tap_right()
                         else:
@@ -137,12 +142,21 @@ def air_ship_path(version, checkpoint:int = 0):
                 memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 18:
-                FFXC.set_neutral()
-                xbox.skip_dialog(1)
-                memory.main.await_control()
-                checkpoint += 1
+                #logger.debug(memory.main.get_camera())
+                #while memory.main.get_camera()[2] < -95:
+                #    pathing.set_movement([1,-10])
+                #    #if not (game_vars.story_mode() and memory.main.diag_skip_possible()):
+                #    xbox.tap_confirm()
+                #FFXC.set_neutral()
+                checkpoint = 19
+                logger.debug(f"Forced checkpoint update: {checkpoint}")
+            #elif checkpoint == 18:
+            #    FFXC.set_neutral()
+            #    xbox.skip_dialog(1)
+            #    memory.main.await_control()
+            #    checkpoint += 1
             elif checkpoint == 24:
-                memory.main.click_to_event_temple(7)
+                memory.main.click_to_event_temple(7, story_mode_dialog=True)
                 checkpoint += 1
 
             # Return trip map changes
@@ -171,57 +185,51 @@ def air_ship_path(version, checkpoint:int = 0):
                 complete = True
 
             # Complete states
-            elif checkpoint == 19 and version == 1:
-                logger.info("Pre-Evrae pathing")
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 3)
+            elif checkpoint == 19:
+                map = memory.main.get_map()
+                while map == memory.main.get_map():
+                    coords = memory.main.get_actor_coords(0)
+                    cam = memory.main.get_camera()
+                    if memory.main.user_control():
+                        pathing.set_movement([1,100])
+                        if coords[1] > -20 and coords[1] < -5:
+                            xbox.tap_confirm()
+                        
+                    else:
+                        if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                            xbox.tap_confirm()
+                        elif memory.main.cutscene_skip_possible():
+                            xbox.skip_scene()
                 FFXC.set_neutral()
-                complete = True
-            elif checkpoint == 19 and version == 3:
-                logger.info("Sin's Arms")
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 3)
-                FFXC.set_neutral()
-                while not memory.main.battle_active():
-                    if memory.main.diag_skip_possible():
-                        xbox.tap_b()
-                    elif memory.main.cutscene_skip_possible():
-                        xbox.skip_scene()
-                complete = True
-            elif checkpoint == 19 and version == 4:
-                logger.info("Straight to the deck, talking to Yuna.")
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 3)
-                FFXC.set_neutral()
-                memory.main.await_control()
-                pathing.set_movement([-2, -15])
-                memory.main.wait_frames(30 * 0.5)
-                while memory.main.user_control():
-                    pathing.set_movement([-2, -15])
-                    xbox.tap_b()
-                FFXC.set_neutral()
-                while not memory.main.user_control():
-                    if memory.main.diag_skip_possible():
-                        xbox.tap_b()
-                    elif memory.main.cutscene_skip_possible():
-                        xbox.skip_scene()
-                complete = True
-            elif checkpoint == 19 and version == 5:
-                logger.info("Again to the deck, three skips.")
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 3)
-                FFXC.set_neutral()
-                while not memory.main.battle_active():
-                    if memory.main.diag_skip_possible():
-                        xbox.tap_b()
-                    elif memory.main.cutscene_skip_possible():
-                        xbox.skip_scene()
-                complete = True
-            elif checkpoint == 19 and version == 6:
-                logger.info("Sin's Face")
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 3)
-                FFXC.set_neutral()
+                '''
+                if version == 1:
+                    logger.info("Evrae battle, includes skip for tutorial.")
+                    if game_vars.story_mode():
+                        memory.main.click_to_diag_progress(4)
+                        memory.main.wait_seconds(15)
+                        xbox.tap_confirm()
+                        memory.main.wait_seconds(2)
+                        xbox.tap_confirm()
+                        xbox.click_to_battle()
+                    else:
+                        xbox.click_to_battle()
+                '''
+                if version in [3,5,6]:
+                    logger.info(f"Expecting start of battle. Version {version}")
+                    while not memory.main.battle_active():
+                        if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                            xbox.tap_confirm()
+                        elif memory.main.cutscene_skip_possible():
+                            xbox.skip_scene()
+                elif version == 4:
+                    logger.info("Approach Yuna for conversation")
+                    memory.main.await_control()
+                    pathing.approach_coords([0,-17])
+                    while not memory.main.user_control():
+                        if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                            xbox.tap_confirm()
+                        elif memory.main.cutscene_skip_possible():
+                            xbox.skip_scene()
                 complete = True
 
             # General Pathing
@@ -232,9 +240,12 @@ def air_ship_path(version, checkpoint:int = 0):
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.flee_all()
-            elif memory.main.menu_open() or memory.main.diag_skip_possible():
-                logger.debug("Mark")
-                xbox.tap_b()
+            elif memory.main.menu_open():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
+            elif checkpoint == 42 and memory.main.diag_progress_flag() == 210:
+                xbox.tap_confirm()
 
     logger.info("End of section, Airship pathing")
 

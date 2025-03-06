@@ -1,6 +1,7 @@
 import logging
 
 import memory.main
+import battle.main
 import xbox
 from players.base import Player
 
@@ -39,6 +40,17 @@ class WakkaImpl(Player):
 
     def overdrive_active(self):
         return memory.main.read_val(0x00DA0BD0, 1) != 0
+
+    def aim(self):
+        # Assumes we have already learned the Aim ability, and no others.
+        while memory.main.battle_menu_cursor() != 20:
+            self.navigate_to_battle_menu(20)
+        
+        while not memory.main.other_battle_menu():
+            xbox.tap_b()
+        while memory.main.other_battle_menu():
+            xbox.tap_b()  # Use the Aim command
+        battle.main.tap_targeting()
 
 
 Wakka = WakkaImpl()

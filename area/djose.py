@@ -18,7 +18,8 @@ FFXC = xbox.controller_handle()
 
 def path():
     memory.main.click_to_control()
-    memory.main.close_menu()
+    if game_vars.story_mode():
+        menu.equip_weapon(character=2, ability=0x8002, full_menu_close=False)
     memory.main.update_formation(Tidus, Wakka, Auron)
     memory.main.close_menu()
 
@@ -97,7 +98,7 @@ def path():
                 count_battles += 1
             elif memory.main.menu_open():
                 xbox.menu_b()
-            elif memory.main.diag_skip_possible():
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.menu_b()
 
     # logs.write_stats("Djose battles:")
@@ -115,7 +116,7 @@ def temple():
         FFXC.set_movement(-1, -1)
         memory.main.click_to_event()  # Talk to Auron
         memory.main.wait_frames(30 * 0.2)
-        memory.main.click_to_control_3()  # Done talking
+        memory.main.click_to_control()  # Done talking
 
     checkpoint = 0
     while not memory.main.get_map() == 214:
@@ -128,12 +129,14 @@ def temple():
                 checkpoint += 1
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
 
 def trials(destro:bool=False):
     logger.info("Starting Trials section.")
+    if game_vars.story_mode():
+        destro = True
     memory.main.click_to_control()
 
     checkpoint = 0
@@ -225,10 +228,11 @@ def trials(destro:bool=False):
                 FFXC.set_movement(0, 1)
                 memory.main.wait_frames(15)
                 FFXC.set_neutral()
-                memory.main.wait_frames(30)  # Initiates the jump animation.
+                memory.main.wait_frames(60)  # Initiates the jump animation.
                 memory.main.await_control()
+                memory.main.wait_frames(2)
                 logger.info("Extra pedestal")
-                approach_coords([1,175])  # Pushes pedestol.
+                approach_coords([1,180])  # Pushes pedestol.
                 FFXC.set_neutral()
                 memory.main.await_control()
                 while not pathing.set_movement([1,74]):  # Jumps all the way back.
@@ -383,7 +387,10 @@ def leaving_djose():
                 # else:
                 checkpoint += 1
             elif checkpoint == 14:
-                memory.main.click_to_event_temple(2)
+                FFXC.set_movement(1,0)
+                while memory.main.user_control():
+                    xbox.tap_confirm()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 18:
                 memory.main.click_to_event_temple(0)
@@ -406,7 +413,7 @@ def leaving_djose():
                 battle.main.flee_all()
             elif memory.main.menu_open():
                 xbox.tap_b()
-            elif memory.main.diag_skip_possible():
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
     FFXC.set_neutral()

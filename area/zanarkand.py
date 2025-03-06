@@ -79,6 +79,9 @@ def decide_luck():
     # Pull from JSON file to get dynamic value.
     decision = False
     force_luck = True
+    if game_vars.story_mode():
+        force_luck = False
+        return force_luck
     try:
         records = avina_memory.retrieve_memory()
         logger.debug(records.keys())
@@ -134,8 +137,18 @@ def decide_advance_spectral_keeper(report:bool=False) -> int:
 
 def arrival():
     memory.main.await_control()
+    # Campfire / storytelling map
+    while memory.main.get_map() == 363:
+        if memory.main.user_control():
+            if memory.main.get_coords()[1] > -67:
+                pathing.set_movement([115,-74])
+            else:
+                pathing.set_movement([270,-165])
+        elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+            xbox.tap_confirm()
+
     decide_nea()
-    # Starts from the map just after the fireplace chat.
+    # This point should be on the map just after the fireplace chat.
     re_equip_ne = False
     if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 1:
         memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
@@ -173,22 +186,20 @@ def arrival():
                 fortune_slot = memory.main.get_item_slot(74)
                 if fortune_slot == 255:
                     fortune_count = 0
-                    FFXC.set_movement(-1, 1)
-                    xbox.tap_b()
+                    pathing.approach_coords([-110,-433],click_through=True)
                 else:
                     if memory.main.get_item_count_slot(fortune_slot) > fortune_count:
                         checkpoint += 1
-                        memory.main.click_to_control()
+                        memory.main.click_to_control_3()
                     else:
-                        FFXC.set_movement(-1, 1)
-                        xbox.tap_b()
+                        pathing.approach_coords([-110,-433],click_through=True)
             elif pathing.set_movement(ZanarkandOutdoors.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
 
-            if screen.battle_screen():
+            if memory.main.battle_active():
                 battle.main.charge_rikku_od()
                 if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
                     re_equip_ne = False
@@ -198,10 +209,10 @@ def arrival():
                     )
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     memory.main.close_menu()
-            elif memory.main.diag_skip_possible() and not memory.main.battle_active():
-                xbox.tap_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
             elif memory.main.menu_open():
-                xbox.tap_b()
+                xbox.tap_confirm()
 
     # Outside the dome
     logger.info("Now approaching the Blitz dome.")
@@ -209,12 +220,17 @@ def arrival():
     logger.info("as the one from the opening of the game.")
     while memory.main.get_map() != 222:
         FFXC.set_movement(0, 1)
-        xbox.tap_b()
+        if not game_vars.story_mode():
+            xbox.tap_confirm()
 
 def dome_interior():
     re_equip_ne = False
     logger.info("Start of Zanarkand Dome section")
     friend_slot = memory.main.get_item_slot(97)
+    if game_vars.story_mode():
+        yuna_levels_needed = 8
+    else:
+        yuna_levels_needed = 6
     if friend_slot == 255:
         friend_count = 0
     else:
@@ -225,8 +241,11 @@ def dome_interior():
         friend_count = 0
     else:
         luck_count = memory.main.get_item_count_slot(luck_slot)
-
-    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 2:
+    if memory.main.get_yuna_slvl() < yuna_levels_needed:
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+        re_equip_ne = True
+    elif memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 2:
         memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         re_equip_ne = True
@@ -240,37 +259,33 @@ def dome_interior():
             if checkpoint == 11 and game_vars.end_game_version() != 4:
                 logger.debug("Do not need friend sphere. Skipping forward.")
                 checkpoint = 15
-            if checkpoint == 13:  # Second chest
+            elif checkpoint == 13:  # Second chest
                 friend_slot = memory.main.get_item_slot(97)
                 if friend_slot == 255:
                     friend_count = 0
-                    pathing.set_movement([8, 90])
-                    memory.main.wait_frames(1)
-                    xbox.tap_b()
+                    pathing.approach_coords([8, 90],click_through=True)
                 else:
                     if memory.main.get_item_count_slot(friend_slot) > friend_count:
                         checkpoint += 1
-                        memory.main.click_to_control()
+                        memory.main.click_to_control_3()
                     else:
-                        pathing.set_movement([8, 90])
-                        memory.main.wait_frames(1)
-                        xbox.tap_b()
-            if checkpoint == 23 and game_vars.get_skip_zan_luck():
+                        pathing.approach_coords([8, 90],click_through=True)
+            elif checkpoint == 20 and re_equip_ne:
+                checkpoint = 18
+            elif checkpoint == 23 and game_vars.get_skip_zan_luck():
                 checkpoint = 25
             elif checkpoint == 24:  # Third chest
                 luck_slot = memory.main.get_item_slot(94)
                 if luck_slot == 255:
                     luck_count = 0
-                    FFXC.set_movement(1, 1)
-                    xbox.tap_b()
+                    pathing.approach_coords([26,-83],click_through=True)
                 else:
                     if memory.main.get_item_count_slot(luck_slot) > luck_count:
                         checkpoint += 1
                         logger.debug(f"Updating Checkpoint {checkpoint}")
-                        memory.main.click_to_control()
+                        memory.main.click_to_control_3()
                     else:
-                        FFXC.set_movement(1, 1)
-                        xbox.tap_b()
+                        pathing.approach_coords([26,-83],click_through=True)
             elif checkpoint == 29:  # Save sphere
                 save_sphere.touch_and_go()
                 checkpoint += 1
@@ -284,20 +299,50 @@ def dome_interior():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
-                battle.main.charge_rikku_od()
-                if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
-                    re_equip_ne = False
+            if memory.main.battle_active():
+                logger.debug(f"Rikku OD check: {memory.main.overdrive_state()[6]}")
+                logger.debug(f"Yuna Slvls: {memory.main.get_yuna_slvl()}")
+                if memory.main.overdrive_state()[6] < 100 and memory.main.get_encounter_id() == 361:
+                    logger.info("Attempting to charge Rikku overdrive")
+                    battle.main.charge_rikku_od()
+                    memory.main.click_to_control()
+                    memory.main.update_formation(
+                        Tidus, Yuna, Auron, full_menu_close=False
+                    )
+                    if (
+                        re_equip_ne and 
+                        Rikku.has_overdrive() and
+                        memory.main.get_yuna_slvl() >= yuna_levels_needed
+                    ):
+                        re_equip_ne = False
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                    memory.main.close_menu()
+                elif memory.main.get_yuna_slvl() < yuna_levels_needed and memory.main.get_encounter_id() != 361:
+                    logger.info("Attempting to gain levels on Yuna")
+                    battle.main.calm_impulse()
+                    memory.main.click_to_control()
+                    memory.main.update_formation(
+                        Tidus, Yuna, Auron, full_menu_close=False
+                    )
+                    if re_equip_ne and memory.main.get_yuna_slvl() >= yuna_levels_needed:
+                        re_equip_ne = False
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                    memory.main.close_menu()
+                else:
+                    logger.info("Unsure purpose of this branch, should not have occurred???")
+                    # This shouldn't occur, but programming as backup anyway.
+                    battle.main.flee_all()
                     memory.main.click_to_control()
                     memory.main.update_formation(
                         Tidus, Yuna, Auron, full_menu_close=False
                     )
                     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     memory.main.close_menu()
-            elif memory.main.diag_skip_possible() and not memory.main.battle_active():
-                xbox.tap_b()
+                    re_equip_ne = False
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.tap_confirm()
             elif memory.main.menu_open():
-                xbox.tap_b()
+                xbox.tap_confirm()
     
     ver = game_vars.end_game_version()
     logger.info(f"Now prepping for Sanctuary Keeper fight. Version {ver}")
@@ -327,14 +372,9 @@ def trials_0(checkpoint):
     while checkpoint < 9:
         if memory.main.user_control():
             if checkpoint == 8:
-                FFXC.set_movement(-1, 0)
-                while memory.main.user_control():
-                    xbox.tap_b()
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(30 * 0.2)
-                memory.main.await_control()
-                memory.main.wait_frames(30 * 1.3)
-                FFXC.set_movement(0, 1)
+                pathing.approach_coords([68,25],click_through=True)  # Push the pedestol
+                pathing.approach_coords([78,60],click_through=True)  # Room to room
+                
                 checkpoint += 1
             elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
                 checkpoint += 1
@@ -354,12 +394,11 @@ def trials_1(checkpoint):
                 xbox.skip_dialog(0.5)
                 memory.main.click_to_control_3()
                 checkpoint += 1
-            elif checkpoint == 26 or checkpoint == 28:
-                FFXC.set_movement(-1, -1)
-                memory.main.click_to_event()
-                FFXC.set_neutral()
-                xbox.skip_dialog(0.5)
-                memory.main.click_to_control_3()
+            elif checkpoint == 26:
+                pathing.approach_coords([68,-1],click_through=True)  # Place red sphere
+                checkpoint += 1
+            elif checkpoint == 28:
+                pathing.approach_coords([68,-24],click_through=True)  # Push second pedestol
                 checkpoint += 1
             elif checkpoint == 30:
                 FFXC.set_movement(0, 1)
@@ -436,7 +475,7 @@ def trials_4(checkpoint):
             elif checkpoint == 87:
                 while memory.main.user_control():
                     pathing.set_movement([141, 1])
-                    xbox.tap_b()
+                    xbox.tap_confirm()
                 FFXC.set_neutral()
                 memory.main.click_to_control_3()
                 checkpoint += 1
@@ -453,6 +492,7 @@ def s_keeper_print_bahamut_crit_chance():
 
 
 def sanctuary_keeper():
+    logger.info("Start section - Engage Sanctuary Keeper")
     while not pathing.set_movement([110, 20]):
         pass
     FFXC.set_movement(-1, 1)
@@ -475,9 +515,10 @@ def sanctuary_keeper():
 
 def yunalesca_prep():
     ver = game_vars.end_game_version()
-    while not pathing.set_movement([-2, -179]):
-        if memory.main.diag_skip_possible():
-            xbox.tap_b()
+    logger.info("Start section - Prep/Grid before Yunalesca")
+    #while not pathing.set_movement([-2, -179]):
+    #    if memory.main.diag_skip_possible() and not game_vars.story_mode():
+    #        xbox.tap_confirm()
 
     if ver == 4:
         logger.info("Final pattern for four return spheres off of the B&Y fight")
@@ -486,9 +527,8 @@ def yunalesca_prep():
     else:
         logger.info("No further sphere gridding needed at this time.")
 
-    logger.info("Sphere grid is done. Moving on to storyline and eventually Yunalesca.")
-
     save_sphere.touch_and_go()
+    logger.info("Sphere grid is done. End of Yunalesca prep")
     
     if game_vars.god_mode():
         rng_track.force_equip(equip_type = 0, character = 3)
@@ -496,11 +536,16 @@ def yunalesca_prep():
 
 def yunalesca():
     checkpoint = 0
+    last_map = memory.main.get_map()
     # Gets us to Yunalesca battle through multiple rooms.
+    logger.info("Starting section - approach and engage Yunalesca")
     while not memory.main.battle_active():
         if memory.main.menu_open():
             memory.main.close_menu()
         elif memory.main.user_control():
+            coords = memory.main.get_actor_coords(0)
+            pathing.set_movement([0,coords[1]+20])
+            '''
             if memory.main.get_map() == 244 and checkpoint < 3:
                 checkpoint = 3
             #elif checkpoint in [2, 4]:
@@ -511,14 +556,26 @@ def yunalesca():
             elif pathing.set_movement(ZanarkandYunalesca.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+            '''
         else:
             FFXC.set_neutral()
+            if last_map != memory.main.get_map():
+                last_map = memory.main.get_map()
+                if last_map == 270:
+                    logger.info("Now! Now is the time!")
+                elif last_map == 224:
+                    logger.info("Now choose. Choose who will become your fayth.")
+            if not game_vars.story_mode():
+                # Double mashing.
+                xbox.skip_dialog_special()
+            '''
             FFXC.set_confirm()
             FFXC.set_back()
             memory.main.wait_frames(1)
             FFXC.release_confirm()
             FFXC.release_back()
             memory.main.wait_frames(1)
+            '''
     if not battle.boss.yunalesca():
         return False
     memory.main.click_to_control()  # This does all the attacking and dialog skipping
@@ -547,6 +604,31 @@ def post_yunalesca(checkpoint=0):
     FFXC.set_neutral()
     if game_vars.nemesis():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)
+
+        # Grab sun sigil
+        while not pathing.set_movement([-36,-22]):
+            pass
+        while not pathing.set_movement([-29,94]):
+            pass
+        while memory.main.get_actor_coords(0)[1] > 50:
+            FFXC.set_movement(1,0)
+        while not pathing.set_movement([-59,-146]):
+            pass
+        while not pathing.set_movement([-36,-22]):
+            pass
+        while not pathing.set_movement([-45,94]):
+            pass
+        
+        # Open chest
+        #check_near_actors(False)
+        pathing.approach_actor_by_id(20482)
+        memory.main.click_to_control()
+        
+        while not pathing.set_movement([-36,-22]):
+            pass
+        while not pathing.set_movement([-13,-173]):
+            pass
+    
     memory.main.wait_frames(2)
     while memory.main.get_map() != 194:
         if memory.main.user_control():
@@ -587,4 +669,5 @@ def post_yunalesca(checkpoint=0):
                     memory.main.wait_frames(2)
                     xbox.skip_scene(fast_mode=True)
             else:
-                xbox.tap_b()
+                if not game_vars.story_mode():
+                    xbox.tap_confirm()

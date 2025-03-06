@@ -532,8 +532,8 @@ class SinFarm(AreaMovementBase):
         38: [351, 710],
         39: [252, 756],
         40: [227, 780],
-        41: [232, 838],
-        42: [216, 952],  # Save sphere
+        41: [220, 929],
+        42: [216, 976],  # Save sphere
         43: [218, 1100],  # Forwards towards Seymour
         44: [414, -888],  # Back towards Seymour
         45: [369, -713],

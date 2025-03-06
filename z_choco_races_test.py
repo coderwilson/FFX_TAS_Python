@@ -68,20 +68,22 @@ area.chocobos.djose_destro(godhand=godhand, baaj=baaj)
 area.chocobos.ice_destro(godhand=godhand, baaj=baaj)
 area.chocobos.sun_crest(godhand=godhand, baaj=baaj)
 
-area.chocobos.rusty_sword()
-area.chocobos.saturn_crest()
-area.chocobos.masamune()
+#area.chocobos.rusty_sword()
+#area.chocobos.saturn_crest()
+#area.chocobos.masamune()
 
-area.chocobos.cactuars()
-area.chocobos.cactuars_finish()
+#area.chocobos.cactuars()
+#area.chocobos.cactuars_finish()
 
 baaj = area.chocobos.onion_knight()
 area.chocobos.belgemine(godhand=godhand, baaj=baaj)
-area.chocobos.venus_crest(godhand=godhand, baaj=baaj)
-godhand = area.chocobos.godhand(baaj=baaj)
-area.chocobos.sun_sigil(godhand=godhand, baaj=baaj)
+#area.chocobos.venus_crest(godhand=godhand, baaj=baaj)
+#godhand = area.chocobos.godhand(baaj=baaj)
+#area.chocobos.sun_sigil(godhand=godhand, baaj=baaj)
 
-area.chocobos.upgrade_celestials(godhand=godhand, baaj=baaj, Yuna=True, Wakka=False)
+#area.chocobos.upgrade_celestials(godhand=godhand, baaj=baaj, Yuna=True, Wakka=False)
+
+area.chocobos.end_showcase(godhand=godhand, baaj=baaj)
 
 logger.warning("END SHOWCASE")
-reset.reset_no_battles()
+#reset.reset_no_battles()

@@ -31,14 +31,14 @@ def recover_low_gil():
         pass
     memory.main.check_near_actors()
     pathing.approach_actor_by_id(20482)
-    memory.main.click_to_control()
+    memory.main.click_to_control_3()
     
     if memory.main.get_gil_value() < 3050: 
         while not pathing.set_movement([-544,345]):
             pass
         memory.main.check_near_actors()
         pathing.approach_actor_by_id(20482)
-        memory.main.click_to_control()
+        memory.main.click_to_control_3()
     while not pathing.set_movement([-320,194]):
         pass
     
@@ -117,7 +117,8 @@ def arrival():
                 xbox.menu_b()
                 if not game_vars.csr():
                     xbox.skip_dialog_special(45)  # Skip the Wakka Face scene
-                memory.main.click_to_control()
+                elif not game_vars.story_mode():
+                    memory.main.click_to_control()
                 checkpoint = 7
                 logger.debug("Seymour scene, updating checkpoint.")
             elif checkpoint == 12:  # Upside down T section
@@ -147,9 +148,34 @@ def arrival():
                 menu.equip_weapon(character=4)  # Unequip Scout for selling.
                 pathing.approach_actor_by_id(actor_id=8410)
                 FFXC.set_neutral()
-                memory.main.click_to_diag_progress(11)  # Got any weapons?
+                memory.main.click_to_diag_progress(11)
+                if game_vars.story_mode():
+                    logger.debug("Lend gil?")
+                    memory.main.wait_frames(9)
+                    xbox.menu_down()
+                    xbox.menu_down()
+                    xbox.menu_b()
+                    memory.main.wait_seconds(4)
+                    xbox.menu_b()
+                    memory.main.wait_seconds(2)
+                    xbox.menu_down()
+                    xbox.menu_left()
+                    xbox.menu_up()
+                    xbox.menu_right()
+                    xbox.menu_right()
+                    xbox.menu_right()
+                    xbox.menu_up()  # 1001
+                    xbox.menu_b()
+                    memory.main.wait_seconds(2)
+                    xbox.menu_down()
+                    xbox.menu_b()
+                    memory.main.await_control()
+                    pathing.approach_actor_by_id(actor_id=8410)
+                    FFXC.set_neutral()
+                    memory.main.click_to_diag_progress(11)
                 logger.debug("Got any weapons?")
                 memory.main.wait_frames(9)
+
                 xbox.menu_b()
                 memory.main.wait_frames(46)
                 xbox.menu_right()
@@ -205,7 +231,8 @@ def arrival():
                 FFXC.set_neutral()
                 battle.main.luca_workers_2(early_haste)
                 logger.debug(f"Tidus XP: {memory.main.get_tidus_xp()}")
-                memory.main.click_to_control()
+                if not game_vars.story_mode():
+                    memory.main.click_to_control()
                 if early_haste == 0 and memory.main.get_tidus_xp() >= 312:
                     early_haste = menu.luca_workers()
 
@@ -237,7 +264,7 @@ def arrival():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 xbox.skip_scene()
@@ -294,7 +321,7 @@ def blitz_start():
                 checkpoint += 1
         else:
             FFXC.set_neutral()
-            if memory.main.diag_skip_possible():
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
 
@@ -314,7 +341,7 @@ def after_blitz():
                     pathing.set_movement([-635, -410])
                     xbox.menu_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 10:  # Second chest
                 logger.debug("Second chest")
@@ -322,7 +349,7 @@ def after_blitz():
                     pathing.set_movement([-620, -424])
                     xbox.menu_b()
                 FFXC.set_neutral()
-                memory.main.click_to_control()
+                memory.main.click_to_control_3()
                 checkpoint += 1
             elif checkpoint == 20:  # Target Auron
                 if not game_vars.csr():
@@ -334,7 +361,10 @@ def after_blitz():
                 checkpoint += 1  # After affection changes
             elif checkpoint == 35:  # Bring the party together
                 logger.debug("Bring the party together")
-                memory.main.click_to_event_temple(1)
+                FFXC.set_movement(1,1)
+                memory.main.await_event()
+                FFXC.set_neutral()
+                memory.main.click_to_control()
                 checkpoint += 1
 
             # General pathing
@@ -363,7 +393,7 @@ def after_blitz():
                     memory.main.wait_frames(4)
                     FFXC.set_neutral()
                     checkpoint = 0
-            elif memory.main.diag_skip_possible():
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
             elif memory.main.cutscene_skip_possible():
                 memory.main.wait_frames(2)

@@ -16,7 +16,7 @@ class TidusImpl(Player):
     def __init__(self):
         super().__init__("Tidus", 0, [0, 19, 20, 22, 1])
 
-    def overdrive(self, direction=None, version: int = 0, character=99):
+    def overdrive(self, direction=None, version: int = 99, character=99):
         if game_vars.god_mode():
             logger.warning("Attempting to force a crit, per settings")
             # Determine enemy name and luck stat
@@ -42,7 +42,26 @@ class TidusImpl(Player):
             xbox.tap_left()
         while not memory.main.interior_battle_menu():
             xbox.tap_b()
-        self._navigate_to_position(version, battle_cursor=memory.main.battle_cursor_3)
+        if version == 99:
+            count = memory.main.tidus_od_count()
+            logger.debug(f"Checking overdrive count: {count}")
+            if count < 10:
+                version = 0
+                self._navigate_to_position(0, battle_cursor=memory.main.battle_cursor_3)
+            #elif count < 30:
+                #version = 1
+            #    self._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
+            elif count < 80:
+                #version = 2
+                #self._navigate_to_position(2, battle_cursor=memory.main.battle_cursor_3)
+                # Energy Rain may be undesirable in general.
+                version = 1
+                self._navigate_to_position(1, battle_cursor=memory.main.battle_cursor_3)
+            else:
+                version = 3
+                self._navigate_to_position(3, battle_cursor=memory.main.battle_cursor_3)
+        else:
+            self._navigate_to_position(version, battle_cursor=memory.main.battle_cursor_3)
         while memory.main.interior_battle_menu():
             xbox.tap_b()
         if character != 99 and memory.main.get_enemy_current_hp()[character - 20] != 0:
@@ -54,9 +73,21 @@ class TidusImpl(Player):
         elif direction:
             if direction == "left":
                 xbox.tap_left()
+        xbox.tap_b()
+        xbox.tap_b()
         while not self.overdrive_active():
-            xbox.tap_b()
-        memory.main.wait_frames(11)
+            pass
+        if version == 0:
+            memory.main.wait_frames(13)
+        elif version == 1:
+            memory.main.wait_frames(12)
+        elif version == 2:
+            memory.main.wait_frames(11)
+        elif version == 3:
+            memory.main.wait_frames(10)
+        else:
+            # Backup. I don't know how this can occur.
+            memory.main.wait_frames(10)
         xbox.tap_b()  # First try pog
         logger.info("Hit Overdrive")
 

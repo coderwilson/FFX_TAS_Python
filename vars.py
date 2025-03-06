@@ -70,11 +70,12 @@ class AllVars:
         self.oblitz_attack_val = "255"
 
         # ----Sphere grid
-        self.full_kilik_menu = False
+        self.full_kilika_menu = False
         self.early_tidus_grid_val = False
         self.early_haste_val = -1
         self.wakka_late_menu_val = False
         self.end_game_version_val = 0
+        self.calm_levels_needed = 4
 
         # ----Equipment
         self.zombie_weapon_val = 255
@@ -104,6 +105,7 @@ class AllVars:
         self.flux_overkill_var = False
         self.first_hits = [0] * 8
         self.invert_confirm = False
+        self.bypass_battle_music = config_vars.get("no_battle_music", False)
 
         # === Nemesis stuff ===
         # ----Nemesis variables, unused in any%
@@ -184,6 +186,17 @@ class AllVars:
             self.rails_trials,
             self.rails_egg_hunt,
         ]
+    
+    def story_mode(self):
+        return not self.skip_cutscene_flag
+
+    def activate_story_mode(self):
+        self.skip_cutscene_flag = False
+        self.generate_saves = True
+
+    def deactivate_story_mode(self):
+        self.skip_cutscene_flag = True
+        self.generate_saves = False
 
     def use_legacy_soundtrack(self):
         return self.legacy_soundtrack
@@ -217,6 +230,9 @@ class AllVars:
         logger.debug(f"Area: {self.area_results}")
         logger.debug(f"Species: {self.species_results}")
         logger.debug(f"Original: {self.original_results}")
+    
+    def arena_arrays(self):
+        return self.area_results, self.species_results, self.original_results
 
     def arena_success(self, array_num, index):
         logger.debug(f"arena_success(): {array_num} | {index}")
@@ -275,6 +291,7 @@ class AllVars:
 
     def nemesis_set(self, value):
         self.nemesis_value = value
+        #self.generate_saves = True
 
     def get_nea_zone(self):
         return self.nea_zone
@@ -349,18 +366,26 @@ class AllVars:
     def flux_overkill_success(self):
         self.flux_overkill_var = True
 
+    def update_calm_levels_needed(self, value):
+        self.calm_levels_needed = value
+
+    def get_calm_levels_needed(self):
+        return self.calm_levels_needed
+
     def csr(self):
+        if self.story_mode():
+            return False
         return self.csr_value
 
     def set_csr(self, value):
         logger.debug(f"Setting CSR: {value}")
         self.csr_value = value
 
-    def complete_full_klikk_menu(self):
-        self.full_klikk_menu = True
+    def complete_full_kilika_menu(self):
+        self.full_kilika_menu = True
 
-    def did_full_klikk_menu(self):
-        return self.full_klikk_menu
+    def did_full_kilika_menu(self):
+        return self.full_kilika_menu
 
     def use_pause(self):
         return self.artificial_pauses
@@ -461,6 +486,9 @@ class AllVars:
 
     def get_battle_speedup(self):
         return self.battle_speedup
+    
+    def no_battle_music(self):
+        return self.bypass_battle_music
 
 
 def init_vars():

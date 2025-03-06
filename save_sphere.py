@@ -162,7 +162,13 @@ def touch_and_go():
 
 def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int = 999):
     if game_vars.nemesis() and save_num != 199:
-        save_num += 80
+        save_num += 100
+        game_mode = "Nemesis"
+    elif game_vars.story_mode() and save_num != 199:
+        save_num += 50
+        game_mode = "Story"
+    else:
+        game_mode = "Speed"
     if save_num >= 200:
         logger.debug(f"Cannot save number {save_num} out of bounds error")
         save_num = 999
@@ -240,7 +246,6 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
 
             # game_state already a string
             step_count_val = str(step_count)
-            nem_value = str(game_vars.nemesis())
             save_num_value = str(save_num)
             blitz_win_value = str(game_vars.get_blitz_win())
             end_game_version_val = str(game_vars.end_game_version())
@@ -251,7 +256,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
             new_val = {
                 game_state: {
                     step_count_val: {
-                        nem_value: {
+                        game_mode: {
                             "save_num": save_num_value,
                             "blitz_win_value": blitz_win_value,
                             "end_game_version_val": end_game_version_val,
