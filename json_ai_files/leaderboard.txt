@@ -9,5 +9,5 @@ RNG Seed Leaderboard, Real-time minus Blitzball
    8: 127, 3:03:03
    9:  39, 3:03:05
   10:  92, 3:03:15
-Seeds completed: 113
-Suggested seeds: [33, 96, 228, 34, 240]
+Seeds completed: 115
+Suggested seeds: [104, 51, 205, 1, 139]
