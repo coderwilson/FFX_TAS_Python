@@ -1543,46 +1543,64 @@ def seymour_natus_blitz_win():
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
-
 def seymour_natus_blitz_loss():
     open_grid(character=1)
     yuna_levels = memory.main.get_yuna_slvl()
     logger.warning(f"Sphere levels: {yuna_levels}")
-    if yuna_levels <= 9:
-        game_vars.update_calm_levels_needed(5)
+    game_vars.update_calm_levels_needed(5)  # Always need 5 for Blitz loss logic.
 
     menu_grid.use_first()
     menu_grid.sel_sphere("tele", "left")  # Str+4 by mental break
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("friend", "up")  # next to Str+4 and Agi+2
+    menu_grid.sel_sphere("friend", "up")  # Tidus, next to Str+4 and Agi+2
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     
     menu_grid.use_and_move()
-    grid_right()
-    grid_right()
+    if game_vars.nemesis():
+        grid_up()
+        grid_up()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_move()
+        grid_right()
+        grid_down()
+    else:
+        grid_right()
+        grid_right()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
 
     menu_grid.use_and_move()
-    grid_right()
-    grid_right()
-    grid_right()
-    grid_right()
+    while memory.main.s_grid_cursor_coords() != [446,-1040]:
+        grid_right()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
+    if game_vars.nemesis():
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "none")
     
     menu_grid.use_and_move()
-    grid_right()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("power", "none")
+    if yuna_levels <= 9:
+        grid_down()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+    else:
+        menu_grid.use_and_move()
+        grid_right()
+        grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "none")
 
     menu_grid.use_and_quit()
     memory.main.close_menu()
+
 
 
 def prep_calm_lands():
@@ -1610,17 +1628,15 @@ def prep_calm_lands():
         
     else:
         menu_grid.move_first()
-        '''
-        if game_vars.nemesis() or game_vars.story_mode():
-            grid_up()
-            grid_up()
-            grid_left()
-            menu_grid.move_and_use()
-            menu_grid.sel_sphere("power", "none")
-            menu_grid.use_and_move()
-            grid_up()
-        '''
-        grid_left()
+        coords = memory.main.s_grid_cursor_coords()
+        while coords != [506, -1040]:
+            if coords[0] > 506:
+                grid_left()
+            elif coords[1] < -1040:
+                grid_down()
+            else:
+                grid_right()
+            coords = memory.main.s_grid_cursor_coords()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
@@ -1789,70 +1805,64 @@ def after_ronso():
         memory.main.close_menu()
 
 def after_ronso_blitz_loss():
-    # Added post Terra
+    # Assumes Lulu already moved.
+    # First, for version 3 only, move Kimahri for Friend Sphere movement.
     if game_vars.end_game_version() == 3:
         menu_grid.move_shift_right("Kimahri")
         menu_grid.move_first()
         grid_down()
         grid_down()
-        menu_grid.move_shift_right("Tidus")
-        menu_grid.move_first()
-        grid_right()
-        grid_right()
-        grid_right()
-        grid_down()
-        grid_right()
-        grid_right()
-        grid_right()
-        grid_down()
-        grid_left()
-        grid_left()
-        menu_grid.move_and_use()
-        menu_grid.sel_sphere("ability", "none")
+    
+    # Next, Tidus armor break. Needs to be first for version 3.
+    menu_grid.move_shift_right("Tidus")
+    menu_grid.move_first()
+    grid_right()
+    grid_right()
+    grid_right()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    grid_down()
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")
+    if game_vars.end_game_version() == 3:
         menu_grid.use_and_move()
         grid_right()
-        grid_down()
-        grid_right()
         grid_right()
         grid_down()
-        menu_grid.move_shift_right("Yuna")
-        menu_grid.move_first()
-        grid_right()
-        grid_right()
-        grid_right()
-        menu_grid.move_and_use()
-        menu_grid.sel_sphere("power", "none")
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("power", "none")
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("friend", "up")  # To Tidus
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("power", "left")
-    elif game_vars.end_game_version() == 4:
-        menu_grid.move_shift_right("Yuna")
+        # This lines up for Yuna to teleport to Tidus.
+    
+    menu_grid.move_shift_right("Yuna")
+    elif game_vars.end_game_version() == 4:  # Four return spheres
         menu_grid.use_first()
-        menu_grid.sel_sphere("ret", "up")
+        menu_grid.sel_sphere("ret", "left_up")
         menu_grid.use_and_move()
-        grid_right()
-        grid_right()
-        grid_right()
+        while memory.main.s_grid_cursor_coords() != [670, -1040]:
+            grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
+        
 
     else:
-        menu_grid.move_shift_right("Yuna")
         menu_grid.move_first()
-        grid_right()
-        grid_right()
-        grid_right()
+        while memory.main.s_grid_cursor_coords() != [670, -1040]:
+            grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
     
-    # Merge for any drops, Return < 4.
+    if game_vars.end_game_version() == 3:  # Four friend spheres
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("friend", "none")
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("power", "none")
+    
+    # Merge for any drops except Return == 4.
     if game_vars.end_game_version() in [1,2,3]:
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("friend", "d2")  # To Lulu
@@ -1882,32 +1892,8 @@ def after_ronso_blitz_loss():
         menu_grid.sel_sphere("friend", "down")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
-        menu_grid.move_shift_right("Tidus")
-        menu_grid.move_first()
-        grid_right()
-        grid_left()
-        grid_left()
-        grid_up()
-        grid_left()
-        menu_grid.move_and_quit()
-    else:
-        # Tidus armor break
-        menu_grid.move_shift_right("Tidus")
-        menu_grid.move_first()
-        grid_right()
-        grid_right()
-        grid_right()
-        grid_down()
-        grid_down()
-        grid_down()
-        grid_down()
-        grid_down()
-        grid_down()
-        menu_grid.move_and_use()
-        menu_grid.sel_sphere("ability", "none")
-        menu_grid.use_and_quit()
+    menu_grid.use_and_quit()
     memory.main.close_menu()
-
 
 
 def find_equipment_index(*, owner, equipment_type, ability_array=[], slot_count):
