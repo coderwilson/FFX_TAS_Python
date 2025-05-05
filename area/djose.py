@@ -9,6 +9,7 @@ import vars
 import xbox
 from paths import DjoseDance, DjoseExit, DjosePath, DjoseTrials
 from players import Auron, Tidus, Wakka
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -29,7 +30,7 @@ def path():
     stone_breath = 0
     logger.info("Starting Djose pathing section")
 
-    while memory.main.get_map() != 81:  # All the way into the temple
+    while memory.main.get_map() != 76:  # All the way into the temple
         if last_cp != checkpoint:
             logger.debug(f"Checkpoint {checkpoint}")
             last_cp = checkpoint
@@ -38,7 +39,7 @@ def path():
             if checkpoint in [47, 48] and stone_breath == 1:
                 checkpoint = 49
             elif checkpoint == 49 and stone_breath == 0:
-                checkpoint = 46
+                checkpoint = 47
             # This is for the fabled Djose skip and not yet viable. Feel free to re-try.
             elif checkpoint == 42 and game_vars.try_djose_skip():
                 FFXC.set_movement(-1, 1)
@@ -70,23 +71,67 @@ def path():
                 if checkpoint in [51, 56, 58]:
                     memory.main.click_to_event_temple(0)
                     checkpoint += 1
-                elif (
-                    DjosePath.execute(checkpoint)[0]
-                    < memory.main.get_actor_coords(0)[0]
-                    and checkpoint < 48
-                    and checkpoint > 18
-                ):
-                    checkpoint += 1
-                elif (
-                    DjosePath.execute(checkpoint)[1]
-                    < memory.main.get_actor_coords(0)[1]
-                    and checkpoint < 48
-                    and checkpoint > 18
-                ):
-                    checkpoint += 1
+                #elif (
+                #    DjosePath.execute(checkpoint)[0]
+                #    < memory.main.get_actor_coords(0)[0]
+                #    and checkpoint < 48
+                #    and checkpoint > 18
+                #):
+                #    checkpoint += 1
+                #elif (
+                #    DjosePath.execute(checkpoint)[1]
+                #    < memory.main.get_actor_coords(0)[1]
+                #    and checkpoint < 49
+                #    and checkpoint > 18
+                #):
+                #    checkpoint += 1
                 # General pathing
                 elif pathing.set_movement(DjosePath.execute(checkpoint)):
                     checkpoint += 1
+        else:
+            FFXC.set_neutral()
+            if memory.main.battle_active():
+                logger.debug("Starting battle")
+                if stone_breath == 0:
+                    logger.debug("Still looking for Stone Breath.")
+                stone_breath = battle.main.djose(stone_breath, battle_count=count_battles)
+                logger.debug("Battles complete.")
+                count_battles += 1
+            elif memory.main.menu_open():
+                xbox.menu_b()
+            elif memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.menu_b()
+    split_timer()
+    
+    while memory.main.get_map() != 81:  # All the way into the temple
+        if last_cp != checkpoint:
+            logger.debug(f"Checkpoint {checkpoint}")
+            last_cp = checkpoint
+
+        if memory.main.user_control():
+            # Map changes
+            if memory.main.get_map() == 76 and checkpoint < 51:
+                checkpoint = 52
+            if checkpoint in [51, 56, 58]:
+                memory.main.click_to_event_temple(0)
+                checkpoint += 1
+            elif (
+                DjosePath.execute(checkpoint)[0]
+                < memory.main.get_actor_coords(0)[0]
+                and checkpoint < 48
+                and checkpoint > 18
+            ):
+                checkpoint += 1
+            elif (
+                DjosePath.execute(checkpoint)[1]
+                < memory.main.get_actor_coords(0)[1]
+                and checkpoint < 48
+                and checkpoint > 18
+            ):
+                checkpoint += 1
+            # General pathing
+            elif pathing.set_movement(DjosePath.execute(checkpoint)):
+                checkpoint += 1
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():

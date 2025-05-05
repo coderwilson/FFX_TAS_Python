@@ -147,15 +147,25 @@ def arrival():
         elif memory.main.diag_skip_possible() and not game_vars.story_mode():
             xbox.tap_confirm()
 
-    decide_nea()
-    # This point should be on the map just after the fireplace chat.
     re_equip_ne = False
-    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 1:
+    level_need = 0
+    if game_vars.story_mode():
+        game_vars.set_nea_zone(99)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
         memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
         menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+        level_need = 7
         re_equip_ne = True
+    else:
+        decide_nea()
+        # This point should be on the map just after the fireplace chat.
+        
+        if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 1:
+            memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+            menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+            re_equip_ne = True
 
-    game_vars.set_skip_zan_luck(decide_luck())
+        game_vars.set_skip_zan_luck(decide_luck())
     logs.write_stats("Zanarkand Luck Skip:")
     logs.write_stats(game_vars.get_skip_zan_luck())
     # game_vars.set_skip_zan_luck(True) #For testing
@@ -200,15 +210,32 @@ def arrival():
             FFXC.set_neutral()
 
             if memory.main.battle_active():
-                battle.main.charge_rikku_od()
-                if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
-                    re_equip_ne = False
-                    memory.main.click_to_control()
-                    memory.main.update_formation(
-                        Tidus, Yuna, Auron, full_menu_close=False
-                    )
-                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                    memory.main.close_menu()
+                if game_vars.story_mode():
+                    if memory.main.overdrive_state_2()[6] != 100:
+                        battle.main.charge_rikku_od()
+                    else:
+                        battle.main.zanarkand_levels()
+                    battle.main.wrap_up()
+                    if (
+                        level_need <= memory.main.get_yuna_slvl() and 
+                        memory.main.overdrive_state_2()[6] == 100
+                    ):
+                        re_equip_ne = False
+                        memory.main.update_formation(
+                            Tidus, Yuna, Auron, full_menu_close=False
+                        )
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                        memory.main.close_menu()
+                else:
+                    battle.main.charge_rikku_od()
+                    if re_equip_ne and memory.main.overdrive_state_2()[6] == 100:
+                        re_equip_ne = False
+                        memory.main.click_to_control()
+                        memory.main.update_formation(
+                            Tidus, Yuna, Auron, full_menu_close=False
+                        )
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                        memory.main.close_menu()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
             elif memory.main.menu_open():

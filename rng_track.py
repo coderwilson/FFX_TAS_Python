@@ -23,37 +23,37 @@ def current_battle_formation() -> []:
         return all_formations[battle_num]
 
 def luck_check(fiend_name:str):
-    library_check = MONSTERS[fiend_name].stats["luck"]
-    logger.debug("== Dict Check: {library_check}")
-    logger.debug("== Dict Check: {library_check}")
-    logger.debug("== Dict Check: {library_check}")
-    logger.debug("== Dict Check: {library_check}")
-    if fiend_name in ["arm","cid","circle","crane","dummy","gate_lock","gate_lock_2","gemini"]:
-        return 0
-    if fiend_name in ["geneauxs_tentacle","head","kimahri_weapon","mortiphasm","mortiphasm_3"]:
-        return 0
-    if fiend_name in ["mortiphasm_4","mortiphasm_5","negator","nemesis","oblitzerator"]:
-        return 0
-    if fiend_name.find("possessed") != -1:
-        return 0
-    if fiend_name.find("sinscale") != -1:
-        return 0
-    if fiend_name in ["pupu","sahagin_4","sahagin_chief"]:
-        return 0
-    if fiend_name in ["sinspawn_ammes","tentacle","vouivre_2","yu_yevon"]:
-        return 10
-    if fiend_name in ["stratoavis"]:
-        return 18
-    if fiend_name in ["anima","lord_ochu","mortibody","mortiphasm_2","neslug","ornitholestes"]:
-        return 20
-    if fiend_name in ["seymour_omnis","yunalesca"]:
-        return 20
-    if fiend_name in ["kottos"]:
-        return 25
-    if fiend_name in ["fenrir"]:
-        return 30
-    if fiend_name in ["hornet"]:
-        return 30
+    try:
+        library_check = MONSTERS[fiend_name].stats["Luck"]
+        logger.debug(f"== Dict Check: {library_check}")
+        return library_check
+    except:
+        if fiend_name in ["arm","cid","circle","crane","dummy","gate_lock","gate_lock_2","gemini"]:
+            return 0
+        if fiend_name in ["geneauxs_tentacle","head","kimahri_weapon","mortiphasm","mortiphasm_3"]:
+            return 0
+        if fiend_name in ["mortiphasm_4","mortiphasm_5","negator","nemesis","oblitzerator"]:
+            return 0
+        if fiend_name.find("possessed") != -1:
+            return 0
+        if fiend_name.find("sinscale") != -1:
+            return 1
+        if fiend_name in ["pupu","sahagin_4","sahagin_chief"]:
+            return 0
+        if fiend_name in ["sinspawn_ammes","tentacle","vouivre_2","yu_yevon"]:
+            return 10
+        if fiend_name in ["stratoavis"]:
+            return 18
+        if fiend_name in ["anima","lord_ochu","mortibody","mortiphasm_2","neslug","ornitholestes"]:
+            return 20
+        if fiend_name in ["seymour_omnis","yunalesca"]:
+            return 20
+        if fiend_name in ["kottos"]:
+            return 25
+        if fiend_name in ["fenrir"]:
+            return 30
+        if fiend_name in ["hornet"]:
+            return 30
     return 15
 
 
@@ -1081,6 +1081,15 @@ def guards_to_calm_equip_drop_count(
             result_array[i] == 99
         else:
             result_array[i] = best
+    
+    # Now, we want to prefer three-larvae results.
+    if result_array[0] % 2 == 1:
+        if result_array[1] % 2 == 1:
+            if result_array[2] % 2 == 0:
+                result_array[0] = 99
+                result_array[1] = 99
+        else:
+            result_array[0] = 99
     logger.warning(f"Steal check: {result_array}")
     return result_array
 
@@ -1089,7 +1098,7 @@ def purifico_to_nea(
     parent_array = [],
     ptr = 3,
     stage=0,  # used to skip forward, reassess in Calm or after defender X.
-    report=False
+    report=True
 ):
     # parent_array passes in enemies that will drop earlier, passed from earlier in the run.
     # ptr is our position on the RNG10 array. Needs to be pre-advanced to last check +3.
@@ -1115,7 +1124,7 @@ def purifico_to_nea(
         ptr += 3
         
         # Two larvae path
-        results[0].append("evrae_altana")
+        results[1].append("evrae_altana")
         #ptr+3
         #Ifrit
         #ptr+6
@@ -1126,16 +1135,16 @@ def purifico_to_nea(
         #ykt-63
         chance = 30
         if (test_array[ptr+12] & 0x7FFFFFFF) % 255 < chance:
-            results[0].append("ykt-63")
+            results[1].append("ykt-63")
             logger.debug("Robot 1 drops item")
         #ptr+15
         
         chance = 60
         # Third larvae path
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
-            results[1].append("maze_larva")
+            results[0].append("maze_larva")
         #ptr+3
-        results[1].append("evrae_altana")
+        results[0].append("evrae_altana")
         #ptr+6
         #Ifrit
         #ptr+9
@@ -1297,7 +1306,7 @@ def final_nea_check(with_ronso:bool = False):
     result_possible = False
     for i in range(max_drop+1):
         results = ronso_array + epaaj_array + ghost_array
-        result_possible, _, _ = rng_alignment_before_nea(enemies=results, report=False)
+        result_possible, _, _ = rng_alignment_before_nea(enemies=results, report=True)
         if result_possible:
             if len(ronso_array) == 0:
                 check = "without"

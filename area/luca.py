@@ -11,6 +11,7 @@ import vars
 import xbox
 from paths import Luca1, Luca3, LucaPreBlitz
 from players import CurrentPlayer
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()

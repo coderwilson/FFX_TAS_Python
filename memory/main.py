@@ -383,9 +383,11 @@ def battle_cursor_2():
 
 
 def battle_cursor_3():
-    global base_value
-    key = base_value + 0x00F3CAFE
-    return process.read_bytes(key, 1)
+    try:
+        key = base_value + 0x00F3CAFE
+        return process.read_bytes(key, 1)
+    except:
+        return 255
 
 
 def overdrive_menu_active():
@@ -930,9 +932,12 @@ def get_mana():
     global base_value
 
     key = get_item_slot(71)
-    speed = get_item_count_slot(key)
-    logger.debug(f"Mana spheres: {speed}")
-    return speed
+    if key == 255:
+        mana = 0
+    else:
+        mana = get_item_count_slot(key)
+    logger.debug(f"Mana spheres: {mana}")
+    return mana
 
 
 def get_speed():
@@ -940,7 +945,7 @@ def get_speed():
 
     key = get_item_slot(72)
     speed = get_item_count_slot(key)
-    logger.debug(f"Speed spheres: {speed}")
+    #logger.debug(f"Speed spheres: {speed}")
     return speed
 
 
@@ -3473,14 +3478,18 @@ def armor_array_character(char_num):
 
 
 def equipped_armor_has_ability(char_num: int, ability_num: int = 0x801D):
-    equip_handles = armor_array_character(char_num)
-    while len(equip_handles) > 0:
-        current_handle = equip_handles.pop(0)
-        if current_handle.is_equipped() == char_num:
-            if current_handle.has_ability(ability_num):
-                return True
-            else:
-                return False
+    try:
+        equip_handles = armor_array_character(char_num)
+        while len(equip_handles) > 0:
+            current_handle = equip_handles.pop(0)
+            if current_handle.is_equipped() == char_num:
+                if current_handle.has_ability(ability_num):
+                    return True
+                else:
+                    return False
+        return False
+    except:
+        return False
 
 
 def equip_weap_cursor():
@@ -4456,22 +4465,25 @@ def rikku_mix_damage() -> List[int]:
 
 
 def future_attack_will_crit(
-    character: int, char_luck: int, enemy_luck: int, equipment_bonus: int = 0, attack_index: int = 1, burn_rolls: int = 0
+    character: int, char_luck: int, enemy_luck: int, 
+    equipment_bonus: int = 0, attack_index: int = 1, 
+    burn_rolls: int = 0, report: bool = False
 ) -> bool:
     # Returns if a specific attack in the future will crit.
     # Attack Index 1 represents the next attack.
     # Assumes no escape attempts, primarily this is used for Aeons anyway.
-    rng_index = min(20 + character, 27)
-    rng_array = rng_array_from_index(index=rng_index, array_len=200)
-
-
-    for i in range(burn_rolls):
-        del rng_array[0]
-
     if attack_index > 90:
         return False
-    crit_roll = rng_array[attack_index * 2] % 101
+    ptr = (attack_index*2) + burn_rolls
+    rng_index = min(20 + character, 27)
+    #rng_array = rng_array_from_index(index=rng_index, array_len=200)
+    rng_val = rng_array_from_index(index=rng_index, array_len=ptr+1)[ptr] & 0x7FFFFFFF
+
+    #crit_roll = (rng_array[attack_index * 2] & 0x7FFFFFFF) % 101
+    crit_roll = rng_val % 101
     crit_chance = char_luck - enemy_luck + equipment_bonus
+    if report:
+        logger.warning(f"Crit check: {crit_roll} < {crit_chance} | RNG index {rng_index}")
 
     return crit_roll < crit_chance
 

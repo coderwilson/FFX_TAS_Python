@@ -11,7 +11,7 @@ import save_sphere
 import vars
 import xbox
 from paths import InsideSin
-from players import Auron, Rikku, Tidus, Yuna, Bahamut
+from players import Auron, Rikku, Tidus, Yuna, Bahamut, Wakka, CurrentPlayer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -78,6 +78,86 @@ def shedinja():  # shelinda
         memory.main.click_to_diag_progress(74)
         memory.main.click_to_diag_progress(28)
         memory.main.click_to_control()
+    memory.main.await_control()
+    low_speed_sphere_check()
+
+
+def low_speed_sphere_check():
+    speed_needed = 2  # Minimum need before BFA
+    if memory.main.get_speed() >= speed_needed:
+        logger.manip(f"Good on speed spheres, moving straight onward. {memory.main.get_speed()}/{speed_needed}")
+        return
+    elif game_vars.nemesis():
+        logger.manip("No speed sphere check on Nemesis route.")
+    logger.manip(f"Short on speed spheres. {memory.main.get_speed()}/{speed_needed}. Initiating recovery.")
+    from nemesis.arena_prep import air_ship_destination, return_to_airship
+    from paths.destro_spheres import besaid_destro_sphere
+    #air_ship_destination(dest_num=2)
+    pathing.approach_actor_by_id(actor_id=8449)
+    while memory.main.get_map() != 382:
+        xbox.tap_confirm()
+    memory.main.wait_frames(150)
+    xbox.tap_confirm()
+    memory.main.wait_frames(9)
+    xbox.tap_down()
+    xbox.tap_confirm()
+    memory.main.wait_frames(9)
+    xbox.tap_confirm()
+    memory.main.await_control()
+    memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
+    menu.remove_all_nea()
+    
+    # This section borrowed and updated from the showcase.
+    checkpoint = 14
+    current_map = memory.main.get_map()
+    while memory.main.get_map() != 22:
+        if current_map != memory.main.get_map():
+            checkpoint += 1
+            current_map = memory.main.get_map()
+        if memory.main.user_control():
+            if pathing.set_movement(besaid_destro_sphere.execute(checkpoint)):
+                checkpoint += 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+    
+    points = [
+        [451,184],
+        [435,153]
+    ]
+    while memory.main.get_map() == 22:
+        if memory.main.user_control():
+            if memory.main.get_speed() < speed_needed:
+                if pathing.set_movement(points[checkpoint%2]):
+                    checkpoint += 1
+                    logger.debug(f"Checkpoint {checkpoint}")
+            else:
+                pathing.set_movement([500,250])
+        else:
+            FFXC.set_neutral()
+            if memory.main.battle_active():
+                while memory.main.battle_active():
+                    if memory.main.turn_ready():
+                        CurrentPlayer().attack()
+                battle.main.wrap_up()
+    memory.main.await_control()
+    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+
+    checkpoint = 27
+    while checkpoint != 19:
+        if memory.main.user_control():
+            if pathing.set_movement(besaid_destro_sphere.execute(checkpoint)):
+                checkpoint -= 1
+                logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+    FFXC.set_movement(0,-1)
+    memory.main.await_event()
+    FFXC.set_neutral()
+    memory.main.await_control()
+    return_to_airship()
+
+    pass
 
 
 def exit_cockpit():
@@ -156,16 +236,10 @@ def inside_sin(checkpoint = 0):
     rikku_charge = False
     yuna_xp = False
     if checkpoint < 41:
-        yuna_needs_levels = 17
+        yuna_needs_levels = 15
     else:
         yuna_needs_levels = 19
     touch_save = False
-    if memory.main.get_yuna_slvl() < yuna_needs_levels:
-        # We will get some XP from Seymour.
-        yuna_xp = True
-        touch_save = True
-        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
     if checkpoint == 0 and memory.main.get_map() != 296:
         logger.info("Moving to position next to save sphere")
         while not pathing.set_movement([247, -237]):
@@ -185,21 +259,20 @@ def inside_sin(checkpoint = 0):
         FFXC.set_neutral()
         logger.debug("Ready to start pathing")
 
-        if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
-            re_equip_ne = True
-            rikku_charge = True
-            memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-            menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-        elif memory.main.get_yuna_slvl() < yuna_needs_levels:
-            yuna_xp = True
-            touch_save = True
-            #memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-            #menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-        else:
-            re_equip_ne = False
-            memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
-        memory.main.close_menu()
-
+    if memory.main.overdrive_state_2()[6] != 100 and game_vars.get_nea_zone() == 3:
+        re_equip_ne = True
+        rikku_charge = True
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+    elif memory.main.get_yuna_slvl() < yuna_needs_levels:
+        yuna_xp = True
+        touch_save = True
+        #memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+        #menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+    else:
+        re_equip_ne = False
+        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+    memory.main.close_menu()
     
     while memory.main.get_map() != 327:  # All the way to the final save sphere
         if memory.main.user_control():
@@ -230,6 +303,16 @@ def inside_sin(checkpoint = 0):
             elif checkpoint == 69 and touch_save:
                 save_sphere.touch_and_go()
                 touch_save = False
+            
+            # Recover from elevator soft lock
+            elif memory.main.get_actor_coords(0)[2] < -25:
+                logger.debug(f"Elevator scenario identified. Recovering.")
+                while not pathing.set_movement([57,-182]):
+                    pass
+                while not pathing.set_movement([46,-190.5]):
+                    pass
+                FFXC.set_neutral()
+                memory.main.wait_seconds(2)
 
             # General Pathing
             elif pathing.set_movement(InsideSin.execute(checkpoint)):

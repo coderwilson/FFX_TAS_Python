@@ -4,11 +4,37 @@ import memory.main
 import vars
 import xbox
 import battle.main
+import pathing
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
+
+
+def arena_npc():
+    memory.main.await_control()
+    if memory.main.get_map() != 307:
+        return
+    while not (
+        memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
+    ):
+        if memory.main.user_control():
+            if memory.main.get_coords()[1] > -12 and memory.main.get_actor_angle(0) > -1:
+                xbox.menu_down()
+                memory.main.wait_frames(12)
+            else:
+                pathing.approach_actor_by_id(actor_id=8241)
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_progress_flag() == 59:
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.menu_a()
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
+    memory.main.wait_frames(3)  # This buffer can be improved later.
 
 
 def area_array():
@@ -54,23 +80,35 @@ def arena_menu_select(choice: int = 2):
     logger.debug(f"Selecting menu option: {choice}")
     if game_vars.use_pause():
         memory.main.wait_frames(2)
-    if choice == 4 and memory.main.user_control():
-        logger.debug("No menu up, no need to select option 4")
-    else:
-        while not memory.main.blitz_cursor() == choice:
-            while not memory.main.blitz_cursor() == choice:
-                if memory.main.battle_wrap_up_active():
-                    battle.main.wrap_up()
-                if choice == 4:
-                    xbox.menu_a()
-                elif choice == 3:
-                    xbox.menu_up()
+    if choice == 4:
+        while not memory.main.user_control():
+            if memory.main.battle_wrap_up_active():
+                xbox.tap_confirm()
+            elif memory.main.diag_skip_possible():
+                if memory.main.blitz_cursor() != 4 or memory.main.menu_open():
+                    xbox.tap_back()
                 else:
-                    xbox.menu_down()
-                memory.main.wait_frames(1)
-                if game_vars.use_pause():
-                    memory.main.wait_frames(2)
-            memory.main.wait_frames(2)
+                    xbox.tap_confirm()
+            else:
+                # I don't know, something goes here I guess.
+                pass
+                #logger.warning("Attempting to select option 4 - Unidentified state. Standing by.")
+    else:
+        if memory.main.user_control():
+            arena_npc()
+        elif memory.main.diag_skip_possible():
+            while not memory.main.blitz_cursor() == choice:
+                while not memory.main.blitz_cursor() == choice:
+                    if memory.main.battle_wrap_up_active():
+                        battle.main.wrap_up()
+                    elif choice == 3:
+                        xbox.menu_up()
+                    else:
+                        xbox.menu_down()
+                    memory.main.wait_frames(1)
+                    if game_vars.use_pause():
+                        memory.main.wait_frames(2)
+                memory.main.wait_frames(2)
         xbox.menu_b()
         memory.main.wait_frames(3)
 

@@ -19,6 +19,7 @@ from paths import (
     NEReturnGreen,
 )
 from players import Auron, Rikku, Tidus
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -27,6 +28,7 @@ FFXC = xbox.controller_handle()
 
 
 def loop_back_from_ronso(checkpoint=0):
+    write_big_text("")
     memory.main.update_formation(Tidus, Rikku, Auron)
     battle.main.heal_up(full_menu_close=True)
     rng_track.print_manip_info()
@@ -47,6 +49,7 @@ def loop_back_from_ronso(checkpoint=0):
 
 
 def to_hidden_cave():
+    next_green(report=True)
     memory.main.update_formation(Tidus, Rikku, Auron)
     battle.main.heal_up(full_menu_close=True)
     rng_track.print_manip_info()
@@ -55,10 +58,15 @@ def to_hidden_cave():
     checkpoint = 0
     prep_battles = 0
     #next_drop, advances = rng_track.nea_track()
-    nea_possible_check, next_drop = rng_track.final_nea_check()
+    #nea_possible_check, next_drop = rng_track.final_nea_check()
+    _, next_drop = rng_track.final_nea_check()
+    nea_possible_check = True
+    write_str = f"Next drop: {next_drop}\nRNG10: "
+    write_str += f"{memory.main.next_chance_rng_10()}"
+    write_big_text(write_str)
     while memory.main.get_map() != 56:
-        if not nea_possible_check or next_drop == 99:
-            return False
+        #if not nea_possible_check or next_drop == 99:
+        #    return False
         if memory.main.user_control():
             if checkpoint < 5 and memory.main.get_map() == 266:
                 checkpoint = 5
@@ -68,6 +76,7 @@ def to_hidden_cave():
             if checkpoint == 8 and (
                 next_drop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
+                write_big_text("")
                 if not last_report:
                     logger.info("Need more advances before entering cave.")
                     last_report = True
@@ -106,11 +115,15 @@ def to_hidden_cave():
                     logger.error(f"RNG12: {memory.main.next_chance_rng_12()}")
                     battle.main.flee_all()
                 prep_battles += 1
+                game_vars.ne_battles_increment()
                 memory.main.update_formation(Tidus, Rikku, Auron)
                 save_sphere.touch_and_go()
                 #next_drop, advances = rng_track.nea_track()
                 nea_possible_check, next_drop = rng_track.final_nea_check()
                 rng_track.print_manip_info()
+                write_str = f"Next drop: {next_drop}\nRNG10: "
+                write_str += memory.main.next_chance_rng_10()
+                write_big_text(write_str)
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
@@ -120,7 +133,7 @@ def to_hidden_cave():
     return True
 
 
-def next_green() -> bool:
+def next_green(report:bool = False) -> bool:
     next_green_val = [0, 0, 0]
     next_green_val[0] = memory.main.next_chance_rng_01(version="green")[0][0]
     next_green_val[1] = memory.main.next_chance_rng_01(version="green")[0][1]
@@ -135,12 +148,18 @@ def next_green() -> bool:
     if next_green_val[0] < next_white:
         if next_green_val[0] >= 2:
             go_green = True
+            if report:
+                write_big_text(f"Green - Extra battles: {next_green_val[0]}")
     if not go_green and next_green_val[1] < next_white:
         if next_green_val[1] >= 2:
             go_green = True
+            if report:
+                write_big_text(f"Green - Extra battles: {next_green_val[1]}")
     if not go_green and next_green_val[2] < next_white:
         if next_green_val[2] >= 2:
             go_green = True
+            if report:
+                write_big_text(f"Green - Extra battles: {next_green_val[2]}")
     logger.debug(f"## Going to Green: {go_green}")
     if game_vars.accessibility_vars()[2]:
         if go_green:
@@ -149,6 +168,8 @@ def next_green() -> bool:
         else:
             tts.message("White")
             tts.message(str(next_white))
+            if report:
+                write_big_text(f"White - Extra battles: {next_white}")
     return go_green
 
 
@@ -178,19 +199,22 @@ def drop_hunt():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
+                write_big_text("")
                 if memory.main.get_encounter_id() in [319, 323]:
                     battle.main.ghost_kill()
                 else:
                     battle.main.flee_all()
                 memory.main.click_to_control_3()
-                memory.main.update_formation(Tidus, Rikku, Auron)
+                memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=False)
                 memory.main.check_nea_armor()
+                next_green()
                 if game_vars.ne_armor() == 255:
                     if next_green() and not go_green:
                         go_green = True
                     pre_ghost_battles += 1
                 memory.main.close_menu()
+                game_vars.ne_battles_increment()
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
@@ -203,16 +227,13 @@ def drop_hunt():
 
 
 def return_to_gagazet():
-    unequip = False
+    nea_actor = memory.main.name_from_number(char_num=game_vars.ne_armor())
+    write_big_text(f"NEA dropped for: {nea_actor}")
     if memory.main.get_coords()[0] > 300:
         go_green = True
         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-        if memory.main.overdrive_state_2()[6] != 100:
-            unequip = True
     else:
         go_green = False
-        if memory.main.overdrive_state_2()[6] == 100:
-            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
 
     checkpoint = 0
     while memory.main.get_map() != 259:
@@ -226,9 +247,6 @@ def return_to_gagazet():
                     logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint < 1 and memory.main.get_map() == 266:
                 checkpoint = 1
-            elif checkpoint == 2 and unequip:
-                menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-                unequip = False
             elif checkpoint == 2:
                 save_sphere.touch_and_go()
                 checkpoint += 1

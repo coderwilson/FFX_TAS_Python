@@ -1,4 +1,5 @@
 import logging
+import pyautogui
 
 import battle.boss
 import battle.main
@@ -21,6 +22,11 @@ game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 
 logger = logging.getLogger(__name__)
+
+
+def split_timer():
+    logger.warning("SPLIT! Sending to timer.")
+    pyautogui.press("num1")
 
 
 def new_game(gamestate):
@@ -63,8 +69,8 @@ def new_game(gamestate):
             memory.main.click_to_diag_progress(8,force=True)
         else:
             memory.main.click_to_diag_progress(7,force=True)
-            for i in range(8):
-                xbox.tap_b()
+            #for i in range(8):
+            #    xbox.tap_b()
     else:  # Load Game
         while not memory.main.save_menu_open():
             if memory.main.get_map() != 23:
@@ -81,15 +87,16 @@ def new_game(gamestate):
 def new_game_2():
     # New game selected. Next, select options.
     time_buffer = 15
-    #logger.info("====================================")
-    #logger.info("Starting in")
-    #logger.info("33")
-    #memory.main.wait_frames(time_buffer)
-    #logger.info("2")
-    #memory.main.wait_frames(time_buffer)
-    ##logger.info("1")
-    #memory.main.wait_frames(time_buffer)
+    logger.info("====================================")
+    logger.info("Starting in")
+    logger.info("3")
+    memory.main.wait_frames(time_buffer)
+    logger.info("2")
+    memory.main.wait_frames(time_buffer)
+    logger.info("1")
+    memory.main.wait_frames(time_buffer)
     logger.info("GO!!! Good fortune!")
+    split_timer()
     logger.info("====================================")
     #logger.info(f"Set seed: {memory.main.rng_seed()}")
     xbox.menu_b()
@@ -189,7 +196,7 @@ def listen_story():
                     xbox.skip_dialog(3)
 
 
-def ammes_battle_truerng():
+def ammes_battle_classic():
     logger.info("Starting ammes")
     xbox.click_to_battle()
     logger.debug("Auron Overdrive turn start")
@@ -232,7 +239,7 @@ def ammes_battle_truerng():
     Auron.overdrive()
 
 
-def ammes_battle(tidus_total_attacks: int, tidus_potion: bool):
+def ammes_battle_crimson(tidus_total_attacks: int, tidus_potion: bool):
     logger.info("Starting ammes")
     xbox.click_to_battle()
     write_seed_num(seed=memory.main.rng_seed())
@@ -280,7 +287,7 @@ def ammes_battle(tidus_total_attacks: int, tidus_potion: bool):
     Auron.overdrive()
 
 
-def after_ammes_truerng():
+def after_ammes_classic():
     memory.main.click_to_control()
     checkpoint = 0
     # memory.main.wait_frames(90)
@@ -328,7 +335,7 @@ def after_ammes_truerng():
                 xbox.skip_stored_scene(3)
 
 
-def after_ammes(tanker_sinscale_kill: bool, klikk_steals: int):
+def after_ammes_crimson(tanker_sinscale_kill: bool, klikk_steals: int):
     memory.main.click_to_control()
     checkpoint = 0
     strats_calculated = False

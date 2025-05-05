@@ -11,8 +11,10 @@ from pathing import approach_coords
 import save_sphere
 import vars
 import xbox
+import time
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
 from players import Tidus, Wakka, Yuna, Lulu, Valefor
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
@@ -451,7 +453,7 @@ def forest_3():
     if game_vars.story_mode():
         valefor_charge = memory.main.overdrive_state()[7] == 20
     checkpoint = 0
-    while memory.main.get_map() != 167:  # All the way to the boats
+    while memory.main.get_map() != 46:  # Back to the village (i.e. out of woods)
         if memory.main.user_control():
             # Events
             if checkpoint == 68:
@@ -490,3 +492,53 @@ def forest_3():
     # logs.write_stats(str(kilika_battles))
     # logs.write_stats("Kilika optimal battles (South):")
     # logs.write_stats(str(optimal_battles))
+
+    # Back in the village.
+    split_timer()
+
+    last_coords_report_time = 0
+    while memory.main.get_story_progress() < 372:
+        if memory.main.user_control():
+            coords = memory.main.get_coords()
+            
+            current_time = time.time()
+            if current_time - last_coords_report_time >= 1:
+                logger.debug(f"Coords: {coords}")
+                last_coords_report_time = current_time
+            
+            if memory.main.get_map() == 46:
+                if coords[1] > 200:
+                    pathing.set_movement([-154,190])
+                elif coords[1] > 160:
+                    pathing.set_movement([-131,155])
+                elif coords[1] > 112 and coords[0] < -107:
+                    pathing.set_movement([-119,105])
+                elif coords[0] < -5:
+                    pathing.set_movement([1,104])
+                elif coords[0] < 70:
+                    pathing.set_movement([73,104])
+                elif coords[0] < 92 and coords[1] > 82:
+                    pathing.set_movement([94,76])
+                else:
+                    pathing.set_movement([95,1])
+            elif memory.main.get_map() == 16:
+                if coords[0] > -51:
+                    pathing.set_movement([-59,-203])
+                elif coords[0] > -135:
+                    pathing.set_movement([-140,-231])
+                elif coords[0] > -200:
+                    pathing.set_movement([-206,-245])
+                else:
+                    pathing.set_movement([-278,-255])
+            else:
+                FFXC.set_neutral()
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_progress_flag() == 38:
+                xbox.tap_confirm()
+            elif game_vars.story_mode():
+                pass
+            else:
+                if memory.main.diag_skip_possible():
+                    xbox.tap_confirm()
+

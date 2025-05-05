@@ -14,6 +14,8 @@ import vars
 import xbox
 from paths import BevelleAirship, BevellePreTrials, BevelleTrials, SutekiDaNe
 from players import Auron, Kimahri, Lulu, Rikku, Tidus, Yuna
+from area.dream_zan import split_timer
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -100,7 +102,7 @@ def guards():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 battle.main.guards(guard_num, sleeping_powders)
-                if guard_num == 2:
+                if guard_num in [2,4] or not sleeping_powders:
                     #if Rikku.hp() < 250:
                     #    battle.main.heal_up_2(0, single_item=True, full_menu_close=False)
                     memory.main.update_formation(Tidus, Lulu, Rikku)
@@ -125,6 +127,7 @@ def guards():
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
     logger.info("--- End of Bevelle guards")
+    write_big_text("")
 
     checkpoint = 0
     while checkpoint < 8:
@@ -460,7 +463,7 @@ def trials_end():
             checkpoint += 1
         else:
             FFXC.set_neutral()
-
+    split_timer()
     FFXC.set_neutral()
 
     # Name for Bahamut
@@ -488,14 +491,16 @@ def via_purifico():
     # Print RNG info
     #rng_track.guards_to_calm_equip_drop_count(guard_battle_num=6,report_num=0)
     routes, best = rng_track.purifico_to_nea()
+    write_big_text(str(routes))
     
     # Determine variables for the path forward.
-    game_vars.set_force_third_larvae(bool((best % 2) == 1))
+    if bool(best % 2 == 0 and routes[best] != routes[best+1]):
+        game_vars.set_force_third_larvae(True)
+    else:
+        game_vars.set_force_third_larvae(False)
     game_vars.set_def_x_drop(bool((best % 4) >= 2))
     game_vars.set_nea_after_bny(bool(best >= 4))
     logger.manip(f"Third larvae: {game_vars.get_force_third_larvae()}")
-    logger.manip(f"Defender X: {game_vars.get_def_x_drop()}")
-    logger.manip(f"B&Y: {game_vars.get_nea_after_bny()}")
     #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
     
     memory.main.click_to_control_3()
@@ -578,6 +583,7 @@ def via_purifico():
             FFXC.set_neutral()
             if not game_vars.story_mode():
                 xbox.tap_confirm()
+    split_timer()
     return True
 
 
@@ -611,7 +617,8 @@ def evrae_altana():
                 logger.debug("Mark")
                 logger.debug(memory.main.get_encounter_id())
                 if memory.main.get_encounter_id() == 266:
-                    rng_track.purifico_to_nea(stage=1)
+                    paths, best = rng_track.purifico_to_nea(stage=1)
+                    write_big_text(str(paths))
                     logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
             elif memory.main.battle_wrap_up_active():
                 xbox.menu_b()
@@ -783,7 +790,6 @@ def seymour_natus():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
-
     logger.info("Natus fight complete, onward to cutscenes.")
     memory.main.click_to_control()
 

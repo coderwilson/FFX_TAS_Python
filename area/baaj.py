@@ -10,6 +10,7 @@ import save_sphere
 import screen
 import vars
 import xbox
+from nemesis.arena_prep import split_timer
 from paths import BaajHallway, BaajPuzzle, BaajRamp
 from players import CurrentPlayer, Rikku, Tidus
 
@@ -19,7 +20,7 @@ FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
 
 
-def entrance_truerng(checkpoint: int = 0):
+def entrance_classic(checkpoint: int = 0):
     memory.main.await_control()
     logger.info("Starting Baaj exterior area")
     FFXC.set_neutral()
@@ -72,7 +73,7 @@ def entrance_truerng(checkpoint: int = 0):
                 xbox.tap_b()
 
 
-def entrance(sahagin_b_first: bool, geos_potion: bool, geos_attacks: int, checkpoint: int = 0):
+def entrance_crimson(sahagin_b_first: bool, geos_potion: bool, geos_attacks: int, checkpoint: int = 0):
     memory.main.await_control()
     logger.info("Starting Baaj exterior area")
     FFXC.set_neutral()
@@ -185,19 +186,31 @@ def baaj_puzzle():
                 xbox.tap_b()
 
 
-def klikk_fight_truerng():
+def klikk_fight_classic():
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
-    while not Rikku.is_turn():
+    while not memory.main.turn_ready():
         xbox.tap_b()
+    #while not Rikku.is_turn():
+    #    xbox.tap_b()
+    while memory.main.battle_active():
+        if Tidus.is_turn():
+            Tidus.attack()
 
-    xbox.click_to_battle()
-    battle.main.use_item(0, "none")  # Tidus self-potion
-    screen.await_turn()
-    battle.boss.klikk()
+    if game_vars.story_mode():
+        memory.main.wait_seconds(51)
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        memory.main.wait_seconds(1)
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        screen.await_turn()
+    else:
+        xbox.click_to_battle()
+    battle.boss.klikk_classic()
 
 
-def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
+def klikk_fight_crimson(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
     while not memory.main.turn_ready():
@@ -221,7 +234,7 @@ def klikk_fight(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_k
         screen.await_turn()
     else:
         xbox.click_to_battle()
-    battle.boss.klikk(tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, klikk_steals)
+    battle.boss.klikk_crimson(tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, klikk_steals)
 
 
 def distance(n1, n2):
@@ -287,7 +300,7 @@ def ab_boat_1():
             xbox.tap_b()
 
 
-def ab_swimming_1_truerng():
+def ab_swimming_1_classic():
     logger.info("Swimming down from the boat")
     while memory.main.get_map() != 288:
         if memory.main.user_control():
@@ -330,7 +343,7 @@ def ab_swimming_1_truerng():
                 xbox.menu_b()
 
 
-def ab_swimming_1(chain_encounter_strat: int):
+def ab_swimming_1_crimson(chain_encounter_strat: int):
     logger.info("Swimming down from the boat")
     while memory.main.get_map() != 288:
         if memory.main.user_control():
@@ -388,7 +401,7 @@ def ab_swimming_1(chain_encounter_strat: int):
     return
 
 
-def ab_swimming_2_truerng():
+def ab_swimming_2_classic():
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)
@@ -431,6 +444,7 @@ def ab_swimming_2_truerng():
     # Tros fight
     xbox.click_to_battle()
     battle.boss.tros()
+    split_timer()
 
     FFXC.set_neutral()
     while memory.main.get_story_progress() < 111:
@@ -470,7 +484,7 @@ def ab_swimming_2_truerng():
         xbox.clear_save_popup(0)
 
 
-def ab_swimming_2(ruins_encounter_strat: int):
+def ab_swimming_2_crimson(ruins_encounter_strat: int):
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
     FFXC.set_movement(1, -1)

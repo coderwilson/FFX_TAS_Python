@@ -37,7 +37,7 @@ def air_ship_path(version, checkpoint:int = 0):
                 and (
                     memory.main.get_speed() < speed_need or 
                     memory.main.get_power() < power_need or
-                    memory.main.get_mana() < 8
+                    memory.main.get_mana() < 9
                 )
             ):
                 # Tyton to update this with the actual purchase.
@@ -82,7 +82,7 @@ def air_ship_path(version, checkpoint:int = 0):
                     xbox.menu_b()
 
                 #  Mana spheres
-                if memory.main.get_speed() < 8:
+                if memory.main.get_speed() < 9:
                     while memory.main.equip_buy_row() != 8:
                         if memory.main.equip_buy_row() < 8:
                             xbox.tap_down()
@@ -91,10 +91,10 @@ def air_ship_path(version, checkpoint:int = 0):
                     while not memory.main.item_shop_menu() == 16:
                         xbox.tap_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((8 - memory.main.get_speed()) / 2), 3
+                        math.ceil((9 - memory.main.get_speed()) / 2), 3
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((8 - memory.main.get_speed()) / 2), 3
+                            math.ceil((9 - memory.main.get_speed()) / 2), 3
                         ):
                             xbox.tap_right()
                         else:

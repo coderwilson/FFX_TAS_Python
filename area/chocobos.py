@@ -15,7 +15,9 @@ from nemesis.arena_prep import (
     unlock_omega,
     arena_return
 )
+from nemesis.arena_select import arena_npc, arena_menu_select, start_fight
 from nemesis.arena_battles import yojimbo_battle
+from json_ai_files.write_seed import write_big_text
 from airship_pathing import air_ship_path
 from area.sin import exit_cockpit
 from paths.home import BikanelDesert
@@ -41,8 +43,7 @@ from paths.destro_spheres import (
 from paths import Kilika1, Kilika2, Kilika3, KilikaTrials
 from menu import equip_armor
 from save_sphere import touch_and_go
-import tts
-from players import CurrentPlayer
+from players import CurrentPlayer, Lulu
 import reset
 from area.dream_zan import new_game
 from json_ai_files.write_seed import write_custom_message
@@ -983,6 +984,7 @@ def leave_temple():
 
 def butterflies():
     air_ship_destination(dest_num=9)
+    write_big_text("Butterfly Minigame\nFor Kimahri")
     memory.main.click_to_control()
     memory.main.check_nea_armor()
     if game_vars.ne_armor() != 255:
@@ -1216,6 +1218,7 @@ def butterflies():
     for i in range(len(path)):
         while not pathing.set_movement(path[i]):
             pass
+    write_big_text("")
     #set_game_speed(0)
     
 # How about getting the celestial mirror?
@@ -1363,6 +1366,7 @@ def leave_mirror_area(to_airship:bool = False):
 
 def spirit_lance():
     # Assumes we start from Macalania Woods first screen.
+    write_big_text("Dodges Remaining: 200")
     
     dodge_count = memory.main.l_strike_count()
     start_count = dodge_count
@@ -1442,6 +1446,7 @@ def spirit_lance():
         if memory.main.dodge_lightning(dodge_count):
             dodge_count = memory.main.l_strike_count()
             logger.debug(f"Dodges left: {start_count + 200 - dodge_count}")
+            write_big_text(f"Dodges Remaining: {start_count + 200 - dodge_count}")
     
     
     # Wrap up North map
@@ -1454,7 +1459,7 @@ def spirit_lance():
             if memory.main.dodge_lightning(dodge_count):
                 dodge_count = memory.main.l_strike_count()
             
-    
+    write_big_text("Kimahri's second item")
     while memory.main.user_control():
         pathing.set_movement([1,-1500])
         if memory.main.dodge_lightning(dodge_count):
@@ -1502,6 +1507,7 @@ def spirit_lance():
     logger.debug("Approach complete.")
     memory.main.click_to_control()
     logger.debug("Control re-gained.")
+    write_big_text("Lulu's item in chest")
     
     # Back north towards agency.
     path = [
@@ -1570,6 +1576,7 @@ def spirit_lance():
     while not pathing.set_movement([-32,-19]):
         pass
     return_to_airship()
+    write_big_text("")
 
 def rusty_sword():
     air_ship_destination(dest_num=14)
@@ -2323,7 +2330,6 @@ def cactuars_finish():
     air_ship_path(1)
     FFXC.set_neutral()
     logger.debug("== Now on the deck!!!")
-    # tts.message("Mark")
     memory.main.wait_frames(60)
     memory.main.click_to_control()
     #memory.main.wait_frames(900)
@@ -3232,7 +3238,7 @@ def besaid_destro(godhand:int = 1, baaj:int = 1):
     while not success:
         xbox.click_to_battle()
         cur_gil = min(memory.main.get_gil_value(),99999999)
-        success = yojimbo_battle(flee_available=False, needed_amount=cur_gil, force_max=True)
+        success = yojimbo_battle(flee_available=False)
         logger.debug(f"Yojimbo results: {success}")
         if not success:
             logger.debug("Starting reset process.")
@@ -3667,7 +3673,7 @@ def ice_destro(godhand:int = 1, baaj:int = 1):
             elif memory.main.battle_active():
                 xbox.click_to_battle()
                 cur_gil = min(memory.main.get_gil_value(),99999999)
-                success = yojimbo_battle(flee_available=False, needed_amount=cur_gil, force_max=True)
+                success = yojimbo_battle(flee_available=False)
                 logger.debug(f"Yojimbo results: {success}")
                 if success:
                     area.mac_temple.escape(dark_aeon=True)
@@ -3736,7 +3742,7 @@ def ice_destro(godhand:int = 1, baaj:int = 1):
     return_to_airship()
   
 
-def sun_crest(godhand:int = 1, baaj:int = 1):
+def sun_crest(godhand:int = 1, baaj:int = 1, face_bahamut=True):
     # Includes destro sphere
     write_custom_message("Showcase!")
     memory.main.fill_overdrive()
@@ -3798,74 +3804,75 @@ def sun_crest(godhand:int = 1, baaj:int = 1):
     memory.main.click_to_event_temple(0)
     memory.main.await_control()
     
-    # Room with save sphere
-    while pathing.set_movement([-6,10]):
-        pass
-    while memory.main.user_control():
-        pathing.set_movement([-2,60])
-    
-    success = False
-    while not success:
-        # Room with 'You're being selfish' scene
-        while memory.main.get_map() != 319:
-            pass
-        memory.main.wait_frames(60)
-        memory.main.await_control()
-        while not pathing.set_movement([0,45]):
+    if face_bahamut:
+        # Room with save sphere
+        while pathing.set_movement([-6,10]):
             pass
         while memory.main.user_control():
-            pathing.set_movement([0,200])
-    
-        xbox.click_to_battle()
-        #memory.main.set_game_speed(2)
-        cur_gil = min(memory.main.get_gil_value(),99999999)
-        #cur_gil = memory.main.get_gil_value()
-        success = yojimbo_battle(flee_available=False, needed_amount=cur_gil, force_max=True)
-        logger.debug(f"Yojimbo results: {success}")
-        if not success:
-            logger.debug("Starting reset process.")
-            reset.reset_to_main_menu()
-            logger.debug("Intro screen - load game")
-            new_game(gamestate="reload_autosave")
-            logger.debug("Selecting save number.")
-            load_game.load_save_num(0)
-    
-    memory.main.await_control()
-    memory.main.update_formation(0, 4, 6)
-    while not pathing.set_movement([-36,-22]):
-        pass
-    while not pathing.set_movement([-29,94]):
-        pass
-    while memory.main.get_actor_coords(0)[1] > 50:
-        FFXC.set_movement(1,0)
-    while not pathing.set_movement([-59,-146]):
-        pass
-    while not pathing.set_movement([-36,-22]):
-        pass
-    while not pathing.set_movement([-45,94]):
-        pass
-    
-    # Open chest
-    check_near_actors(False)
-    pathing.approach_actor_by_id(20482)
-    memory.main.click_to_control()
-    
-    while not pathing.set_movement([-36,-22]):
-        pass
-    while not pathing.set_movement([-13,-173]):
-        pass
-    while memory.main.user_control():
-        pathing.set_movement([-10,-300])
-    memory.main.await_control()
-    while memory.main.user_control():
-        pathing.set_movement([-3,-150])
-    memory.main.await_control()
-    
-    # Save sphere screen
-    while not pathing.set_movement([-1,-51]):
-        pass
-    while not pathing.set_movement([-1,-163]):
-        pass
+            pathing.set_movement([-2,60])
+
+        success = False
+        while not success:
+            # Room with 'You're being selfish' scene
+            while memory.main.get_map() != 319:
+                pass
+            memory.main.wait_frames(60)
+            memory.main.await_control()
+            while not pathing.set_movement([0,45]):
+                pass
+            while memory.main.user_control():
+                pathing.set_movement([0,200])
+        
+            xbox.click_to_battle()
+            #memory.main.set_game_speed(2)
+            cur_gil = min(memory.main.get_gil_value(),99999999)
+            #cur_gil = memory.main.get_gil_value()
+            success = yojimbo_battle(flee_available=False)
+            logger.debug(f"Yojimbo results: {success}")
+            if not success:
+                logger.debug("Starting reset process.")
+                reset.reset_to_main_menu()
+                logger.debug("Intro screen - load game")
+                new_game(gamestate="reload_autosave")
+                logger.debug("Selecting save number.")
+                load_game.load_save_num(0)
+        
+        memory.main.await_control()
+        memory.main.update_formation(0, 4, 6)
+        while not pathing.set_movement([-36,-22]):
+            pass
+        while not pathing.set_movement([-29,94]):
+            pass
+        while memory.main.get_actor_coords(0)[1] > 50:
+            FFXC.set_movement(1,0)
+        while not pathing.set_movement([-59,-146]):
+            pass
+        while not pathing.set_movement([-36,-22]):
+            pass
+        while not pathing.set_movement([-45,94]):
+            pass
+        
+        # Open chest
+        check_near_actors(False)
+        pathing.approach_actor_by_id(20482)
+        memory.main.click_to_control()
+        
+        while not pathing.set_movement([-36,-22]):
+            pass
+        while not pathing.set_movement([-13,-173]):
+            pass
+        while memory.main.user_control():
+            pathing.set_movement([-10,-300])
+        memory.main.await_control()
+        while memory.main.user_control():
+            pathing.set_movement([-3,-150])
+        memory.main.await_control()
+        
+        # Save sphere screen
+        while not pathing.set_movement([-1,-51]):
+            pass
+        while not pathing.set_movement([-1,-163]):
+            pass
     
     #memory.main.set_game_speed(0)
     return_to_airship()
@@ -4024,4 +4031,13 @@ def upgrade_engage(menu_id:int, force_end=False):
             xbox.menu_b()
         else:
             memory.main.click_to_diag_progress(33)
-    
+
+def lulu_overdrive_test():
+    # Assumes we are starting at the monster arena
+
+    arena_npc()
+    arena_menu_select(1)
+    start_fight(area_index=13, monster_index=9)
+    memory.main.wait_frames(1)
+    battle.main.lulu_overdrive_demo(version="full")
+    arena_menu_select(4)

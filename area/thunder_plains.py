@@ -14,6 +14,7 @@ import save_sphere
 from json_ai_files.write_seed import write_big_text
 from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 from players import Auron, Tidus, Wakka
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -52,7 +53,7 @@ def south_pathing():
                     elif checkpoint == 2 and game_vars.nemesis():
                         checkpoint = 20
                     elif checkpoint == 3 and not save_touched:
-                        if next_enc_dist in [380,390]:
+                        if next_enc_dist in range(375,415):
                             while not memory.main.battle_active():
                                 FFXC.set_movement(0,1)
                             FFXC.set_neutral()
@@ -331,9 +332,9 @@ def north_pathing(battle_count: int):
             if memory.main.dodge_lightning(l_strike_count):
                 logger.debug("Dodge")
                 l_strike_count = memory.main.l_strike_count()
-            elif game_vars.csr() and checkpoint == 14:
-                checkpoint = 24
-            elif checkpoint == 17 and not game_vars.get_blitz_win() and not lunar_slot:
+            #elif game_vars.csr() and checkpoint == 14:
+            #    checkpoint = 24
+            elif checkpoint == 19 and not game_vars.get_blitz_win() and not lunar_slot:
                 checkpoint -= 2
                 logger.debug(f"No lunar curtain. Checkpoint {checkpoint}")
 
@@ -357,6 +358,7 @@ def north_pathing(battle_count: int):
                 return False
 
     FFXC.set_neutral()
+    split_timer()
     memory.main.await_control()
     logger.info("Thunder Plains North complete. Moving to the Macalania save sphere.")
     if not game_vars.csr() and not game_vars.story_mode():

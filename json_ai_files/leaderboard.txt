@@ -1,13 +1,13 @@
 RNG Seed Leaderboard, Real-time minus Blitzball
-   1: 160, 2:59:56
-   2:  26, 3:01:58
-   3: 189, 3:02:30
-   4:  29, 3:02:38
-   5: 196, 3:02:42
-   6: 164, 3:02:44
-   7:  74, 3:02:46
-   8: 127, 3:03:03
-   9:  39, 3:03:05
-  10:  92, 3:03:15
-Seeds completed: 113
-Suggested seeds: [33, 96, 228, 34, 240]
+   1: 160,  2:57:30 (flip_lowroad) (100%)
+   2: 196,  2:58:43 (standard) (100%)
+   3:  41,  2:59:11 (standard) (100%)
+   4: 247,  2:59:22 (standard) (44%)
+   5:  39,  2:59:26 (standard) (44%)
+   6: 237,  2:59:38 (flip_bikanel) (44%)
+   7: 189,  3:00:04 (flip_highroad) (66%)
+   8:  64,  3:00:42 (standard) (22%)
+   9:  36,  3:00:46 (standard) (22%)
+  10:  67,  3:01:07 (standard) (11%)
+Seed completion progress: 6.03%
+Suggested seeds: ['251', '175', '174', '166', '124']

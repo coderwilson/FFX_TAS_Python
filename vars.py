@@ -91,11 +91,12 @@ class AllVars:
         # ----NEA Manip
         self.try_ne_val = True  # We can choose False later, no current value here.
         self.ne_armor_val = 255
-        self.ne_battles = 0  # Tracks number of forced manip battles outside cave.
+        self.ne_battles = 0  # Tracks number of forced manip battles outside and inside cave.
         self.nea_zone = 0
         self.nea_force_third_larvae = False
         self.nea_force_def_x_drop = False
         self.nea_after_bny = False
+        self.nea_ignore = False
 
         # ----Other
         self.new_game = False
@@ -316,6 +317,12 @@ class AllVars:
 
     def set_nea_after_bny(self, value):
         self.nea_after_bny = value
+
+    def get_nea_ignore(self):
+        return self.nea_ignore
+
+    def set_nea_ignore(self, value):
+        self.nea_ignore = value
 
     def nem_checkpoint_ap(self):
         return self.nem_ap_val

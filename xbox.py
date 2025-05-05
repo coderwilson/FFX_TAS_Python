@@ -115,6 +115,14 @@ class VgTranslator:
             self.gamepad.update()
         except Exception:
             pass
+    
+    def right_stick(self, x, y):
+        try:
+            self.gamepad.right_joystick_float(x_value_float=x, y_value_float=y)
+            self.gamepad.update()
+        except Exception:
+            pass
+
 
     def set_neutral(self):
         self.gamepad.reset()
@@ -622,6 +630,8 @@ def click_to_battle():
             #    logger.debug(f"Mark: {memory.main.get_story_progress()}|{last_dialog}")
         elif memory.main.diag_skip_possible():
             tap_b()
+        elif memory.main.battle_wrap_up_active():
+            break
 
 
 character_mapping = {

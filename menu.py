@@ -194,19 +194,20 @@ def woods_menuing():
     xbox.menu_b()
     xbox.menu_b()  # Sphere grid on Tidus
     menu_grid.move_first()
+    
+    # We may need this again at some point.
     start_node = memory.main.s_grid_cursor_coords()[0]
-    if start_node == 242:
+    if start_node == -81:
         agi_need = 2
     else:
         agi_need = 3
 
-    menu_grid.grid_left()
-    if agi_need == 3:
-        menu_grid.grid_left()
-    full_menu = False
     if memory.main.get_tidus_slvl() >= agi_need:
         full_menu = True
-        menu_grid.grid_left()
+        menu_grid.coords_movement([-165,-564])
+    else:
+        full_menu = False
+        menu_grid.coords_movement([-117,-448])
 
     menu_grid.move_and_use()
     menu_grid.sel_sphere("ability", "none")
@@ -227,10 +228,11 @@ def woods_menuing():
 def geneaux():
     open_grid(character=0)
 
-    menu_grid.move_first()
-    grid_left()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("speed", "none")
+    if memory.main.s_grid_cursor_coords() == [-117, -448]:
+        menu_grid.move_first()
+        menu_grid.coords_movement([-165,-564])
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
@@ -695,8 +697,6 @@ def kimahri_terra():
     grid_down()
     grid_down()
     menu_grid.move_and_use()
-    #menu_grid.sel_sphere("speed", "none")
-    #menu_grid.use_and_use_again()
     menu_grid.sel_sphere("Lv1", "none")
     menu_grid.use_and_move()
     grid_left()
@@ -862,6 +862,8 @@ def m_lake_grid():
 
     menu_grid.use_shift_right("kimahri")  # And last is Kimahri (removed for Terra skip)
     menu_grid.move_first()
+    menu_grid.coords_movement([-117,336])
+    '''
     grid_down()
     grid_down()
     grid_down()
@@ -869,21 +871,28 @@ def m_lake_grid():
     grid_down()
     grid_down()
     grid_down()
+    '''
     menu_grid.move_and_use()
     #menu_grid.sel_sphere("speed", "none")
     #menu_grid.use_and_use_again()
     menu_grid.sel_sphere("Lv1", "none")
     menu_grid.use_and_move()
+    menu_grid.coords_movement([-423,336])
+    '''
     grid_left()
     grid_left()
     grid_left()
     grid_left()
+    '''
     menu_grid.move_and_use()
     menu_grid.sel_sphere("Lv1", "none")
     menu_grid.use_and_move()
+    menu_grid.coords_movement([-703,220])
+    '''
     grid_up()
     grid_up()
     grid_left()
+    '''
     menu_grid.move_and_use()
     menu_grid.sel_sphere("ability", "none")  # Steal
     menu_grid.use_and_use_again()
@@ -898,19 +907,22 @@ def mac_temple():
 
     menu_grid.sel_sphere("Lv2", "none")
     menu_grid.use_and_move()
-    grid_right()
-    grid_up()
+    menu_grid.coords_movement([306,-703])
+    #grid_right()
+    #grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_move()
-    grid_up()
-    grid_up()
+    menu_grid.coords_movement([274,-819])
+    #grid_up()
+    #grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_move()
-    grid_right()
-    grid_right()
-    grid_up()
+    menu_grid.coords_movement([506,-876])
+    #grid_right()
+    #grid_right()
+    #grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
@@ -918,20 +930,21 @@ def mac_temple():
     menu_grid.use_and_use_again()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
-    grid_right()
-    grid_right()
+    #grid_right()
+    #grid_right()
     if game_vars.get_blitz_win():
+        menu_grid.coords_movement([670,-1040])
         menu_grid.move_and_use()
         menu_grid.sel_sphere("strength", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_move()
-    grid_left()
-    grid_left()
+    
     if game_vars.nemesis():
-        grid_up()
-        grid_left()
-        grid_up()
+        menu_grid.coords_movement([390,-1156])
+        #grid_up()
+        #grid_left()
+        #grid_up()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("strength", "none")
         menu_grid.use_and_use_again()
@@ -939,9 +952,11 @@ def mac_temple():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "right")
         menu_grid.use_and_move()
-        grid_down()
-        grid_right()
-        grid_down()
+        #grid_down()
+        #grid_right()
+        #grid_down()
+    
+    menu_grid.coords_movement([506,-1040])
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_use_again()
@@ -950,15 +965,17 @@ def mac_temple():
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_move()
     if game_vars.nemesis():
-        grid_right()
-        grid_down()
+        menu_grid.coords_movement([550,-996])
+        #grid_right()
+        #grid_down()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("strength", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_move()
-        grid_left()
-    grid_left()
+        #grid_left()
+    #grid_left()
+    menu_grid.coords_movement([446,-1040])
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     if game_vars.nemesis():
@@ -971,10 +988,11 @@ def mac_temple():
         # Add Kimahri for terra skip.
         menu_grid.use_shift_left("Kimahri")
         menu_grid.move_first()
-        grid_down()
-        grid_down()
-        grid_down()
-        grid_down()
+        menu_grid.coords_movement([-667,416])
+        #grid_down()
+        #grid_down()
+        #grid_down()
+        #grid_down()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")  # Should be HP +200
         menu_grid.use_and_use_again()
@@ -992,10 +1010,11 @@ def mac_temple():
 def after_seymour():
     open_grid(character=0)
     menu_grid.move_first()
-    grid_left()
-    grid_left()
-    grid_left()
-    grid_left()
+    menu_grid.coords_movement([134,-1040])
+    #grid_left()
+    #grid_left()
+    #grid_left()
+    #grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
@@ -1006,8 +1025,9 @@ def after_seymour():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("mana", "none")
     menu_grid.use_and_move()
-    grid_up()
-    grid_up()
+    menu_grid.coords_movement([-30,-1204])
+    #grid_up()
+    #grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
     if game_vars.nemesis():
@@ -1030,37 +1050,76 @@ def home_grid():
 
 
 
-def overworld_use_item(item_to_use: int = 3):
-    while not memory.main.menu_open():
-        memory.main.open_menu()
-
-    while memory.main.get_menu_cursor_pos() != 1:
-        memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 1, 11)
-    while memory.main.menu_number() != 26:
-        xbox.tap_b()
+def overworld_use_item(item_to_use: int = 3, heal_array=[3,4], full_menu_close:bool=False):
     mega_pot_slot = memory.main.get_item_slot(item_to_use)
-    column = mega_pot_slot % 2
-    row = (mega_pot_slot - column) / 2
-    logger.debug(f"mega_pot_slot: {mega_pot_slot} column: {column} row: {row}")
+    count = memory.main.get_item_count_slot(mega_pot_slot)
+    if mega_pot_slot != 255 and count != 0:
+        while not memory.main.menu_open():
+            memory.main.open_menu()
 
-    while memory.main.item_menu_column() != column:
-        if memory.main.item_menu_column() > column:
-            xbox.tap_left()
-        else:
-            xbox.tap_right()
-    while memory.main.item_menu_row() != row:
-        if memory.main.item_menu_row() < row:
-            xbox.tap_down()
-        else:
-            xbox.tap_up()
+        while memory.main.get_menu_cursor_pos() != 1:
+            memory.main.menu_direction(memory.main.get_menu_cursor_pos(), 1, 11)
+        while memory.main.menu_number() != 26:
+            xbox.tap_b()
+        column = mega_pot_slot % 2
+        row = (mega_pot_slot - column) / 2
+        
+        logger.debug(f"item_slot: {mega_pot_slot} count: {count} column: {column} row: {row}")
 
-    while memory.main.item_menu_number() != 13:
-        xbox.tap_b()
-    current_hp = memory.main.get_hp()
-    maximal_hp = memory.main.get_max_hp()
-    while current_hp != maximal_hp:
-        xbox.tap_b()
-        current_hp = memory.main.get_hp()
+        while memory.main.item_menu_column() != column:
+            if memory.main.item_menu_column() > column:
+                xbox.tap_left()
+            else:
+                xbox.tap_right()
+        while memory.main.item_menu_row() != row:
+            if memory.main.item_menu_row() < row:
+                xbox.tap_down()
+            else:
+                xbox.tap_up()
+
+        while memory.main.item_menu_number() != 13:
+            xbox.tap_b()
+        
+        if item_to_use == 3:
+            current_hp = memory.main.get_hp()
+            maximal_hp = memory.main.get_max_hp()
+            while current_hp != maximal_hp:
+                count = memory.main.get_item_count_slot(mega_pot_slot)
+                if count == 0:
+                    break
+                else:
+                    xbox.tap_b()
+                    current_hp = memory.main.get_hp()
+        else:
+            for i in range(len(heal_array)):
+                heal_char = heal_array[i]
+                char_order = memory.main.get_order()  # Get character positions on screen
+                char_order.pop(0)
+                target_index = char_order.index(heal_char)  # Find the index of the target character
+                logger.debug(f"Healing character {heal_char} in slot {target_index}")
+
+                current_hp = memory.main.get_hp()[heal_char]
+                max_hp = memory.main.get_max_hp()[heal_char]
+                if current_hp < max_hp:
+
+                    while memory.main.item_heal_character_cursor() != target_index:
+                        while memory.main.item_heal_character_cursor() != target_index:
+                            xbox.tap_down()
+                        memory.main.wait_frames(1)
+
+                    while current_hp < max_hp:
+                        count = memory.main.get_item_count_slot(mega_pot_slot)
+                        if count == 0:
+                            break
+                        else:
+                            xbox.tap_b()
+                            current_hp = memory.main.get_hp()[heal_char]
+                
+                count = memory.main.get_item_count_slot(mega_pot_slot)
+                if count == 0:
+                    break
+    if full_menu_close:
+        memory.main.close_menu()
 
 
 def sort_items(full_menu_close=True):
@@ -1434,8 +1493,9 @@ def via_purifico():
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("speed", "none")
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("mana", "none")
+        if memory.main.get_mana() != 0:
+            menu_grid.use_and_use_again()
+            menu_grid.sel_sphere("mana", "none")
         
     menu_grid.use_and_quit()
     memory.main.close_menu()
@@ -1586,17 +1646,19 @@ def seymour_natus_blitz_loss():
     
     menu_grid.use_and_move()
     if yuna_levels <= 9:
-        grid_down()
-        menu_grid.move_and_use()
-        menu_grid.sel_sphere("power", "none")
+        if game_vars.nemesis():
+            grid_down()
+            menu_grid.move_and_use()
+            menu_grid.sel_sphere("power", "none")
     else:
         menu_grid.use_and_move()
         grid_right()
         grid_right()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("power", "none")
+        if game_vars.nemesis():
+            menu_grid.use_and_use_again()
+            menu_grid.sel_sphere("power", "none")
 
     menu_grid.use_and_quit()
     memory.main.close_menu()
@@ -1668,6 +1730,8 @@ def after_ronso():
     menu_grid.move_and_use()
     menu_grid.sel_sphere("Lv2", "none")
     menu_grid.use_and_move()
+    menu_grid.coords_movement([7,1013])
+    '''
     grid_down()
     grid_down()
     grid_down()
@@ -1677,6 +1741,7 @@ def after_ronso():
     grid_down()
     grid_down()
     grid_down()
+    '''
     menu_grid.move_and_use()
     menu_grid.sel_sphere("Lv3", "none")
     menu_grid.use_and_move()
@@ -1835,9 +1900,9 @@ def after_ronso_blitz_loss():
         # This lines up for Yuna to teleport to Tidus.
     
     menu_grid.move_shift_right("Yuna")
-    elif game_vars.end_game_version() == 4:  # Four return spheres
+    if game_vars.end_game_version() == 4:  # Four return spheres
         menu_grid.use_first()
-        menu_grid.sel_sphere("ret", "left_up")
+        menu_grid.sel_sphere("ret", "left")
         menu_grid.use_and_move()
         while memory.main.s_grid_cursor_coords() != [670, -1040]:
             grid_right()
@@ -2247,6 +2312,9 @@ def bfa():
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "none")
         menu_grid.use_and_move()
+        
+        menu_grid.coords_movement([-888,643])
+        '''
         grid_pos = memory.main.s_grid_cursor_coords()
         while grid_pos[0] > -885:
             grid_left()
@@ -2269,7 +2337,7 @@ def bfa():
             memory.main.wait_frames(6)
             grid_pos = memory.main.s_grid_cursor_coords()
             logger.debug(f"(B): {grid_pos}")
-
+        '''
 
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "left")
@@ -2305,11 +2373,7 @@ def bfa():
     if game_vars.zombie_weapon() == 255:
         menu_grid.use_shift_left("tidus")
         menu_grid.move_first()
-        grid_up()
-        grid_up()
-        grid_up()
-        grid_up()
-        grid_up()
+        menu_grid.coords_movement([260,-1040])
         menu_grid.move_and_use()
         menu_grid.sel_sphere("lv4", "none")
         menu_grid.use_and_move()
@@ -2520,21 +2584,16 @@ def sk_return_2():
     else:  # Battle Site adjustment
         menu_grid.sel_sphere("ret", "up")
     menu_grid.use_and_move()
-    grid_left()
-    grid_left()
-    grid_left()
+    menu_grid.coords_movement([-290,538])
     menu_grid.move_and_use()
     menu_grid.sel_sphere("speed", "none")
     menu_grid.use_and_move()
-    grid_left()
-    grid_left()
-    grid_left()
-    grid_left()
-    grid_left()
+    menu_grid.coords_movement([-467,612])
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
-    menu_grid.use_and_use_again()
-    menu_grid.sel_sphere("mana", "none")
+    if memory.main.get_mana() != 0:
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("mana", "none")
     
     menu_grid.use_and_quit()
 
