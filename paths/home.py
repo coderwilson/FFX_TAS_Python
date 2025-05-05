@@ -12,7 +12,7 @@ class BikanelDesert(AreaMovementBase):
         6: [121, -409],
         7: [147, -421],
         8: [197, -387],
-        # Map change
+        9: [220, -400],
         10: [172, -569],
         11: [441, -366],
         12: [228, -523],
@@ -79,6 +79,12 @@ class BikanelDesert(AreaMovementBase):
         73: [-474, 476],
         74: [0, 0],  # Chest, 10k gil
         75: [-481, 505],
+        85: [127, -467],
+        86: [145, -482],
+        87: [175, -481],
+        88: [175, -481],  # Flip RNG
+        89: [189, -478],
+        90: [212, -439],
     }
     checkpoint_fallback = {
         2: "Touching save sphere",

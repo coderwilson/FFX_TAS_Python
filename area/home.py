@@ -8,15 +8,27 @@ import pathing
 import save_sphere
 import vars
 import xbox
+import time
 import random
 #import rng_track
 from paths import BikanelDesert, BikanelHome
 from players import Auron, Kimahri, Rikku, Tidus, Wakka, Lulu
+from reset import reset_to_main_menu
+from area.dream_zan import new_game, split_timer
+from load_game import load_save_num
+from battle.main import guards_report_items
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
+
+
+def quick_reset():
+    reset_to_main_menu()
+    new_game(gamestate="reload_autosave")
+    load_save_num(0)
 
 
 def check_spheres():
@@ -57,9 +69,27 @@ def check_spheres():
     return need_speed, need_power
 
 
+def reverse_battle_rng():
+    FFXC.set_neutral()
+    memory.main.check_near_actors()
+    pathing.approach_actor_by_id(actor_id=20496)
+    FFXC.set_neutral()
+    memory.main.wait_frames(63)
+
+    # Start battle
+    xbox.tap_down()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.click_to_battle()
+
+    # Escape and back out of menu
+    battle.main.flee_all(wrap_up_battle=False)
+    while not memory.main.user_control():
+        xbox.tap_a()
+
+
 def desert():
     logger.info("Desert")
-    memory.main.click_to_control()
 
     need_speed, need_power = check_spheres()
     # Logic for finding Teleport Spheres x2 (only chest in this area)
@@ -82,23 +112,39 @@ def desert():
 
     # Now to figure out how many items we need.
     steal_items = battle.main.update_steal_items_desert()
-    items_needed = 7 - sum(steal_items)
+    if memory.main.get_item_slot(39) == 255:
+        items_needed_total = 6
+    else:
+        items_needed_total = 8
+        # The extra one is for Ghost. If no silence grenade, no need for 8.
+    items_needed = items_needed_total - sum(steal_items)
 
     menu.equip_sonic_steel()
     memory.main.close_menu()
     
     #rng_track.print_manip_info()
     #logger.manip(f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}")
+    flip_rng = "flip_bikanel" in game_vars.run_modifier()
+    # flip_rng = True  # Override for testing.
 
-    checkpoint = 0
+    checkpoint = 2  # This is so we can create a save file properly.
     first_format = False
     sandy1 = False
+    timer_start = False
+    start_time = time.time()
+    next_enc_dist = 999
     while memory.main.get_map() != 130:
         if memory.main.user_control():
+            #logger.debug(f"Checkpoint {checkpoint}")
+            # RNG manip first
+            if checkpoint == 6 and flip_rng:
+                checkpoint = 85
+            if checkpoint == 91:
+                checkpoint = 9
+
             # Map changes
-            if checkpoint == 9:
-                memory.main.click_to_event_temple(0)
-                checkpoint += 1
+            elif checkpoint < 10 and memory.main.get_map() == 136:
+                checkpoint = 10
             elif checkpoint == 11 and len(memory.main.get_order_seven()) > 4:
                 checkpoint += 1
             elif checkpoint < 39 and memory.main.get_map() == 137:
@@ -153,12 +199,18 @@ def desert():
                 else:
                     checkpoint += 1
                     logger.debug(f"Checkpoint {checkpoint}")
+            elif checkpoint == 88:
+                reverse_battle_rng()
+                checkpoint += 1
             elif checkpoint == 12 and not first_format:
                 first_format = True
                 memory.main.update_formation(Tidus, Wakka, Lulu)
 
             # Sandragora skip logic
             elif checkpoint == 57:
+                #if next_enc_dist < 275:
+                #    FFXC.set_movement(1,0)
+                #    memory.main.wait_seconds(1)
                 checkpoint += 1
             elif checkpoint == 60:
                 if manip_drops:
@@ -166,14 +218,26 @@ def desert():
                     memory.main.await_event()
                     manip_drops = False
                     checkpoint -= 2
-                elif memory.main.get_coords()[1] < 812:
+                elif memory.main.get_coords()[1] < 811:
                     # Dialing in. 810 works 95%, but was short once.
+                    # 812 will sometimes get stuck with an incomplete push.
                     FFXC.set_movement(0, 1)
                 else:
                     FFXC.set_neutral()
                     checkpoint += 1
             elif checkpoint == 61:
-                if memory.main.get_coords()[1] < 810:
+                if not timer_start:
+                    start_time = time.time()
+                    logger.debug("Sandragora Skip timer start")
+                    timer_start = True
+                elif time.time() - start_time >= 8:
+                    logger.warning("Stuck attempting Sandy Skip. Triggering un-stuck logic.")
+                    FFXC.set_movement(-1,0)
+                    memory.main.wait_frames(15)
+                    FFXC.set_neutral()
+                    checkpoint = 58
+                    timer_start = False
+                elif memory.main.get_coords()[1] < 810:
                     # Accidentally encountered Sandragora, must re-position.
                     checkpoint -= 2
                 elif memory.main.get_coords()[1] < 840:
@@ -184,11 +248,11 @@ def desert():
             # After Sandy2 logic
             elif checkpoint == 64:
                 if (
-                    items_needed >= 1
+                    items_needed > 0
                 ):  # Cannot move on if we're short on throwable items
                     checkpoint -= 2
-                elif need_speed:  # Cannot move on if we're short on speed spheres
-                    checkpoint -= 2
+                #elif need_speed:  # Cannot move on if we're short on speed spheres
+                #    checkpoint -= 2
                 elif 1 in memory.main.ambushes() and Kimahri.overdrive_percent() < 100:
                     # Avoids game-over state on the second battle, new with Terra skip
                     checkpoint -= 2
@@ -203,7 +267,6 @@ def desert():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():  # Lots of battle logic here.
-                xbox.click_to_battle()
                 if checkpoint < 7 and memory.main.get_encounter_id() == 197:
                     # First battle in desert
                     if not battle.main.zu():
@@ -213,11 +276,14 @@ def desert():
                     if checkpoint < 55:
                         if not sandy1:
                             battle.main.sandragora(1)
+                            next_enc_dist = memory.main.distance_to_encounter()
+                            logger.warning(f"Next Enc distance: {next_enc_dist}")
                             sandy1 = True
                         else:
                             battle.main.flee_all()
                     else:
                         battle.main.sandragora(2)
+                        
                         checkpoint = 58
                 else:
                     battle.main.bikanel_battle_logic(
@@ -227,44 +293,53 @@ def desert():
 
                 # After-battle logic
                 memory.main.click_to_control()
+                steal_items = battle.main.update_steal_items_desert()
+                guards_report_items()
                 # Come back to this. Could save some runs.
                 # if 1 in memory.main.ambushes():
                 #    menu.main.overworld_use_item()
 
-                # First, check and update party format.
+                # First, check and update party format and health.
+                need_heal = False
+                if checkpoint > 30 and (Wakka.hp() < 600 or Kimahri.hp() < 600):
+                    need_heal = True
                 if checkpoint > 10:
                     if checkpoint < 23 and checkpoint > 10:
-                        memory.main.update_formation(Tidus, Wakka, Auron)
-                    elif not charge_state:
-                        memory.main.update_formation(Tidus, Auron, Rikku)
-                    elif need_power:
-                        memory.main.update_formation(Tidus, Auron, Rikku)
-                    elif need_speed:
-                        memory.main.update_formation(Tidus, Auron, Rikku)
-                    elif items_needed >= 1:
-                        memory.main.update_formation(Tidus, Auron, Rikku)
+                        memory.main.update_formation(Tidus, Wakka, Auron,full_menu_close=not need_heal)
+                    elif (
+                        not charge_state or 
+                        items_needed > 0 or
+                        need_power or
+                        need_speed
+                    ):
+                        memory.main.update_formation(Tidus, Wakka, Rikku,full_menu_close=not need_heal)
                     else:  # Catchall
-                        memory.main.update_formation(Tidus, Wakka, Lulu)
+                        memory.main.update_formation(Tidus, Wakka, Rikku,full_menu_close=not need_heal)
+                    if need_heal:
+                        menu.overworld_use_item(item_to_use=1,heal_array=[3,4],full_menu_close=True)
+                        memory.main.close_menu()
 
                 # Next, figure out how many items we need.
-                steal_items = battle.main.update_steal_items_desert()
                 logger.debug(f"Items status: {steal_items}")
-                items_needed = 7 - sum(steal_items)
+                items_needed = items_needed_total - sum(steal_items)
 
                 # Finally, check for other factors and report to console.
                 charge_state = memory.main.overdrive_state()[6] == 100
                 need_speed, need_power = check_spheres()
                 logger.debug("Flag statuses")
                 logger.debug(f"Rikku is charged up: {charge_state}")
-                #logger.debug(f"Need more Speed spheres: {need_speed}")
-                #logger.debug(f"Need more Power spheres: {need_power}")
-                logger.debug(f"Additional items needed before Home: {items_needed}")
+                logger.manip(f"Additional items needed before Home: {items_needed}")
                 #rng_track.print_manip_info()
                 #logger.manip(
                 #    f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}"
                 #)
                 if checkpoint == 60:
                     checkpoint = 58
+                    
+                if timer_start:
+                    start_time = time.time()
+                    logger.debug("Sandragora Skip timer restart")
+                
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
             elif checkpoint == 53:
@@ -273,6 +348,7 @@ def desert():
 
     # Move to save sphere
     checkpoint = 0
+    write_big_text("")
     while checkpoint < 7:
         if pathing.set_movement(BikanelHome.execute(checkpoint)):
             checkpoint += 1
@@ -294,24 +370,9 @@ def find_summoners():
     last_dialog = memory.main.diag_progress_flag()
 
     checkpoint = 7
-    while memory.main.get_map() != 261:
+    while memory.main.get_map() != 219:
         if memory.main.user_control():
             coords = memory.main.get_coords()
-            # Summoner's Sanctum room
-            if memory.main.get_map() == 219:
-                if coords[0] < 100:
-                    pathing.set_movement([105,-40])
-                else:
-                    pathing.set_movement([160,-50])
-            # Ramp to airship
-            elif memory.main.get_map() == 303:
-                if coords[0] > 185:
-                    if coords[1] < 56:
-                        pathing.set_movement([190,60])
-                    else:
-                        pathing.set_movement([165,58])
-                else:
-                    pathing.set_movement([80,60])
 
             # events
             if checkpoint == 7:
@@ -394,17 +455,26 @@ def find_summoners():
                 if memory.main.get_encounter_id() == 417:
                     logger.info("Home, battle 1")
                     od_learns = battle.main.home_1()
-                    memory.main.update_formation(Tidus, Auron, Lulu)
+                    if memory.main.game_over():
+                        quick_reset()
+                    else:
+                        memory.main.update_formation(Tidus, Auron, Lulu)
                 elif memory.main.get_encounter_id() == 419:
                     if memory.main.get_map() == 280:
                         logger.info("Home, battle 2")
                         od_learns = battle.main.home_2(od_learns)
-                        memory.main.update_formation(Tidus, Auron, Lulu)
+                        if memory.main.game_over():
+                            quick_reset()
+                        else:
+                            memory.main.update_formation(Tidus, Auron, Lulu)
                         od_learns = min(od_learns, 2)
                     else:
                         logger.info("Home, bonus battle for Blitz loss")
                         od_learns = battle.main.home_3(od_learns)
-                        memory.main.update_formation(Tidus, Auron, Lulu)
+                        if memory.main.game_over():
+                            quick_reset()
+                        else:
+                            memory.main.update_formation(Tidus, Auron, Lulu)
                 elif memory.main.get_encounter_id() == 420:
                     logger.info("Home, final battle")
                     battle.main.home_4()
@@ -427,7 +497,28 @@ def find_summoners():
                 last_story = memory.main.get_story_progress()
                 last_dialog = memory.main.diag_progress_flag()
                 logger.debug(f"Progress update - story: {last_story} | dialog {last_dialog}")
+
+    split_timer()
     logger.info("Let's go get that airship!")
+    # Summoner's Sanctum room
+    while memory.main.get_map() != 303:
+        coords = memory.main.get_coords()
+        if coords[0] < 100:
+            pathing.set_movement([105,-40])
+        else:
+            pathing.set_movement([160,-50])
+    # Ramp to airship
+    while memory.main.get_map() == 303:
+        coords = memory.main.get_coords()
+        if coords[0] > 185:
+            if coords[1] < 56:
+                pathing.set_movement([190,60])
+            else:
+                pathing.set_movement([165,58])
+        else:
+            pathing.set_movement([80,60])
+
+    # Now aboard the airship
     FFXC.set_neutral()
     if game_vars.story_mode():
         logger.debug("Story mode, no need to wait on these scenes.")

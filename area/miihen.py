@@ -207,11 +207,19 @@ def arrival():
             if memory.main.battle_active():
                 logger.debug(f"Miihen battle check: {memory.main.get_encounter_id()}")
                 if memory.main.get_encounter_id() == 57:  # Tutorial battle with Auron
-                    while not memory.main.battle_wrap_up_active():
+                    while memory.main.battle_wrap_up_active():
                         if memory.main.turn_ready():
                             Tidus.attack()
                         elif not game_vars.story_mode():
                             xbox.tap_confirm()
+                        elif memory.main.game_over():
+                            seed_str = str(memory.main.rng_seed())
+                            avina_memory.add_battle_to_memory(
+                                seed=seed_str,
+                                area="highroad_heals",
+                                battle_num=battle_count - 1,
+                            )
+                            return [False, 0, False, False]
                     FFXC.set_movement(0, 1)
                     while not memory.main.user_control():
                         xbox.tap_confirm()
@@ -334,14 +342,22 @@ def arrival_2(self_destruct, battle_count):
 def mid_point():
     checkpoint = 0
     story_mode_phase = 0
+    flip_highroad = "flip_highroad" in game_vars.run_modifier()
+    
     while memory.main.get_map() != 115:
         if memory.main.user_control():
+            #logger.debug(checkpoint)
             if memory.main.get_map() == 58:
                 memory.main.update_formation(Tidus, Kimahri, Wakka)
                 FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
-            elif checkpoint in [2, 3]:
+            elif checkpoint == 2 and not flip_highroad:
+                checkpoint = 4
+            elif checkpoint == 3 and flip_highroad:
+                reverse_battle_rng(realign=False)
+                FFXC.set_neutral()
+                flip_highroad = False
                 checkpoint = 4
             elif checkpoint == 5:
                 FFXC.set_movement(0, -1)
@@ -379,7 +395,7 @@ def mid_point():
 
 
 # Starts just after the save sphere.
-def low_road(self_destruct, battle_count):
+def low_road(self_destruct, battle_count) -> bool:
     #game_vars.set_run_modifier("flip_lowroad")  # This is for testing only, needs to be replaced at start of run.
     flip_lowroad = "flip_lowroad" in game_vars.run_modifier()
     checkpoint = 0
@@ -424,14 +440,7 @@ def low_road(self_destruct, battle_count):
             if memory.main.battle_active():
                 battle_count += 1
                 logger.info("Starting battle")
-                battle.main.miihen_road()
-                if memory.main.game_over():
-                    #seed_str = str(memory.main.rng_seed())
-                    #avina_memory.add_battle_to_memory(
-                    #    seed=seed_str,
-                    #    area="highroad_heals",
-                    #    battle_num=battle_count - 1,
-                    #)
+                if not battle.main.miihen_road():
                     return False
                 logger.info("Battle complete")
                 post_battle_logic(battle_num=battle_count)
@@ -440,12 +449,10 @@ def low_road(self_destruct, battle_count):
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 if checkpoint < 6 or checkpoint > 12:
                     xbox.tap_b()
-    # logs.write_stats('Miihen encounters:')
-    # logs.write_stats(battle_count)
     return True
 
 
-def reverse_battle_rng():
+def reverse_battle_rng(realign=True):
     FFXC.set_neutral()
     memory.main.check_near_actors()
     pathing.approach_actor_by_id(actor_id=20496)
@@ -463,8 +470,9 @@ def reverse_battle_rng():
     while not memory.main.user_control():
         xbox.tap_a()
 
-    # Back to alginment with the path
-    while not pathing.set_movement([-69,156]):
-        pass
+    if realign:
+        # Back to alginment with the path
+        while not pathing.set_movement([-69,156]):
+            pass
 
     # Return back to the parent process.

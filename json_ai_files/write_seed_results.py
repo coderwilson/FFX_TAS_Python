@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 filepath = os.path.join("json_ai_files", "seed_results.json")
 
-def add_to_seed_results(seed, modifier, avina_heals:str, raw:str, blitz:str, adjusted:str):
+def add_to_seed_results(seed, modifier, avina_heals:str, raw:str, blitz:str, adjusted:str, bcount:str):
     #if seed == 256:
     #    return
     adjusted = adjusted.split(".")[0]
@@ -46,6 +46,7 @@ def add_to_seed_results(seed, modifier, avina_heals:str, raw:str, blitz:str, adj
                     "raw_time": raw,
                     "blitz_time": blitz,
                     "adjusted_time": adjusted,
+                    "nea_manip_battle_count": bcount,
                 }
             }
         }
@@ -68,28 +69,83 @@ def check_ml_heals(seed_num):
             logger.debug("No standard runs completed.")
             modifier = "standard"
             avina_heals = False
-        elif not "False" in results[seed_num]["standard"]:  # True/False if using ML heal method.
-            logger.debug("No standard runs completed - with all heal method.")
-            modifier = "standard"
-            avina_heals = False
-        elif not "True" in results[seed_num]["standard"]:  # True/False if using ML heal method.
-            logger.debug("No standard runs completed - with ML heal method.")
-            modifier = "standard"
-            avina_heals = True
         
         #  Add other cases before catchall Else statement here, as we add them to the program.
         elif not "flip_lowroad" in results[seed_num].keys():
             logger.debug("First attempt, flipping at Lowroad")
             modifier = "flip_lowroad"
             avina_heals = False
-        elif not "True" in results[seed_num]["flip_lowroad"]:
-            logger.debug("Flip lowroad and aVIna heals")
-            modifier = "flip_lowroad"
-            avina_heals = True
+
+        elif not "flip_bikanel" in results[seed_num].keys():
+            logger.debug("Second attempt, flipping in Bikanel.")
+            modifier = "flip_bikanel"
+            avina_heals = False
+
+        elif not "flip_highroad" in results[seed_num].keys():
+            logger.debug("Third attempt, flipping in Highroad.")
+            modifier = "flip_highroad"
+            avina_heals = False
+
+        elif not "flip_lowroad:flip_bikanel" in results[seed_num].keys():
+            logger.debug("Fourth attempt, double flipp (Lowroad & Bikanel).")
+            modifier = "flip_lowroad:flip_bikanel"
+            avina_heals = False
+
+        elif not "flip_highroad:flip_bikanel" in results[seed_num].keys():
+            logger.debug("fifth attempt, double flipp (Highroad & Bikanel).")
+            modifier = "flip_highroad:flip_bikanel"
+            avina_heals = False
+
+        elif not "flip_lowroad:flip_highroad" in results[seed_num].keys():
+            logger.debug("Sixth attempt, double flipp (Highroad & Lowroad).")
+            modifier = "flip_lowroad:flip_highroad"
+            avina_heals = False
+
+        elif not "flip_lowroad:flip_highroad:flip_bikanel" in results[seed_num].keys():
+            logger.debug("Seventh attempt, TRIPLE flip!!!")
+            modifier = "flip_lowroad:flip_highroad:flip_bikanel"
+            avina_heals = False
 
         else:
-            logger.debug("Catchall settings.")
+            logger.debug("Catchall settings - determining lowest run time modifier")
+            lowest_time = results[seed_num]['best_adj']
+            logger.debug("test1")
+            for mod in results[seed_num].keys():
+                if mod == "best_adj":
+                    continue
+                logger.debug("test2")
+                for heal_method in results[seed_num][mod].keys():
+                    logger.debug(f"A: {lowest_time}")
+                    logger.debug(f"B: {results[seed_num][mod][heal_method]['adjusted_time']}")
+                    if lowest_time == results[seed_num][mod][heal_method]['adjusted_time']:
+                        logger.debug("test4")
+                        modifier=mod
+                        avina_heals = True
+        
+
+        '''
+        logger.debug("Catchall settings - determining lowest nea_manip_battle_count")
+        lowest_modifier = None
+        lowest_count = float('inf')
+        avina_heals = True  # Default if no valid value found
+
+        for mod in results[seed_num].keys():
+            if mod == "best_adj":
+                continue
+            for heal_method in results[seed_num][mod].keys():
+                if "nea_manip_battle_count" in results[seed_num][mod][heal_method]:
+                    try:
+                        count = int(results[seed_num][mod][heal_method]["nea_manip_battle_count"])
+                    except:
+                        count = 0
+                    if count < lowest_count:
+                        lowest_count = count
+                        lowest_modifier = mod
+
+        if lowest_modifier:
+            modifier = lowest_modifier
+        else:
             modifier = "standard"
-            avina_heals = True
+        '''
     
     return [modifier, avina_heals]

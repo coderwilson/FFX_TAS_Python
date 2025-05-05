@@ -25,6 +25,7 @@ from paths import (
 )
 from players import Auron, CurrentPlayer, Kimahri, Rikku, Tidus, Wakka, Yuna
 from area.ne_armor import next_green
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -33,7 +34,6 @@ if game_vars.nemesis():
 from nemesis.changes import gagazet_lv_4_chest
 
 FFXC = xbox.controller_handle()
-
 
 def check_gems():
     gem_slot = memory.main.get_item_slot(34)
@@ -72,9 +72,11 @@ def calm_lands(checkpoint = 0):
     half = int(len(routes)/2)
     game_vars.set_def_x_drop(bool((best % 4) >= 2))
     game_vars.set_nea_after_bny(bool(best >= half))
-    logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
+    if (not 2 in routes) and (not 1 in routes):
+        game_vars.set_nea_ignore(True)
+    #logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
 
-    rng_track.print_manip_info(pre_x= True)
+    #rng_track.print_manip_info(pre_x= True)
     # Enter the cutscene where Yuna muses about ending her journey.
     while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
         if memory.main.user_control():
@@ -97,12 +99,20 @@ def calm_lands(checkpoint = 0):
                             checkpoint -= 1
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
+                        elif game_vars.get_def_x_drop() and memory.main.next_chance_rng_10() != 0:
+                            checkpoint -= 1
+                            FFXC.set_movement(-1, -1)
+                            memory.main.wait_frames(60)
                     logger.debug(f"Checkpoint {checkpoint}")
             else:
                 if pathing.set_movement(CalmLands.execute(checkpoint)):
                     checkpoint += 1
                     if checkpoint == 15:
                         if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
+                            checkpoint -= 1
+                            FFXC.set_movement(-1, -1)
+                            memory.main.wait_frames(60)
+                        elif game_vars.get_def_x_drop() and memory.main.next_chance_rng_10() != 0:
                             checkpoint -= 1
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
@@ -124,11 +134,31 @@ def calm_lands(checkpoint = 0):
                 memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
-                rng_track.print_manip_info(pre_x= True)
+                #rng_track.print_manip_info(pre_x= True)
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.menu_b()
+            
+
+            # Let's report after battle the big text on screen.
+            if check_gems() < 2:
+                report_str = f"Need to steal {2 - check_gems()} gem(s)."
+            elif game_vars.get_nea_ignore():
+                report_str = "Skipping NEA"
+            else:
+                report_str = "NEA: "
+                if game_vars.get_nea_after_bny():
+                    report_str += "After Ronso, "
+                else:
+                    report_str += "Before Ronso, "
+                if game_vars.get_def_x_drop():
+                    report_str += "yes drop on X"
+                else:
+                    report_str += "no drop on X"
+                report_str += f"\nDrop Alignment: {memory.main.next_chance_rng_10()}"
+
+            write_big_text(report_str)
 
 
 def defender_x():
@@ -138,6 +168,7 @@ def defender_x():
     while not pathing.set_movement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
+    rng_track.print_manip_info(pre_x=True)
     memory.main.await_event()
     FFXC.set_neutral()
 
@@ -156,7 +187,7 @@ def defender_x():
                 CurrentPlayer().attack()
     FFXC.set_movement(0, 1)
     memory.main.click_to_control()
-    rng_track.print_manip_info()
+    rng_track.print_manip_info(pre_x=False)
     next_green()
 
 
@@ -192,6 +223,8 @@ def to_the_ronso(checkpoint: int = 2):
 
 def gagazet_climb(checkpoint: int = 0):
     # Should appear on the map just before the Ronso hymn
+    write_big_text("")
+    nea_equipped_start = True  # Do I need this?
     end_ver = game_vars.end_game_version()
     logger.debug(f"Grid version: {end_ver}")
     logs.write_stats("B&Y Return spheres:")
@@ -202,23 +235,38 @@ def gagazet_climb(checkpoint: int = 0):
     else:
         logs.write_stats("2")
     memory.main.await_control()
-    if memory.main.overdrive_state()[6] == 100:
-        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
-    else:
-        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
     delay_grid = True
     logger.warning(f"Check Yuna Slvl: {memory.main.get_slvl_yuna()}")
     if memory.main.get_slvl_yuna() >= 4:
         delay_grid = False
         menu.after_ronso()
+    elif game_vars.story_mode():
+        nea_equipped_start = False
     else:
-        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-        memory.main.close_menu()
+        nea_equipped_start = False
 
     logger.info("Gagazet path section")
     talk_wantz = False
     if game_vars.nemesis() or game_vars.story_mode():
         talk_wantz = True
+
+    if nea_equipped_start:
+        if game_vars.ne_armor() < 10:
+            if not memory.main.equipped_armor_has_ability(
+                char_num=game_vars.ne_armor(), ability_num=32797
+            ):
+                menu.equip_armor(character=game_vars.ne_armor(), ability=32797)
+    else:
+        if memory.main.overdrive_state()[6] == 100 or memory.main.get_item_slot(39) != 255:
+            memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
+        else:
+            memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+        if memory.main.equipped_armor_has_ability(
+            char_num=game_vars.ne_armor(), ability_num=32797
+        ):
+            menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+
+    memory.main.close_menu()
 
     while memory.main.get_map() != 285:
         if memory.main.user_control():
@@ -257,11 +305,18 @@ def gagazet_climb(checkpoint: int = 0):
                         if (
                             memory.main.overdrive_state_2()[6] == 100
                             and game_vars.ne_armor() != 255
+                            and not game_vars.story_mode()
                         ):
                             menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     else:
                         memory.main.close_menu()
-                elif memory.main.overdrive_state()[6] == 100:
+                elif game_vars.story_mode() and memory.main.get_slvl_yuna() < 5:
+                    # In story mode, we need extra levels to avoid soft lock later.
+                    battle.main.calm_impulse()
+                    memory.main.click_to_control()
+                    memory.main.update_formation(Tidus, Rikku, Auron)
+                elif memory.main.overdrive_state()[6] == 100 or memory.main.get_item_slot(39) < 100:
+                    # Silence grenade negates the need for overdrive here.
                     battle.main.flee_all()
                     memory.main.click_to_control()
                 else:
@@ -282,7 +337,7 @@ def gagazet_climb(checkpoint: int = 0):
     logger.debug("Should now be on the map with Seymour Flux.")
 
 
-def flux():
+def flux() -> bool:
     logger.info("Flux screen - ready for Seymour again.")
     logger.info(f"REMINDER, VERSION: {game_vars.end_game_version()}")
     FFXC.set_neutral()
@@ -309,7 +364,8 @@ def flux():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 logger.info("Flux battle start")
-                battle.boss.seymour_flux()
+                if not battle.boss.seymour_flux():
+                    return False
                 # FFXC.set_movement(0,1)
                 memory.main.click_to_control()
                 # Removed for Terra
@@ -320,6 +376,7 @@ def flux():
                 xbox.tap_confirm()
             elif memory.main.menu_open():
                 xbox.tap_confirm()
+    return True
 
 
 def dream(checkpoint: int = 0):

@@ -74,6 +74,17 @@ class ThunderPlainsNorth(AreaMovementBase):
         11: [79, -18],
         12: [70, 0],
         13: [52, 123],
+        14: [-53, 408],  # Inside the covered area
+        15: [-30, 452],
+        16: [-6, 720],
+        17: [-9, 783],
+        18: [-53, 935],
+        19: [-75, 1037],
+        20: [-75, 2000],
+    }
+    
+class backup(AreaMovementBase):
+    checkpoint_coordiantes = {
         14: [-52, 414],  # any% only (non-CSR)
         15: [-26, 451],
         16: [-1, 739],  # Both back on track

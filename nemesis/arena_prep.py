@@ -10,6 +10,7 @@ import load_game
 import memory.main
 import menu
 import nemesis.arena_select
+from nemesis.arena_select import arena_npc
 import nemesis.menu
 import pathing
 import rng_track
@@ -37,6 +38,7 @@ from paths.nem import (
 )
 from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna, Kimahri
 from gamestate import game
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -44,11 +46,6 @@ FFXC = xbox.controller_handle()
 test_mode = False
 
 # The following functions extend the regular Bahamut run. Farming sections.
-
-
-def split_timer():
-    logger.debug("Split complete. Sending to timer.")
-    pyautogui.press("num1")
 
 
 def auto_life():
@@ -629,31 +626,6 @@ def bribe_battle(spare_change_value: int = 12000):
     logger.debug("Now back in control.")
 
 
-def arena_npc():
-    memory.main.await_control()
-    if memory.main.get_map() != 307:
-        return
-    while not (
-        memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible()
-    ):
-        if memory.main.user_control():
-            if memory.main.get_coords()[1] > -12 and memory.main.get_actor_angle(0) > -1:
-                xbox.menu_down()
-                memory.main.wait_frames(12)
-            else:
-                pathing.approach_actor_by_id(actor_id=8241)
-        else:
-            FFXC.set_neutral()
-            if memory.main.diag_progress_flag() == 59:
-                xbox.menu_a()
-                xbox.menu_a()
-                xbox.menu_a()
-                xbox.tap_b()
-            elif memory.main.diag_skip_possible():
-                xbox.tap_b()
-    memory.main.wait_frames(3)  # This buffer can be improved later.
-
-
 def arena_return(checkpoint: int = 0, godhand:int = 0, baaj:int = 0):
     if checkpoint == 0:
         air_ship_destination(dest_num=12+godhand+baaj)
@@ -1008,6 +980,7 @@ def auto_phoenix():  # Calm Lands items
             ):
                 if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 90:
                     restock_downs()
+                    nemesis.arena_select.arena_menu_select(4)
                 else:
                     arena_npc()
 
@@ -1434,7 +1407,7 @@ def final_armor():
         full_menu_close=False,
     )
     
-    #menu.equip_armor(character=0, ability=32896,full_menu_close=False)  # Auto-Haste
+    menu.equip_armor(character=0, ability=32896,full_menu_close=False)  # Auto-Haste
     menu.equip_weapon(character=0, ability=32772,full_menu_close=False)  # Evade & Counter (Caldabolg)
     memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
     nemesis.menu.yuna_use_command()

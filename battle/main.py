@@ -27,6 +27,8 @@ from players import (
     Yuna,
 )
 from players.rikku import omnis_items
+from area.dream_zan import split_timer
+from json_ai_files.write_seed import write_big_text
 
 game_vars = vars.vars_handle()
 
@@ -287,7 +289,9 @@ def revive_all():
 
 
 def get_advances(tros=True, report=False):
-
+    return 2
+    '''
+    # We would need to revisit this in the future.
     t_strike_results, yellows = rng_track.t_strike_tracking(tros=tros, report=report)
     if t_strike_results[0] >= 1 and not yellows[0]:
         advances = 0
@@ -304,6 +308,7 @@ def get_advances(tros=True, report=False):
     game_vars.set_yellows(yellows[advances])
     logger.debug(f"Advances updated: {t_strike_results} | {yellows} | {advances}")
     return advances
+    '''
 
 
 @battle.utils.speedup_decorator
@@ -880,13 +885,19 @@ def after_blitz_1(early_haste):
                 wakka_turns += 1
                 hp_values = memory.main.get_battle_hp()
                 if wakka_turns < 3:
-                    CurrentPlayer().attack(target_id=22, direction_hint="l")
+                    Wakka.attack(target_id=22, direction_hint="l")
                 elif hp_values[1] < 200:  # Tidus HP
-                    use_potion_character(0, "u")
+                    if memory.main.get_item_slot(0) != 255:
+                        use_potion_character(0, "u")
+                    else:
+                        Wakka.defend()
                 elif hp_values[0] < 100:  # Wakka HP
-                    use_potion_character(4, "u")
+                    if memory.main.get_item_slot(0) != 255:
+                        use_potion_character(4, "u")
+                    else:
+                        Wakka.defend()
                 else:
-                    CurrentPlayer().defend()
+                    Wakka.defend()
 
 
 @battle.utils.speedup_decorator
@@ -901,7 +912,7 @@ def after_blitz_3(early_haste):
     tidus_turn = 0
     while not memory.main.turn_ready():
         pass
-    while not memory.main.battle_wrap_up_active():
+    while memory.main.battle_active():
         if memory.main.turn_ready():
             hp_values = memory.main.get_battle_hp()
             if Auron.is_turn():
@@ -938,6 +949,7 @@ def after_blitz_3(early_haste):
                 else:
                     CurrentPlayer().defend()
     logger.info("Battle complete (Garuda) A")
+    split_timer()
     # Get to control
     if game_vars.story_mode():
         logger.debug("Ending battles after Blitz (early haste variant)")
@@ -1061,14 +1073,18 @@ def after_blitz_3_late_haste(early_haste):
 
 @battle.utils.speedup_decorator
 def miihen_road(self_destruct=False):
+    while not memory.main.turn_ready():
+        if memory.main.game_over():
+            return False
     enc_id = memory.main.get_encounter_id()
     logger.info(f"Fight start: Mi'ihen Road ({enc_id})")
     logger.warning(f"Mi'ihen battle. Self-destruct learned: {game_vars.self_destruct_get()}")
     if game_vars.story_mode() and not game_vars.self_destruct_get():
         # Need to track all encounters where we can learn self destruct.
-        enc_id = memory.main.get_encounter_id()
         if enc_id in [51,87]:
             lancet_swap(target_id=20)
+            if memory.main.game_over():
+                return False
             game_vars.self_destruct_learned()  # Can't forget this.
         elif enc_id in [64,65,66,84] and memory.main.battle_type() != 2:
             lancet_swap(target_id=21)
@@ -1076,14 +1092,16 @@ def miihen_road(self_destruct=False):
 
         # Once done learning, we should just leave.
         flee_all()
-        wrap_up()
+        if memory.main.game_over():
+            return False
         memory.main.update_formation(Tidus, Wakka, Auron)
     else:
         flee_all()
-    if memory.main.game_over():
-        return
+        if memory.main.game_over():
+            return False
     FFXC.set_movement(0, 1)
     wrap_up()
+    return True
 
 
 def mrr_target():
@@ -1578,15 +1596,15 @@ def djose(stone_breath, battle_count=0):
             logger.info("I have no memory of this seed. (B)")
     except Exception:
         logger.info("I have no memory of this seed. (C)")
-    logger.info("Fight start: Djose road")
+    encounter_id = memory.main.get_encounter_id()
+    logger.info(f"Fight start: Djose road {encounter_id}")
     while memory.main.battle_active():  # AKA end of battle screen
-        encounter_id = memory.main.get_encounter_id()
         if memory.main.turn_ready():
             if stone_breath == 1:  # Stone Breath already learned
                 logger.debug("Djose: Stone breath already learned.")
                 flee_all()
             else:  # Stone breath not yet learned
-                if encounter_id == 128 or encounter_id == 134 or encounter_id == 136:
+                if encounter_id in [128,134,136]:
                     logger.info("Djose: Learning Stone Breath.")
                     lancet_swap("none")
                     stone_breath = 1
@@ -1691,6 +1709,9 @@ def thunder_plains(section, battle_count: int = 0):
     while not memory.main.turn_ready():
         if memory.main.game_over():
             return False
+        if memory.main.battle_wrap_up_active():
+            wrap_up()
+            return True
 
     # Petrify check is not working. Requires review.
     if check_petrify():
@@ -2305,14 +2326,16 @@ def seymour_guado_blitz_win():
             xbox.tap_b()
             logger.debug("Diag skip")
     if memory.main.game_over():
-        return
+        return False
+    split_timer()
     wrap_up()
+    return True
 
 
 @battle.utils.speedup_decorator
 def seymour_guado_blitz_loss():
+    xbox.click_to_battle()
     od_array = memory.main.kim_od_unlocks()
-    screen.await_turn()
 
     tidushaste = False
     kimahriconfused = False
@@ -2364,7 +2387,10 @@ def seymour_guado_blitz_loss():
                     #Tidus.swap_battle_weapon(named_equip="brotherhood")
                 elif tidus_turns == 4:
                     buddy_swap(Wakka)
-                elif animahits + animamiss == 3 and animamiss > 0 and not missbackup:
+                elif (
+                    animahits + animamiss == 3 and animamiss > 0 and not missbackup
+                    and memory.main.get_enemy_current_hp()[3] > 0
+                ):
                     buddy_swap(Lulu)
                     screen.await_turn()
                     revive()
@@ -2505,15 +2531,17 @@ def seymour_guado_blitz_loss():
             xbox.tap_b()
             logger.debug("Diag skip")
     if memory.main.game_over():
-        return
+        return False
+    split_timer()
     wrap_up()
+    return True
 
 
-def seymour_guado():
+def seymour_guado() -> bool:
     if game_vars.get_blitz_win():
-        seymour_guado_blitz_win()
+        return seymour_guado_blitz_win()
     else:
-        seymour_guado_blitz_loss()
+        return seymour_guado_blitz_loss()
 
 
 def escape_with_xp():
@@ -2547,11 +2575,16 @@ def escape_with_xp():
                     else:
                         CurrentPlayer().defend()
                 else:
-                    if memory.main.get_battle_char_slot(0) >= 3:
+                    Tidus_slot = memory.main.get_battle_char_slot(0)
+                    Rikku_slot = memory.main.get_battle_char_slot(6)
+                    Yuna_slot = memory.main.get_battle_char_slot(3)
+                    if Rikku_slot == 255:
+                        flee_all()
+                    elif Tidus_slot >= 3 and Tidus_slot != 255:
                         buddy_swap(Tidus)
-                    elif memory.main.get_battle_char_slot(6) >= 3:
+                    elif Rikku_slot >= 3:
                         buddy_swap(Rikku)
-                    elif memory.main.get_battle_char_slot(1) >= 3:
+                    elif Yuna_slot >= 3 and Yuna_slot != 255:
                         buddy_swap(Yuna)
                     else:
                         CurrentPlayer().defend()
@@ -2647,6 +2680,181 @@ def zu():
 
 @battle.utils.speedup_decorator
 def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
+    # status should be an array length 4
+    # [rikku_charged (unused), speed_needed, power_needed, items_needed]
+    encounter_id = memory.main.get_encounter_id()
+    logger.warning(f"DESERT BATTLE {encounter_id} START")
+    item_stolen = status[3] <= 0
+    item_thrown = False
+    throw_power = False
+    throw_speed = False
+
+    # Set throw encounters, only if we still need speed or power.
+    if encounter_id in [199,200,208,209,221]:
+        if status[1]:
+            throw_speed = True
+        if status[2]:
+            throw_power = True
+    if encounter_id in [218,222]:
+        if status[2]:
+            throw_power = True
+
+    # Set steal targets
+    steal_slot = 20
+    if encounter_id in [201,203,204,205,210,212,213,215,219,223,224,226,227]:
+        item_stolen = True # Don't steal for these encounters. See Google Sheet list.
+    else:
+        if encounter_id in [209,221,222]:
+            steal_slot = 21  # Check 226 later
+
+        # Zu needs special logic.
+        if encounter_id in [202, 211, 216, 225]:  # Zu battles
+            steal_slot = 20
+        if encounter_id == 217:  # Special Zu battle
+            steal_slot = 21
+    
+    # If we haven't gotten Rikku yet, we don't want to steal AND throw.
+    # That messes with Wakka's logic, so it's not worth.
+    if memory.main.get_story_progress() < 1720 and not item_stolen:
+        throw_power=False
+        throw_speed=False
+    
+    # Flee from these battles
+    flee_battle = [201,203,205,210,212,215]
+
+
+    # Here we are going to explicitly state our plan to the console.
+    plan = "Plan is to "
+    if not item_stolen:
+        plan += "steal once, "
+    if throw_speed or throw_power:
+        plan += "throw an item, and if the battle continues, []"
+    plan += "escape or flee."
+    logger.debug(f"Story progress: {memory.main.get_story_progress()}")
+    xbox.click_to_battle()
+        
+    # Set charges
+    logger.debug(Rikku.overdrive_percent(combat=False))
+    charge_rikku = Rikku.overdrive_percent() != 100 and memory.main.get_story_progress() >= 1720
+    logger.debug(Kimahri.overdrive_percent(combat=False))
+    charge_kimahri = Kimahri.overdrive_percent() != 100 and game_vars.story_mode()
+    logger.debug(Auron.overdrive_percent(combat=False))
+    charge_auron = Auron.overdrive_percent() != 100 and not sandy_fight_complete
+    # If sandy fight complete, we do not need to recharge Auron.
+    if charge_kimahri and charge_rikku:
+        charge_auron = False
+
+
+    if charge_auron or charge_kimahri or charge_rikku:
+        plan2 = "charge OD for [ "
+        if charge_kimahri:
+            plan2 += "Kimahri "
+        if charge_rikku:
+            plan2 += "Rikku "
+        if charge_auron:
+            plan2 += "Auron "
+        plan2 += "] before we "
+        plan.replace("[]", plan2)
+    else:
+        plan.replace("[]","")
+    
+    
+    if memory.main.battle_type() == 2:
+        # Check ambushes
+        if not encounter_id in [202,211,216,225]:
+            logger.warning(f"Ambush = escape for battle {encounter_id}")
+            flee_all()
+            return
+    elif encounter_id in flee_battle:
+        logger.warning(f"Preferable flee scenario for {encounter_id}")
+        flee_all()
+        return
+    
+    logger.manip(plan)  # Report before jumping to first turn.
+
+    # Now to perform the logic sequentially.
+    while memory.main.battle_active():
+        '''
+        if Tidus.is_turn() and (
+            charge_rikku or
+            charge_kimahri or
+            charge_auron
+        ):
+            escape_one()
+        '''
+        if not item_stolen:
+            logger.debug("Looking to steal an item.")
+            if memory.main.turn_ready():
+                if not Kimahri.active():
+                    buddy_swap(Kimahri)
+                elif not item_stolen and (Kimahri.is_turn() or Rikku.is_turn()):
+                    steal_target(steal_slot)
+                    item_stolen = True
+                else:
+                    CurrentPlayer().defend()
+                logger.manip(plan)
+        elif not item_thrown and (throw_power or throw_speed):
+            logger.debug("Looking to throw an item.")
+            if memory.main.turn_ready():
+                items = update_steal_items_desert()
+                if not Kimahri.active():
+                    buddy_swap(Kimahri)
+                elif not item_thrown and (Kimahri.is_turn() or Rikku.is_turn()):
+                    if items[2] >= 1:
+                        item_to_use = 40
+                    elif items[1] >= 1:
+                        item_to_use = 37
+                    elif items[3] >= 1:
+                        item_to_use = 39
+                    else:
+                        item_to_use = 999
+
+                    if item_to_use == 999:
+                        logger.warning("No items to throw.")
+                    else:
+                        use_item(memory.main.get_use_items_slot(item_to_use), "none")
+                    item_thrown = True
+                logger.manip(plan)
+        elif memory.main.turn_ready():
+            if charge_rikku and not Rikku.active():
+                buddy_swap(Rikku)
+                logger.manip(plan)
+            elif charge_rikku and Rikku.is_turn():
+                if Rikku.hp() < 100:
+                    Rikku.attack()
+                else:
+                    Rikku.attack(target_id=6)
+                logger.manip(plan)
+            elif charge_kimahri and not Kimahri.active():
+                buddy_swap(Kimahri)
+                logger.manip(plan)
+            elif charge_kimahri and Kimahri.is_turn():
+                if Kimahri.hp() < 200:
+                    Kimahri.attack()
+                else:
+                    Kimahri.attack(target_id=3)
+                logger.manip(plan)
+            elif charge_auron and not Auron.active():
+                buddy_swap(Auron)
+                logger.manip(plan)
+            elif charge_auron and Auron.is_turn():
+                # Note this can only occur if either Rikku or Kimahri have already charged.
+                if Auron.hp() < 200:
+                    Auron.attack()
+                else:
+                    Auron.attack(target_id=2)
+                logger.manip(plan)
+            elif not charge_rikku and not charge_kimahri and not charge_auron:
+                logger.warning("All other needs complete, ready to flee.")
+                flee_all()
+                return
+            else:
+                escape_one()
+                logger.manip(plan)
+    wrap_up()
+
+@battle.utils.speedup_decorator
+def bikanel_battle_logic_old(status, sandy_fight_complete: bool = False):
     # status should be an array length 4
     # [rikku_charged, speed_needed, power_needed, items_needed]
     encounter_id = memory.main.get_encounter_id()
@@ -2797,7 +3005,7 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
                         use_item(memory.main.get_use_items_slot(item_to_use), "none")
                     item_thrown = True
                 elif not status[0]:
-                    if memory.main.get_battle_char_turn() == 6:
+                    if Rikku.is_turn() == 6:
                         CurrentPlayer().attack()
                     else:
                         escape_one()
@@ -2807,7 +3015,10 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
             logger.debug("Attack/Steal with Rikku, everyone else escape.")
             if memory.main.turn_ready():
                 if Rikku.is_turn():
-                    CurrentPlayer().attack()
+                    if memory.main.get_use_items_slot(20) < 200:
+                        use_item(memory.main.get_use_items_slot(20))
+                    else:
+                        Rikku.attack()
                 elif Auron.is_turn() and not Auron.has_overdrive():
                     Auron.attack(target_id=Auron)
                 elif Rikku.active():
@@ -2841,11 +3052,11 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
 def update_steal_items_desert():
     item_array = [0, 0, 0, 0]
     # Bomb cores
-    index = memory.main.get_item_slot(27)
-    if index == 255:
-        item_array[0] = 0
-    else:
-        item_array[0] = memory.main.get_item_count_slot(index)
+    #index = memory.main.get_item_slot(27)
+    #if index == 255:
+    item_array[0] = 0  # We're going to ignore bomb cores now.
+    #else:
+    #    item_array[0] = memory.main.get_item_count_slot(index)
 
     # Sleeping Powders
     index = memory.main.get_item_slot(37)
@@ -2875,36 +3086,35 @@ def update_steal_items_desert():
 
 @battle.utils.speedup_decorator
 def sandragora(version):
-    screen.await_turn()
-    if version != 1:  # Kimahri's turn
+    while not memory.main.turn_ready():
+        pass
+    if version != 1:  # Second Sandy, reset and try skip again.
         flee_all()
         memory.main.click_to_control()
-    else:  # Auron's turn
-        # Manip for NE armor
-        if memory.main.battle_type() == 2:
-            while memory.main.battle_type() == 2:
-                logger.debug("Ambushed, swapping out.")
-                flee_all()
-                memory.main.click_to_control()
-                FFXC.set_movement(0, 1)
-                memory.main.await_event()
-                FFXC.set_neutral()
-                screen.await_turn()
-        else:
-            logger.debug("DO NOT Swap odd/even seeds on RNG01")
+        return
+    if memory.main.battle_type() == 2 and Auron.active():
+        while memory.main.battle_type() == 2:
+            logger.debug("Ambushed, swapping out.")
+            flee_all()
+            memory.main.click_to_control()
+            FFXC.set_movement(0, 1)
+            memory.main.await_event()
+            FFXC.set_neutral()
+            while not memory.main.turn_ready():
+                pass
 
-        if 2 not in memory.main.get_active_battle_formation():
-            buddy_swap(Auron)  # Tidus for Kimahri
-        else:
-            tidus_haste("l", character=Auron)
+    if 2 not in memory.main.get_active_battle_formation():
+        buddy_swap(Auron)  # Tidus for Auron
+    else:
+        tidus_haste("l", character=Auron)
+    screen.await_turn()
+    if Kimahri.is_turn() or Rikku.is_turn():
+        logger.debug("Kimahri/Rikku taking a spare turn. Just defend.")
+        CurrentPlayer().defend()
         screen.await_turn()
-        if Kimahri.is_turn() or Rikku.is_turn():
-            logger.debug("Kimahri/Rikku taking a spare turn. Just defend.")
-            CurrentPlayer().defend()
-            screen.await_turn()
-        logger.debug("Setting up Auron overdrive")
-        Auron.overdrive(style="shooting star")
-        wrap_up()
+    logger.debug("Setting up Auron overdrive")
+    Auron.overdrive(style="shooting star")
+    wrap_up()
 
 
 @battle.utils.speedup_decorator
@@ -2912,7 +3122,13 @@ def home_1():
     FFXC.set_neutral()
     xbox.click_to_battle()
     logger.debug("Tidus vs Bombs")
-    use_lancet = not game_vars.get_blitz_win() and Kimahri.overdrive_percent(combat=True) != 100
+    
+    use_lancet = (
+        Kimahri.overdrive_percent() != 100 and 
+        not game_vars.story_mode() and 
+        not game_vars.get_blitz_win()
+    )
+    
     od_learns = 2
     tidus_haste("none")
     while memory.main.battle_active():  # AKA end of battle screen
@@ -2923,7 +3139,7 @@ def home_1():
                 CurrentPlayer().attack()
             elif Auron.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
                 CurrentPlayer().attack()
-            elif use_lancet and memory.main.get_battle_char_slot(3) >= 3:
+            elif use_lancet and not Kimahri.active():
                 buddy_swap(Kimahri)  # Tidus for Kimahri
             elif use_lancet and Kimahri.is_turn():
                 lancet_target(target=23, direction="d", post_steal=True)
@@ -2932,6 +3148,8 @@ def home_1():
             else:
                 CurrentPlayer().defend()
     logger.debug("Home 1 shows as fight complete.")
+    if memory.main.game_over():
+        return 0
     memory.main.click_to_control()
     if game_vars.god_mode():
         rng_track.force_preempt()
@@ -3047,6 +3265,8 @@ def home_4():
             else:
                 CurrentPlayer().defend()
     logger.debug("Home 4 shows as fight complete.")
+    if memory.main.game_over():
+        return
     memory.main.click_to_control()
     if game_vars.god_mode():
         rng_track.force_preempt()
@@ -3080,8 +3300,24 @@ def distiller_target(seed:int=2, ignore=[]):
     return final_targets[0], len(final_targets)
 
 
+def guards_report_items():
+    sleep_slot = memory.main.get_item_slot(37)
+    silence_slot = memory.main.get_item_slot(39)
+    smoke_slot = memory.main.get_item_slot(40)
+
+    sleep_count = memory.main.get_item_count_slot(sleep_slot)
+    silence_count = memory.main.get_item_count_slot(silence_slot)
+    smoke_count = memory.main.get_item_count_slot(smoke_slot)
+    
+    report_str = f"Sleep: {sleep_count}\n"
+    report_str += f"Silence: {silence_count}\n"
+    report_str += f"Smoke: {smoke_count}\n"
+    write_big_text(report_str)
+
+
 @battle.utils.speedup_decorator
 def guards(group_num, sleeping_powders):
+    guards_report_items()
     max_steals = 0
     remaining_steals = 0
     nea_result_array = rng_track.guards_to_calm_equip_drop_count(
@@ -3128,208 +3364,224 @@ def guards(group_num, sleeping_powders):
     num_throws = 0  # This is for grenade throws.
     hasted = False
     tidus_went = False
-    if sleeping_powders:  # We have sleeping powders
-        while memory.main.battle_active():  # AKA end of battle screen
-            if memory.main.turn_ready():
-                target, distiller_targets = distiller_target(seed=distiller_count,ignore=distilled_targets)
-                if distiller_targets < distiller_count:
-                    distiller_count = distiller_targets
-                logger.manip(memory.main.get_enemy_current_hp())
-                if group_num in [1, 3]:
-                    if Tidus.is_turn():
-                        CurrentPlayer().attack()
-                    elif distiller_count >= 1:
-                        if memory.main.get_item_slot(18) != 255:
-                            _use_healing_item(num=target,item_id=18)
-                        elif memory.main.get_item_slot(16) != 255:
-                            _use_healing_item(num=target,item_id=16)
-                        else:
-                            _use_healing_item(num=target,item_id=17)
-                        distiller_count -= 1
-                        distilled_targets.append(target)
-                    elif remaining_steals != 0 and (Rikku.is_turn() or Kimahri.is_turn()):
-                        steal()
-                        remaining_steals -= 1
-                    elif remaining_steals != 0 and Lulu.is_turn():
-                        if 6 not in memory.main.get_active_battle_formation():
-                            buddy_swap(Rikku)
-                        elif 3 not in memory.main.get_active_battle_formation():
-                            buddy_swap(Kimahri)
-                        else:
-                            CurrentPlayer.defend()
-                    elif (
-                        Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
-                    ):
-                        if memory.main.get_item_slot(0) != 255:
-                            use_potion_character(Rikku, "r")
-                        elif memory.main.get_item_slot(1) != 255:
-                            _use_healing_item(num=Rikku, direction="r", item_id=1)
-                        else:
-                            CurrentPlayer().defend()
+    while memory.main.battle_active():  # AKA end of battle screen
+        if memory.main.turn_ready():
+            guards_report_items()
+            target, distiller_targets = distiller_target(seed=distiller_count,ignore=distilled_targets)
+            if distiller_targets < distiller_count:
+                distiller_count = distiller_targets
+            logger.manip(memory.main.get_enemy_current_hp())
+            if group_num in [1, 3]:
+                if Tidus.is_turn():
+                    CurrentPlayer().attack()
+                elif remaining_steals != 0 and (Rikku.is_turn() or Kimahri.is_turn()):
+                    steal()
+                    remaining_steals -= 1
+                elif remaining_steals != 0 and Lulu.is_turn():
+                    if 6 not in memory.main.get_active_battle_formation():
+                        buddy_swap(Rikku)
+                    elif 3 not in memory.main.get_active_battle_formation():
+                        buddy_swap(Kimahri)
+                    else:
+                        CurrentPlayer.defend()
+                elif distiller_count >= 1 and (Rikku.is_turn() or Kimahri.is_turn()):
+                    if memory.main.get_item_slot(18) != 255:
+                        _use_healing_item(num=target,item_id=18)
+                    elif memory.main.get_item_slot(16) != 255:
+                        _use_healing_item(num=target,item_id=16)
+                    else:
+                        _use_healing_item(num=target,item_id=17)
+                    distiller_count -= 1
+                    distilled_targets.append(target)
+                elif (
+                    Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
+                ):
+                    if memory.main.get_item_slot(0) != 255:
+                        use_potion_character(Rikku, "r")
+                    elif memory.main.get_item_slot(1) != 255:
+                        _use_healing_item(num=Rikku, direction="r", item_id=1)
                     else:
                         CurrentPlayer().defend()
-                elif group_num in [2, 4]:
-                    if Tidus.is_turn() and memory.main.get_enemy_current_hp()[0] >= 1:
-                        CurrentPlayer().attack()
-                    elif (
-                        (Rikku.is_turn() or Kimahri.is_turn()) and 
-                        num_throws == 1 and
-                        remaining_steals == 1
-                    ):
-                        steal()
-                        remaining_steals -= 1
-                    elif (Rikku.is_turn()) and num_throws < 2:
-                        # Not using Kimahri as that can mess up NEA manip.
-                        silence_slot = memory.main.get_item_slot(39)
-                        if num_throws == 0 and memory.main.get_use_items_slot(37) < 200:
-                            use_item(memory.main.get_use_items_slot(37))
+                else:
+                    CurrentPlayer().defend()
+            elif group_num in [2, 4]:
+                if Rikku.is_turn():
+                    if num_throws < 2:
+                        if num_throws == 0:
+                            if memory.main.get_item_slot(37) < 200:
+                                use_item(memory.main.get_use_items_slot(37))
+                            elif memory.main.get_item_slot(39) < 200:
+                                use_item(memory.main.get_use_items_slot(39))
+                            else:
+                                use_item(memory.main.get_use_items_slot(40))
                         else:
                             if memory.main.get_use_items_slot(40) != 255:
+                                # Smoke grenade
                                 use_item(memory.main.get_use_items_slot(40))
                             elif (
-                                silence_slot != 255
-                                and memory.main.get_item_count_slot(silence_slot) > 1
+                                memory.main.get_item_slot(37) != 255 and
+                                memory.main.get_item_count_slot(memory.main.get_item_slot(37)) > 1
                             ):
-                                # Save one for later if possible
-                                use_item(memory.main.get_use_items_slot(39))
-                            elif memory.main.get_use_items_slot(37) != 255:
+                                # Sleep Powder
                                 use_item(memory.main.get_use_items_slot(37))
-                            elif memory.main.get_use_items_slot(27) != 255:
-                                use_item(memory.main.get_use_items_slot(27))
-                            elif silence_slot != 255:
-                                # Throw last Silence grenade as a last resort.
+                            elif (
+                                memory.main.get_item_slot(39) != 255 and
+                                memory.main.get_item_count_slot(memory.main.get_item_slot(39)) > 2
+                            ):
+                                # Throw Silence grenades last.
                                 use_item(memory.main.get_use_items_slot(39))
+                            elif memory.main.get_use_items_slot(27) != 255:
+                                # If we're throwing bomb cores, we're already in panic mode.
+                                use_item(memory.main.get_use_items_slot(27))
                             else:
                                 CurrentPlayer().defend()
                         num_throws += 1
+                    elif remaining_steals >= 1:
+                        steal()
+                        remaining_steals -= 1
                     else:
                         CurrentPlayer().defend()
-                elif group_num == 5:
-                    if screen.faint_check():
-                        revive()
-                    elif Tidus.is_turn():
-                        if not hasted:
-                            tidus_haste("left", character=6)
-                            hasted = True
+                elif Tidus.is_turn():
+                    if not Kimahri.active() and not sleeping_powders and num_throws < 1:
+                        buddy_swap(Kimahri)
+                        if memory.main.get_item_slot(40) < 200:
+                            use_item(memory.main.get_use_items_slot(40))
                         else:
-                            CurrentPlayer().attack(target_id=22, direction_hint="r")
-                    elif Rikku.is_turn() or Kimahri.is_turn():
-                        silence_slot = memory.main.get_item_slot(39)
-                        if num_throws < 2:
-                            if memory.main.get_use_items_slot(40) != 255:
-                                use_item(memory.main.get_use_items_slot(40))
-                            elif (
-                                silence_slot != 255
-                                and memory.main.get_item_count_slot(silence_slot) > 1
-                            ):
-                                # Save one for later if possible
-                                use_item(memory.main.get_use_items_slot(39))
-                            elif memory.main.get_use_items_slot(37) != 255:
-                                use_item(memory.main.get_use_items_slot(37))
-                            elif memory.main.get_use_items_slot(27) != 255:
-                                use_item(memory.main.get_use_items_slot(27))
-                            elif memory.main.get_use_items_slot(39) != 255:
-                                use_item(memory.main.get_use_items_slot(39))
-                            else:
-                                CurrentPlayer().defend()
-                            num_throws += 1
-                            
-                        elif remaining_steals == 1:
-                            steal()
-                            remaining_steals -= 1
-                        else:
-                            CurrentPlayer().defend()
-    else:  # We do not have sleeping powders
-        while memory.main.battle_active():
-            if memory.main.turn_ready():
-                target, distiller_targets = distiller_target(distiller_count)
-                if distiller_targets < distiller_count:
-                    distiller_count = distiller_targets
-                if group_num in [1, 3]:
-                    if Tidus.is_turn():
+                            use_item(memory.main.get_use_items_slot(39))
+                        num_throws += 1
+                    else:
                         CurrentPlayer().attack()
-                    elif distiller_count >= 1:
-                        if memory.main.get_item_slot(18) != 255:
-                            _use_healing_item(num=target,item_id=18)
-                        elif memory.main.get_item_slot(16) != 255:
-                            _use_healing_item(num=target,item_id=16)
-                        else:
-                            _use_healing_item(num=target,item_id=17)
-                        distiller_count -= 1
-                    elif (
-                        Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
-                    ):
-                        if memory.main.get_item_slot(0) != 255:
-                            use_potion_character(6, "r")
-                        elif memory.main.get_item_slot(1) != 255:
-                            _use_healing_item(num=6, direction="r", item_id=1)
-                        else:
-                            CurrentPlayer().defend()
+                elif Kimahri.is_turn():
+                    if not Tidus.active():
+                        buddy_swap(Tidus)
+                        Tidus.attack()
+                    elif remaining_steals >= 1:
+                        steal()
+                        remaining_steals -= 1
                     else:
                         CurrentPlayer().defend()
-                elif group_num in [2, 4]:
-                    if Tidus.is_turn():
-                        if not tidus_went:
-                            buddy_swap(Kimahri)
-                            tidus_went = True
-                        else:
-                            CurrentPlayer().attack()
-                    elif Kimahri.is_turn() or Rikku.is_turn():
-                        silence_slot = memory.main.get_item_slot(39)
+                else:
+                    CurrentPlayer().defend()
+
+            elif group_num == 5:
+                if screen.faint_check():
+                    revive()
+                elif Tidus.is_turn():
+                    if not hasted:
+                        tidus_haste("left", character=6)
+                        hasted = True
+                    else:
+                        CurrentPlayer().attack(target_id=22, direction_hint="r")
+                elif Rikku.is_turn() or Kimahri.is_turn():
+                    silence_slot = memory.main.get_item_slot(39)
+                    if num_throws < 2:
                         if memory.main.get_use_items_slot(40) != 255:
                             use_item(memory.main.get_use_items_slot(40))
-                        elif (
-                            silence_slot != 255
-                            and memory.main.get_item_count_slot(silence_slot) >= 2
-                        ):
-                            # Save one for later if possible
-                            use_item(memory.main.get_use_items_slot(39))
                         elif memory.main.get_use_items_slot(37) != 255:
                             use_item(memory.main.get_use_items_slot(37))
-                        elif memory.main.get_use_items_slot(27) != 255:
-                            use_item(memory.main.get_use_items_slot(27))
+                        #elif memory.main.get_use_items_slot(27) != 255:
+                        #    use_item(memory.main.get_use_items_slot(27))
                         elif memory.main.get_use_items_slot(39) != 255:
                             use_item(memory.main.get_use_items_slot(39))
-                        else:
-                            CurrentPlayer().defend()
-                    else:
-                        CurrentPlayer().defend()
-                elif group_num == 5:
-                    if Tidus.is_turn():
-                        if not tidus_went:
-                            buddy_swap(Rikku)
-                            tidus_went = True
-                        else:
-                            CurrentPlayer().attack(target_id=22, direction_hint="l")
-                    elif Rikku.is_turn() or Kimahri.is_turn():
-                        silence_slot = memory.main.get_item_slot(39)
-                        if num_throws < 2:
-                            if memory.main.get_use_items_slot(40) != 255:
-                                use_item(memory.main.get_use_items_slot(40))
-                            elif (
-                                silence_slot != 255
-                                and memory.main.get_item_count_slot(silence_slot) > 1
-                            ):
-                                # Save one for later if possible
-                                use_item(memory.main.get_use_items_slot(39))
-                            elif memory.main.get_use_items_slot(37) != 255:
-                                use_item(memory.main.get_use_items_slot(37))
-                            elif memory.main.get_use_items_slot(27) != 255:
-                                use_item(memory.main.get_use_items_slot(27))
-                            elif (
-                                memory.main.get_use_items_slot(39) != 255
-                                and num_throws < 2
-                            ):
-                                use_item(memory.main.get_use_items_slot(39))
-                            else:
-                                CurrentPlayer().defend()
+                            # Silence as a last resort.
                         else:
                             CurrentPlayer().defend()
                         num_throws += 1
-                    elif Kimahri.is_turn():
-                        buddy_swap(Tidus)
+                        
+                    elif remaining_steals == 1:
+                        steal()
+                        remaining_steals -= 1
                     else:
                         CurrentPlayer().defend()
+        guards_report_items()
+    # else:  # We do not have sleeping powders
+    #     while memory.main.battle_active():
+    #         if memory.main.turn_ready():
+    #             guards_report_items()
+    #             target, distiller_targets = distiller_target(distiller_count)
+    #             if distiller_targets < distiller_count:
+    #                 distiller_count = distiller_targets
+    #             if group_num in [1, 3]:
+    #                 if Tidus.is_turn():
+    #                     CurrentPlayer().attack()
+    #                 elif distiller_count >= 1:
+    #                     if memory.main.get_item_slot(18) != 255:
+    #                         _use_healing_item(num=target,item_id=18)
+    #                     elif memory.main.get_item_slot(16) != 255:
+    #                         _use_healing_item(num=target,item_id=16)
+    #                     else:
+    #                         _use_healing_item(num=target,item_id=17)
+    #                     distiller_count -= 1
+    #                 elif (
+    #                     Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
+    #                 ):
+    #                     if memory.main.get_item_slot(0) != 255:
+    #                         use_potion_character(6, "r")
+    #                     elif memory.main.get_item_slot(1) != 255:
+    #                         _use_healing_item(num=6, direction="r", item_id=1)
+    #                     else:
+    #                         CurrentPlayer().defend()
+    #                 else:
+    #                     CurrentPlayer().defend()
+    #             elif group_num in [2, 4]:
+    #                 if Tidus.is_turn():
+    #                     if not tidus_went:
+    #                         buddy_swap(Kimahri)
+    #                         tidus_went = True
+    #                     else:
+    #                         CurrentPlayer().attack()
+    #                 elif Kimahri.is_turn() or Rikku.is_turn():
+    #                     silence_slot = memory.main.get_item_slot(39)
+    #                     if memory.main.get_use_items_slot(40) != 255:
+    #                         use_item(memory.main.get_use_items_slot(40))
+    #                     elif (
+    #                         silence_slot != 255
+    #                         and memory.main.get_item_count_slot(silence_slot) >= 2
+    #                     ):
+    #                         # Save one for later if possible
+    #                         use_item(memory.main.get_use_items_slot(39))
+    #                     elif memory.main.get_use_items_slot(37) != 255:
+    #                         use_item(memory.main.get_use_items_slot(37))
+    #                     elif memory.main.get_use_items_slot(27) != 255:
+    #                         use_item(memory.main.get_use_items_slot(27))
+    #                     elif memory.main.get_use_items_slot(39) != 255:
+    #                         use_item(memory.main.get_use_items_slot(39))
+    #                     else:
+    #                         CurrentPlayer().defend()
+    #                 else:
+    #                     CurrentPlayer().defend()
+    #             elif group_num == 5:
+    #                 if Tidus.is_turn():
+    #                     if not tidus_went:
+    #                         buddy_swap(Rikku)
+    #                         tidus_went = True
+    #                     else:
+    #                         CurrentPlayer().attack(target_id=22, direction_hint="l")
+    #                 elif Rikku.is_turn() or Kimahri.is_turn():
+    #                     silence_slot = memory.main.get_item_slot(39)
+    #                     if num_throws < 2:
+    #                         if memory.main.get_use_items_slot(40) != 255:
+    #                             use_item(memory.main.get_use_items_slot(40))
+    #                         # elif (
+    #                         #     silence_slot != 255
+    #                         #     and memory.main.get_item_count_slot(silence_slot) > 1
+    #                         # ):
+    #                         #     # Save one for later if possible
+    #                         #     use_item(memory.main.get_use_items_slot(39))
+    #                         elif memory.main.get_use_items_slot(37) != 255:
+    #                             use_item(memory.main.get_use_items_slot(37))
+    #                         elif memory.main.get_use_items_slot(39) != 255:
+    #                             use_item(memory.main.get_use_items_slot(39))
+    #                         else:
+    #                             CurrentPlayer().defend()
+    #                     else:
+    #                         CurrentPlayer().defend()
+    #                     num_throws += 1
+    #                 elif Kimahri.is_turn():
+    #                     buddy_swap(Tidus)
+    #                 else:
+    #                     CurrentPlayer().defend()
+    #         guards_report_items()
     logger.debug("Guards battle complete.")
     wrap_up()
 
@@ -3509,43 +3761,44 @@ def calm_lands_gems():
     extra_drops, advances = rng_track.nea_track(pre_defender_x=True)
     while not memory.main.turn_ready():
         pass
+    
     steal_complete = False
     if memory.main.get_encounter_id() not in [273, 275, 281, 283]:
         flee_all()
-    elif memory.main.battle_type() == 2:
+        return
+    if memory.main.battle_type() == 2:
+        logger.debug("Avoiding ambush. Flee.")
         flee_all()
-    else:
-        from memory.main import who_goes_first_after_current_turn,get_next_turn
-        while memory.main.battle_active():
-            check_array = [get_next_turn(),20,21,22,23]
-            if memory.main.turn_ready():
-                next_turn = who_goes_first_after_current_turn(check_array)
-                # We should start with predicting character deaths. Add later.
-                if next_turn >= 20:
-                    flee_all()
-                    wrap_up()
-                    return
-                if steal_complete:
-                    flee_all()
-                    wrap_up()
-                    return
-                if not Kimahri.active():
-                    buddy_swap(Kimahri)
-                    screen.await_turn()
-                elif Kimahri.is_turn():
-                    # Red element in center slot, with machina and dog
-                    if memory.main.get_encounter_id() in [273, 281]:
-                        logger.debug("Grabbing a gem here.")
-                        steal_target(index=21)
-                    # Red element in top slot, with bee and tank
-                    elif memory.main.get_encounter_id() in [275, 283]:
-                        logger.debug("Grabbing a gem here.")
-                        steal_target(index=22)
-                    else:
-                        CurrentPlayer().defend()
-                    steal_complete = True
+        return
+    from memory.main import who_goes_first_after_current_turn,get_next_turn
+    while memory.main.battle_active():
+        check_array = [get_next_turn(),20,21,22,23]
+        if memory.main.turn_ready():
+            #next_turn = who_goes_first_after_current_turn(check_array)
+            # We should start with predicting character deaths. Add later.
+            #if next_turn >= 20:
+            #    flee_all()
+            #    return
+            if steal_complete:
+                flee_all()
+                return
+            if not Kimahri.active():
+                buddy_swap(Kimahri)
+                screen.await_turn()
+            elif Kimahri.is_turn():
+                # Red element in center slot, with machina and dog
+                if memory.main.get_encounter_id() in [273, 281]:
+                    logger.debug("Grabbing a gem here.")
+                    steal_target(index=21)
+                # Red element in top slot, with bee and tank
+                elif memory.main.get_encounter_id() in [275, 283]:
+                    logger.debug("Grabbing a gem here.")
+                    steal_target(index=22)
                 else:
                     CurrentPlayer().defend()
+                steal_complete = True
+            else:
+                CurrentPlayer().defend()
     wrap_up()
 
 
@@ -4673,6 +4926,8 @@ def lancet_swap(direction:str="none", target_id=99):
     direction = direction.lower()
     lancet_complete = False
     while not lancet_complete:
+        if memory.main.game_over():
+            return False
         if not Kimahri.active():
             buddy_swap(Kimahri)
         elif Kimahri.is_turn():
@@ -4687,6 +4942,7 @@ def lancet_swap(direction:str="none", target_id=99):
     screen.await_turn()
     flee_all()
     wrap_up()
+    return True
 
 
 def lancet(direction):
@@ -4808,7 +5064,7 @@ def lancet_home(direction):
     tap_targeting()
 
 
-def flee_all(exclude: int = 99):
+def flee_all(exclude: int = 99, wrap_up_battle=True):
     FFXC.set_neutral()
     logger.debug("Attempting escape (all party members and end screen)")
     if memory.main.battle_active():
@@ -4833,7 +5089,8 @@ def flee_all(exclude: int = 99):
     if memory.main.game_over():
         return False
     logger.info("Flee complete")
-    wrap_up()
+    if wrap_up_battle:
+        wrap_up()
     return True
 
 
@@ -4938,6 +5195,8 @@ def buddy_swap(character, quick_return:bool=False):
     else:
         while not memory.main.other_battle_menu():
             xbox.l_bumper()
+            if not memory.main.battle_active():
+                return
         position -= 3
         reserveposition = position % 4
         logger.debug(f"Character is in reserve position {reserveposition}")
@@ -4947,6 +5206,8 @@ def buddy_swap(character, quick_return:bool=False):
             direction = "down"
 
         while reserveposition != memory.main.battle_cursor_2():
+            if not memory.main.battle_active():
+                return
             if direction == "down":
                 xbox.tap_down()
             else:
@@ -5080,8 +5341,9 @@ def sin_arms():
                 CurrentPlayer().attack()
     else:
         Bahamut.unique(target_far_line=True)
-        xbox.tap_b()
-        xbox.tap_b()
+        while memory.main.battle_active():
+            xbox.tap_b()
+    split_timer()
 
     while not memory.main.user_control():
         if memory.main.cutscene_skip_possible():
@@ -5117,6 +5379,7 @@ def sin_face():
         else:
             xbox.tap_b()
     logger.info("Fight end: Sin's Face")
+    split_timer()
     while not (memory.main.user_control() or memory.main.cutscene_skip_possible()):
         xbox.tap_b()
     if memory.main.cutscene_skip_possible():
@@ -5167,8 +5430,10 @@ def bfa_nem():
             else:
                 CurrentPlayer().defend()
     logger.debug("BFA down")
+    split_timer()
 
-    while memory.main.get_story_progress() < 3400:  # End of game
+    while memory.main.get_story_progress() < 3380:
+    #while memory.main.get_story_progress() < 3400:  # End of game
         if memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
@@ -5186,6 +5451,29 @@ def bfa_nem():
                 xbox.skip_scene()
         else:
             xbox.tap_b()
+            
+    screen.await_turn()
+    while memory.main.get_enemy_current_hp()[0] != 0:
+        if memory.main.battle_active():
+            if memory.main.turn_ready():
+                if Tidus.is_turn():
+                    CurrentPlayer().attack(record_results=True)
+                    logger.debug(f"Battle Num: {memory.main.get_encounter_id()}")
+                elif Yuna.is_turn():
+                    buddy_swap(Wakka)
+                elif Auron.is_turn():
+                    buddy_swap(Lulu)
+                else:
+                    CurrentPlayer().defend()
+        elif memory.main.cutscene_skip_possible():
+            memory.main.wait_frames(2)
+            if memory.main.cutscene_skip_possible():
+                xbox.skip_scene()
+        else:
+            xbox.tap_b()
+    while int(memory.main.get_camera()[1]) != 0:
+        pass
+    split_timer()
     logger.debug("GG Nemesis%")
     logger.debug("Returning to main")
     return True
@@ -5551,14 +5839,39 @@ def calm_lands_manip():
             logger.info(f"Calm manip: Best_path {best[chosen_steals % 3]} for steals {chosen_steals}")
             check_array = [get_next_turn(),20,21,22,23]
             next_turn = who_goes_first_after_current_turn(check_array)
-            # We should start with predicting character deaths. Add later.
-            if next_turn >= 20:
-                logger.debug("Calm manip: Next turn is an enemy. Trigger flee function.")
+
+            if chosen_steals-steal_count == 0:
+                logger.debug("Calm manip: Align complete, fleeing. (A)")
                 flee_all()
-                wrap_up()
+                return
+            elif chosen_steals-steal_count >= 3:
+                if Tidus.is_turn():
+                    logger.debug("Calm manip: Tidus escape for > 3 manip (B)")
+                    escape_one()
+                elif Rikku.is_turn():
+                    if (chosen_steals-steal_count) % 3 != 0:
+                        logger.debug("Calm manip: Trigger steal command. (C)")
+                        if get_encounter_id() in [273,274,276,279,281,282,289]:
+                            steal_target(index=21)
+                            steal_count += 1
+                        else:
+                            steal_target(index=20)
+                            steal_count += 1
+                    else:
+                        logger.debug("Calm manip: Rikku defend for > 3 manip (D)")
+                        Rikku.defend()
+                elif chosen_steals-steal_count >= 6:
+                    logger.debug("Calm manip: Current player defend for > 6 manip (E)")
+                    CurrentPlayer().defend()
+                else:
+                    logger.debug("Calm manip: Current player escape for > 3 manip (F)")
+                    escape_one()
+            elif next_turn >= 20:
+                logger.debug("Calm manip: Next turn is an enemy. Trigger flee function. (G)")
+                flee_all()
                 return
             elif steal_count < chosen_steals:
-                logger.debug("Calm manip: Trigger steal command.")
+                logger.debug("Calm manip: Trigger steal command. (H)")
                 if get_encounter_id() in [273,274,276,279,281,282,289]:
                     steal_target(index=21)
                     steal_count += 1
@@ -5566,9 +5879,8 @@ def calm_lands_manip():
                     steal_target(index=20)
                     steal_count += 1
             else:
-                logger.debug("Calm manip: Steals complete. Triggering flee function.")
+                logger.debug("Calm manip: Steals complete. Triggering flee function. (I)")
                 flee_all()
-                wrap_up()
                 return
         else:
             FFXC.set_neutral()
@@ -5843,36 +6155,51 @@ def advance_rng_12():
 
 @battle.utils.speedup_decorator
 def ghost_kill():
-
     next_drop, _ = rng_track.item_to_be_dropped()
     owner1 = next_drop.equip_owner
     owner2 = next_drop.equip_owner_alt
-    silence_slot_check = memory.main.get_item_slot(39)
-    if silence_slot_check == 255:
-        silence_slot = 255
-    else:
-        silence_slot = memory.main.get_use_items_slot(39)
     tidus_hasted = False
-
-    if memory.main.next_chance_rng_10():
-        tidus_hasted, silence_slot = ghost_advance_rng_10_silence(
-            silence_slot=silence_slot, owner_1=owner1, owner_2=owner2
-        )
 
     if owner2 in [0, 4, 6]:
         logger.manip(f"Aeon kill results in NEA on char:{owner2}")
-        ghost_kill_aeon()
-    #elif silence_slot > 200:
-    #    logger.debug(f"No silence grenade, going with aeon kill: {owner2}")
-    #    ghost_kill_aeon()
+        aeon_kill=True
     elif owner1 in [0, 4, 6]:
         logger.manip(f"Any character kill results in NEA on char:{owner1}")
-        ghost_kill_any(silence_slot=silence_slot, self_haste=tidus_hasted)
+        aeon_kill=False
     elif owner1 == 9:
         logger.manip(f"Has to be Tidus kill: {owner1}")
-        ghost_kill_tidus(silence_slot=silence_slot, self_haste=tidus_hasted)
+        aeon_kill=False
     else:
         logger.manip(f"No way to get an optimal drop. Resorting to aeon: {owner2}")
+        aeon_kill=True
+    
+    silence_slot = memory.main.get_item_slot(39)
+    if silence_slot != 255:
+        silence_count = memory.main.get_item_count_slot(silence_slot)
+    else:
+        silence_count = 0
+    write_big_text(f"Silence grenade count: {silence_count}")
+
+    advance_needed = memory.main.next_chance_rng_10()
+    if aeon_kill and advance_needed < 3:
+        silence_slot = 255
+    
+    use_silence = bool(silence_slot != 255)
+
+    if advance_needed:
+        tidus_hasted, silence_slot = ghost_advance_rng_10_silence(
+            use_silence=use_silence, aeon_kill=aeon_kill
+        )
+        use_silence = False
+        
+
+    if owner2 in [0, 4, 6]:
+        ghost_kill_aeon()
+    elif owner1 in [0, 4, 6]:
+        ghost_kill_any(use_silence=use_silence, self_haste=tidus_hasted)
+    elif owner1 == 9:
+        ghost_kill_tidus(use_silence=use_silence, self_haste=tidus_hasted)
+    else:
         ghost_kill_aeon()
 
     memory.main.click_to_control_3()
@@ -5880,28 +6207,30 @@ def ghost_kill():
         rng_track.force_preempt()
 
 
-def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
+def ghost_advance_rng_10_silence(use_silence:bool = False,aeon_kill:bool = True):
     logger.debug("RNG10 is not aligned. Special logic to align.")
     # Premise is that we must have a silence grenade in inventory.
     # We should force extra manip in gorge if no silence grenade,
     # so should be guaranteed if this triggers.
-    pref_drop = [0, 4, 6, 9]  # 9 indicates equipment drops for killer.
-    if silence_slot != 255:
+    # pref_drop = [0, 4, 6, 9]  # 9 indicates equipment drops for killer.
+    if use_silence:
+        silence_slot = memory.main.get_use_items_slot(39)
         silence_used = False
     else:
+        silence_slot = 255
         silence_used = True
-    tidus_hasted = False
+    tidus_hasted = not aeon_kill
     while memory.main.next_chance_rng_10():
         if memory.main.turn_ready():
             logger.manip(f"Steals needed: {memory.main.next_chance_rng_10()}")
             if not silence_used:
-                if not Rikku.active():
-                    buddy_swap(Rikku)
+                if not Kimahri.active():
+                    buddy_swap(Kimahri)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
                     silence_slot = 255
-                elif not Kimahri.active():
-                    buddy_swap(Kimahri)
+                elif not Rikku.active():
+                    buddy_swap(Rikku)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
                     silence_slot = 255
@@ -5910,50 +6239,53 @@ def ghost_advance_rng_10_silence(silence_slot: int, owner_1: int, owner_2: int):
                     silence_used = True
                     silence_slot = 255
                 elif Tidus.is_turn() and not tidus_hasted:
-                    tidus_hasted = True
-                    tidus_haste("none")
-                elif Tidus.is_turn() and memory.main.get_enemy_current_hp()[0] > 3000:
-                    CurrentPlayer().attack()
+                    tidus_haste("left", character=0)
                 else:
                     CurrentPlayer().defend()
-            # Next, put in preferred team
-            elif owner_2 in pref_drop or owner_1 not in pref_drop:  # prefer aeon kill
-                if Rikku.is_turn() or Kimahri.is_turn():
+            else:
+                if Kimahri.is_turn():
                     steal()
-                elif not Rikku.active():
-                    buddy_swap(Rikku)
                 elif not Kimahri.active():
                     buddy_swap(Kimahri)
-                elif not Tidus.active():
-                    buddy_swap(Tidus)
-                elif Tidus.is_turn() and not tidus_hasted:
-                    tidus_hasted = True
-                    tidus_haste("none")
+                elif aeon_kill:
+                    if Rikku.is_turn():
+                        steal()
+                    elif not Rikku.active():
+                        buddy_swap(Rikku)
+                    else:
+                        CurrentPlayer().defend()
                 else:
-                    CurrentPlayer().defend()
-            else:  # Will need a non-Aeon kill
-                if Rikku.is_turn() or Kimahri.is_turn():
-                    steal()
-                elif not Rikku.active():
-                    buddy_swap(Rikku)
-                elif not Tidus.active():
-                    buddy_swap(Tidus)
-                elif not Kimahri.active():
-                    buddy_swap(Kimahri)
-                elif Tidus.is_turn() and not tidus_hasted:
-                    tidus_hasted = True
-                    tidus_haste("none")
-                elif memory.main.get_enemy_current_hp()[0] > 3000:
-                    CurrentPlayer().attack()
-                else:
-                    CurrentPlayer().defend()
+                    if not Yuna.active():
+                        buddy_swap(Yuna)
+                    elif Yuna.is_turn():
+                        if memory.main.get_enemy_current_hp()[0] > 3000:
+                            Yuna.attack()
+                        else:
+                            Yuna.defend()
+                    elif not Tidus.active():
+                        buddy_swap(Tidus)
+                    elif Tidus.is_turn():
+                        if not tidus_hasted:
+                            tidus_haste("left", character=0)
+                        elif memory.main.get_enemy_current_hp()[0] > 2000:
+                            Tidus.attack()
+                        else:
+                            Tidus.defend()
+                    else:
+                        CurrentPlayer().defend()
+
+
     logger.debug("RNG10 is now aligned.")
     if game_vars.god_mode():
         rng_track.force_preempt()
     return tidus_hasted, silence_slot
 
 
-def ghost_kill_tidus(silence_slot: int, self_haste: bool):
+def ghost_kill_tidus(use_silence: bool, self_haste: bool):
+    if use_silence:
+        silence_slot = memory.main.get_use_items_slot(39)
+    else:
+        silence_slot = 255
     logger.debug(f"Silence slot: {silence_slot}")
     if not self_haste and silence_slot < 200:
         screen.await_turn()
@@ -5986,16 +6318,20 @@ def ghost_kill_tidus(silence_slot: int, self_haste: bool):
                 buddy_swap(Yuna)
             elif Yuna.is_turn() and memory.main.get_enemy_current_hp()[0] > 3250:
                 # Yuna confirmed can do 3180 damage.
-                CurrentPlayer().attack()
+                Yuna.attack()
             else:
-                CurrentPlayer().defend()
+                Yuna.defend()
     if game_vars.god_mode():
         rng_track.force_preempt()
 
 
-def ghost_kill_any(silence_slot: int, self_haste: bool):
+def ghost_kill_any(use_silence: bool, self_haste: bool):
     yuna_haste = False
     # item_thrown = silence_slot >= 200  # item_thrown is assigned to but never used
+    if use_silence:
+        silence_slot = memory.main.get_use_items_slot(39)
+    else:
+        silence_slot = 255
     logger.debug(f"Silence slot: {silence_slot}")
     if not self_haste and silence_slot < 200:
         screen.await_turn()
@@ -6033,7 +6369,7 @@ def ghost_kill_any(silence_slot: int, self_haste: bool):
                 logger.debug("Get Yuna in for extra smacks")
                 buddy_swap(Yuna)
             elif Yuna.is_turn():
-                CurrentPlayer().attack()
+                Yuna.attack()
             else:
                 CurrentPlayer().defend()
     if game_vars.god_mode():
@@ -6081,7 +6417,81 @@ def belgemine(use_aeon:int = 4, impulse:bool = False, special_end=False):
             CurrentPlayer().attack()
         else:
             CurrentPlayer().defend()
-    memory.main.wait_seconds(20)
+    memory.main.wait_seconds(15)
     if special_end:
+        xbox.tap_confirm()
         memory.main.wait_seconds(40)
     memory.main.click_to_control()
+
+def zanarkand_levels():
+    while memory.main.battle_active():
+        if memory.main.get_encounter_id() in [360,361]:
+            flee_all()
+        elif memory.main.turn_ready():
+            if Yuna.is_turn():
+                aeon_summon(4)
+            elif Bahamut.is_turn():
+                Bahamut.unique()
+            elif not Yuna.active():
+                buddy_swap(Yuna)
+            else:
+                CurrentPlayer().defend()
+
+
+def lulu_overdrive_heal():
+    '''
+    # Healing does not work on this boss.
+    slot = memory.main.get_item_slot(8)  # Elixir
+    if slot != 255:
+        logger.warning("THROWING ELIXIR")
+        _use_healing_item(num=20, direction='u',item_id=8)
+        return
+    slot = memory.main.get_item_slot(2)  # X-pot
+    if slot != 255:
+        logger.warning("THROWING HI-POTION")
+        _use_healing_item(num=20, direction='u',item_id=2)
+        return
+    '''
+    logger.warning("NO HEALING ITEMS!!! (they don't work here)")
+    CurrentPlayer().defend()
+
+def lulu_overdrive_demo(version="short"):
+    if version == "short":
+        spell_pos = 0
+    else:
+        spell_pos = 9
+    od_completed = False
+    while not memory.main.battle_active():
+        pass
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if not Kimahri.active():
+                buddy_swap(Kimahri)
+            elif Kimahri.is_turn():
+                lulu_overdrive_heal()
+            elif not Auron.active():
+                buddy_swap(Auron)
+            elif Auron.is_turn():
+                lulu_overdrive_heal()
+            elif Lulu.is_turn():
+                if Lulu.overdrive_percent() == 100:
+                    Lulu.overdrive(spell_pos=spell_pos)
+                    if spell_pos == 0:
+                        od_completed=True
+                    elif spell_pos in [8,9,10,11]:
+                        spell_pos = 13
+                    elif spell_pos == 13:
+                        spell_pos = 17
+                    elif spell_pos == 17:
+                        spell_pos = 18
+                    else:
+                        od_completed=True
+                else:
+                    Lulu.attack()
+            elif not Lulu.active():
+                buddy_swap(Lulu)
+            elif od_completed:
+                flee_all()
+            else:
+                lulu_overdrive_heal()
+    wrap_up()

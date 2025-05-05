@@ -181,6 +181,40 @@ def use_first():
     return True
 
 
+
+def coords_movement(dest):
+    coords = memory.main.s_grid_cursor_coords()
+    x = 0
+    y = 0
+    while coords != dest:
+        # Set the X coordinate variable.
+        if coords[0] < dest[0] - 15:
+            x = 1.0
+        elif coords[0] < dest[0] - 9:
+            x = 0.4
+        elif coords[0] > dest[0] + 15:
+            x = -1.0
+        elif coords[0] > dest[0] + 9:
+            x = -0.4
+        else:
+            x = 0
+        
+        # Set the Y coordinate variable.
+        if coords[1] < dest[1] - 15:
+            y = -1.0
+        elif coords[1] < dest[1] - 9:
+            y = -0.4
+        elif coords[1] > dest[1] + 15:
+            y = 1.0
+        elif coords[1] > dest[1] + 9:
+            y = 0.4
+        else:
+            y = 0
+        
+        # Set movement factor, then re-check the coordinates.
+        FFXC.set_movement(x,y)
+        coords = memory.main.s_grid_cursor_coords()
+
 def move_first():
     logger.debug(f"move first - {s_grid_cursor_coords()}")
     while not move_active():
@@ -206,6 +240,7 @@ def move_and_use():
             xbox.menu_down()
         elif use_ready():
             xbox.menu_b()
+    memory.main.wait_frames(1)
     return True
 
 

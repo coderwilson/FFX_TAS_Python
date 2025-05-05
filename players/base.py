@@ -167,7 +167,9 @@ class Player:
         target_id: Optional[int] = None,
         direction_hint: Optional[str] = "u",
         record_results: bool = False,
+        short_taps: bool = False
     ):
+        
         skip_direction = False
         if target_id is None:
             logger.debug("Attack enemy, first targetted.")
@@ -204,23 +206,28 @@ class Player:
         if target_id is not None and not skip_direction:
             logger.debug(f"Targetting ID {target_id}")
             self._target_specific_id(target_id, direction_hint)
+
+        enc_id = memory.main.get_encounter_id()
+        enemies = current_battle_formation()
+        logger.debug(f"Battle: {enc_id} | Enemies: {enemies}")
+        if len(enemies) != 0:
+            try:
+                if target_id is None:
+                    # In multi-enemy battles, the first enemy is almost always the boss.
+                    luck_value = luck_check(enemies[0])
+                else:
+                    luck_value = luck_check(enemies[target_id-20])
+                logger.manip(f"Enemy Luck stat confirmed: {luck_value}")
+            except:
+                luck_value = 15
+                logger.manip(f"Enemy Luck stat assumed: {luck_value}")
+        else:
+            luck_value = 15
         
         # This logic is only for cheese runs! See var 'god_mode'.
         if game_vars.god_mode():
             logger.warning("Attempting to force a crit, per settings")
             # Determine enemy name and luck stat
-            enemies = current_battle_formation()
-            if len(enemies) != 0:
-                try:
-                    if target_id is None:
-                        # In multi-enemy battles, the first enemy is almost always the boss.
-                        luck_value = luck_check(enemies[0])
-                    else:
-                        luck_value = luck_check(enemies[target_id-20])
-                except:
-                    luck_value = 15
-            else:
-                luck_value = 15
             logger.warning(f"Player luck: {self.luck()} || Enemy luck: {luck_value}")
                 
             # Force forward to the next crit.
@@ -229,8 +236,9 @@ class Player:
                 char_luck=self.luck(),
                 enemy_luck=luck_value
             )
+        self.next_crits(enemy_luck=luck_value)
         
-        if record_results:
+        if record_results or short_taps:
             logger.debug("First six hits logic")
             xbox.tap_b()
             xbox.tap_b()
@@ -358,15 +366,15 @@ class Player:
 
         # Make sure we are not already in defend state_berserk
         while self.is_defending() == 1:
-            pass
+            logger.debug("Waiting previous defend to end.")
         memory.main.wait_frames(1)  # Buffer for safety
 
         result = 0
         # Now tap to defending status.
         while result == 0 and memory.main.battle_active():
+            xbox.tap_y()
             result = self.is_defending()
-            if result == 0:
-                xbox.tap_y()
+            logger.debug(f"Is defending: {result}")
         memory.main.wait_frames(1)  # Buffer for safety
         return True
 
@@ -459,25 +467,52 @@ class Player:
             else:
                 xbox.tap_up()
 
-    def next_crits(self, enemy_luck: int, length: int = 20) -> List[int]:
+    def next_crits(self, enemy_luck: int = 15,length: int = 10) -> List[int]:
         # Note that this says the number of increments, so the previous roll
         # will be a hit, and this one will be the crit.
         results = []
-        cur_rng = memory.main.rng_from_index(self.char_rng)
-        cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
-        cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
-        index = 2
-        while len(results) < length:
-            crit_roll = memory.main.s32(cur_rng & PlayerMagicNumbers.RNG_COMP) % 101
+        for i in range(length):
+            if i == 0:
+                pass
+            elif memory.main.future_attack_will_crit(
+                character=self.raw_id(),
+                char_luck=self.luck(),
+                enemy_luck=enemy_luck,
+                attack_index=i,
+                report=False
+            ):
+                #logger.warning(f"Attack {i} will crit")
+                results.append(i)
+            #else:
+            #    logger.manip(f"Attack {i} will not crit, actor {self.raw_id()}")
+        
+        '''
+        rng_array = memory.main.rng_array_from_index(
+            index=self.char_rng, array_len=((length*2)+4)
+        )
+        #cur_rng = memory.main.rng_from_index(self.char_rng)
+        #cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
+        #cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
+        index = 1
+
+        # Note that the RNG to be rolled is every second RNG value, after damage rolls.
+        # That's why we check only those even values starting at value 2 (index*2).
+        while index*2 < len(rng_array):
+            crit_roll = (rng_array[index*2] & 0x7FFFFFFF) % 101
             crit_chance = self.luck() - enemy_luck
             if crit_roll < crit_chance:
                 results.append(index)
-                index += 1
-            cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
+            index += 1
+        '''
+        logger.manip(f"Upcoming crits: {results}")
         return results
 
     def next_crit(self, enemy_luck) -> int:
-        return self.next_crits(enemy_luck, length=1)[0]
+        array = self.next_crits(enemy_luck, length=1)
+        if len(array) != 0:
+            return array[0]
+        else:
+            return 0
 
     def overdrive(self, *args, **kwargs):
         raise NotImplementedError()

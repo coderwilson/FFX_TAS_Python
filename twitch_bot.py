@@ -10,6 +10,11 @@ import logging
 import pyautogui
 from timer_saver_logic.timer_reset import clickHeader
 from typing import Dict
+import psutil
+import pygetwindow as gw
+import ctypes
+from json_ai_files.write_seed import write_big_text
+from json_ai_files.write_seed_results import check_ml_heals
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +31,8 @@ CSR_PATH = ""
 GAME_PATH = ""
 CONFIG_FILE_PATH = "bot-config.yaml"
 MARBLES_PATH = "C:\\Users\\coder\\Desktop\\Python_projects\\marbles_on_stream"
+LANGUAGE_FILE = "C:\\Users\\coder\\Documents\\SQUARE ENIX\\FINAL FANTASY X&X-2 HD Remaster"
+CHOSEN_SEED_NUM = 999
 
 import psutil
 
@@ -45,6 +52,97 @@ def terminate_marbles_processes():
         print(f"Terminated processes: {terminated}")
     else:
         print("No processes with 'marbles' in their names found.")
+
+def focus_obs():
+    print("Searching for 'obs64.exe' process...")
+
+    # Find OBS process
+    obs_processes = [p for p in psutil.process_iter(['pid', 'name']) if p.info['name'] and "obs64.exe" in p.info['name'].lower()]
+    
+    if not obs_processes:
+        print("OBS process (obs64.exe) not found.")
+        return False
+
+    print(f"Found {len(obs_processes)} OBS-related process(es).")
+
+    # Get OBS window(s)
+    obs_windows = [win for win in gw.getWindowsWithTitle('') if "OBS" in win.title]
+
+    if not obs_windows:
+        print("OBS window not found.")
+        return False
+
+    obs_window = obs_windows[0]
+
+    print(f"Attempting to focus OBS window: '{obs_window.title}'")
+
+    # Minimize and restore to force foreground focus
+    ctypes.windll.user32.ShowWindow(obs_window._hWnd, 6)  # SW_MINIMIZE
+    time.sleep(0.2)  # Short delay to allow Windows to process the change
+    ctypes.windll.user32.ShowWindow(obs_window._hWnd, 9)  # SW_RESTORE
+    time.sleep(0.1)
+    ctypes.windll.user32.SetForegroundWindow(obs_window._hWnd)
+
+    print(f"Successfully brought OBS window '{obs_window.title}' to focus.")
+    return True
+
+def decide_seed(ctx):
+    global CHOSEN_SEED_NUM
+    args = ctx.message.content.split()
+    print("")
+    print("=== Deciding Seed ===")
+    records = oblitz_history()
+    CHOSEN_SEED_NUM = str(random.choice(range(256)))
+    reroll = 0
+    for i in range(len(args)):
+        try:
+            if args[i].lower() == "seed":
+                CHOSEN_SEED_NUM = str(args[i + 1])
+                print(f"=== Seed passed: {CHOSEN_SEED_NUM} ===")
+                return
+        except Exception:
+            pass
+    if CHOSEN_SEED_NUM == 999:
+        # Choose a random seed we haven't tried. (1000 attempts to break loop)
+        while CHOSEN_SEED_NUM in records.keys() and reroll < 1000:
+            CHOSEN_SEED_NUM = str(random.choice(range(256)))
+            reroll += 1
+        print(f"=== Seed random: {CHOSEN_SEED_NUM} ===")
+        return
+
+def set_language(story=False):
+    global CHOSEN_SEED_NUM
+    print(f"Checking ML heals for seed {CHOSEN_SEED_NUM}")
+    modifier, avina_heals = check_ml_heals(seed_num=CHOSEN_SEED_NUM)
+    print(f"Running ")
+
+    if story:
+        desired_str = "Language=en"
+        search_str = "Language=ch"
+    elif avina_heals:
+        desired_str = "Language=ch"
+        search_str = "Language=en"
+    else:
+        desired_str = "Language=en"
+        search_str = "Language=ch"
+    print(f"Running {desired_str} Mark 1")
+    orig_dir = os.getcwd()
+    print(os.getcwd())
+    os.chdir(LANGUAGE_FILE)
+    print(os.getcwd())
+    print(f"Running {desired_str} Mark 2")
+    with open("GameSetting.ini",'r') as f:
+        contents=f.read()
+
+    contents=contents.replace(search_str,desired_str)
+    
+    with open("GameSetting.ini",'w') as f:
+        f.write(contents)
+    os.chdir(orig_dir)
+    print(os.getcwd())
+    print("=== Language has been set ====")
+    time.sleep(1)
+
 
 def oblitz_history():
     filepath = os.path.join("json_ai_files", "oblitz_results.json")
@@ -163,26 +261,15 @@ class Bot(commands.Bot):
     # Define the start command
     @commands.command(aliases=("begin", "launch"))
     async def start(self, ctx: commands.Context):
+        global CHOSEN_SEED_NUM
+        if CHOSEN_SEED_NUM == 999:
+            CHOSEN_SEED_NUM = str(random.choice(range(256)))
         arg_array = []
         print(ctx.message.content)
+        time.sleep(2)
         args = ctx.message.content.split()
-        print(args)
-        seed_set = False
-        records = oblitz_history()
-        seed_num = str(random.choice(range(256)))
-        reroll = 0
-        print(records.keys())
-        while seed_num in records.keys() and reroll < 1000:
-            seed_num = str(random.choice(range(256)))
-            reroll += 1
         for i in range(len(args)):
             try:
-                if args[i].lower() == "seed":
-                    arg_array.append("-seed")
-                    seed_num = str(args[i + 1])
-                    print(f"Specified Seed: {seed_num}")
-                    seed_set = True
-                    arg_array.append(seed_num)
                 if args[i].lower() in ["state","stage"]:
                     arg_array.append("-state")
                     arg_array.append(args[i + 1])
@@ -192,29 +279,28 @@ class Bot(commands.Bot):
                 if args[i].lower() == "blitz":
                     arg_array.append("-train_blitz")
                     arg_array.append("True")
-                #if args[i].lower() == "godrng":
-                #    arg_array.append("-godrng")
-                #    arg_array.append("True")
-                if "classic" in args:
+                if args[i].lower() == "godrng":
+                    arg_array.append("-godrng")
+                    arg_array.append("True")
+                if args[i].lower() == "classic":
                     arg_array.append("-classic")
                     arg_array.append("True")
-                elif "story" in args:
+                elif args[i].lower() == "story":
                     arg_array.append("-story")
                     arg_array.append("True")
-                else:
-                    arg_array.append("-story")
-                    arg_array.append("False")
-                if "nem" in args or "nemesis" in args:
+                if "nem" in args.lower() or "nemesis" in args.lower():
                     arg_array.append("-nemesis")
                     arg_array.append("True")
             except Exception:
-                await ctx.send(
-                    f"There was an error with your command: {ctx.message.content}"
-                )
-
-        if not seed_set:
-            arg_array.append("-seed")
-            arg_array.append(seed_num)
+                #await ctx.send(
+                #    f"There was an error with your command: {ctx.message.content}"
+                #)
+                pass
+        arg_array.append("-seed")
+        arg_array.append(CHOSEN_SEED_NUM)
+        print(arg_array)
+        time.sleep(2)
+        CHOSEN_SEED_NUM = 999  # Resets for next attempt.
 
         if self.process is None and self.marbles is None:
             print(["python", SCRIPT_PATH] + arg_array)
@@ -325,6 +411,7 @@ class Bot(commands.Bot):
     # Kill FFX
     @commands.command(aliases=("game_stop", "halt_game"))
     async def stop_game(self, ctx: commands.Context):
+        write_big_text("")
         #if self.is_valid_user(ctx):
         if self.game is not None:
             self.game.terminate()
@@ -431,6 +518,12 @@ class Bot(commands.Bot):
         await self.marbles_end(ctx)
         #if self.is_valid_user(ctx):
         await ctx.send("Launching all elements!")
+        decide_seed(ctx)
+        
+        if "story" in ctx.message.content:
+            set_language(story=True)
+        else:
+            set_language()
         await self.start_game(ctx)
         time.sleep(3)
         await self.start_csr(ctx)
@@ -441,6 +534,7 @@ class Bot(commands.Bot):
         else:
             await self.start_timer(ctx)
         time.sleep(3)
+        focus_obs()
         await self.start(ctx)
     
     # Kill All

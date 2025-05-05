@@ -12,6 +12,7 @@ import xbox
 import random
 from memory.main import BlitzActor
 from json_ai_files.write_seed import write_blitz_results
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -1226,6 +1227,7 @@ def blitz_main(force_blitz_win):
             logger.exception(x_val)
 
     logger.info("Blitz game has completed.")
+    split_timer()
     # Set the blitz_win flag for the rest of the run.
     logger.info(
         f"Final scores: Aurochs: {memory.main.blitz_own_score()}, "

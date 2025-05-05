@@ -17,6 +17,7 @@ class TrackerManager:
     def __init__(self):
         self.trackers = []
         self.count = 0
+        self.identify_all_variants()
 
     def add_tracker(self, seed_num, delta):
         tracker = TimedeltaTracker(seed_num, delta)
@@ -43,11 +44,15 @@ class TrackerManager:
         return self.trackers[:10]
 
     def find_missing_seeds(self):
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
         if self.count == 0:
             self.build_results()
+        missing_seeds = []
         # Check for missing seeds in the range of 0-255
-        present_seeds = {tracker.seed_num for tracker in self.trackers}
-        missing_seeds = [seed for seed in range(256) if seed not in present_seeds]
+        for i in range(256):
+            if str(i) not in results.keys():
+                missing_seeds.append(str(i))
         return missing_seeds
     
     def build_results(self):
@@ -63,6 +68,98 @@ class TrackerManager:
                 self.add_tracker(key, results[key]["best_adj"])
         self.order_by_timedelta()
 
+    def get_manip_battle_count(self, seed_key) -> str:
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
+
+        if seed_key not in results:
+            return "N/A"
+
+        best_adj = results[seed_key].get("best_adj")
+        for category in results[seed_key].values():
+            if isinstance(category, dict):
+                for sub_key, sub_value in category.items():
+                    if isinstance(sub_value, dict) and sub_value.get("adjusted_time") == best_adj:
+                        return str(sub_value.get("nea_manip_battle_count", 99))
+        
+        return "N/A"  # Return None if no match is found
+
+    def identify_all_variants(self):
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
+
+        all_variants = set()
+
+        for seed_key, value in results.items():
+            if seed_key.isdigit():  # Only consider numeric seed keys
+                for variant in value.keys():
+                    if isinstance(value[variant], dict):  # Ensure it's a variant category
+                        all_variants.add(variant)
+
+        self.all_variants = sorted(list(all_variants))  # Store globally and sort for consistency
+    
+    def get_seed_exploration_percentage(self, seed_key):
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
+        
+        if str(seed_key) not in results.keys():
+            return 0  # If the seed does not exist, return 0% explored
+
+        explored_variants = 0
+        total_variants = len(self.all_variants) + 1
+
+
+        for i in range(len(self.all_variants)):
+            if self.all_variants[i] in results[str(seed_key)].keys():
+                explored_variants += 1  # Each category (e.g., standard, flip_lowroad) is a variant type
+                if "True" in results[str(seed_key)][self.all_variants[i]].keys():
+                    explored_variants += 1  # At least one "True" was attempted
+
+        return explored_variants,total_variants,int(explored_variants/total_variants*100)
+    
+    def get_total_exploration_percentage(self):
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
+        per_seed_variants = len(self.all_variants) + 1
+        explored_variants = 0
+        total_variants = 0
+        for i in range(256):
+            if str(i) in results.keys():
+                single_explored, single_total, _ = self.get_seed_exploration_percentage(i)
+                explored_variants += single_explored
+                total_variants += single_total
+            else:
+                total_variants += per_seed_variants
+
+        return round((explored_variants / total_variants * 100), 2)
+    
+    
+    def get_best_variant_for_seed(self, seed_num: str):
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
+
+        seed_key = seed_num  # Convert to string to match JSON keys
+        if seed_key not in results.keys():
+            #print(f"Variant not found: {seed_key}")
+            return None  # Return None if the seed is not found
+
+        best_variant = None
+        best_time = results[seed_key]["best_adj"]
+
+        for variant, data in results[seed_key].items():
+            if variant == "best_adj":
+                continue
+            
+            if isinstance(data, dict):
+                for sub_key, sub_value in data.items():
+                    if isinstance(sub_value, dict) and "adjusted_time" in sub_value:
+                        #print(f"{sub_value['adjusted_time']} | {best_time}")
+                        adjusted_time = sub_value["adjusted_time"]
+                        if adjusted_time == best_time:
+                            best_time = adjusted_time
+                            best_variant = variant
+        #print(f"Variant found: {best_variant}")
+        return best_variant
 
 
 resultpath = os.path.join("json_ai_files", "seed_results.json")
@@ -74,7 +171,9 @@ def print_best():
         print(result)
 
 def print_missing():
-    print(seed_results.find_missing_seeds())
+    print("===================")
+    #print(seed_results.find_missing_seeds())
+    #print("===================")
 
 def pick_missing_five():
     results = seed_results.find_missing_seeds()
@@ -94,9 +193,22 @@ def build_file_str():
     top_runs = seed_results.get_top_runs()
     i = 1
     for result in top_runs:
-        file_str += f"{i:>4}: {result.seed_num:>3}, {result.delta}\n"
+        file_str += f"{i:>4}: {result.seed_num:>3},  {result.delta} "
+
+        variant = seed_results.get_best_variant_for_seed(str(result.seed_num))
+        file_str += f"({variant}) "
+
+        battle_count = seed_results.get_manip_battle_count(str(result.seed_num))
+        if battle_count == '0':
+            battle_count = "skip"
+
+        _, _, seed_percent = seed_results.get_seed_exploration_percentage(result.seed_num)
+        file_str += f"({seed_percent}%)\n"
+        
         i += 1
-    file_str += f"Seeds completed: {seed_results.get_seed_count()}\n"
+    
+    total_seed_percent = seed_results.get_total_exploration_percentage()
+    file_str += f"Seed completion progress: {total_seed_percent}%\n"
     file_str += f"Suggested seeds: {pick_missing_five()}\n"
     return file_str
 

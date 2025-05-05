@@ -46,10 +46,9 @@ class MiihenAgency(AreaMovementBase):
     checkpoint_coordiantes = {
         0: [26, -23],
         1: [15, -30],
-        # Go for P.downs if less than 10.
-        2: [-2, -27],
-        # Talk to lady and purchase downs.
-        3: [-2, -27],
+        # 2 and 3 are for flipping RNG
+        2: [10, -50],
+        3: [10, -50],
         4: [-2, -56],
         5: [-10, -90],
     }

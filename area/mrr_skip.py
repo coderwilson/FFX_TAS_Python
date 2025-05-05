@@ -405,7 +405,9 @@ def advance_to_aftermath():
             logger.info("I have no memory of this seed. (B)")
     except Exception:
         logger.info("I have no memory of this seed. (C)")
-    if 0 in heal_array:
+    if ml_heals and 0 in heal_array:
+        battle.main.heal_up()
+    elif 1 in memory.main.ambushes():
         battle.main.heal_up()
     while memory.main.get_map() != 131:
         if memory.main.user_control():
@@ -417,7 +419,7 @@ def advance_to_aftermath():
             if memory.main.battle_active():
                 battle_num += 1
                 logger.debug(f"Battle Start: {battle_num}")
-                while not memory.main.turn_ready():
+                while not memory.main.turn_ready() and not memory.main.game_over():
                     pass
                 if memory.main.game_over():
                     avina_memory.add_battle_to_memory(

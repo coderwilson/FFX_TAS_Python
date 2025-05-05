@@ -12,6 +12,7 @@ import xbox
 from paths import Besaid1, Besaid2, BesaidTrials
 from players import Lulu, Tidus, Wakka, Yuna
 import save_sphere
+from area.dream_zan import split_timer
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -38,6 +39,82 @@ def beach(lagoon_strats):
     good_battles = 0
     checkpoint = 0
     last_cp = 0
+    while not (
+        (memory.main.get_story_progress() == 119 and memory.main.diag_progress_flag() == 1) or
+        memory.main.get_map() in [69,67]
+    ):
+        if checkpoint != last_cp:
+            logger.debug(f"Checkpoint {checkpoint}")
+            last_cp = checkpoint
+
+        # map changes
+        if checkpoint < 2 and memory.main.get_map() == 20:
+            checkpoint = 2
+            logger.debug(f"Map change. Checkpoint {checkpoint}")
+        elif checkpoint < 6 and memory.main.get_map() == 41:
+            checkpoint = 6
+            logger.debug(f"Map change. Checkpoint {checkpoint}")
+        elif checkpoint < 22 and memory.main.get_map() == 69:
+            checkpoint = 22
+            logger.debug(f"Map change. Checkpoint {checkpoint}")
+        elif checkpoint < 29 and memory.main.get_map() == 133:
+            if not game_vars.csr():
+                # You do remember the prayer?
+                memory.main.click_to_diag_progress(9)
+                memory.main.wait_frames(20)
+                xbox.menu_down()
+                xbox.menu_b()
+                xbox.menu_b()
+                xbox.menu_b()
+            checkpoint = 29
+        elif checkpoint == 36 and memory.main.get_map() == 17:
+            checkpoint = 37
+
+        # Events
+        elif memory.main.user_control():
+            if checkpoint == 34:  # Into the temple for the first time
+                memory.main.click_to_event_temple(0)
+                checkpoint += 1
+            elif checkpoint == 43:  # Wakka tent
+                memory.main.click_to_event_temple(2)
+                checkpoint += 1
+            elif checkpoint == 44:  # Talk to Wakka
+                while memory.main.user_control():
+                    pathing.set_movement([15, 16])
+                    xbox.tap_b()
+                FFXC.set_neutral()
+                if game_vars.story_mode():
+                    logger.debug("Static time click")
+                    memory.main.wait_seconds(10)
+                    xbox.tap_confirm()
+                    logger.debug("Click")
+                memory.main.click_to_control() # Allows for story mode.
+                checkpoint += 1
+            elif checkpoint == 45:  # Exiting tent
+                logger.info("Exiting tent")
+                memory.main.click_to_event_temple(7)
+                checkpoint += 1
+
+            # General pathing
+            elif pathing.set_movement(Besaid1.execute(checkpoint)):
+                checkpoint += 1
+        else:
+            FFXC.set_neutral()
+            if screen.battle_screen():
+                logging.debug(f"Lagoon Encounter: {lagoon_encounter} / Strat: {lagoon_strats[lagoon_encounter]}")
+                battle.main.piranhas(strat=lagoon_strats[lagoon_encounter])
+                lagoon_encounter += 1
+                besaid_battles += 1
+                encounter_id = memory.main.get_encounter_id()
+                if encounter_id == 11 or (
+                    encounter_id == 12 and memory.main.battle_type() == 1
+                ):
+                    good_battles += 1
+            elif memory.main.diag_skip_possible() or memory.main.menu_open():
+                if not game_vars.story_mode():
+                    xbox.tap_b()
+    
+    split_timer()
     while memory.main.get_map() != 122:
         if checkpoint != last_cp:
             logger.debug(f"Checkpoint {checkpoint}")

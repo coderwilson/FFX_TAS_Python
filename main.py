@@ -13,6 +13,7 @@ import area.boats
 import area.chocobos
 import area.djose
 import area.dream_zan
+from area.dream_zan import split_timer
 import area.gagazet
 import area.guadosalam
 import area.home
@@ -57,6 +58,7 @@ import manip_planning.rng
 import manip_planning.ammes
 import manip_planning.baaj_to_tros
 from datetime import timedelta
+import time
 
 # This sets up console and file logging (should only be called once)
 log_init.initialize_logging()
@@ -106,9 +108,9 @@ def configuration_setup():
         game.state = "VAR_ERROR"
         game.step = 999
 
-    if args.train_blitz is not None:
-        game_vars.set_loop_blitz(True)
-        logger.warning("Training Blitzball, may reset after Blitzball wins.")
+    #if args.train_blitz is not None:
+    #    game_vars.set_loop_blitz(True)
+    #    logger.warning("Training Blitzball, may reset after Blitzball wins.")
     if args.seed is not None:
         logger.debug(f"Seed passed from Twitch: {args.seed}")
         twitch_seed = int(args.seed)
@@ -116,15 +118,19 @@ def configuration_setup():
         game_length = "Seed set via Twitch chat"
     if args.godrng is not None:
         game_vars.activate_god_rng()
+    logger.warning(f"All args check: {args}")
+    time.sleep(4)
     logger.warning(f"Story Mode check: {args.story}")
-    if args.classic == "True":
-        logger.warning("Running classic speed run! (No CSR)")
-    elif args.story == "True":
+    if args.story == "True":
         logger.warning("Running in story mode!!!")
+        write_big_text("New game, Story Mode")
         game_vars.activate_story_mode()
+    elif args.classic == "True":
+        logger.warning("Running classic speed run! (No CSR)")
+        write_big_text("New game, Classic speedrun")
     elif args.nemesis == "True":
         logger.warning("Running Nemesis mode.")
-        write_big_text("New game, Nemesis run")
+        write_big_text("New game, Nemesis speedrun")
         game_vars.nemesis_set(True)
     else:
         logger.warning("Running a regular CSR speed run.")
@@ -151,6 +157,7 @@ def configuration_setup():
         logger.warning(
             "THIS RUN IS USING AUTOMATIC 4X BATTLE SPEEDUP. ONLY USE FOR TESTING."
         )
+    time.sleep(4)
 
 
 def set_confirm_button():
@@ -173,7 +180,7 @@ def set_confirm_button():
         else:
             last_click = "back"
             xbox.tap_back()
-        memory.main.wait_frames(150)
+        memory.main.wait_frames(90)
     
     if last_click == "back":
         logger.warning(f"Check: {game_vars.get_invert_confirm()}")
@@ -252,6 +259,7 @@ def perform_TAS():
 
     game_vars = vars.vars_handle()
     results_mod = "not_set"
+    use_heals = False
     blitz_duration = int(0)
 
     # Original seed for when looping
@@ -263,8 +271,9 @@ def perform_TAS():
 
     while game.state != "End":
         try:
-            strats = manip_planning.baaj_to_tros.plan_manips(klikk_steals=0)
-            klikk_steals, tanker_sinscale_kill = manip_planning.baaj_to_tros.plan_klikk_steals()
+            if not truerng:
+                strats = manip_planning.baaj_to_tros.plan_manips(klikk_steals=0)
+                klikk_steals, tanker_sinscale_kill = manip_planning.baaj_to_tros.plan_klikk_steals()
             # If not starting from dream zan, must first initialize strats variable.
             if game_vars.rng_seed_num() > 256:
                 game.state = "End"
@@ -340,16 +349,16 @@ def perform_TAS():
                     # game.state, game.step = reset.mid_run_reset()
                     # Start of the game, up through the start of Sinspawn Ammes fight
                     if truerng:
-                        area.dream_zan.ammes_battle_truerng()
+                        area.dream_zan.ammes_battle_classic()
                     else:
-                        area.dream_zan.ammes_battle(tidus_total_attacks=tidus_sinspawn_attacks, tidus_potion=tidus_potion)
+                        area.dream_zan.ammes_battle_crimson(tidus_total_attacks=tidus_sinspawn_attacks, tidus_potion=tidus_potion)
                     game.step = 2
 
                 if game.step == 2:
                     if truerng:
-                        battle.boss.ammes_truerng()
+                        battle.boss.ammes_classic()
                     else:
-                        battle.boss.ammes(spiral_cut_turn=tidus_spiral_cut_turn)
+                        battle.boss.ammes_crimson(spiral_cut_turn=tidus_spiral_cut_turn)
                     game.step = 3
 
                 if game.step == 3:
@@ -358,9 +367,9 @@ def perform_TAS():
                     logger.debug(f"Tanker Sinscale Kill: {tanker_sinscale_kill}")
 
                     if truerng:
-                        area.dream_zan.after_ammes_truerng()
+                        area.dream_zan.after_ammes_classic()
                     else:
-                        strats = area.dream_zan.after_ammes(tanker_sinscale_kill=tanker_sinscale_kill,
+                        strats = area.dream_zan.after_ammes_crimson(tanker_sinscale_kill=tanker_sinscale_kill,
                                                             klikk_steals=klikk_steals)
 
                     # Sin drops us near Baaj temple.
@@ -375,9 +384,9 @@ def perform_TAS():
                     # strats = manip_planning.baaj_to_tros.plan_manips(klikk_steals=klikk_steals)
 
                     if truerng:
-                        area.baaj.entrance_truerng()
+                        area.baaj.entrance_classic()
                     else:
-                        area.baaj.entrance(sahagin_b_first=strats["sahagin_b_first"], geos_potion=strats["geos_potion"],
+                        area.baaj.entrance_crimson(sahagin_b_first=strats["sahagin_b_first"], geos_potion=strats["geos_potion"],
                                            geos_attacks=strats["geos_attacks"])
                     game.step = 2
 
@@ -387,9 +396,9 @@ def perform_TAS():
 
                 if game.step == 3:
                     if truerng:
-                        area.baaj.klikk_fight_truerng()
+                        area.baaj.klikk_fight_classic()
                     else:
-                        area.baaj.klikk_fight(tidus_potion_klikk=strats["tidus_potion_klikk"],
+                        area.baaj.klikk_fight_crimson(tidus_potion_klikk=strats["tidus_potion_klikk"],
                                               tidus_potion_turn=strats["tidus_potion_turn"],
                                               rikku_potion_klikk=strats["rikku_potion_klikk"],
                                               klikk_steals=klikk_steals)
@@ -404,17 +413,17 @@ def perform_TAS():
 
                 if game.step == 5:
                     if truerng:
-                        area.baaj.ab_swimming_1_truerng()
+                        area.baaj.ab_swimming_1_classic()
                     else:
-                        rikku_attacks_left = area.baaj.ab_swimming_1(chain_encounter_strat=strats["chain_encounter_strat"])
+                        rikku_attacks_left = area.baaj.ab_swimming_1_crimson(chain_encounter_strat=strats["chain_encounter_strat"])
                     game.step = 6
 
                 if game.step == 6:
                     logger.info("Underwater Airship section")
                     if truerng:
-                        area.baaj.ab_swimming_2_truerng()
+                        area.baaj.ab_swimming_2_classic()
                     else:
-                        area.baaj.ab_swimming_2(ruins_encounter_strat=strats["ruins_encounter_strat"])
+                        area.baaj.ab_swimming_2_crimson(ruins_encounter_strat=strats["ruins_encounter_strat"])
                     game.state = "Besaid"
                     game.step = 1
 
@@ -567,19 +576,20 @@ def perform_TAS():
                     if return_array[2] is False:
                         game.state, game.step = reset.mid_run_reset()
                     else:
+                        split_timer()
                         area.miihen.mid_point()
                         logger.info("End of Mi'ihen mid point section.")
                         game.step = 3
                         maybe_create_save(save_num=27)
 
                 if game.step == 3:
-                    return_val = area.miihen.low_road(return_array[0], return_array[1])
-                    if return_val is False:
+                    if not area.miihen.low_road(return_array[0], return_array[1]):
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
                         load_game.load_save_num(0)
                     else:
                         # Report duration at the end of Mi'ihen section for all runs.
+                        split_timer()
                         end_time = logs.time_stamp()
                         total_time = end_time - game.start_time
                         logger.info(f"Mi'ihen End timer is: {total_time}")
@@ -686,6 +696,7 @@ def perform_TAS():
             if game.state == "Moonflow":
                 if game.step == 1:
                     area.moonflow.arrival()
+                    split_timer()
                     area.moonflow.south_bank()
                     game.step = 2
                     maybe_create_save(save_num=31)
@@ -716,6 +727,7 @@ def perform_TAS():
 
                 if game.step == 2:
                     area.guadosalam.guado_skip()
+                    split_timer()
                     game.step = 1
                     game.state = "ThunderPlains"
 
@@ -776,14 +788,13 @@ def perform_TAS():
                     if memory.main.get_map() != 80:
                         area.mac_temple.arrival()
                     area.mac_temple.start_seymour_fight()
-                    area.mac_temple.seymour_fight()
-                    if memory.main.game_over():
+                    if area.mac_temple.seymour_fight():
+                        game.step = 5
+                    else:
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
                         load_game.load_save_num(0)
                         # Do not change game.state or game.step. Will restart this section.
-                    else:
-                        game.step = 5
 
                 if game.step == 5:
                     area.mac_temple.trials()
@@ -895,35 +906,40 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    if game_vars.get_nea_after_bny():
+                    if game_vars.get_nea_after_bny() or game_vars.get_nea_ignore():
                         game.step = 3
                     else:
-                        success,direct = rng_track.final_nea_check()
-                        _,indirect = rng_track.final_nea_check(with_ronso=True)
-                        if success and direct <= indirect:
-                            game.step = 2
-                        else:
-                            game.step = 3
+                        game.step = 2
+                        # Something about final_nea_check is not working.
+                        
+                        #success,direct = rng_track.final_nea_check()
+                        #_,indirect = rng_track.final_nea_check(with_ronso=True)
+                        #if success and direct <= indirect:
+                        #    game.step = 2
+                        #else:
+                        #    game.step = 3
 
                 if game.step == 2:
-                    nea_possible_check, _ = rng_track.final_nea_check()
-                    if nea_possible_check:  #game_vars.try_for_ne() and nea_possible_check:
-                        manip_time_1 = logs.time_stamp()
+                    #nea_possible_check, _ = rng_track.final_nea_check()
+                    #if nea_possible_check:  #game_vars.try_for_ne() and nea_possible_check:
+                    #if game_vars.get_nea_after_bny():
+                    manip_time_1 = logs.time_stamp()
+                    area.ne_armor.next_green(report=True)
 
-                        logger.debug("Mark 1")
-                        if area.ne_armor.to_hidden_cave():
-                            logger.debug("Mark 2")
-                            area.ne_armor.drop_hunt()
-                        logger.debug("Mark 3")
-                        area.ne_armor.return_to_gagazet()
-                        manip_time_2 = logs.time_stamp()
-                        try:
-                            manip_time = manip_time_2 - manip_time_1
-                            logger.info(f"NEA Manip duration: {str(manip_time)}")
-                            logs.write_stats("NEA Manip duration:")
-                            logs.write_stats(manip_time)
-                        except Exception as e:
-                            logger.warning(e)
+                    logger.debug("Mark 1")
+                    if area.ne_armor.to_hidden_cave():
+                        logger.debug("Mark 2")
+                        area.ne_armor.drop_hunt()
+                    logger.debug("Mark 3")
+                    area.ne_armor.return_to_gagazet()
+                    manip_time_2 = logs.time_stamp()
+                    try:
+                        manip_time = manip_time_2 - manip_time_1
+                        logger.info(f"NEA Manip duration: {str(manip_time)}")
+                        logs.write_stats("NEA Manip duration:")
+                        logs.write_stats(manip_time)
+                    except Exception as e:
+                        logger.warning(e)
                     game.step = 3
 
                 if game.step == 3:
@@ -931,7 +947,10 @@ def perform_TAS():
                     drop_check,_ = rng_track.final_nea_check()
                     logger.warning(f"NE Armor check main: {game_vars.ne_armor()}")
                     logger.warning(f"  NEA can drop main: {drop_check}")
-                    if drop_check and game_vars.ne_armor() == 255:
+                    if game_vars.get_nea_ignore():
+                        area.gagazet.to_the_ronso(checkpoint=6)
+                        game.step = 4
+                    elif game_vars.get_nea_after_bny() and game_vars.ne_armor() == 255:
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:
@@ -944,15 +963,23 @@ def perform_TAS():
 
                 if game.step == 4:
                     area.gagazet.gagazet_climb()
-                    area.gagazet.flux()
                     game.step = 5
-                    maybe_create_save(save_num=46)
-
+                
                 if game.step == 5:
-                    area.gagazet.dream()
-                    game.step = 6
+                    if area.gagazet.flux():
+                        game.step = 6
+                        maybe_create_save(save_num=46)
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                        # Do not change game.state or game.step. Will restart this section.
 
                 if game.step == 6:
+                    area.gagazet.dream()
+                    game.step = 7
+
+                if game.step == 7:
                     area.gagazet.cave()
                     area.gagazet.wrap_up()
                     game.step = 1
@@ -1254,6 +1281,7 @@ def perform_TAS():
     if memory.main.get_story_progress() > 3210:
         end_time = logs.time_stamp()
         total_time = end_time - game.start_time
+        bcount = game_vars.ne_extra_battles()
         logs.write_stats("Total time:")
         logs.write_stats(str(total_time))
         logger.info(f"The game duration was: {str(total_time)}")
@@ -1262,7 +1290,13 @@ def perform_TAS():
         try:
             adj_time = total_time - timedelta(seconds=blitz_duration)
             logger.debug(f"Time checks: {total_time} | {blitz_duration} | {adj_time}")
-            if blitz_duration != None and not truerng:
+            if (
+                blitz_duration != None and
+                not truerng and
+                not game_vars.nemesis() and
+                not game_vars.story_mode() and
+                game_vars.csr() == True
+            ):
                 if game_vars.get_blitz_win():
                     logger.debug(f"Writing seed results to memory: {adj_time}")
                     add_to_seed_results(
@@ -1271,10 +1305,12 @@ def perform_TAS():
                         avina_heals=str(game_vars.ml_heals()),
                         raw=str(total_time),
                         blitz=str(blitz_duration),
-                        adjusted=str(adj_time)
+                        adjusted=str(adj_time),
+                        bcount=str(bcount)
                     )
                 else:
                     logger.debug(f"Do not write seed results to memory for Blitz loss.")
+                write_big_text(f"ADJ TIME: {adj_time}")
             else:
                 logger.info(f"Identified run started as a test, no results to confirm.")
         except Exception as e:
@@ -1295,7 +1331,10 @@ def perform_TAS():
             if memory.main.get_map() in [348, 349]:
                 xbox.tap_start()
             elif memory.main.cutscene_skip_possible():
+                memory.main.wait_seconds(251)
                 xbox.skip_scene()
+                memory.main.wait_seconds(2)
+        write_big_text("")
         memory.main.wait_frames(180)
         while not memory.main.save_menu_open():
             xbox.tap_b()

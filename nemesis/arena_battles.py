@@ -76,6 +76,7 @@ def save_game(actually_save=True):
 
 
 def touch_save(real_save=False):
+    nemesis.arena_select.arena_menu_select(4)
     save_game(actually_save=real_save)
 
 
@@ -259,8 +260,6 @@ def yojimbo_battle(flee_available:bool=True, diag_after=False):
         needed_amount = zanmato_gil_needed()  # Set value
         if needed_amount > 255000:
             needed_amount = 1
-        #needed_amount = max(needed_amount - 1, 1)
-        #needed_amount = 64  # I don't know, nothing seems to work.
         logger.debug(f"Pay the man: {needed_amount}")
         Yojimbo.pay(gil_value=needed_amount)
         memory.main.wait_frames(90)
@@ -293,7 +292,7 @@ def yojimbo_battle(flee_available:bool=True, diag_after=False):
     logger.debug("Yojimbo wrap-up is complete.")
     memory.main.wait_frames(2)
     if diag_after:
-        return
+        return True
     while not memory.main.diag_skip_possible():
         if memory.main.user_control():
             return True
@@ -419,6 +418,10 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                 ):
                     logger.debug("Yuna will attack to gain Overdrive charge")
                     Yuna.attack()
+                elif not Yuna.active():
+                    battle.main.buddy_swap(Yuna)
+                elif not Tidus.active():
+                    battle.main.buddy_swap(Tidus)
                 else:
                     logger.debug("Yuna will defend")
                     Yuna.defend()
@@ -435,6 +438,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
         pass
     memory.main.wait_frames(1)
     nemesis.arena_select.arena_menu_select(4)
+    memory.main.update_formation(Tidus, Yuna, Rikku)
     if restore_mp:
         save_game(actually_save=False)
     return memory.main.battle_arena_results()
@@ -502,7 +506,8 @@ def restock_downs():
     xbox.tap_up()
     xbox.tap_b()
     memory.main.wait_frames(6)
-    xbox.menu_a()
+    while memory.main.menu_open():
+        xbox.tap_back()
     nemesis.arena_select.arena_menu_select(4)
 
 
@@ -525,7 +530,7 @@ def battles_1():
     while not basic_quick_attacks(mega_phoenix=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
-        memory.main.update_formation(Tidus, Yuna, Wakka)
+        memory.main.update_formation(Tidus, Yuna, Rikku)
         touch_save()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
@@ -533,7 +538,7 @@ def battles_1():
     game_vars.arena_success(array_num=0, index=2)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
-    memory.main.update_formation(Tidus, Yuna, Wakka)
+    memory.main.update_formation(Tidus, Yuna, Rikku)
 
     check_yojimbo_possible()
     
@@ -872,7 +877,7 @@ def juggernaut_farm():
     logger.debug("Starting menu to finish strength.")
     nemesis.arena_select.arena_menu_select(4)
     nemesis.menu.str_boost()
-    memory.main.update_formation(Tidus, Yuna, Wakka)
+    memory.main.update_formation(Tidus, Yuna, Rikku)
     write_custom_message("Detour 2\nSteal from evil eyes\nfor 48 musk\ninto confuseproof\non Wakka")
     #musk_farm()
     logger.debug("Touch save sphere, and then good to go.")
@@ -913,7 +918,7 @@ def musk_farm():
             xbox.menu_up()
     nemesis.arena_select.arena_menu_select(4)
     
-    memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
+    memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
     menu.add_ability(
         owner=4,  # Wakka armor, Confuse-proof for Fenrir
         equipment_type=1,
@@ -1058,10 +1063,8 @@ def item_dump():
     xbox.menu_right()
     xbox.menu_b()
     menu.sell_all(nea=True)
-    xbox.menu_a()
-    xbox.menu_a()
-    xbox.menu_a()
-    xbox.menu_a()
+    while memory.main.menu_open():
+        xbox.tap_back()
 
 
 def quick_reset_logic():
@@ -1092,7 +1095,7 @@ def check_yojimbo_possible():
     ):
         # Save game in preparation for the Yojimbo attempt
         memory.main.wait_frames(20)
-        memory.main.update_formation(Tidus, Yuna, Wakka)
+        memory.main.update_formation(Tidus, Yuna, Rikku)
 
         # Now attempt to get Zanmato until successful, no re-saving.
         while not battles_5(game_vars.yojimbo_get_index()):
@@ -1155,6 +1158,17 @@ def battles_5(completion_version: int):
 
     # Now for the Yojimbo section
     arena_npc()
+
+    # First, if a bad battle is pending, do an easy one instead.
+    needed_amount = zanmato_gil_needed()  # Set value
+    while needed_amount > memory.main.get_gil_value() or first_turn_action_occurs():
+        nemesis.arena_select.arena_menu_select(1)
+        nemesis.arena_select.start_fight(area_index=0, monster_index=0)
+        yojimbo_advance_battle()
+        nemesis.arena_select.arena_menu_select(4)
+        touch_save()
+        arena_npc()
+        needed_amount = zanmato_gil_needed()  # Set value
     nemesis.arena_select.arena_menu_select(1)
 
     # Battles here
@@ -1230,8 +1244,7 @@ def battles_5(completion_version: int):
             memory.main.click_to_diag_progress(2)
             memory.main.click_to_control_3()
             return True
-        else:
-            return False
+        return False
 
     # Wrap up decisions
     if yojimbo_success:
@@ -1253,18 +1266,43 @@ def recharge_overdrives():
     screen.await_turn()
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if Yuna.is_turn() and Yuna.overdrive_percent() != 100:
+            if not Yuna.active():
+                battle.main.buddy_swap(Yuna)
+            elif Yuna.is_turn() and Yuna.overdrive_percent() != 100:
                 CurrentPlayer().attack()
+            elif not Tidus.active():
+                battle.main.buddy_swap(Tidus)
+            elif (
+                Tidus.is_turn() and
+                Tidus.overdrive_percent() == 100 and
+                Yuna.overdrive_percent() == 100
+            ):
+                battle.main.flee_all()
             elif Tidus.is_turn() and Tidus.overdrive_percent() != 100:
                 CurrentPlayer().attack()
             else:
-                battle.main.escape_one()
+                CurrentPlayer().defend()
 
     logger.debug("Battle is complete.")
-    battle.main.wrap_up()
     nemesis.arena_select.arena_menu_select(4)
     memory.main.wait_frames(2)
     touch_save()
+
+
+def yojimbo_advance_battle():
+    # Advances Yojimbo's RNG.
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Yuna.is_turn():
+                battle.main.aeon_summon(5)
+            elif screen.turn_aeon():
+                Yojimbo.pay(gil_value=1)
+            elif not Yuna.active():
+                battle.main.buddy_swap(Yuna)
+            else:
+                CurrentPlayer().defend()
+    battle.main.wrap_up()
+
 
 
 def nemesis_battle():
@@ -1276,32 +1314,27 @@ def nemesis_battle():
             # If Yuna is charged, do next battle. Otherwise charge.
             if Yuna.overdrive_percent() == 100:
                 battles_5(game_vars.yojimbo_get_index())
+                nemesis.arena_select.arena_menu_select(4)
             else:
                 recharge_overdrives()
-            nemesis.arena_select.arena_menu_select(4)
 
     if Yuna.overdrive_percent() != 100:
         recharge_overdrives()
-    if memory.main.get_gil_value() < 300000:
+    arena_npc()
+    needed_amount = zanmato_gil_needed()  # Set value
+    while needed_amount > memory.main.get_gil_value() or first_turn_action_occurs():
+        nemesis.arena_select.arena_menu_select(1)
+        nemesis.arena_select.start_fight(area_index=0, monster_index=0)
+        yojimbo_advance_battle()
         nemesis.arena_select.arena_menu_select(4)
-        menu.auto_sort_equipment()
+        touch_save()
         arena_npc()
-        nemesis.arena_select.arena_menu_select(2)
-        memory.main.wait_frames(90)
-        xbox.menu_right()
-        xbox.menu_b()
-        menu.sell_all()
-        xbox.menu_a()
-        xbox.menu_a()
-        xbox.menu_a()
-        xbox.menu_a()
-        xbox.menu_a()
-        xbox.menu_a()
-        xbox.menu_a()
+        needed_amount = zanmato_gil_needed()  # Set value
     nemesis.arena_select.arena_menu_select(4)
-    memory.main.update_formation(Tidus, Yuna, Wakka)
+    memory.main.update_formation(Tidus, Yuna, Rikku)
     save_game()
     while not battles_5(completion_version=99):
+        nemesis.arena_select.arena_menu_select(4)
         quick_reset_logic()
     xbox.controller_handle()
     while not pathing.set_movement([-6, -27]):

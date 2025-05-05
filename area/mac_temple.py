@@ -17,6 +17,7 @@ from paths import (
     MacalaniaTempleFoyer,
     MacalaniaTempleTrials,
     MacalaniaUnderTemple,
+    BikanelDesert,
 )
 from players import Auron, Rikku, Tidus, Yuna, CurrentPlayer
 
@@ -173,9 +174,8 @@ def start_seymour_fight():
 
 def seymour_fight():
     logger.info("Fighting Seymour Guado")
-    battle.main.seymour_guado()
-    if memory.main.game_over():
-        return
+    if not battle.main.seymour_guado():
+        return False
 
     # Name for Shiva
     xbox.name_aeon("Shiva")
@@ -189,6 +189,7 @@ def seymour_fight():
             checkpoint += 1
 
     FFXC.set_neutral()
+    return True
 
 
 def trials(destro=False):
@@ -474,4 +475,10 @@ def under_lake():
                 xbox.tap_b()
     FFXC.set_neutral()
     memory.main.click_to_control()
+
+    checkpoint = 0
+    while checkpoint < 2:
+        if pathing.set_movement(BikanelDesert.execute(checkpoint)):
+            checkpoint += 1
+            logger.debug(f"Checkpoint {checkpoint}")
 

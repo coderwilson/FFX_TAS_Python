@@ -36,14 +36,16 @@ class YojimboImpl(Aeon):
         logger.debug(f"Amt1: {gil_amount} | Amt2: {amount} | Copy: {gil_copy}")
         logger.debug(position)
 
-        for cur in range(6, -1, -1):
+        #for cur in range(6, -1, -1):
+        for cur in range(7):
             if not position[cur]:
                 continue
             while memory.main.spare_change_cursor() != cur:
                 while memory.main.spare_change_cursor() != cur:
-                    memory.main.side_to_side_direction(
-                        memory.main.spare_change_cursor(), cur, 6
-                    )
+                    # memory.main.side_to_side_direction(
+                    #     memory.main.spare_change_cursor(), cur, 6
+                    # )
+                    xbox.tap_left()
                 memory.main.wait_frames(2)
             target = position[cur]
             while battle.main.get_digit(memory.main.spare_change_amount(), cur) != target:
