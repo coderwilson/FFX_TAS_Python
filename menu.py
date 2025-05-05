@@ -170,25 +170,78 @@ def short_aeons():
 def liki():
     logger.debug("Menu - SS Liki")
     open_grid(character=0)
-    memory.main.wait_frames(10)
 
     # Move to the Def node just to the left
     logger.debug("Sphere grid on Tidus, learn Cheer and Str +1")
+    levels = memory.main.get_tidus_slvl()
     menu_grid.move_first()
-    grid_up()
-    grid_up()
-    if memory.main.get_tidus_slvl() >= 3:
-        grid_left()
+
+    if levels >= 3:
+        while memory.main.s_grid_cursor_coords() != [-81,-484]:
+            if memory.main.s_grid_cursor_coords()[0] > -50:
+                grid_left()
+            elif memory.main.s_grid_cursor_coords()[0] <= -117:
+                grid_right()
         menu_grid.move_and_use()
-        menu_grid.sel_sphere("power", "left")
-        menu_grid.use_and_use_again()  # Str +1 node
-    menu_grid.sel_sphere("ability", "none")  # Cheer
-    xbox.menu_b()
+        menu_grid.sel_sphere("power", "left")  # Str +1 node
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("ability", "none")  # Cheer
+    else:  # This can only be 2 levels.
+        while memory.main.s_grid_cursor_coords() != [-45,-520]:
+            if memory.main.s_grid_cursor_coords()[0] > -30:
+                grid_left()
+            else:
+                grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("ability", "none")  # Cheer
     menu_grid.use_and_quit()
-    xbox.menu_a()
+    memory.main.close_menu()
 
 
 def woods_menuing():
+    # Tidus learning Flee
+    open_grid(character=0)
+    menu_grid.move_first()
+    logger.debug(memory.main.s_grid_cursor_coords())
+    levels = memory.main.get_tidus_slvl()
+    if memory.main.s_grid_cursor_coords() == [-81,-484]:
+        if levels == 1:
+            while memory.main.s_grid_cursor_coords() != [-117,-448]:
+                grid_left()
+        else:
+            while memory.main.s_grid_cursor_coords() != [-165,-564]:
+                grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("ability", "none")
+        if levels > 1:
+            menu_grid.use_and_use_again()
+            menu_grid.sel_sphere("speed", "none")
+            game_vars.complete_full_kilika_menu()
+    else:
+        if levels == 2:
+            while memory.main.s_grid_cursor_coords() != [-117,-448]:
+                grid_left()
+        else:
+            while memory.main.s_grid_cursor_coords() != [-165,-564]:
+                grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("ability", "none")
+        if levels > 2:
+            menu_grid.use_and_use_again()
+            menu_grid.sel_sphere("speed", "none")
+            game_vars.complete_full_kilika_menu()
+        logger.warning("SPHERE GRID ERROR - CONTACT CODER IMMEDIATELY!!!")
+        quit()
+    menu_grid.use_and_quit()
+
+    # Reorder the party
+    memory.main.update_formation(Tidus, Lulu, Wakka, full_menu_close=False)
+
+
+    equip_scout(full_menu_close=True)
+
+
+def woods_menuing_old():
     # Tidus learning Flee
     open_grid(character=0)
     xbox.menu_b()
@@ -233,6 +286,15 @@ def geneaux():
         menu_grid.coords_movement([-165,-564])
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "none")
+'''
+    if memory.main.s_grid_cursor_coords() != [-165,-564]:
+        menu_grid.move_first()
+        grid_left()
+        menu_grid.move_and_use()
+    else:
+        menu_grid.use_first()
+    menu_grid.sel_sphere("speed", "none")
+'''
     menu_grid.use_and_quit()
     memory.main.close_menu()
 

@@ -1346,5 +1346,25 @@
                 "nea_manip_battle_count": "0"
             }
         }
+    },
+    "204": {
+        "best_adj": "3:04:07",
+        "standard": {
+            "False": {
+                "raw_time": "3:11:09.485741",
+                "blitz_time": "422",
+                "adjusted_time": "3:04:07"
+            }
+        }
+    },
+    "96": {
+        "best_adj": "3:06:58",
+        "standard": {
+            "False": {
+                "raw_time": "3:13:30.547475",
+                "blitz_time": "392",
+                "adjusted_time": "3:06:58"
+            }
+        }
     }
 }
