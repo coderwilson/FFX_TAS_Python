@@ -286,7 +286,7 @@ def geneaux():
         menu_grid.coords_movement([-165,-564])
         menu_grid.move_and_use()
         menu_grid.sel_sphere("speed", "none")
-'''
+    '''
     if memory.main.s_grid_cursor_coords() != [-165,-564]:
         menu_grid.move_first()
         grid_left()
@@ -294,7 +294,7 @@ def geneaux():
     else:
         menu_grid.use_first()
     menu_grid.sel_sphere("speed", "none")
-'''
+    '''
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
