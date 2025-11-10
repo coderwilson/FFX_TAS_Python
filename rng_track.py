@@ -1187,7 +1187,7 @@ def purifico_to_nea(
         
     elif stage == 3:
         for i in range(2):
-            results.append(results[i] + ["yenke_ronso","biran_ronso","ghost"])
+            results[i] = results[i] + ["yenke_ronso","biran_ronso","ghost"]
             results[i] = results[i] + ["ghost"]
     # else stage 4 == after B&Y completed. No extra info needed.
     
@@ -1281,13 +1281,15 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
             condition = "with"
         if "yenke_ronso" in enemies:
             condition2 = "with"
-        if equipment.has_ability(32797) and enemies[i] == "ghost":
+        if enemies[i] == "ghost":
             #logger.warning("Found one!")
             #if report:
                 #logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.")
                 #logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
             if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
                 return (True, equipment, extras)
+            else:
+                return (False, equipment, extras)
                 
         ptr12 += 4
         ptr13 += advances

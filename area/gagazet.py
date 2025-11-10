@@ -14,6 +14,7 @@ import xbox
 from paths import (
     CalmLands,
     CalmLandsNemesis,
+    CalmLandsPlatinum,
     DefenderX,
     GagazetCave,
     GagazetDreamSeq,
@@ -25,12 +26,18 @@ from paths import (
 )
 from players import Auron, CurrentPlayer, Kimahri, Rikku, Tidus, Wakka, Yuna
 from area.ne_armor import next_green
+from area.chocobos import (
+    all_races, 
+    upgrade_mirror, 
+    to_remiem,
+    remiem_races,
+    leave_temple,
+    upgrade_mirror
+)
 from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
-if game_vars.nemesis():
-    import nemesis.changes
 from nemesis.changes import gagazet_lv_4_chest
 
 FFXC = xbox.controller_handle()
@@ -48,8 +55,9 @@ def check_gems():
     logger.debug(f"Total gems: {gems}")
     return gems
 
+    
 
-def calm_lands(checkpoint = 0):
+def calm_lands(checkpoint = 0, plat_second_pass=False):
     memory.main.await_control()
     # Start by getting away from the save sphere
     if memory.main.get_map() == 329:
@@ -73,28 +81,29 @@ def calm_lands(checkpoint = 0):
     game_vars.set_def_x_drop(bool((best % 4) >= 2))
     game_vars.set_nea_after_bny(bool(best >= half))
     if (not 2 in routes) and (not 1 in routes):
-        game_vars.set_nea_ignore(True)
+        if not game_vars.nemesis() and not game_vars.platinum():
+            game_vars.set_nea_ignore(True)
     #logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
 
     #rng_track.print_manip_info(pre_x= True)
     # Enter the cutscene where Yuna muses about ending her journey.
-    while not (memory.main.get_coords()[1] >= -1650 and memory.main.user_control()):
-        if memory.main.user_control():
-            FFXC.set_movement(0, 1)
-        else:
-            FFXC.set_neutral()
-            if memory.main.diag_skip_possible() and not game_vars.story_mode():
-                xbox.tap_confirm()
+    if not (memory.main.get_coords()[1] >= -1620 and memory.main.user_control()):
+        checkpoint = 0
+    
 
     dest_map = 279
-    if game_vars.nemesis() and checkpoint == 0:
+    if (game_vars.nemesis() or game_vars.platinum()) and checkpoint <= 2:
         dest_map = 307
     while memory.main.get_map() != dest_map:
         if memory.main.user_control():
-            if game_vars.nemesis():
+            # This accounts for the cutscene on entrance to calm lands.
+            if checkpoint < 2 and memory.main.get_coords()[0] < 450:
+                checkpoint = 2
+
+            if game_vars.nemesis() or game_vars.platinum():
                 if pathing.set_movement(CalmLandsNemesis.execute(checkpoint)):
                     checkpoint += 1
-                    if checkpoint == 15:
+                    if checkpoint == 17:
                         if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
                             checkpoint -= 1
                             FFXC.set_movement(-1, -1)
@@ -107,7 +116,7 @@ def calm_lands(checkpoint = 0):
             else:
                 if pathing.set_movement(CalmLands.execute(checkpoint)):
                     checkpoint += 1
-                    if checkpoint == 15:
+                    if checkpoint == 17:
                         if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
                             checkpoint -= 1
                             FFXC.set_movement(-1, -1)
@@ -134,7 +143,7 @@ def calm_lands(checkpoint = 0):
                 memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
-                #rng_track.print_manip_info(pre_x= True)
+                logger.warning(f"Checkpoint test: {checkpoint}")
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
@@ -247,7 +256,7 @@ def gagazet_climb(checkpoint: int = 0):
 
     logger.info("Gagazet path section")
     talk_wantz = False
-    if game_vars.nemesis() or game_vars.story_mode():
+    if game_vars.nemesis() or game_vars.story_mode() or game_vars.platinum():
         talk_wantz = True
 
     if nea_equipped_start:
@@ -267,20 +276,38 @@ def gagazet_climb(checkpoint: int = 0):
             menu.equip_armor(character=game_vars.ne_armor(), ability=99)
 
     memory.main.close_menu()
-
+    braska_sphere = game_vars.platinum()
     while memory.main.get_map() != 285:
         if memory.main.user_control():
-            if checkpoint == 19 and talk_wantz:
+            if checkpoint == 10 and braska_sphere:
+                checkpoint = 40
+            elif checkpoint == 44:
+                FFXC.set_neutral()
+                memory.main.wait_frames(10)
+                if memory.main.user_control():
+                    FFXC.set_movement(1,1)
+                    memory.main.wait_frames(4)
+                    FFXC.set_neutral()
+                    memory.main.wait_frames(10)
+                    if memory.main.user_control():
+                        while memory.main.user_control():
+                            xbox.tap_confirm()
+                        memory.main.click_to_control()
+                        checkpoint += 1
+            elif checkpoint == 48:
+                checkpoint = 10
+                braska_sphere = False
+            elif checkpoint == 19 and talk_wantz:
                 memory.main.check_near_actors()
                 if pathing.approach_actor_by_id(8413):
                     while memory.main.diag_progress_flag() != 35:
-                        if game_vars.nemesis():
+                        if game_vars.nemesis() or game_vars.platinum():
                             xbox.tap_confirm()
                     memory.main.wait_seconds(1)
                     xbox.tap_a()
                     xbox.tap_b()
                     talk_wantz = False
-            if checkpoint == 22 and game_vars.nemesis():
+            if checkpoint == 22 and (game_vars.nemesis() or game_vars.platinum()):
                 gagazet_lv_4_chest()
                 checkpoint += 1
             elif pathing.set_movement(GagazetSnow.execute(checkpoint)):
@@ -305,16 +332,18 @@ def gagazet_climb(checkpoint: int = 0):
                         if (
                             memory.main.overdrive_state_2()[6] == 100
                             and game_vars.ne_armor() != 255
-                            and not game_vars.story_mode()
                         ):
-                            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                            if not game_vars.story_mode():
+                                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                     else:
                         memory.main.close_menu()
-                elif game_vars.story_mode() and memory.main.get_slvl_yuna() < 5:
+                elif game_vars.story_mode() and memory.main.get_slvl_yuna() < 10:
                     # In story mode, we need extra levels to avoid soft lock later.
                     battle.main.calm_impulse()
                     memory.main.click_to_control()
                     memory.main.update_formation(Tidus, Rikku, Auron)
+                    if memory.main.get_slvl_yuna() >= 10:
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 elif memory.main.overdrive_state()[6] == 100 or memory.main.get_item_slot(39) < 100:
                     # Silence grenade negates the need for overdrive here.
                     battle.main.flee_all()
@@ -346,6 +375,7 @@ def flux() -> bool:
     else:
         memory.main.update_formation(Tidus, Yuna, Auron)
     checkpoint = 0
+    get_crest = game_vars.platinum()
     while checkpoint < 8:
         if memory.main.user_control():
             if checkpoint == 7:
@@ -353,6 +383,10 @@ def flux() -> bool:
                 FFXC.set_neutral()
                 save_sphere.touch_and_go()
                 checkpoint += 1
+            elif checkpoint == 5 and get_crest:
+                pathing.approach_actor_by_id(20482)
+                memory.main.click_to_control_3()
+                get_crest = False
             # elif checkpoint == 8:
             #    while memory.main.user_control():
             #        FFXC.set_movement(1, 1)

@@ -136,7 +136,7 @@ def listen_story():
                     pass
                 logger.info("Ready to name Tidus")
                 FFXC.set_neutral()
-                memory.main.wait_frames(6)
+                memory.main.wait_frames(12)
 
                 # Name Tidus
                 xbox.name_aeon("Tidus")
@@ -196,7 +196,7 @@ def listen_story():
                     xbox.skip_dialog(3)
 
 
-def ammes_battle_classic():
+def ammes_battle_classic(results_mod:str=""):
     logger.info("Starting ammes")
     xbox.click_to_battle()
     logger.debug("Auron Overdrive turn start")
@@ -224,7 +224,7 @@ def ammes_battle_classic():
     logger.debug(f"Corrected RNG seed: {correct_seed}")
     if correct_seed != "Err_seed_not_found":
         game_vars.set_confirmed_seed(correct_seed)
-        write_seed_num(seed=memory.main.rng_seed())
+        write_seed_num(seed=memory.main.rng_seed(), variant=results_mod)
     else:
         logging.error(f"Unable to derive seed from recorded hits: {hits_array}")
         write_seed_err()
@@ -239,10 +239,11 @@ def ammes_battle_classic():
     Auron.overdrive()
 
 
-def ammes_battle_crimson(tidus_total_attacks: int, tidus_potion: bool):
+def ammes_battle_crimson(tidus_total_attacks: int, tidus_potion: bool, results_mod:str):
     logger.info("Starting ammes")
     xbox.click_to_battle()
-    write_seed_num(seed=memory.main.rng_seed())
+    logger.debug(f"Mark 1")
+    write_seed_num(seed=memory.main.rng_seed(), variant=results_mod)
     logger.debug("Auron Overdrive turn start")
     memory.main.last_hit_init()
 

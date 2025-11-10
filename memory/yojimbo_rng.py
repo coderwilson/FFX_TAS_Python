@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def resistance(z_level: int = 5):
+    logger.warning(f"Enemy zanmato level == {z_level}")
     if z_level in [3, 4, 5]:
         return 0.4
     return 0.8
@@ -70,7 +71,7 @@ def zanmato_gil_needed(zan_level: int = 5) -> int:
     while gil_amount < 500000:
         base_motiv = (compat_val // 10) + gil_motivation
         # motiv_rng set earlier, does not change until an action is taken.
-        motivation = (base_motiv * resistance()) + motiv_rng + 20  # Assume full overdrive
+        motivation = (base_motiv * resistance(z_level=zan_level)) + motiv_rng + 20  # Assume full overdrive
 
         if motivation >= 80:
             logger.warning(f"Gil amount needed: {gil_amount} | final_motiv: {round(motivation,1)}")
@@ -103,8 +104,11 @@ def zanmato_gil_needed(zan_level: int = 5) -> int:
 
 def rng_value():
     if memory.main.battle_active() and screen.turn_aeon():
+        logger.info("In-battle RNG used")
         return rng_array_from_index(index=17, array_len=3)[1] & 0x7FFFFFFF & 63
     elif first_turn_action_occurs():
+        logger.info("Pre-battle RNG with first turn action")
         return rng_array_from_index(index=17, array_len=3)[3] & 0x7FFFFFFF & 63
     else:
+        logger.info("Pre-battle RNG with NO first turn action")
         return rng_array_from_index(index=17, array_len=3)[2] & 0x7FFFFFFF & 63

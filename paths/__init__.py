@@ -7,6 +7,7 @@ from paths.dream_zan import AllStartsHere, TidusHomeMovement
 from paths.gagazet import (
     CalmLands,
     CalmLandsNemesis,
+    CalmLandsPlatinum,
     DefenderX,
     GagazetCave,
     GagazetDreamSeq,
@@ -106,6 +107,7 @@ __all__ = [
     "cactuar10",
     "CalmLands",
     "CalmLandsNemesis",
+    "CalmLandsPlatinum",
     "DefenderX",
     "DjoseDance",
     "DjoseExit",

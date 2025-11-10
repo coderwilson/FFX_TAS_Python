@@ -38,10 +38,17 @@ def arrival():
         if memory.main.user_control():
             # events
             if checkpoint == 4:  # Move into Yunas dance
+                
                 memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 6:  # Move into Yuna's dance
-                memory.main.click_to_event_temple(0)
+                if game_vars.story_mode():
+                    FFXC.set_movement(0,1)
+                    memory.main.await_event()
+                    FFXC.set_neutral()
+                    memory.main.await_control()
+                else:
+                    memory.main.click_to_event_temple(0)
                 checkpoint += 1
             elif checkpoint == 8:  # Exit the inn
                 # Can be improved, there's a tiny ledge to get stuck on.
@@ -54,7 +61,13 @@ def arrival():
                 memory.main.click_to_event_temple(3)
                 checkpoint += 1
             elif checkpoint == 16:  # Talking to Wakka
-                memory.main.click_to_event_temple(1)
+                if game_vars.story_mode():
+                    FFXC.set_movement(1,1)
+                    memory.main.await_event()
+                    FFXC.set_neutral()
+                    memory.main.await_control()
+                else:
+                    memory.main.click_to_event_temple(1)
                 checkpoint += 1
             elif checkpoint == 18:  # Back to the map with the inn
                 memory.main.click_to_event_temple(7)
@@ -269,7 +282,7 @@ def _distance(n1, n2):
 def trials(destro:bool=False):
     logger.info("Kilika trials")
     memory.main.click_to_control()
-    if game_vars.story_mode():
+    if game_vars.story_mode() or game_vars.platinum():
         destro = True
     checkpoint = 0
     while memory.main.get_map() != 45:
@@ -497,6 +510,7 @@ def forest_3():
     split_timer()
 
     last_coords_report_time = 0
+    get_primer = game_vars.platinum()
     while memory.main.get_story_progress() < 372:
         if memory.main.user_control():
             coords = memory.main.get_coords()
@@ -522,6 +536,23 @@ def forest_3():
                 else:
                     pathing.set_movement([95,1])
             elif memory.main.get_map() == 16:
+                if get_primer:
+                    while not pathing.set_movement([-32,-200]):
+                        pass
+                    while not pathing.set_movement([-14,-200]):
+                        pass
+                    while memory.main.get_map() != 151:
+                        pathing.set_movement([50,-200])
+                    FFXC.set_neutral()
+                    memory.main.await_control()
+                    FFXC.set_movement(1,1)
+                    memory.main.wait_frames(12)
+                    pathing.primer()
+                    while memory.main.get_map() == 151:
+                        FFXC.set_movement(0,-1)
+                    FFXC.set_neutral()
+                    memory.main.await_control()
+                    get_primer=False
                 if coords[0] > -51:
                     pathing.set_movement([-59,-203])
                 elif coords[0] > -135:

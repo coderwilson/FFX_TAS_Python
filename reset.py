@@ -111,7 +111,7 @@ def _attempt_reset():
                 xbox.menu_a()
         while memory.main.menu_number() != 5:
             pass
-    if memory.main.game_over():
+    if memory.main.game_over() and memory.main.get_map() != 374:
         logger.debug("Reset: game over")
         while memory.main.get_map() not in [23, 62, 348, 349]:
             xbox.tap_b()
@@ -129,26 +129,28 @@ def _attempt_reset():
         348,
         349,
     ]:
-        xbox.tap_a()
+        logger.debug(f"Wrong map: {memory.main.get_map()} | {user_control()} | {turn_ready()} | {memory.main.battle_active()}")
 
     while memory.main.get_map() not in [23, 348, 349]:
         logger.info("Attempting reset")
         logger.info(f"FFX map: {memory.main.get_map()}")
         memory.main.set_map_reset()
-        memory.main.wait_frames(30 * 0.1)
+        memory.main.wait_frames(30)
         memory.main.force_map_load()
-        memory.main.wait_frames(30 * 1)
+        memory.main.wait_frames(30)
 
 
 def reset_to_main_menu():
     FFXC.set_neutral()
     if memory.main.get_story_progress() <= 8:
+        logger.debug("Early game reset")
         _attempt_reset()
-    elif memory.main.game_over():
+    elif memory.main.game_over() and memory.main.get_map() != 374:
+        logger.debug("Game Over reset")
         while not memory.main.get_map() in [21,23]:
             xbox.menu_b()
     elif memory.main.battle_active():
-        logger.info("Battle is active. Forcing battle to end so we can soft reset.")
+        logger.info("Battle Active reset (force game over)")
         while not memory.main.turn_ready():
             xbox.menu_a()
         memory.main.reset_battle_end()
@@ -156,6 +158,7 @@ def reset_to_main_menu():
             xbox.menu_b()
 
     else:
+        logger.debug("Basic Reset")
         _attempt_reset()
     logger.info("Resetting")
 

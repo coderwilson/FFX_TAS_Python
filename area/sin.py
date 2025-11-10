@@ -87,12 +87,11 @@ def low_speed_sphere_check():
     if memory.main.get_speed() >= speed_needed:
         logger.manip(f"Good on speed spheres, moving straight onward. {memory.main.get_speed()}/{speed_needed}")
         return
-    elif game_vars.nemesis():
+    elif game_vars.nemesis() or game_vars.platinum():
         logger.manip("No speed sphere check on Nemesis route.")
     logger.manip(f"Short on speed spheres. {memory.main.get_speed()}/{speed_needed}. Initiating recovery.")
-    from nemesis.arena_prep import air_ship_destination, return_to_airship
+    from nemesis.arena_prep import return_to_airship
     from paths.destro_spheres import besaid_destro_sphere
-    #air_ship_destination(dest_num=2)
     pathing.approach_actor_by_id(actor_id=8449)
     while memory.main.get_map() != 382:
         xbox.tap_confirm()
@@ -376,7 +375,7 @@ def execute_egg_hunt():
     memory.main.wait_frames(30 * 0.5)
     egg_hunt.engage()
     logger.info("Done with the egg hunt. Final prep for BFA.")
-    if game_vars.nemesis():
+    if game_vars.nemesis() or game_vars.platinum():
         menu.equip_weapon(character=0, ability=0x8019, full_menu_close=True)
         FFXC.set_movement(1, 1)
         memory.main.wait_frames(5)

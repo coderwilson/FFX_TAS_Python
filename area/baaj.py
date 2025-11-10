@@ -251,6 +251,9 @@ def ab_boat_1():
     logger.info("Start of Al Bhed boat section.")
     logger.debug("Control restored.")
     logger.info("On the boat!")
+    if game_vars.platinum():
+        memory.main.await_control()
+        pathing.primer()
     tutorial_done = False
     while memory.main.get_actor_coords(actor_index=0)[0] > -50:
         if memory.main.user_control():

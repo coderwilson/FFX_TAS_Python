@@ -1,8 +1,8 @@
 from gamestate import game
 
-def write_seed_num(seed: int=999):
+def write_seed_num(seed: int=999, variant:str=""):
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write(f"Seed num: {seed}\nBlitz Win: TBD\nReturn spheres: none")
+    f.write(f"Seed num: {seed} | {variant}\nReturn spheres: none\nBlitz Win: TBD")
     f.close()
 
 
@@ -25,7 +25,7 @@ def write_returns(results:int):
 
 def write_seed_err():
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write(f"TrueRNG run active!\nBlitz Win: TBD\nReturn spheres: none")
+    f.write(f"TrueRNG run active!\nReturn spheres: none\nBlitz Win: TBD")
     f.close()
 
 
@@ -52,7 +52,7 @@ def update_state_step(state: str, step: str):
 
 def write_new_game(seed: int):
     f = open("json_ai_files\current_seed.txt", "w")
-    f.write(f"New Run! GL\nSeed num: {seed}\nBlitz Win: TBD\nReturn spheres: none")
+    f.write(f"New Run! GL\nSeed num: {seed}\nReturn spheres: none\nBlitz Win: TBD")
     f.close()
 
 def write_custom_message(msg:str):

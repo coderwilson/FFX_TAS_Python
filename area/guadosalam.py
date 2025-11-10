@@ -100,11 +100,34 @@ def arrival():
     logger.debug("Ready for next movement.")
 
 
+def primer1():
+    while not pathing.set_movement([-80,-29]):
+        pass
+    while not pathing.set_movement([-153,60]):
+        pass
+    while memory.main.user_control():
+        pathing.set_movement([-168,85])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while not pathing.set_movement([-19,-6]):
+        pass
+    pathing.primer()
+    while not pathing.set_movement([-19,-6]):
+        pass
+    #while not pathing.set_movement([14,-27]):
+    #    pass
+    while memory.main.user_control():
+        pathing.set_movement([20,-35])
+    FFXC.set_neutral()
+    memory.main.await_control()
+
+
 def after_speech(checkpoint=0):
     memory.main.click_to_control()  # Skips through the long cutscene
     logger.debug("Starting movement.")
     logger.debug(f"Starting Checkpoint {checkpoint}")
     farplane_lulu = game_vars.story_mode()
+    get_primer = game_vars.platinum()
 
     if checkpoint == 0:
         memory.main.click_to_event_temple(4)
@@ -133,6 +156,9 @@ def after_speech(checkpoint=0):
                 else:
                     memory.main.click_to_event_temple(0)
                 checkpoint += 1
+            elif checkpoint == 31 and get_primer:
+                primer1()
+                get_primer = False
             elif checkpoint == 17:
                 if not game_vars.csr():
                     memory.main.click_to_event_temple(0, story_mode_dialog=True)

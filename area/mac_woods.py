@@ -53,6 +53,7 @@ def arrival(rikku_charged):
     battle_count = 0
     heal_array = []
     ml_heals = False
+    kimahri_charged = memory.main.overdrive_state()[3] == 100
     try:
         records = avina_memory.retrieve_memory()
         logger.debug(records.keys())
@@ -99,8 +100,8 @@ def arrival(rikku_charged):
                     pathing.set_movement([-141,225])
                     xbox.tap_b()
             elif checkpoint == 59:
-                logger.debug(f"Rikku Charge: {rikku_charged}")
-                if not rikku_charged:
+                logger.debug(f"Rikku Charge: {rikku_charged} | Kimahri: {kimahri_charged}")
+                if not rikku_charged or not kimahri_charged:
                     checkpoint -= 2
                 else:  # All good to proceed
                     checkpoint += 1
@@ -136,6 +137,7 @@ def arrival(rikku_charged):
                     )
                     return False
                 rikku_charged = memory.main.overdrive_state()[6] == 100
+                kimahri_charged = memory.main.overdrive_state()[3] == 100
                 memory.main.click_to_control()
                 logger.info(
                     "Rikku charged" if rikku_charged else "Rikku is not charged."
@@ -190,6 +192,10 @@ def lake_road():
     menu.m_woods()  # Selling and buying, item sorting, etc
     memory.main.click_to_control()
     memory.main.update_formation(Tidus, Kimahri, Yuna)
+    if game_vars.platinum():
+        while not pathing.set_movement([120, -43]):
+            pass
+        pathing.primer()
     while not pathing.set_movement([101, -72]):
         pass
 
@@ -366,8 +372,12 @@ def lake():
     logger.debug(memory.main.affection_array())
 
     checkpoint = 0
+    get_primer = game_vars.platinum()
     while memory.main.get_encounter_id() != 194:
         if memory.main.user_control():
+            if checkpoint == 2 and get_primer:
+                pathing.primer()
+                get_primer = False
             if pathing.set_movement(MacalaniaLake.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")

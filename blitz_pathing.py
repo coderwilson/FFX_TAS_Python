@@ -39,7 +39,6 @@ def set_movement(target) -> bool:
 
     FFXC.set_movement(Lx, Ly)
 
-    if abs(player[1] - target[1]) < 3 and abs(player[0] - target[0]) < 3:
+    if abs(player[1] - target[1]) < 10 and abs(player[0] - target[0]) < 10:
         return True  # Checkpoint reached
-    else:
-        return False
+    return False

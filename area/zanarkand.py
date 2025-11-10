@@ -254,7 +254,7 @@ def dome_interior():
     re_equip_ne = False
     logger.info("Start of Zanarkand Dome section")
     friend_slot = memory.main.get_item_slot(97)
-    if game_vars.story_mode():
+    if game_vars.story_mode() or game_vars.end_game_version() == 4:
         yuna_levels_needed = 8
     else:
         yuna_levels_needed = 6
@@ -629,7 +629,7 @@ def confirm_zombie() -> int:
 def post_yunalesca(checkpoint=0):
     logger.info("Heading back outside.")
     FFXC.set_neutral()
-    if game_vars.nemesis():
+    if game_vars.nemesis() or game_vars.platinum():
         menu.equip_weapon(character=0, ability=0x807A, full_menu_close=True)
 
         # Grab sun sigil

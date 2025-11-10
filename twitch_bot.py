@@ -1,7 +1,9 @@
 from twitchio.ext import commands
 import subprocess
 import random
+import sys
 import os
+import asyncio
 import json
 import time
 
@@ -15,6 +17,8 @@ import pygetwindow as gw
 import ctypes
 from json_ai_files.write_seed import write_big_text
 from json_ai_files.write_seed_results import check_ml_heals
+from types import SimpleNamespace
+from obswebsocket import obsws, requests
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +47,23 @@ def terminate_marbles_processes():
         try:
             process_name = process.info["name"]
             if "marbles" in process_name.lower():
+                process.terminate()  # Request termination
+                terminated.append(process.info["pid"])
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue  # Process might have ended or can't be accessed
+    
+    if terminated:
+        print(f"Terminated processes: {terminated}")
+    else:
+        print("No processes with 'marbles' in their names found.")
+
+def terminate_ff_processes():
+    """Identify and terminate processes with 'marbles' in their names (case-insensitive)."""
+    terminated = []
+    for process in psutil.process_iter(attrs=["pid", "name"]):
+        try:
+            process_name = process.info["name"]
+            if "ffx" in process_name.lower():
                 process.terminate()  # Request termination
                 terminated.append(process.info["pid"])
         except (psutil.NoSuchProcess, psutil.AccessDenied):
@@ -110,13 +131,19 @@ def decide_seed(ctx):
         print(f"=== Seed random: {CHOSEN_SEED_NUM} ===")
         return
 
-def set_language(story=False):
+def set_language(story=False, force:str='none'):
     global CHOSEN_SEED_NUM
     print(f"Checking ML heals for seed {CHOSEN_SEED_NUM}")
     modifier, avina_heals = check_ml_heals(seed_num=CHOSEN_SEED_NUM)
     print(f"Running ")
 
-    if story:
+    if force.lower() == 'english':
+        desired_str = "Language=en"
+        search_str = "Language=ch"
+    elif force.lower() == 'chinese':
+        desired_str = "Language=ch"
+        search_str = "Language=en"
+    elif story:
         desired_str = "Language=en"
         search_str = "Language=ch"
     elif avina_heals:
@@ -163,6 +190,9 @@ def update_timer_category(category:str="csr_speedrun"):
     closetag=' </RecentSplits>'
     oldtext=contents[contents.find(opentag)+16:contents.find(closetag)]
 
+    if category=="platinum":
+        file_name='Final Fantasy X - PC - Platinum.lss'
+        category_name = 'PC Platinum%'
     if category=="nemesis":
         file_name='Final Fantasy X - PC - Nemesis.lss'
         category_name = 'PC Nemesis%'
@@ -213,17 +243,144 @@ class Bot(commands.Bot):
         self.game = None
         self.timer = None
         self.marbles = None
+        
+        # Start connection monitor
+        self.connection_check_task = None
+
+    async def event_disconnect(self):
+        """Called when the bot loses connection to Twitch chat."""
+        print("[WARN] Lost connection to Twitch chat.")
+        print("[INFO] Attempting to reconnect in 30 seconds...")
+
+        # Wait 30 seconds before trying to reconnect
+        await asyncio.sleep(30)
+
+        # Try reconnecting safely
+        try:
+            await self.connect()
+            print("[INFO] Reconnected to Twitch chat successfully.")
+        except Exception as e:
+            print(f"[ERROR] Reconnection failed: {e}")
+            # Optional: schedule another retry after a delay
+            asyncio.create_task(self._delayed_reconnect())
+    
+    async def _delayed_reconnect(self):
+        """Retry reconnecting if the first attempt failed."""
+        await asyncio.sleep(60)
+        try:
+            await self.connect()
+            print("[INFO] Reconnected after retry.")
+        except Exception as e:
+            print(f"[ERROR] Second reconnection attempt failed: {e}")
+
+    # async def _monitor_connection(self):
+    #     """Background task that ensures the bot stays connected."""
+    #     while True:
+    #         await asyncio.sleep(900)  # 15 minutes
+    #         try:
+    #             if not self._ws or not self._ws.open:
+    #                 print("[WARN] Lost connection to Twitch chat. Attempting reconnect...")
+    #                 await self._reconnect_safely()
+    #             else:
+    #                 print("[INFO] Connection healthy.")
+    #         except Exception as e:
+    #             print(f"[ERROR] Connection check failed: {e}")
+
+    # async def _reconnect_safely(self):
+    #     """Try to reconnect without affecting other running tasks."""
+    #     try:
+    #         await self.close()  # close existing connection
+    #         await asyncio.sleep(5)
+    #         await self.connect()  # reconnect to Twitch
+    #         print("[INFO] Reconnected to Twitch chat successfully.")
+    #     except Exception as e:
+    #         print(f"[ERROR] Reconnection attempt failed: {e}")
+    
+    async def shutdown_obs(self):
+        """Gracefully stop OBS system."""
+        try:
+            ws = obsws("localhost", 4455, "G7v9Xp2rLwB4qZ8M")
+            ws.connect()
+            print("Connected to OBS via WebSocket.")
+
+            # Stop streaming if active
+            try:
+                ws.call(requests.StopStream())
+                print("Stopped streaming.")
+            except Exception:
+                print("Streaming was not active or already stopped.")
+
+            # Give OBS a moment to wrap up
+            await asyncio.sleep(6)
+
+            # Tell OBS to quit gracefully, once every 20 seconds, until closed.
+            counter = 0
+            while any(p.name() == "obs64.exe" for p in psutil.process_iter()):
+                await asyncio.sleep(1)
+                if counter % 20 == 0:
+                    print("Mark 1")
+                    stream_status = ws.call(requests.GetStreamStatus())
+                    print(stream_status.getOutputActive())
+                    print("Mark 2")
+                    if stream_status.getOutputActive():
+                        print("Mark 3")
+                        print("OBS is streaming, stopping now...")
+                        ws.call(requests.StopStream())
+                    elif counter < 600:
+                        print("Mark 4")
+                        # print(stream_status)
+                        # print(f"{stream_status.getStreaming()} | {record_status.getIsRecording()}")
+                        print("Sending quit command.")
+                        try:
+                            from pywinauto import Application
+                            app = Application(backend="uia").connect(path="obs64.exe")
+                            window = app.top_window()
+                            window.close()  # Sends WM_CLOSE
+                            print("Sent close window command to OBS.")
+                        except Exception as e:
+                            print(f"Could not send close command: {e}")
+
+
+                        # ws.call(requests.Quit(force=False))
+                        # ws.call(requests.TriggerHotkeyByName("Quit OBS"))
+                        # try:
+                        #     for p in psutil.process_iter():
+                        #         if p.name() == "obs64.exe":
+                        #             print("Terminating OBS process...")
+                        #             p.terminate()  # sends graceful SIGTERM
+                        #             try:
+                        #                 p.wait(timeout=30)  # wait up to 30 seconds for it to close
+                        #                 print("Terminated gracefully.")
+                        #             except:
+                        #                 print("Terminate command completed WITH ERRORS")
+                        # except:
+                        #     pass
+
+                        time.sleep(3)
+                    else:
+                        print("Mark 5")
+                        # print("OBS did not terminate after 200 seconds. Force killing...")
+                        # for p in psutil.process_iter():
+                        #     if p.name() == "obs64.exe":
+                        #         p.terminate()
+                        pass
+                counter += 1
+                print(f"OBS Close counter: {counter}")
+            print("OBS closed.")
+            await asyncio.sleep(3)
+
+            ws.disconnect()
+
+        except Exception as e:
+            print(f"Error shutting down OBS: {e}")
+            
+    @commands.command(name="obs_test")
+    async def obs_test(self, ctx: commands.Context):
+        await self.shutdown_obs()
     
     def is_valid_user(self, ctx: commands.Context):
-        if self.game_ended_check():
-            print("Game has ended. Adjusting.")
-            self.kill(ctx)
-            time.sleep(5)
         if ctx.author.is_mod or ctx.author.name in self.allowed_users:
             print("Identified mod or elevated user. Valid User function returning True.")
-            return True
-        elif self.process == None and self.marbles == None:
-            print("No processes running. Valid User function returning True.")
             return True
         else:
             print("Regular user. Valid User function returning False.")
@@ -231,12 +388,36 @@ class Bot(commands.Bot):
                 f"Sorry {ctx.author.name}, you don't have permissions to execute this. Please wait for the run to finish or ask for mod status."
             )
             return False
+        
 
+    @commands.command(name="reboot")
+    async def reboot(self, ctx: commands.Context):
+        """Performs a full system reboot (Windows only)."""
+        # Ensure only allowed users can execute
+        if not self.is_valid_user(ctx):
+            await ctx.send(f"Sorry {ctx.author.name}, you’re not authorized to reboot the system.")
+            return
+
+        await self.kill(ctx)
+
+        await ctx.send("Stopping stream and rebooting the system... 💻")
+
+        await self.shutdown_obs()
+        
+        # Reboot the system
+        import os
+        print("Rebooting system...")
+        os.system("shutdown /r /t 0")
+        
     async def event_ready(self):
+        # if not self.connection_check_task:
+        #     self.connection_check_task = asyncio.create_task(self._monitor_connection())
         # Notify when we are logged in and ready to use commands
         print(f"Logged in as {self.nick}")
         print(f"User id is {self.user_id}")
         print("Ready for commands")
+        for channel in self.connected_channels:
+            await channel.send(f"aVIna is now online! Ready for commands.")
         
     # Timer, cancel last split
     @commands.command(aliases=("undo","timer_undo"))
@@ -258,6 +439,64 @@ class Bot(commands.Bot):
             await ctx.send("Permissions error - must be a mod.")
             pass
 
+    @commands.command(aliases=("continue"))
+    async def resume(self, ctx: commands.Context):
+        global CHOSEN_SEED_NUM
+        if CHOSEN_SEED_NUM == 999:
+            CHOSEN_SEED_NUM = str(random.choice(range(256)))
+        set_language(force='english')
+        await self.start_csr(ctx)
+        time.sleep(1)
+        await self.start_game(ctx)
+        time.sleep(2)
+        focus_obs()
+        
+        arg_array = []
+        print(ctx.message.content)
+        time.sleep(2)
+        # arg_array.append("-state")
+        # arg_array.append("Nem_Farm")
+        # arg_array.append("-step")
+        # arg_array.append("1")
+        # arg_array.append("-platinum")
+        # arg_array.append("True")
+
+        arg_array.append("-state")
+        arg_array.append("Nem_Farm")
+        arg_array.append("-step")
+        arg_array.append("99")
+        arg_array.append("-platinum")
+        arg_array.append("True")
+
+        # arg_array.append("-state")
+        # arg_array.append("Nem_Farm")
+        # arg_array.append("-step")
+        # arg_array.append("99")
+        # arg_array.append("-nemesis")
+        # arg_array.append("True")
+
+        # arg_array.append("-state")
+        # arg_array.append("Nem_Farm")
+        # arg_array.append("-step")
+        # arg_array.append("9")
+        # arg_array.append("-platinum")
+        # arg_array.append("True")
+
+        arg_array.append("-seed")
+        arg_array.append("0")
+        
+        print(arg_array)
+        time.sleep(2)
+        if self.process is None and self.marbles is None:
+            print(["python", SCRIPT_PATH] + arg_array)
+            self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
+            #await ctx.send("FFX TAS started.")
+            print("aVIna FFX TAS started.")
+        else:
+            #await ctx.send("FFX TAS is already running.")
+            print("aVIna FFX TAS is already running.")
+        return self.process
+    
     # Define the start command
     @commands.command(aliases=("begin", "launch"))
     async def start(self, ctx: commands.Context):
@@ -268,6 +507,7 @@ class Bot(commands.Bot):
         print(ctx.message.content)
         time.sleep(2)
         args = ctx.message.content.split()
+
         for i in range(len(args)):
             try:
                 if args[i].lower() in ["state","stage"]:
@@ -288,8 +528,11 @@ class Bot(commands.Bot):
                 elif args[i].lower() == "story":
                     arg_array.append("-story")
                     arg_array.append("True")
-                if "nem" in args.lower() or "nemesis" in args.lower():
+                elif args[i].lower() == "nem":
                     arg_array.append("-nemesis")
+                    arg_array.append("True")
+                elif args[i].lower() == "plat":
+                    arg_array.append("-platinum")
                     arg_array.append("True")
             except Exception:
                 #await ctx.send(
@@ -344,7 +587,6 @@ class Bot(commands.Bot):
     # Define the exit command
     @commands.command(aliases=("stop", "quit", "terminate"))
     async def exit(self, ctx: commands.Context):
-        #if self.is_valid_user(ctx):
         if self.process is not None:
             self.process.terminate()
             self.process.wait()
@@ -364,8 +606,10 @@ class Bot(commands.Bot):
         if "classic" in ctx.message.content:
             logger.info("CSR undesirable for classic mode.")
             return
+        # if "plat" in ctx.message.content:
+        #     logger.info("CSR undesirable for Platinum runs.")
+        #     return
         arg_array = []
-        #if self.is_valid_user(ctx):
         if self.csr is None and self.marbles is None:
             print(CSR_PATH)
             arg_array.append("--csr=true")
@@ -379,7 +623,6 @@ class Bot(commands.Bot):
     # Define the stop-CSR command
     @commands.command(aliases=("csr_stop", "csr_halt"))
     async def stop_csr(self, ctx: commands.Context):
-        #if self.is_valid_user(ctx):
         if self.csr is not None:
             self.csr.terminate()
             self.csr.wait()
@@ -392,7 +635,6 @@ class Bot(commands.Bot):
     # Launch FFX
     @commands.command(aliases=("game_start", "launch_game"))
     async def start_game(self, ctx: commands.Context):
-        #if self.is_valid_user(ctx):
         if self.game is None and self.marbles is None:
             cwd = os.getcwd()
             print(cwd)
@@ -412,11 +654,11 @@ class Bot(commands.Bot):
     @commands.command(aliases=("game_stop", "halt_game"))
     async def stop_game(self, ctx: commands.Context):
         write_big_text("")
-        #if self.is_valid_user(ctx):
         if self.game is not None:
             self.game.terminate()
             self.game.wait()
             self.game = None
+            terminate_ff_processes()
             #await ctx.send("FFX stopped.")
             print("FFX stopped.")
         else:
@@ -447,9 +689,10 @@ class Bot(commands.Bot):
             csr_val = False
         else:
             csr_val = True
-        #if self.is_valid_user(ctx):
         if self.timer is None and self.marbles is None:
-            if "nem" in ctx.message.content.lower():
+            if "plat" in ctx.message.content.lower():
+                cat = "platinum"
+            elif "nem" in ctx.message.content.lower():
                 cat = "nemesis"
             elif "story" in ctx.message.content.lower():
                 cat = "story"
@@ -490,8 +733,6 @@ class Bot(commands.Bot):
         print("Save successful.")
         time.sleep(0.5)
         print("Killing process.")
-
-        #if self.is_valid_user(ctx):
         if self.timer is not None:
             self.timer.terminate()
             self.timer.wait()
@@ -516,26 +757,34 @@ class Bot(commands.Bot):
     @commands.command(aliases=("begin_all", "all"))
     async def start_all(self, ctx: commands.Context):
         await self.marbles_end(ctx)
-        #if self.is_valid_user(ctx):
-        await ctx.send("Launching all elements!")
         decide_seed(ctx)
+
+        global CHOSEN_SEED_NUM
+        if CHOSEN_SEED_NUM == 67:
+            await ctx.send("Esserr, stop attempting seed 67. Pick something else.")
+        else:
         
-        if "story" in ctx.message.content:
-            set_language(story=True)
-        else:
-            set_language()
-        await self.start_game(ctx)
-        time.sleep(3)
-        await self.start_csr(ctx)
-        time.sleep(1)
-        if "state" in ctx.message.content.lower():
-            #await ctx.send("Timer undesirable when loading a save.")
-            pass
-        else:
-            await self.start_timer(ctx)
-        time.sleep(3)
-        focus_obs()
-        await self.start(ctx)
+            await ctx.send("Launching all elements!")
+            if "story" in ctx.message.content:
+                set_language(story=True)
+            elif "chinese" in ctx.message.content:
+                set_language(force='chinese')
+            elif "english" in ctx.message.content:
+                set_language(force='english')
+            else:
+                set_language()
+            await self.start_game(ctx)
+            time.sleep(3)
+            await self.start_csr(ctx)
+            time.sleep(1)
+            if "state" in ctx.message.content.lower():
+                #await ctx.send("Timer undesirable when loading a save.")
+                pass
+            else:
+                await self.start_timer(ctx)
+            time.sleep(3)
+            focus_obs()
+            await self.start(ctx)
     
     # Kill All
     @commands.command(aliases=("kill_all","halt_all","stop_all"))

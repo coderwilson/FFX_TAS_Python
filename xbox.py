@@ -736,12 +736,15 @@ def navigate_to_character(cur_character):
 
 def name_aeon(character=""):
     logger.info("Waiting for aeon naming screen")
-
+    logger.debug("name_aeon mark 1")
     while not memory.main.name_aeon_ready():
         if memory.main.menu_open():
             tap_confirm()
         elif memory.main.diag_skip_possible() and not game_vars.story_mode():
             tap_confirm()
+        elif memory.main.user_control():
+            return
+    logger.debug("name_aeon mark 2")
     if character:
         with open("character_names.json") as fp:
             custom_name = json.load(fp)[character]
@@ -754,12 +757,20 @@ def name_aeon(character=""):
             for cur_character in custom_name:
                 navigate_to_character(cur_character)
                 menu_b()
-
+    logger.debug("name_aeon mark 3")
     if memory.main.get_map() != 382:  # Ignore for airship password entry 
         while memory.main.equip_sell_row() != 1:
             tap_start()
         logger.info("Naming screen is up.")
+        # if memory.main.get_story_progress() == 3:
+        #     memory.main.wait_frames(3)  # This should buffer Tidus's name.
+        #     tap_up()
         while memory.main.equip_sell_row() != 0:
             tap_up()
+            if memory.main.user_control() and memory.main.get_story_progress() != 3:
+                return
+        logger.debug("name_aeon mark 4")
         while memory.main.name_confirm_open():
             tap_b()
+            if memory.main.user_control():
+                return

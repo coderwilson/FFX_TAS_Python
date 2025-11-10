@@ -46,6 +46,7 @@ class AllVars:
 
         # === Other vars from user ===
         self.nemesis_value = config_vars.get("nemesis_value", False)
+        self.platinum_percent_value = False
         self.force_loop = config_vars.get("force_loop", False)
         self.legacy_soundtrack = config_vars.get("original_soundtrack", True)
         self.generate_saves = config_vars.get("generate_saves", False)
@@ -113,6 +114,8 @@ class AllVars:
         # Nemesis route, determines Tidus level-up progress. Starts at 1
         self.nem_ap_val = 1
         self.yojimbo_index = 1  # Used in arena battles to track Zanmato progress.
+        self.yojimbo_unlocked_val = False
+        self.platinum_percent_value = False
 
         # ----Nemesis Arena variables, sets to 1 after a boss is killed.
         # ----Note, 0/1 are preferable to True/False for viewing in the console.
@@ -286,6 +289,12 @@ class AllVars:
 
     def yojimbo_increment_index(self):
         self.yojimbo_index += 1
+    
+    def yojimbo_unlocked(self):
+        return self.yojimbo_unlocked_val
+    
+    def set_yojimbo_unlocked(self):
+        self.yojimbo_unlocked_val = True
 
     def nemesis(self):
         return self.nemesis_value
@@ -293,6 +302,12 @@ class AllVars:
     def nemesis_set(self, value):
         self.nemesis_value = value
         #self.generate_saves = True
+        
+    def platinum(self):
+        return self.platinum_percent_value
+        
+    def platinum_set(self, value):
+        self.platinum_percent_value = value
 
     def get_nea_zone(self):
         return self.nea_zone

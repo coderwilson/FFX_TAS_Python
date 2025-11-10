@@ -78,7 +78,7 @@ class MacalaniaWoods(AreaMovementBase):
 
 class MacalaniaLake(AreaMovementBase):
     checkpoint_coordiantes = {
-        0: [50, -51],
+        0: [148, 14],
         1: [-13, -99],
         2: [-32, -143],
         3: [-43, -195],

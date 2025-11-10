@@ -74,6 +74,64 @@ def recover_low_gil():
         xbox.menu_b()
     
 
+def primer1():
+    # Primer in locker room B.
+    while not pathing.set_movement([-269, 67]):
+        pass
+    while not pathing.set_movement([-182, 69]):
+        pass
+    while memory.main.get_map() == 123:
+        pathing.set_movement([-100, 69])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    pathing.primer()
+    while memory.main.get_map() != 123:
+        pathing.set_movement([-1, -250])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while not pathing.set_movement([-269, 67]):
+        pass
+
+
+def primer2():
+    # Primer in the theater area
+    while not pathing.set_movement([54, 18]):
+        pass
+    while not pathing.set_movement([0, 60]):
+        pass
+    while memory.main.get_map() == 77:
+        pathing.set_movement([-1, 250])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while memory.main.get_map() == 157:
+        pathing.set_movement([-270, -230])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while memory.main.get_map() == 170:
+        pathing.set_movement([130, 0])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    pathing.primer()
+    FFXC.set_movement(0,-1)
+    memory.main.await_event()
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while not pathing.set_movement([-21, 18]):
+        pass
+    while memory.main.get_map() == 170:
+        pathing.set_movement([-120, 18])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while memory.main.get_map() == 157:
+        pathing.set_movement([-450, -470])
+    FFXC.set_neutral()
+    memory.main.await_control()
+    while not pathing.set_movement([0, 60]):
+        pass
+    while not pathing.set_movement([54, 18]):
+        pass
+
+
 def arrival():
     if not game_vars.csr():
         xbox.skip_stored_scene(2)
@@ -83,6 +141,8 @@ def arrival():
     early_haste = 0
     oaka_buy = False
     checkpoint = 0
+    get_primer = game_vars.platinum()
+    get_primer2 = game_vars.platinum()
     while checkpoint < 56:
         if memory.main.user_control():
             # Map changes
@@ -126,6 +186,9 @@ def arrival():
                 logger.debug("Event: Upside down T section")
                 memory.main.click_to_event_temple(4)
                 checkpoint += 1
+            elif checkpoint == 13 and get_primer2:
+                primer2()
+                get_primer2 = False
             elif checkpoint == 23:  # Into the bar
                 logger.debug("Event: Into the bar looking for Auron")
                 FFXC.set_movement(0, 1)
@@ -136,6 +199,9 @@ def arrival():
                 logger.debug("Event: Back to Blitz dome entrance")
                 memory.main.click_to_event_temple(6)
                 checkpoint += 1
+            elif checkpoint == 35 and get_primer:
+                primer1()
+                get_primer = False
             elif checkpoint == 36:  # To the docks
                 logger.debug("Event: Towards the docks")
                 FFXC.set_movement(0, 1)

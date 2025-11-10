@@ -25,10 +25,13 @@ from players import (
     Valefor,
     Wakka,
     Yuna,
+    Yojimbo
 )
 from players.rikku import omnis_items
 from area.dream_zan import split_timer
 from json_ai_files.write_seed import write_big_text
+from gamestate import game
+import memory.unlocks
 
 game_vars = vars.vars_handle()
 
@@ -165,7 +168,7 @@ def use_skill(position: int = 0, target: int = 20):
     _navigate_to_position(position)
     while memory.main.other_battle_menu():
         xbox.tap_b()
-    if target != 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
+    if target >= 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
         direction = "l"
         while memory.main.battle_target_id() != target:
             if direction == "l":
@@ -178,6 +181,7 @@ def use_skill(position: int = 0, target: int = 20):
                 if memory.main.battle_target_id() < 20:
                     xbox.tap_up()
                     direction = "l"
+    xbox.tap_confirm()
     tap_targeting()
 
 
@@ -212,6 +216,7 @@ def use_special(position, target: int = 20, direction: int = "u"):
                     if memory.main.battle_target_id() < 20:
                         xbox.tap_down()
                         direction = "r"
+    xbox.tap_confirm()
     tap_targeting()
 
 
@@ -906,7 +911,7 @@ def after_blitz_3(early_haste):
     logger.debug(f"Early haste: {early_haste}")
     # Wakka dark attack, or Auron power break
     wakka_dark = False
-    if game_vars.story_mode():
+    if game_vars.story_mode() or game_vars.platinum():
         wakka_dark = True
     screen.await_turn()
     tidus_turn = 0
@@ -1082,12 +1087,14 @@ def miihen_road(self_destruct=False):
     if game_vars.story_mode() and not game_vars.self_destruct_get():
         # Need to track all encounters where we can learn self destruct.
         if enc_id in [51,87]:
-            lancet_swap(target_id=20)
+            lancet_swap()
             if memory.main.game_over():
                 return False
             game_vars.self_destruct_learned()  # Can't forget this.
         elif enc_id in [64,65,66,84] and memory.main.battle_type() != 2:
             lancet_swap(target_id=21)
+            if memory.main.game_over():
+                return False
             game_vars.self_destruct_learned()  # Can't forget this.
 
         # Once done learning, we should just leave.
@@ -1576,7 +1583,7 @@ def mrr_manip_old(kim_max_advance: int = 6):
 
 
 @battle.utils.speedup_decorator
-def djose(stone_breath, battle_count=0):
+def djose(battle_count=0):
     # AI logic - it remembers!!! Skynet and all that stuff.
     heal_array = []
     try:
@@ -1600,19 +1607,17 @@ def djose(stone_breath, battle_count=0):
     logger.info(f"Fight start: Djose road {encounter_id}")
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
-            if stone_breath == 1:  # Stone Breath already learned
+            if Kimahri.is_overdrive_learned("stone breath"):  # Stone Breath already learned
                 logger.debug("Djose: Stone breath already learned.")
                 flee_all()
             else:  # Stone breath not yet learned
                 if encounter_id in [128,134,136]:
                     logger.info("Djose: Learning Stone Breath.")
                     lancet_swap("none")
-                    stone_breath = 1
                 elif encounter_id == 127:
                     logger.info("Djose: Learning Stone Breath")
                     # One basilisk with two wasps
                     lancet_swap("up")
-                    stone_breath = 1
                     break
                 else:
                     logger.info("Djose: Cannot learn Stone Breath here.")
@@ -1644,7 +1649,6 @@ def djose(stone_breath, battle_count=0):
     else:
         logger.debug("Djose: No need to heal.")
     memory.main.update_formation(Tidus, Wakka, Auron)
-    return stone_breath
 
 
 @battle.utils.speedup_decorator
@@ -1887,7 +1891,9 @@ def m_woods():
             if memory.main.get_use_items_slot(32) == 255:
                 need_fish_scale = True
             rikku_charged = Rikku.has_overdrive()
+            kimahri_charged = Kimahri.has_overdrive()
             logging.info(f"Rikku charge state: {rikku_charged}")
+            logging.info(f"Kimahri charge state: {kimahri_charged}")
             if not rikku_charged:
                 if (
                     need_arctic_wind
@@ -1932,6 +1938,10 @@ def m_woods():
                         CurrentPlayer().defend()
                 elif not Rikku.active():
                     buddy_swap(Rikku)
+                elif Kimahri.is_turn() and not Kimahri.has_overdrive():
+                    Kimahri.defend()
+                elif not Kimahri.active() and not kimahri_charged:
+                    buddy_swap(Kimahri)
                 else:
                     escape_one()
             elif memory.main.next_steal_rare(pre_advance=2):
@@ -2574,17 +2584,19 @@ def escape_with_xp():
                         rikku_item = True
                     else:
                         CurrentPlayer().defend()
+                elif Yuna.is_turn():
+                    Yuna.defend()
                 else:
                     Tidus_slot = memory.main.get_battle_char_slot(0)
                     Rikku_slot = memory.main.get_battle_char_slot(6)
                     Yuna_slot = memory.main.get_battle_char_slot(3)
                     if Rikku_slot == 255:
                         flee_all()
-                    elif Tidus_slot >= 3 and Tidus_slot != 255:
+                    elif Tidus_slot != 255 and not Tidus.active():
                         buddy_swap(Tidus)
-                    elif Rikku_slot >= 3:
+                    elif Rikku_slot != 255 and not Rikku.active():
                         buddy_swap(Rikku)
-                    elif Yuna_slot >= 3 and Yuna_slot != 255:
+                    elif Yuna_slot != 255 and not Yuna.active():
                         buddy_swap(Yuna)
                     else:
                         CurrentPlayer().defend()
@@ -2715,9 +2727,10 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     
     # If we haven't gotten Rikku yet, we don't want to steal AND throw.
     # That messes with Wakka's logic, so it's not worth.
-    if memory.main.get_story_progress() < 1720 and not item_stolen:
-        throw_power=False
-        throw_speed=False
+    if memory.main.get_story_progress() < 1720:
+        logger.info("Too early, don't do special stuff until Rikku is in party.")
+        flee_all()
+        return
     
     # Flee from these battles
     flee_battle = [201,203,205,210,212,215]
@@ -2734,15 +2747,17 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
     xbox.click_to_battle()
         
     # Set charges
-    logger.debug(Rikku.overdrive_percent(combat=False))
-    charge_rikku = Rikku.overdrive_percent() != 100 and memory.main.get_story_progress() >= 1720
-    logger.debug(Kimahri.overdrive_percent(combat=False))
-    charge_kimahri = Kimahri.overdrive_percent() != 100 and game_vars.story_mode()
-    logger.debug(Auron.overdrive_percent(combat=False))
-    charge_auron = Auron.overdrive_percent() != 100 and not sandy_fight_complete
+    logger.debug(f"Rikku: {Rikku.overdrive_percent(combat=False)}")
+    charge_rikku = Rikku.overdrive_percent() != 100
+    logger.debug(f"Kimahri: {Kimahri.overdrive_percent(combat=False)}")
+    charge_kimahri = Kimahri.overdrive_percent() != 100 and (
+        game_vars.story_mode() or
+        game_vars.platinum()
+    )
+
+    logger.debug(f"Auron: {Auron.overdrive_percent(combat=False)} ({sandy_fight_complete})")
+    charge_auron = Auron.overdrive_percent(combat=False) != 100 and not sandy_fight_complete
     # If sandy fight complete, we do not need to recharge Auron.
-    if charge_kimahri and charge_rikku:
-        charge_auron = False
 
 
     if charge_auron or charge_kimahri or charge_rikku:
@@ -2851,7 +2866,8 @@ def bikanel_battle_logic(status, sandy_fight_complete: bool = False):
             else:
                 escape_one()
                 logger.manip(plan)
-    wrap_up()
+    if not memory.main.game_over():
+        wrap_up()
 
 @battle.utils.speedup_decorator
 def bikanel_battle_logic_old(status, sandy_fight_complete: bool = False):
@@ -3126,7 +3142,7 @@ def home_1():
     use_lancet = (
         Kimahri.overdrive_percent() != 100 and 
         not game_vars.story_mode() and 
-        not game_vars.get_blitz_win()
+        (game_vars.platinum() or not game_vars.get_blitz_win())
     )
     
     od_learns = 2
@@ -3494,97 +3510,41 @@ def guards(group_num, sleeping_powders):
                     else:
                         CurrentPlayer().defend()
         guards_report_items()
-    # else:  # We do not have sleeping powders
-    #     while memory.main.battle_active():
-    #         if memory.main.turn_ready():
-    #             guards_report_items()
-    #             target, distiller_targets = distiller_target(distiller_count)
-    #             if distiller_targets < distiller_count:
-    #                 distiller_count = distiller_targets
-    #             if group_num in [1, 3]:
-    #                 if Tidus.is_turn():
-    #                     CurrentPlayer().attack()
-    #                 elif distiller_count >= 1:
-    #                     if memory.main.get_item_slot(18) != 255:
-    #                         _use_healing_item(num=target,item_id=18)
-    #                     elif memory.main.get_item_slot(16) != 255:
-    #                         _use_healing_item(num=target,item_id=16)
-    #                     else:
-    #                         _use_healing_item(num=target,item_id=17)
-    #                     distiller_count -= 1
-    #                 elif (
-    #                     Rikku.active() and Rikku.in_danger(121) and not Rikku.is_dead()
-    #                 ):
-    #                     if memory.main.get_item_slot(0) != 255:
-    #                         use_potion_character(6, "r")
-    #                     elif memory.main.get_item_slot(1) != 255:
-    #                         _use_healing_item(num=6, direction="r", item_id=1)
-    #                     else:
-    #                         CurrentPlayer().defend()
-    #                 else:
-    #                     CurrentPlayer().defend()
-    #             elif group_num in [2, 4]:
-    #                 if Tidus.is_turn():
-    #                     if not tidus_went:
-    #                         buddy_swap(Kimahri)
-    #                         tidus_went = True
-    #                     else:
-    #                         CurrentPlayer().attack()
-    #                 elif Kimahri.is_turn() or Rikku.is_turn():
-    #                     silence_slot = memory.main.get_item_slot(39)
-    #                     if memory.main.get_use_items_slot(40) != 255:
-    #                         use_item(memory.main.get_use_items_slot(40))
-    #                     elif (
-    #                         silence_slot != 255
-    #                         and memory.main.get_item_count_slot(silence_slot) >= 2
-    #                     ):
-    #                         # Save one for later if possible
-    #                         use_item(memory.main.get_use_items_slot(39))
-    #                     elif memory.main.get_use_items_slot(37) != 255:
-    #                         use_item(memory.main.get_use_items_slot(37))
-    #                     elif memory.main.get_use_items_slot(27) != 255:
-    #                         use_item(memory.main.get_use_items_slot(27))
-    #                     elif memory.main.get_use_items_slot(39) != 255:
-    #                         use_item(memory.main.get_use_items_slot(39))
-    #                     else:
-    #                         CurrentPlayer().defend()
-    #                 else:
-    #                     CurrentPlayer().defend()
-    #             elif group_num == 5:
-    #                 if Tidus.is_turn():
-    #                     if not tidus_went:
-    #                         buddy_swap(Rikku)
-    #                         tidus_went = True
-    #                     else:
-    #                         CurrentPlayer().attack(target_id=22, direction_hint="l")
-    #                 elif Rikku.is_turn() or Kimahri.is_turn():
-    #                     silence_slot = memory.main.get_item_slot(39)
-    #                     if num_throws < 2:
-    #                         if memory.main.get_use_items_slot(40) != 255:
-    #                             use_item(memory.main.get_use_items_slot(40))
-    #                         # elif (
-    #                         #     silence_slot != 255
-    #                         #     and memory.main.get_item_count_slot(silence_slot) > 1
-    #                         # ):
-    #                         #     # Save one for later if possible
-    #                         #     use_item(memory.main.get_use_items_slot(39))
-    #                         elif memory.main.get_use_items_slot(37) != 255:
-    #                             use_item(memory.main.get_use_items_slot(37))
-    #                         elif memory.main.get_use_items_slot(39) != 255:
-    #                             use_item(memory.main.get_use_items_slot(39))
-    #                         else:
-    #                             CurrentPlayer().defend()
-    #                     else:
-    #                         CurrentPlayer().defend()
-    #                     num_throws += 1
-    #                 elif Kimahri.is_turn():
-    #                     buddy_swap(Tidus)
-    #                 else:
-    #                     CurrentPlayer().defend()
-    #         guards_report_items()
     logger.debug("Guards battle complete.")
     wrap_up()
 
+def kottos_fight():
+    distiller_thrown = False
+    
+    power = memory.main.get_item_count_slot(memory.main.get_item_slot(16))
+    mana = memory.main.get_item_count_slot(memory.main.get_item_slot(17))
+    speed = memory.main.get_item_count_slot(memory.main.get_item_slot(18))
+    ability = memory.main.get_item_count_slot(memory.main.get_item_slot(19))
+
+    power_count = memory.main.get_item_count_slot(memory.main.get_item_slot(70))
+    mana_count = memory.main.get_item_count_slot(memory.main.get_item_slot(71))
+    speed_count = memory.main.get_item_count_slot(memory.main.get_item_slot(72))
+    ability_count = memory.main.get_item_count_slot(memory.main.get_item_slot(73))
+
+    xbox.click_to_battle()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if not distiller_thrown:
+                if power_count < 80 and power >= 1:
+                    use_item_new(16)
+                    distiller_thrown = True
+                elif mana_count < 80 and mana >= 1:
+                    use_item_new(17)
+                    distiller_thrown = True
+                elif speed_count < 80 and speed >= 1:
+                    use_item_new(18)
+                    distiller_thrown = True
+                elif ability_count < 80 and ability >= 1:
+                    use_item_new(19)
+                    distiller_thrown = True
+            else:
+                CurrentPlayer().attack()
+    wrap_up()
 
 def altana_heal():
     direction = "d"
@@ -3842,11 +3802,11 @@ def gagazet_cave(direction):
     attack(direction)
     flee_all()
 
-
-def use_item(slot: int, direction="none", target=255, rikku_flee=False):
+def use_item(slot: int, direction="none", target=None, rikku_flee=False):
     logger.debug("Using items via the Use command")
     logger.debug(f"Item slot: {slot}")
     logger.debug(f"Direction: {direction}")
+
     while not memory.main.main_battle_menu():
         pass
     logger.debug("Mark 1, turn is active.")
@@ -3889,10 +3849,17 @@ def use_item(slot: int, direction="none", target=255, rikku_flee=False):
         memory.main.wait_frames(3)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
-    if target != 255:
+    if target != None:
         last_target = memory.main.battle_target_id()
+        counter = 1
         try:
             logger.debug("Targetting based on character number")
+            if counter % 5 == 0:
+                if direction == "l":
+                    direction = "d"
+                else:
+                    direction = "l"
+            counter += 1
             if target >= 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
                 direction = "l"
                 while memory.main.battle_target_id() != target:
@@ -4416,6 +4383,503 @@ def steal_target(index):
     tap_targeting()
 
 
+def quick_hit(target:int = 20):
+    CurrentPlayer().quick_hit(target=target)
+
+    # Obsoleted logic.
+    '''
+    logger.debug("Quick Hit function")
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            pass
+    actor = CurrentPlayer().raw_id()
+    skill_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Skill']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in skill_menu:
+        if ability['name'] == 'Quick Hit':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Quick Hit!")
+        CurrentPlayer().attack()
+        return
+    while memory.main.battle_menu_cursor() != 19:
+        CurrentPlayer().navigate_to_battle_menu(19)
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+        
+    # Target the appropriate enemy.
+    direction = "l"
+    retry = 0
+    if memory.main.get_enemy_current_hp()[target - 20] != 0:
+        # Only attack
+        while memory.main.battle_target_id() != target:
+            while memory.main.battle_target_id() != target:
+                if direction == "l":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong battle line targeted.")
+                        xbox.tap_right()
+                        direction = "u"
+                        retry = 0
+                    else:
+                        xbox.tap_left()
+                elif direction == "r":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_left()
+                        direction = "d"
+                    else:
+                        xbox.tap_right()
+                elif direction == "u":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_down()
+                        direction = "l"
+                    else:
+                        xbox.tap_up()
+                elif direction == "d":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_up()
+                        direction = "r"
+                    else:
+                        xbox.tap_down()
+                retry += 1
+            memory.main.wait_frames(1)
+
+    tap_targeting()
+    '''
+
+
+def bribe(target:int = 20, spare_change_value:int = 10000):
+    logger.debug("Bribe function")
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            pass
+    actor = CurrentPlayer().raw_id()
+    special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in special_menu:
+        if ability['name'] == 'Bribe':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Bribe!")
+        CurrentPlayer().defend()
+        return
+    while memory.main.battle_menu_cursor() != 20:
+        CurrentPlayer().navigate_to_battle_menu(20)
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+        
+    calculate_spare_change_movement(spare_change_value)
+
+    while memory.main.spare_change_open():
+        xbox.tap_b()
+        
+    # Target the appropriate enemy.
+    direction = "l"
+    retry = 0
+    if memory.main.get_enemy_current_hp()[target - 20] != 0:
+        # Only attack
+        while memory.main.battle_target_id() != target:
+            while memory.main.battle_target_id() != target:
+                if direction == "l":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong battle line targeted.")
+                        xbox.tap_right()
+                        direction = "u"
+                        retry = 0
+                    else:
+                        xbox.tap_left()
+                elif direction == "r":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_left()
+                        direction = "d"
+                    else:
+                        xbox.tap_right()
+                elif direction == "u":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_down()
+                        direction = "l"
+                    else:
+                        xbox.tap_up()
+                elif direction == "d":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_up()
+                        direction = "r"
+                    else:
+                        xbox.tap_down()
+                retry += 1
+            memory.main.wait_frames(1)
+
+    tap_targeting()
+
+
+def entrust(target:int = 4):
+    logger.debug("Entrust function")
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            pass
+    actor = CurrentPlayer().raw_id()
+    special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in special_menu:
+        if ability['name'] == 'Entrust':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Entrust!")
+        CurrentPlayer().defend()
+        return
+    while memory.main.battle_menu_cursor() != 20:
+        CurrentPlayer().navigate_to_battle_menu(20)
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+
+    # Target the appropriate enemy.
+    direction = "l"
+    retry = 0
+    while memory.main.battle_target_id() != target:
+        while memory.main.battle_target_id() != target:
+            if direction == "l":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong battle line targeted.")
+                    xbox.tap_right()
+                    direction = "u"
+                    retry = 0
+                else:
+                    xbox.tap_left()
+            elif direction == "r":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong character targeted.")
+                    xbox.tap_left()
+                    direction = "d"
+                else:
+                    xbox.tap_right()
+            elif direction == "u":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong character targeted.")
+                    xbox.tap_down()
+                    direction = "l"
+                else:
+                    xbox.tap_up()
+            elif direction == "d":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong character targeted.")
+                    xbox.tap_up()
+                    direction = "r"
+                else:
+                    xbox.tap_down()
+            retry += 1
+        memory.main.wait_frames(1)
+
+    tap_targeting()
+
+
+def provoke(target:int = 20):
+    CurrentPlayer().provoke(target=target)
+#     logger.debug("Provoke function")
+#     if not memory.main.main_battle_menu():
+#         while not memory.main.main_battle_menu():
+#             pass
+#     actor = CurrentPlayer().raw_id()
+#     special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
+#     # logger.warning(special_menu)
+#     ability_position = None
+#     for ability in special_menu:
+#         if ability['name'] == 'Provoke':
+#             ability_position = ability['position']
+#     if ability_position is None:
+#         logger.warning("This character does not know Provoke!")
+#         CurrentPlayer().defend()
+#         return
+#     while memory.main.battle_menu_cursor() != 20:
+#         CurrentPlayer().navigate_to_battle_menu(20)
+#     while not memory.main.other_battle_menu():
+#         xbox.tap_b()
+#     _navigate_to_position(ability_position)
+#     logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+#     while memory.main.other_battle_menu():
+#         xbox.tap_b()  # Use the command
+        
+#     # Target the appropriate enemy.
+#     direction = "l"
+#     retry = 0
+#     if memory.main.get_enemy_current_hp()[target - 20] != 0:
+#         # Only attack
+#         while memory.main.battle_target_id() != target:
+#             while memory.main.battle_target_id() != target:
+#                 if direction == "l":
+#                     if retry > 5:
+#                         retry = 0
+#                         logger.debug("Wrong battle line targeted.")
+#                         xbox.tap_right()
+#                         direction = "u"
+#                         retry = 0
+#                     else:
+#                         xbox.tap_left()
+#                 elif direction == "r":
+#                     if retry > 5:
+#                         retry = 0
+#                         logger.debug("Wrong character targeted.")
+#                         xbox.tap_left()
+#                         direction = "d"
+#                     else:
+#                         xbox.tap_right()
+#                 elif direction == "u":
+#                     if retry > 5:
+#                         retry = 0
+#                         logger.debug("Wrong character targeted.")
+#                         xbox.tap_down()
+#                         direction = "l"
+#                     else:
+#                         xbox.tap_up()
+#                 elif direction == "d":
+#                     if retry > 5:
+#                         retry = 0
+#                         logger.debug("Wrong character targeted.")
+#                         xbox.tap_up()
+#                         direction = "r"
+#                     else:
+#                         xbox.tap_down()
+#                 retry += 1
+#             memory.main.wait_frames(1)
+
+#     tap_targeting()
+
+
+def dispel(target:int = 20):
+    logger.debug("Dispel function")
+    if CurrentPlayer().mp() < 12:
+        CurrentPlayer().defend()
+        return
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            pass
+    actor = CurrentPlayer().raw_id()
+    white_mag_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['White Magic']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in white_mag_menu:
+        if ability['name'] == 'Dispel':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Dispel!")
+        CurrentPlayer().defend()
+        return
+    logger.debug(f"Confirmed Dispel is in position {ability_position}")
+    while memory.main.battle_menu_cursor() != 22:
+        logger.debug(f"Mark 0: {memory.main.battle_menu_cursor()}")
+        CurrentPlayer().navigate_to_battle_menu(22)
+    logger.debug("Mark 1")
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    logger.debug("Mark 2")
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+        
+    # Target the appropriate enemy.
+    direction = "l"
+    retry = 0
+    if memory.main.get_enemy_current_hp()[target - 20] != 0:
+        # Only attack
+        while memory.main.battle_target_id() != target:
+            while memory.main.battle_target_id() != target:
+                if direction == "l":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong battle line targeted.")
+                        xbox.tap_right()
+                        direction = "u"
+                        retry = 0
+                    else:
+                        xbox.tap_left()
+                elif direction == "r":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_left()
+                        direction = "d"
+                    else:
+                        xbox.tap_right()
+                elif direction == "u":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_down()
+                        direction = "l"
+                    else:
+                        xbox.tap_up()
+                elif direction == "d":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_up()
+                        direction = "r"
+                    else:
+                        xbox.tap_down()
+                retry += 1
+            memory.main.wait_frames(1)
+
+    tap_targeting()
+
+
+def auto_life(target:int=0):
+    logger.debug("Auto-Life function")
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            if memory.main.game_over():
+                return
+    actor = CurrentPlayer().raw_id()
+    white_mag_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['White Magic']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in white_mag_menu:
+        if ability['name'] == 'Auto-Life':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Auto-Life!")
+        CurrentPlayer().defend()
+        return
+    while memory.main.battle_menu_cursor() != 22:
+        CurrentPlayer().navigate_to_battle_menu(22)
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+        
+    # Target the appropriate ally.
+    direction = "l"
+    retry = 0
+    # Only attack
+    while memory.main.battle_target_id() != target:
+        while memory.main.battle_target_id() != target:
+            if direction == "l":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong battle line targeted.")
+                    xbox.tap_right()
+                    direction = "u"
+                    retry = 0
+                else:
+                    xbox.tap_left()
+            elif direction == "r":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong character targeted.")
+                    xbox.tap_left()
+                    direction = "d"
+                else:
+                    xbox.tap_right()
+            elif direction == "u":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong character targeted.")
+                    xbox.tap_down()
+                    direction = "l"
+                else:
+                    xbox.tap_up()
+            elif direction == "d":
+                if retry > 5:
+                    retry = 0
+                    logger.debug("Wrong character targeted.")
+                    xbox.tap_up()
+                    direction = "r"
+                else:
+                    xbox.tap_down()
+            retry += 1
+        memory.main.wait_frames(1)
+
+    tap_targeting()
+
+
+def nulblaze():
+    logger.debug("NulBlaze function")
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            pass
+    actor = CurrentPlayer().raw_id()
+    white_mag_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['White Magic']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in white_mag_menu:
+        if ability['name'] == 'NulBlaze':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know NulBlaze!")
+        CurrentPlayer().defend()
+        return
+    while memory.main.battle_menu_cursor() != 22:
+        CurrentPlayer().navigate_to_battle_menu(22)
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+    
+    tap_targeting()
+
+
+def aim():
+    logger.debug("Aim function")
+    if not memory.main.main_battle_menu():
+        while not memory.main.main_battle_menu():
+            pass
+    actor = CurrentPlayer().raw_id()
+    special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
+    ability_position = None
+    for ability in special_menu:
+        if ability['name'] == 'Aim':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Aim!")
+        CurrentPlayer().defend()
+        return
+    while memory.main.battle_menu_cursor() != 20:
+        CurrentPlayer().navigate_to_battle_menu(20)
+    while not memory.main.other_battle_menu():
+        xbox.tap_b()
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.tap_b()  # Use the command
+    
+    tap_targeting()
+
+
 def _steal(direction=None, steal_position=0):
     if not memory.main.main_battle_menu():
         while not memory.main.main_battle_menu():
@@ -4449,7 +4913,147 @@ def _steal(direction=None, steal_position=0):
     tap_targeting()
 
 
+def steal_new(actor):
+    logger.debug("Steal (new)")
+    special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
+    # logger.warning(special_menu)
+    steal_position = None
+    for ability in special_menu:
+        if ability['name'] == 'Steal':
+            steal_position = ability['position']
+    if steal_position is None:
+        logger.warning("This character does not know Steal!")
+        CurrentPlayer().defend()
+        return
+    logger.warning(f"Steal command in position {steal_position}")
+    if memory.main.get_encounter_id() in [273, 281]:
+        _steal("left", steal_position=steal_position)
+    elif memory.main.get_encounter_id() in [276, 279, 289]:
+        _steal("up", steal_position=steal_position)
+    else:
+        _steal(steal_position=steal_position)
+
+def shadow_gem_farm():
+    screen.await_turn()
+    steal_count = 0
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if steal_count < 10:
+                steal_new(CurrentPlayer().raw_id())
+                steal_count += 1
+            else:
+                CurrentPlayer().attack()
+    wrap_up()
+
+def use_item_new(item:int, target:int|None=None):
+    actor = CurrentPlayer().raw_id()
+    # If a single target is designated, throw the item at that target.
+    # Otherwise it will ignore this step and just push through.
+    item_slot = memory.main.get_use_items_slot(item)
+    logger.debug(f"Use (new), item slot {item_slot}")
+    if item_slot > 200:
+        logger.warning(f"We are out of that item! Fall back to defend command!")
+        CurrentPlayer().defend()
+        return
+    special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
+    # logger.warning(special_menu)
+    ability_position = None
+    for ability in special_menu:
+        if ability['name'] == 'Use':
+            ability_position = ability['position']
+    if ability_position is None:
+        logger.warning("This character does not know Use!")
+        CurrentPlayer().defend()
+        return
+    logger.debug("Selecting 'Special' command")
+    
+    # Navigate to Special command
+    move_count = 0  # Used to escape infinite loop if needed.
+    while memory.main.battle_menu_cursor() != 20:
+        while memory.main.battle_menu_cursor() != 20:
+            #if not Rikku.is_turn() and not Kimahri.is_turn():
+            #    return 
+            logger.debug(f"Menu ID: {memory.main.battle_menu_cursor()}")
+            if memory.main.battle_menu_cursor() in [0, 19, 23]:
+                xbox.tap_down()
+            elif memory.main.battle_menu_cursor() == 1:
+                xbox.tap_up()
+            elif memory.main.battle_menu_cursor() > 20:
+                xbox.tap_up()
+            else:
+                xbox.tap_down()
+            move_count += 1
+            if move_count > 10:
+                CurrentPlayer().defend()
+                return
+        memory.main.wait_frames(1)
+    while memory.main.main_battle_menu():
+        xbox.tap_b()
+    logger.debug("Selecting 'Use' command")
+
+    # Navigate to 'Use' command on interior menu
+    logger.warning(f"Use command in position {ability_position}")
+    _navigate_to_position(ability_position)
+    logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    while memory.main.other_battle_menu():
+        xbox.menu_b()
+    
+    # Target the item to be used
+    _navigate_to_position(item_slot, memory.main.battle_cursor_3)
+    while memory.main.interior_battle_menu():
+        xbox.menu_b()
+    
+        
+    # Target the appropriate ally.
+    direction = "l"
+    retry = 0
+    # Only attack
+    if target is not None:
+        while memory.main.battle_target_id() != target:
+            while memory.main.battle_target_id() != target:
+                if direction == "l":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong battle line targeted.")
+                        xbox.tap_right()
+                        direction = "u"
+                        retry = 0
+                    else:
+                        xbox.tap_left()
+                elif direction == "r":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_left()
+                        direction = "d"
+                    else:
+                        xbox.tap_right()
+                elif direction == "u":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_down()
+                        direction = "l"
+                    else:
+                        xbox.tap_up()
+                elif direction == "d":
+                    if retry > 5:
+                        retry = 0
+                        logger.debug("Wrong character targeted.")
+                        xbox.tap_up()
+                        direction = "r"
+                    else:
+                        xbox.tap_down()
+                retry += 1
+            memory.main.wait_frames(1)
+
+    tap_targeting()
+    
+
+
 def steal(steal_position=0):
+    if memory.main.rikku_learned_flee() and steal_position == 0:
+        steal_position = 1
     logger.debug("Steal")
     if memory.main.get_encounter_id() in [273, 281]:
         _steal("left")
@@ -4654,6 +5258,7 @@ def steal_and_attack_pre_tros():
 # move to battle.aeon
 def aeon_summon(position):
     logger.debug(f"Summoning Aeon {position}")
+    backup = 0
     while not memory.main.main_battle_menu():
         pass
     while memory.main.battle_menu_cursor() != 23:
@@ -4676,6 +5281,9 @@ def aeon_summon(position):
             xbox.tap_down()
         else:
             xbox.tap_up()
+        backup += 1
+        if backup > 20:
+            position -= 1
     while memory.main.other_battle_menu():
         xbox.tap_confirm()
 
@@ -4920,8 +5528,9 @@ def heal_up_2(*chars, heal_method: int = 1, item_index: int = 0, single_item: bo
         memory.main.back_to_main_menu()
 
 
-def lancet_swap(direction:str="none", target_id=99):
+def lancet_swap(direction:str="none", target_id=20):
     logger.debug("Lancet Swap function")
+
     # Assumption is formation: Tidus, Wakka, Auron, Kimahri, and Yuna in last slot.
     direction = direction.lower()
     lancet_complete = False
@@ -4931,10 +5540,16 @@ def lancet_swap(direction:str="none", target_id=99):
         if not Kimahri.active():
             buddy_swap(Kimahri)
         elif Kimahri.is_turn():
-            if target_id == 99:
-                lancet(direction)
-            else:
-                lancet_target(target=target_id, direction='u')
+            # if target_id == 99:
+            memory.main.kim_od_unlocks()
+            CurrentPlayer().use_special_by_name(command_name="Lancet",direction=direction,target_id=target_id)
+            memory.main.kim_od_unlocks()
+                # lancet_target(target=20, direction='u')
+            # else:
+            #     memory.main.kim_od_unlocks()
+            #     CurrentPlayer().use_special_by_name(command_name="Lancet",direction=direction,target_id=target_id)
+            #     memory.main.kim_od_unlocks()
+            #     lancet_target(target=target_id, direction='u')
             lancet_complete = True
         else:
             CurrentPlayer().defend()
@@ -4946,6 +5561,10 @@ def lancet_swap(direction:str="none", target_id=99):
 
 
 def lancet(direction):
+    memory.main.kim_od_unlocks()
+    CurrentPlayer().use_special_by_name(command_name="Lancet",direction=direction,target_id=20)
+    memory.main.kim_od_unlocks()
+    '''
     memory.main.kim_od_unlocks()
     logger.debug(f"Casting Lancet with variation: {direction}")
     while memory.main.battle_menu_cursor() != 20:
@@ -4972,9 +5591,16 @@ def lancet(direction):
         xbox.tap_down()
     tap_targeting()
     memory.main.kim_od_unlocks()
+    '''
 
 
-def lancet_target(target, direction, post_steal=False):
+def lancet_target(target, direction='l', post_steal=False):
+    memory.main.kim_od_unlocks()
+    CurrentPlayer().use_special_by_name(command_name="Lancet",direction=direction,target_id=target)
+    memory.main.kim_od_unlocks()
+
+
+def lancet_target_old(target, direction, post_steal=False):
     memory.main.kim_od_unlocks()
     logger.debug(f"Casting Lancet with variation: {direction}")
     while memory.main.battle_menu_cursor() != 20:
@@ -5064,6 +5690,38 @@ def lancet_home(direction):
     tap_targeting()
 
 
+def lancet_omega():
+    lancet_used = False
+    while not memory.main.battle_wrap_up_active():
+        if memory.main.turn_ready():
+            if not lancet_used:
+                if Kimahri.is_turn():
+                    lancet_target(target=20, direction='l')
+                    lancet_used=True
+                elif not Kimahri.active():
+                    buddy_swap(Kimahri)
+                else:
+                    CurrentPlayer().defend()
+            else:
+                if screen.turn_aeon():
+                    from memory.yojimbo_rng import zanmato_gil_needed
+                    needed_amount = zanmato_gil_needed(zan_level=3)  # Set value
+                    # needed_amount = 2255000  # Set value
+                    logger.debug(f"Check: {needed_amount}")
+                    # if needed_amount > 255000:
+                    #     needed_amount = 1
+                    logger.debug(f"Pay the man: {needed_amount}")
+                    Yojimbo.pay(gil_value=needed_amount)
+                    memory.main.wait_frames(90)
+                elif Yuna.is_turn():
+                    Yuna.overdrive(aeon_num=5)
+                elif not Yuna.active():
+                    buddy_swap(Yuna)
+                else:
+                    CurrentPlayer().defend()
+    wrap_up()
+
+
 def flee_all(exclude: int = 99, wrap_up_battle=True):
     FFXC.set_neutral()
     logger.debug("Attempting escape (all party members and end screen)")
@@ -5074,8 +5732,8 @@ def flee_all(exclude: int = 99, wrap_up_battle=True):
             if memory.main.turn_ready():
                 tidus_position = memory.main.get_battle_char_slot(0)
                 logger.debug(f"Tidus Position: {tidus_position}")
-                if Tidus.is_turn():
-                    Tidus.flee()
+                if CurrentPlayer().knows_flee():
+                    CurrentPlayer().flee()
                 elif tidus_position >= 3 and tidus_position != 255:
                     buddy_swap(Tidus)
                 elif (
@@ -5206,6 +5864,7 @@ def buddy_swap(character, quick_return:bool=False):
             direction = "down"
 
         while reserveposition != memory.main.battle_cursor_2():
+            logger.debug(f"Moving to reserve position {reserveposition}: {memory.main.battle_cursor_2()}")
             if not memory.main.battle_active():
                 return
             if direction == "down":
@@ -5284,10 +5943,45 @@ def wrap_up():
     memory.main.wait_frames(1)
     if game_vars.god_mode():
         rng_track.force_preempt()
+    
+    if game.state == "Nem_Farm":
+        post_battle_grid_report()
         
     if game_vars.no_battle_music():
         memory.main.disable_battle_music()
     return True
+
+
+def post_battle_grid_report():
+    out_text = "Post-battle report:\n"
+    
+    sphere_index = memory.main.get_item_slot(70)
+    if sphere_index == 255:
+        sphere_count = 0
+    else:
+        sphere_count = memory.main.get_item_count_slot(sphere_index)
+    out_text += f"Power: {sphere_count}\n"
+    sphere_index = memory.main.get_item_slot(71)
+    if sphere_index == 255:
+        sphere_count = 0
+    else:
+        sphere_count = memory.main.get_item_count_slot(sphere_index)
+    out_text += f"Mana: {sphere_count}\n"
+    sphere_index = memory.main.get_item_slot(72)
+    if sphere_index == 255:
+        sphere_count = 0
+    else:
+        sphere_count = memory.main.get_item_count_slot(sphere_index)
+    out_text += f"Speed: {sphere_count}\n\n"
+    out_text += "Char levels:\n"
+
+    for i in range(7):
+        name = memory.main.name_from_number(i)
+        char_levels = memory.sphere_grid.char_sphere_levels(i)
+        if i in [0,4,6]:
+            out_text += f"{name}: {char_levels}\n"
+    
+    write_big_text(out_text)
 
 
 @battle.utils.speedup_decorator
@@ -5335,7 +6029,7 @@ def sin_arms():
     xbox.click_to_battle()  # Start of Sin Core
     aeon_summon(4)
     screen.await_turn()
-    if game_vars.nemesis() or game_vars.ne_armor() > 200:
+    if game_vars.nemesis() or game_vars.ne_armor() > 200 or game_vars.platinum():
         while memory.main.battle_active():
             if memory.main.turn_ready():
                 CurrentPlayer().attack()
@@ -5436,15 +6130,19 @@ def bfa_nem():
     #while memory.main.get_story_progress() < 3400:  # End of game
         if memory.main.battle_active():
             if memory.main.turn_ready():
-                if Tidus.is_turn():
+                if memory.main.get_encounter_id() == 404:
+                    CurrentPlayer().cast_black_magic_spell_by_name(spell_name="Ultima")
+                elif Tidus.is_turn():
                     CurrentPlayer().attack(record_results=True)
                     logger.debug(f"Battle Num: {memory.main.get_encounter_id()}")
-                elif Yuna.is_turn():
+                elif Yuna.is_turn() and not Wakka.active():
                     buddy_swap(Wakka)
-                elif Auron.is_turn():
+                elif Auron.is_turn() and not Lulu.active():
                     buddy_swap(Lulu)
                 else:
                     CurrentPlayer().defend()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
         elif memory.main.cutscene_skip_possible():
             memory.main.wait_frames(2)
             if memory.main.cutscene_skip_possible():
@@ -5818,13 +6516,19 @@ def calm_lands_manip():
     game_vars.set_def_x_drop(best[chosen_steals] in [2,6])
     game_vars.set_nea_after_bny(best[chosen_steals] in [4,6])
     if game_vars.get_def_x_drop():
-        logger.warning(memory.main.next_chance_rng_10(min_steals=0))
-        chosen_steals = max(memory.main.next_chance_rng_10(min_steals=0) - gem_need,0)
-        logger.info(f"Defender X drop needed. Updated advances: {chosen_steals} ({gem_need} gem steals)")
+        if game_vars.get_nea_after_bny():
+            chosen_steals = max(memory.main.next_chance_rng_10_ronso() - gem_need,0)
+            logger.info(f"Defender X drop needed. Updated advances: {chosen_steals} ({gem_need} gem steals)")
+        else:
+            chosen_steals = max(memory.main.next_chance_rng_10() - gem_need,0)
+            logger.info(f"Defender X drop needed. Updated advances: {chosen_steals} ({gem_need} gem steals)")
     else:
-        logger.warning(memory.main.next_chance_rng_10(min_steals=0))
-        chosen_steals = max(memory.main.next_miss_rng_10(min_steals=0) - gem_need,0)
-        logger.info(f"Defender X drop undesirable. Updated advances: {chosen_steals} ({gem_need} gem steals)")
+        if game_vars.get_nea_after_bny():
+            chosen_steals = max(memory.main.next_chance_rng_10_ronso_calm() - gem_need,0)
+            logger.info(f"Defender X drop undesirable. Updated advances: {chosen_steals} ({gem_need} gem steals)")
+        else:
+            chosen_steals = max(memory.main.next_chance_rng_10_calm() - gem_need,0)
+            logger.info(f"Defender X drop undesirable. Updated advances: {chosen_steals} ({gem_need} gem steals)")
 
 
     # Now determine if it's worth it to manip.
@@ -6058,7 +6762,7 @@ def advance_rng_10(num_advances: int):
     memory.main.click_to_control_3()
 
 
-def rng_12_attack(try_impulse=False):
+def rng_12_attack():
     logger.debug("RNG12 logic (attack only)")
     if screen.turn_aeon():
         if memory.main.get_encounter_id() in [283, 309, 313]:
@@ -6107,41 +6811,14 @@ def advance_rng_12():
                 else:
                     aeon_summon(4)
             elif screen.turn_aeon():
-                Bahamut.unique()
-                '''
-                num_enemies = len(memory.main.get_enemy_current_hp())
-                logger.debug(f"{memory.main.get_enemy_current_hp()}")
-                logger.debug(f"{num_enemies}")
-                check_ahead = num_enemies * 3
-                logger.debug(f"{check_ahead}")
-                ahead_array = memory.main.next_chance_rng_10_full()
-                for h in range(check_ahead):
-                    if h == 3:
-                        pass
-                    elif h % 3 != 0 and ahead_array[h]:
-                        double_drop = True
-                for i in range(7):
-                    if ahead_array[i + check_ahead] and not attack_count:
-                        use_impulse = True
-                if not attack_count:
-                    if memory.main.get_encounter_id() in [314]:
+                if not aeon_turn:
+                    rng_12_attack()
+                else:
+                    if memory.main.get_encounter_id() in [313, 314]:
                         Bahamut.unique()
-                        attack_count = True
-                    elif extra_drops >= 2:
-                        Bahamut.unique()
-                        attack_count = True
-                    elif extra_drops == 1:
-                        if use_impulse and not double_drop:
-                            Bahamut.unique()
-                            attack_count = True
-                        else:
-                            attack_count = True
-                            rng_12_attack()
                     else:
                         CurrentPlayer().dismiss()
-                else:
-                    CurrentPlayer().dismiss()
-                '''
+
                 aeon_turn = True
             else:
                 if aeon_turn:
@@ -6191,7 +6868,10 @@ def ghost_kill():
             use_silence=use_silence, aeon_kill=aeon_kill
         )
         use_silence = False
-        
+    if not memory.main.battle_active():
+        wrap_up()
+        memory.main.click_to_control_3()
+        return
 
     if owner2 in [0, 4, 6]:
         ghost_kill_aeon()
@@ -6258,7 +6938,7 @@ def ghost_advance_rng_10_silence(use_silence:bool = False,aeon_kill:bool = True)
                     if not Yuna.active():
                         buddy_swap(Yuna)
                     elif Yuna.is_turn():
-                        if memory.main.get_enemy_current_hp()[0] > 3000:
+                        if memory.main.get_enemy_current_hp()[0] > 6000:
                             Yuna.attack()
                         else:
                             Yuna.defend()
@@ -6267,7 +6947,7 @@ def ghost_advance_rng_10_silence(use_silence:bool = False,aeon_kill:bool = True)
                     elif Tidus.is_turn():
                         if not tidus_hasted:
                             tidus_haste("left", character=0)
-                        elif memory.main.get_enemy_current_hp()[0] > 2000:
+                        elif memory.main.get_enemy_current_hp()[0] > 4500:
                             Tidus.attack()
                         else:
                             Tidus.defend()
@@ -6321,6 +7001,7 @@ def ghost_kill_tidus(use_silence: bool, self_haste: bool):
                 Yuna.attack()
             else:
                 Yuna.defend()
+    wrap_up()
     if game_vars.god_mode():
         rng_track.force_preempt()
 
@@ -6372,6 +7053,7 @@ def ghost_kill_any(use_silence: bool, self_haste: bool):
                 Yuna.attack()
             else:
                 CurrentPlayer().defend()
+    wrap_up()
     if game_vars.god_mode():
         rng_track.force_preempt()
 
@@ -6387,6 +7069,7 @@ def ghost_kill_aeon():
                 aeon_summon(4)
             else:
                 CurrentPlayer().defend()
+    wrap_up()
     if game_vars.god_mode():
         rng_track.force_preempt()
 
@@ -6436,6 +7119,7 @@ def zanarkand_levels():
                 buddy_swap(Yuna)
             else:
                 CurrentPlayer().defend()
+    wrap_up()
 
 
 def lulu_overdrive_heal():
@@ -6495,3 +7179,154 @@ def lulu_overdrive_demo(version="short"):
             else:
                 lulu_overdrive_heal()
     wrap_up()
+
+
+def bribe_battle(spare_change_value: int = 12000):
+    logger.debug(f"value (2): {spare_change_value}")
+    first_attempt = True
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Lulu.is_turn():
+                bribe(spare_change_value=spare_change_value)
+                spare_change_value = max(spare_change_value/50, 2000)
+            elif not Lulu.active():
+                buddy_swap(Lulu)
+            else:
+                CurrentPlayer().defend()
+    logger.debug("Battle is complete.")
+    wrap_up()
+    logger.debug("Now back in control.")
+
+def distiller_and_killer(distiller_num:int=16, skip_throw:bool = False):
+    memory.main.wait_seconds(1)
+    logger.debug("Starting distiller fight")
+    slot = memory.main.get_throw_items_slot(distiller_num)
+    logger.debug(f"Distiller {distiller_num} is in slot {slot}")
+    item_thrown = skip_throw
+    while not memory.main.battle_wrap_up_active():
+        if memory.main.turn_ready():
+            if not item_thrown:
+                while memory.main.main_battle_menu():
+                    if memory.main.battle_menu_cursor() != 1:
+                        xbox.tap_down()
+                    else:
+                        xbox.tap_b()
+                while memory.main.main_battle_menu():
+                    xbox.tap_b()
+                logger.debug(f"Position: {slot}")
+                _navigate_to_position(slot)
+                while memory.main.other_battle_menu():
+                    xbox.tap_b()
+                tap_targeting()
+                item_thrown = True
+            elif Tidus.is_turn() and Tidus.has_overdrive():
+                Tidus.overdrive()
+            elif Wakka.is_turn() and Wakka.has_overdrive():
+                Wakka.overdrive(reels="attack")
+            else:
+                CurrentPlayer().attack()
+    wrap_up()
+
+def dark_aeon(backup_aeon:int=0):
+    logger.debug("Starting Dark Yojimbo fight")
+    aim_count = 0
+    aeon_num = backup_aeon
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Wakka.is_turn():
+                if Wakka.has_overdrive():
+                    Wakka.overdrive(reels="attack")
+                # elif not Wakka.has_auto_life():
+                #     Wakka.cast_white_magic_spell_by_name(
+                #         spell_name="Auto-Life",
+                #         target_id=4
+                #     )
+                elif Lulu.is_dead():
+                    revive_target(target=5)
+                elif Yuna.is_dead():
+                    revive_target(target=1)
+                # elif aim_count < 5:
+                #     Wakka.aim()
+                #     aim_count += 1
+                else:
+                    Wakka.defend()
+            elif Lulu.is_turn():
+                if not Lulu.has_auto_life():
+                    Lulu.cast_white_magic_spell_by_name(
+                        spell_name="Auto-Life",
+                        target_id=5
+                    )
+                elif Wakka.is_dead():
+                    revive_target(target=4)
+                elif Yuna.is_dead():
+                    revive_target(target=1)
+                elif Lulu.has_overdrive() and not Wakka.has_overdrive():
+                    Tidus.entrust(target_character=4)
+                elif not Wakka.has_auto_life():
+                    Lulu.cast_white_magic_spell_by_name(
+                        spell_name="Auto-Life",
+                        target_id=4
+                    )
+                elif not Yuna.has_auto_life():
+                    Lulu.cast_white_magic_spell_by_name(
+                        spell_name="Auto-Life",
+                        target_id=1
+                    )
+                # elif Tidus.has_overdrive():
+                #     Tidus.overdrive()
+                else:
+                    Lulu.defend()
+            elif Yuna.is_turn():
+                enemy_od = memory.main.get_overdrive_battle(20)
+                logger.manip(f"Enemy OD: {enemy_od}")
+                if enemy_od == 100 and aeon_num != 99:
+                    aeon_summon(aeon_num)
+                    aeon_num += 1
+                elif not Yuna.has_auto_life():
+                    Yuna.cast_white_magic_spell_by_name(
+                        spell_name="Auto-Life",
+                        target_id=1
+                    )
+                elif Lulu.is_dead():
+                    revive_target(target=5)
+                elif Wakka.is_dead():
+                    revive_target(target=4)
+                elif Yuna.has_overdrive() and not Wakka.has_overdrive():
+                    Yuna.entrust(4)
+                # elif Yuna.has_overdrive() and not Tidus.has_overdrive():
+                #     Yuna.entrust(0)
+                elif not Lulu.has_auto_life():
+                    Yuna.cast_white_magic_spell_by_name(
+                        spell_name="Auto-Life",
+                        target_id=5
+                    )
+                elif not Wakka.has_auto_life():
+                    Yuna.cast_white_magic_spell_by_name(
+                        spell_name="Auto-Life",
+                        target_id=4
+                    )
+                # else:
+                #     Yuna.cast_white_magic_spell_by_name(
+                #         spell_name="Haste",
+                #         target_id=4
+                #     )
+                else:
+                    Yuna.defend()
+            elif screen.turn_aeon():
+                CurrentPlayer().attack()
+            elif not Wakka.active():
+                buddy_swap(Wakka)
+            elif not Yuna.active():
+                buddy_swap(Yuna)
+            elif not Lulu.active():
+                buddy_swap(Lulu)
+            else:
+                CurrentPlayer().attack()
+        if memory.main.game_over():
+            logger.warning(f"Dark Yojimbo battle is over (fail)")
+            return backup_aeon
+    logger.warning(f"Dark Yojimbo battle is over (success)")
+    if not memory.main.game_over():
+        wrap_up()
+        return aeon_num
+    return backup_aeon

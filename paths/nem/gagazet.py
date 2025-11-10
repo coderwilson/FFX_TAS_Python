@@ -23,7 +23,7 @@ class GagazetFarm(AreaMovementBase):
         17: [69, -906],
         18: [124, -964],
         19: [109, -1021],
-        20: [113, -1034],  # Platform, back to ronso
+        20: [97, -1019],  # Platform, back to ronso
         21: [0, 0],  # Activate platform - end of sections 2/4
         22: [106, -63],  # Start of Zanarkand Overpass section (after platform)
         23: [240, -200],  # To next map

@@ -86,7 +86,11 @@ def ss_liki():
         if memory.main.user_control():
             # events
             if checkpoint == 1:  # Group surrounding Yuna
-                memory.main.click_to_event_temple(7)
+                FFXC.set_movement(-1,1)
+                memory.main.await_event()
+                FFXC.set_neutral()
+                memory.main.await_control()
+                # memory.main.click_to_event_temple(7)
                 checkpoint += 1
             elif checkpoint == 3:  # Talk to Wakka
                 memory.main.click_to_event_temple(3)
@@ -243,38 +247,61 @@ def jecht_shot_success():
     xbox.tap_b()
 
 
-def jecht_shot():
+def jecht_shot(learn_shot:bool=False):
     # Jecht shot tutorial
     logger.info("Ready for Jecht Shot")
     if game_vars.story_mode():
         memory.main.click_to_diag_progress(89)
         while memory.main.diag_progress_flag() != 97:
             xbox.tap_b()
-    else:
+    elif memory.main.get_story_progress() < 2000:
         memory.main.click_to_diag_progress(96)
-    while memory.main.diag_progress_flag() != 100:
-        if memory.main.diag_progress_flag() == 97:
-            FFXC.set_value("d_pad", 1)  # Up
-            FFXC.set_value("d_pad", 8)  # Right
-            xbox.tap_b()
-        elif memory.main.diag_progress_flag() == 98:
-            FFXC.set_value("d_pad", 4)  # Left
-            xbox.tap_b()
-        elif memory.main.diag_progress_flag() == 99:
-            FFXC.set_value("d_pad", 2)  # Down
-            FFXC.set_value("d_pad", 8)  # Right
-            xbox.tap_b()
-        elif memory.main.diag_skip_possible():
-            xbox.tap_b()
-        FFXC.set_neutral()
-        if game_vars.story_mode():
-            xbox.tap_confirm()
-            xbox.tap_confirm()
-            xbox.tap_confirm()
-            xbox.tap_confirm()
-            xbox.tap_confirm()
+        while memory.main.diag_progress_flag() != 100:
+            if memory.main.diag_progress_flag() == 97:
+                FFXC.set_value("d_pad", 1)  # Up
+                FFXC.set_value("d_pad", 8)  # Right
+                xbox.tap_b()
+            elif memory.main.diag_progress_flag() == 98:
+                FFXC.set_value("d_pad", 4)  # Left
+                xbox.tap_b()
+            elif memory.main.diag_progress_flag() == 99:
+                FFXC.set_value("d_pad", 2)  # Down
+                FFXC.set_value("d_pad", 8)  # Right
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                xbox.tap_b()
+            FFXC.set_neutral()
+    else:
+        memory.main.click_to_diag_progress(72)
+        while memory.main.diag_progress_flag() < 79:
+            logger.debug(memory.main.diag_progress_flag())
+            if memory.main.diag_progress_flag() == 72:
+                FFXC.set_neutral()
+                FFXC.set_value("d_pad", 1)  # Up
+                FFXC.set_value("d_pad", 8)  # Right
+                xbox.tap_b()
+            elif memory.main.diag_progress_flag() == 73:
+                FFXC.set_neutral()
+                FFXC.set_value("d_pad", 4)  # Left
+                xbox.tap_b()
+            elif memory.main.diag_progress_flag() == 74:
+                FFXC.set_neutral()
+                FFXC.set_value("d_pad", 2)  # Down
+                FFXC.set_value("d_pad", 8)  # Right
+                xbox.tap_b()
+            elif memory.main.diag_skip_possible():
+                FFXC.set_neutral()
+                xbox.tap_b()
+            #memory.main.wait_seconds(1)
+            #logger.debug(memory.main.diag_progress_flag())
 
-    if game_vars.story_mode():
+    if game_vars.story_mode() or learn_shot:
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+        xbox.tap_confirm()
+
         # Success logic
         for i in range(15):
             jecht_shot_success()
