@@ -94,7 +94,7 @@ def arrival():
                 battle.main.flee_all()
                 if memory.main.game_over():
                     return 999
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 if memory.main.get_hp()[0] < 520:
                     battle.main.heal_up(full_menu_close=False)
                 elif 1 in memory.main.ambushes():
@@ -359,8 +359,12 @@ def aftermath():
             if memory.main.get_map() == 131 and checkpoint < 4:
                 checkpoint = 4
             elif checkpoint == 3:
-                memory.main.click_to_event_temple(0)
+                pathing.approach_actor_by_id(8408)
+                memory.main.await_control()
+                logger.warning(memory.main.get_map())
                 checkpoint += 1
+                if memory.main.get_map() == 134:
+                    child_dance()
             elif checkpoint == 7:
                 FFXC.set_movement(-1, 0)
                 memory.main.await_event()
@@ -376,3 +380,17 @@ def aftermath():
         else:
             FFXC.set_neutral()
             memory.main.click_to_control()
+
+
+def child_dance():
+    position = 0
+    path = [
+        [372,-10],
+        [372,10],
+        [320,10],
+        [320,-10]
+    ]
+
+    while memory.main.get_map() == 134:
+        if pathing.set_movement(path[position%4]):
+            position += 1

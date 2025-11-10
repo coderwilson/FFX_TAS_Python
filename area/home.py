@@ -133,6 +133,39 @@ def desert():
     timer_start = False
     start_time = time.time()
     next_enc_dist = 999
+    get_primer1 = False # Salvage ship
+    get_primer2 = game_vars.platinum() # SS Liki
+    get_primer3 = game_vars.platinum() # SS Winno
+    get_primer4 = game_vars.platinum() # Thunder Plains (Rin)
+    get_primer5 = game_vars.platinum() # always spawns in desert
+    get_primer6 = game_vars.platinum() # always spawns in desert
+
+    # This is to recover from game-over state.
+    if memory.main.get_map() != 129:
+        if memory.main.get_map() == 136:
+            if memory.main.get_story_progress() == 1720:
+                checkpoint = 23
+                get_primer2 = False
+                get_primer3 = False
+            else:
+                checkpoint = 10
+                get_primer2 = False
+        if memory.main.get_map() == 137:
+            checkpoint = 39
+            get_primer2 = False
+            get_primer3 = False
+            get_primer4 = False
+            get_primer5 = False
+            get_primer6 = False
+        if memory.main.get_map() == 138:
+            checkpoint = 50
+            get_primer2 = False
+            get_primer3 = False
+            get_primer4 = False
+            get_primer5 = False
+            get_primer6 = False
+        
+
     while memory.main.get_map() != 130:
         if memory.main.user_control():
             #logger.debug(f"Checkpoint {checkpoint}")
@@ -151,9 +184,70 @@ def desert():
                 checkpoint = 39
             elif checkpoint < 50 and memory.main.get_map() == 138:
                 checkpoint = 50
+            
+            # Platinum specific stuff (mostly primers)
+            elif checkpoint == 5 and get_primer1:
+                logger.manip("Primer 1")
+                pathing.primer()
+                get_primer1 = False
+            elif checkpoint == 8 and get_primer2:
+                logger.manip("Primer 2")
+                get_primer2 = not pathing.primer()
+            elif checkpoint == 11 and get_primer3:
+                logger.manip("Primer 3")
+                get_primer3 = not pathing.primer()
+            elif checkpoint == 36 and get_primer4:
+                logger.manip("Primer 4")
+                if pathing.set_movement([437,645]):
+                    get_primer4 = not pathing.primer()
+            elif checkpoint == 39 and get_primer5:
+                logger.manip("Primer 5")
+                checkpoint = 100
+            elif checkpoint == 101:
+                switch = 0
+                while not memory.main.battle_active():
+                    if switch % 2 == 0:
+                        FFXC.set_movement(-1,0)
+                    else:
+                        FFXC.set_movement(1,0)
+                    memory.main.wait_frames(12)
+                    switch += 1
+                FFXC.set_neutral()
+                battle.main.flee_all()
+                memory.main.click_to_control_3()
+                pathing.primer()
+                get_primer5 = False
+                checkpoint += 1
+            elif checkpoint == 103:
+                checkpoint = 42
+            elif checkpoint == 47 and get_primer6:
+                logger.manip("Primer 6")
+                checkpoint = 104
+            elif checkpoint == 106:
+                switch = 0
+                while not memory.main.battle_active():
+                    if switch % 2 == 0:
+                        FFXC.set_movement(-1,0)
+                    else:
+                        FFXC.set_movement(1,0)
+                    memory.main.wait_frames(12)
+                    switch += 1
+                FFXC.set_neutral()
+                battle.main.flee_all()
+                memory.main.click_to_control_3()
+                pathing.primer()
+                checkpoint += 1
+                get_primer6 = False
+            elif checkpoint == 108:
+                checkpoint = 47
+
 
             # Nemesis stuff
-            elif checkpoint == 47 and (game_vars.nemesis() or game_vars.story_mode()):
+            elif checkpoint == 47 and (
+                game_vars.nemesis() or 
+                game_vars.story_mode() or
+                game_vars.platinum()
+            ):
                 checkpoint = 70
             elif checkpoint == 72:
                 FFXC.set_neutral()
@@ -189,16 +283,19 @@ def desert():
                 save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 53:
-                logger.info("Going for first Sandragora and chest")
-                tele_slot = memory.main.get_item_slot(98)
-                if tele_slot == 255 or tele_count == memory.main.get_item_count_slot(
-                    tele_slot
-                ):
-                    pathing.set_movement([-44, 446])
-                    xbox.tap_b()
+                if Auron.overdrive_percent() < 100 and not sandy1:
+                    checkpoint -= 2
                 else:
-                    checkpoint += 1
-                    logger.debug(f"Checkpoint {checkpoint}")
+                    logger.info("Going for first Sandragora and chest")
+                    tele_slot = memory.main.get_item_slot(98)
+                    if tele_slot == 255 or tele_count == memory.main.get_item_count_slot(
+                        tele_slot
+                    ):
+                        pathing.set_movement([-44, 446])
+                        xbox.tap_b()
+                    else:
+                        checkpoint += 1
+                        logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 88:
                 reverse_battle_rng()
                 checkpoint += 1
@@ -256,6 +353,8 @@ def desert():
                 elif 1 in memory.main.ambushes() and Kimahri.overdrive_percent() < 100:
                     # Avoids game-over state on the second battle, new with Terra skip
                     checkpoint -= 2
+                elif Rikku.overdrive_percent() < 100:
+                    checkpoint -= 2
                 else:
                     checkpoint += 1
 
@@ -290,6 +389,8 @@ def desert():
                         [charge_state, need_speed, need_power, items_needed],
                         sandy_fight_complete=sandy1,
                     )
+                    if memory.main.game_over():
+                        return False
 
                 # After-battle logic
                 memory.main.click_to_control()
@@ -345,6 +446,16 @@ def desert():
             elif checkpoint == 53:
                 xbox.tap_confirm()
 
+    return True
+
+def primer_and_save():
+    
+    if game_vars.platinum():
+        while not pathing.set_movement([-34,-108]):
+            pass
+        while not pathing.set_movement([-81,-78]):
+            pass
+        pathing.primer()
 
     # Move to save sphere
     checkpoint = 0
@@ -353,7 +464,6 @@ def desert():
         if pathing.set_movement(BikanelHome.execute(checkpoint)):
             checkpoint += 1
             logger.debug(f"Checkpoint {checkpoint}")
-    return True
 
 
 def find_summoners():
@@ -369,7 +479,9 @@ def find_summoners():
     last_story = memory.main.get_story_progress()
     last_dialog = memory.main.diag_progress_flag()
 
+
     checkpoint = 7
+    hall_primer = game_vars.platinum()
     while memory.main.get_map() != 219:
         if memory.main.user_control():
             coords = memory.main.get_coords()
@@ -417,6 +529,8 @@ def find_summoners():
                 xbox.tap_right()
                 xbox.tap_b()
                 memory.main.click_to_control()
+                if game_vars.platinum():
+                    pathing.primer()
                 FFXC.set_movement(1, -1)
                 memory.main.await_event()
                 FFXC.set_neutral()
@@ -424,12 +538,21 @@ def find_summoners():
             elif checkpoint == 88:
                 checkpoint = 21
             elif checkpoint == 20:
-                if game_vars.get_blitz_win():
-                    checkpoint = 21
-                else:
+                if game_vars.platinum() or not game_vars.get_blitz_win():
                     checkpoint = 81
+                else:
+                    checkpoint = 21
             elif checkpoint in [24, 25] and 1 in ambush_check:
                 checkpoint = 22
+            elif checkpoint == 23 and hall_primer:
+                checkpoint = 90  # Primer branch
+            elif checkpoint == 93:
+                pathing.primer()
+                hall_primer = False
+                checkpoint += 1
+            elif checkpoint == 96:
+                checkpoint = 24
+
             elif checkpoint == 31 and not game_vars.csr():
                 #memory.main.click_to_event_temple(6)
                 FFXC.set_movement(-1,0)

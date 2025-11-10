@@ -703,7 +703,9 @@ def echuilles():
                 tidus_counter += 1
                 if tidus_counter <= 2:
                     logger.debug("Cheer")
-                    Tidus.flee()  # performs cheer command
+                    Tidus.use_special_by_name(
+                        command_name="Cheer"
+                    )  # performs cheer command
                 elif (
                     memory.main.get_overdrive_battle(0) == 100
                     and memory.main.get_enemy_current_hp()[0] <= 750
@@ -2116,7 +2118,7 @@ def seymour_natus(delay_grid:bool):
         while memory.main.battle_active():
             if memory.main.turn_ready():
                 if Tidus.is_turn():
-                    if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis():
+                    if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis() or game_vars.platinum():
                         battle.main.buddy_swap(Lulu)
                         screen.await_turn()
                         CurrentPlayer().swap_battle_weapon()
@@ -2242,6 +2244,11 @@ def biran_yenke():
             drop2 = drop_rare(drop_num=2)
             logger.debug(f"==== B&Y Drops: {drop1} : {drop2}")
     
+    if game_vars.platinum():
+        while not Kimahri.is_overdrive_learned("thrust kick"):
+            if memory.main.turn_ready():
+                battle.main.lancet_target(target=20)
+    
     gem_slot = memory.main.get_use_items_slot(34)
     if gem_slot == 255:
         gem_slot = memory.main.get_use_items_slot(28)
@@ -2267,24 +2274,23 @@ def biran_yenke():
             xbox.tap_b()
 
     ret_slot = memory.main.get_item_slot(96)  # Return sphere
-    friend_slot = memory.main.get_item_slot(97)  # Friend sphere
 
-    if friend_slot == 255:  # Four return sphere method.
+    if ret_slot == 255:
+        logger.warning("Double friend sphere.")
+        write_returns(0)
+        game_vars.end_game_version_set(3)
+        return
+    
+    ret_count = memory.main.get_item_count_slot(ret_slot)
+    if ret_count == 4:
         logger.debug("Double return sphere drops.")
         write_returns(4)
-        end_game_version = 4
-    elif ret_slot == 255:
-        logger.warning("Double friend sphere, effective game over. :( ")
-        write_returns(0)
-        end_game_version = 3
+        game_vars.end_game_version_set(4)
     else:
         logger.debug("Split items between friend and return spheres.")
         write_returns(2)
-        end_game_version = 1
-
-    game_vars.end_game_version_set(end_game_version)
-    if game_vars.god_mode():
-        rng_track.force_preempt()
+        game_vars.end_game_version_set(1)
+    return
 
 
 def seymour_flux_battle_site_version():
@@ -2296,7 +2302,12 @@ def seymour_flux_battle_site_version():
 
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            if Yuna.is_turn():
+            if screen.turn_aeon():
+                #if aeon_order[aeon_summoned] == 2:
+                #    Bahamut.unique()  # This might not work. Supposed to dispell
+                #else:
+                CurrentPlayer().attack()
+            elif Yuna.is_turn():
                 logger.debug(f"Yunas turn. Stage: {stage}")
                 if stage == 1:
                     Yuna.attack()
@@ -2311,17 +2322,19 @@ def seymour_flux_battle_site_version():
                             stage += 1
                 else:
                     Yuna.attack()
+            elif not Yuna.active():
+                battle.main.buddy_swap(Yuna)
             elif Tidus.is_turn():
                 if not yuna_haste:
-                    battle.main.tidus_haste("down", character=1)
+                    Tidus.cast_white_magic_spell_by_name(
+                        spell_name="Haste",
+                        target_id=1
+                    )
                     yuna_haste = True
                 else:
                     CurrentPlayer().attack()
-            elif screen.turn_aeon():
-                #if aeon_order[aeon_summoned] == 2:
-                #    Bahamut.unique()  # This might not work. Supposed to dispell
-                #else:
-                CurrentPlayer().attack()
+            elif not Tidus.active():
+                battle.main.buddy_swap(Tidus)
             else:
                 CurrentPlayer().defend()
     if memory.main.game_over():
@@ -2587,7 +2600,7 @@ def omnis():
     if memory.main.game_over():
         return False
     else:
-        if not game_vars.nemesis():
+        if not game_vars.nemesis() and not game_vars.platinum():
             split_timer()
         logger.debug("Should be done now.")
         memory.main.click_to_control()

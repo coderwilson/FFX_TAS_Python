@@ -1149,6 +1149,33 @@
             "forced_condition": "",
             "danger_value": 0
         },
+		"omega_ruins_(sphere)": {
+            "name": "Omega Ruins (Lower)",
+            "formations": [
+                ["master_coeurl", "floating_death", "master_coeurl"],
+                ["halma", "spirit", "halma"],
+                ["zaurus", "floating_death", "zaurus"],
+                ["black_element", "spirit", "black_element"],
+                ["varuna"],
+                ["master_tonberry"],
+                ["adamantoise"],
+                ["machea", "machea"],
+                ["defender_z", "defender_z"],
+                ["demonolith", "demonolith"],
+                ["great_malboro"],
+                ["zaurus", "???_2"],
+                ["zaurus", "???_2"],
+                ["zaurus", "???_2"],
+                ["zaurus", "mimic"],
+                ["zaurus", "mimic_2"],
+                ["zaurus", "mimic_3"],
+                ["zaurus", "mimic_4"],
+                ["puroboros", "puroboros", "puroboros"],
+                ["wraith"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
         "omega_ruins_(lower)": {
             "name": "Omega Ruins (Lower)",
             "formations": [
@@ -1186,6 +1213,21 @@
                 ["gemini", "gemini_3"],
                 ["defender_z", "defender_z"],
                 ["puroboros", "puroboros", "puroboros"]
+            ],
+            "forced_condition": "",
+            "danger_value": 0
+        },
+        "omega_ruins_(special)": {
+            "name": "Omega Ruins (special)",
+            "formations": [
+                ["demonolith", "demonolith"],
+                ["varuna"],
+                ["great_malboro"],
+                ["master_tonberry"],
+                ["gemini", "gemini_3"],
+                ["defender_z", "defender_z"],
+                ["wraith", "????", "wraith"],
+                ["Adamantoise"]
             ],
             "forced_condition": "",
             "danger_value": 0

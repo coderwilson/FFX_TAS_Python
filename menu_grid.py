@@ -180,43 +180,68 @@ def use_first():
             xbox.menu_b()
     return True
 
-
-
 def coords_movement(dest):
-    coords = memory.main.s_grid_cursor_coords()
     x = 0
     y = 0
+    coords = memory.main.s_grid_cursor_coords()
+
     while coords != dest:
-        # Set the X coordinate variable.
-        if coords[0] < dest[0] - 15:
-            x = 1.0
-        elif coords[0] < dest[0] - 9:
-            x = 0.4
-        elif coords[0] > dest[0] + 15:
-            x = -1.0
-        elif coords[0] > dest[0] + 9:
-            x = -0.4
-        else:
-            x = 0
-        
-        # Set the Y coordinate variable.
-        if coords[1] < dest[1] - 15:
-            y = -1.0
-        elif coords[1] < dest[1] - 9:
-            y = -0.4
-        elif coords[1] > dest[1] + 15:
-            y = 1.0
-        elif coords[1] > dest[1] + 9:
-            y = 0.4
-        else:
-            y = 0
-        
-        # Set movement factor, then re-check the coordinates.
-        FFXC.set_movement(x,y)
-        coords = memory.main.s_grid_cursor_coords()
+        while coords != dest:
+            coords = memory.main.s_grid_cursor_coords()
+
+            # Check for exact equality now that we know coordinates snap
+            if coords == dest:
+                FFXC.set_movement(0, 0) # Ensure movement is stopped
+                break # Exit the loop
+
+            try:
+                # Set the X coordinate variable.
+                if coords[0] < dest[0] - 20:
+                    x = 1.0
+                elif coords[0] < dest[0] - 6:
+                    x = 0.2
+                elif coords[0] > dest[0] + 20:
+                    x = -1.0
+                elif coords[0] > dest[0] + 6:
+                    x = -0.2
+                else:
+                    x = 0
+
+                # Set the Y coordinate variable.
+                if coords[1] < dest[1] - 20:
+                    y = -1.0
+                elif coords[1] < dest[1] - 6:
+                    y = -0.2
+                elif coords[1] > dest[1] + 20:
+                    y = 1.0
+                elif coords[1] > dest[1] + 6:
+                    y = 0.2
+                else:
+                    y = 0
+
+                # Set movement factor.
+                FFXC.set_movement(x, y)
+
+            except Exception as e:
+                # This block is for handling unexpected errors during the process.
+                # It's crucial to understand what kind of exceptions might occur here.
+                logger.warning(f"An unexpected error occurred in coords_movement: {e}")
+                # Potentially log the error for later analysis.
+                # For now, we'll try to recover by stopping movement and re-checking.
+                x = 0
+                y = 0
+                FFXC.set_movement(x, y) # Stop any ongoing movement on error
+                # Important: Do NOT immediately break here unless you want to exit
+                # the function on the first error. If it's a transient issue,
+                # letting the loop continue might allow it to recover.
+            
+        memory.main.wait_frames(3)
+    FFXC.set_movement(0, 0)
+    return True
 
 def move_first():
     logger.debug(f"move first - {s_grid_cursor_coords()}")
+    counter = 0
     while not move_active():
         if first_position():
             xbox.menu_b()
@@ -225,6 +250,11 @@ def move_first():
             memory.main.wait_frames(3)
         elif use_ready():
             xbox.menu_up()
+        counter += 1
+        if counter > 100:
+            while not first_position():
+                xbox.menu_a()
+            counter = 0
     return True
 
 
@@ -233,6 +263,7 @@ def move_and_use():
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
+    counter = 0
     while not ready_select_sphere():
         if move_complete() or first_position():
             xbox.menu_b()
@@ -240,6 +271,11 @@ def move_and_use():
             xbox.menu_down()
         elif use_ready():
             xbox.menu_b()
+        counter += 1
+        if counter > 100:
+            while not first_position():
+                xbox.menu_a()
+            counter = 0
     memory.main.wait_frames(1)
     return True
 
@@ -249,6 +285,7 @@ def use_and_move():
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
+    counter = 0
     while not move_active():
         if ready_use_sphere() or first_position():
             xbox.menu_b()
@@ -258,6 +295,11 @@ def use_and_move():
             xbox.menu_up()
         else:
             xbox.menu_b()
+        counter += 1
+        if counter > 100:
+            while not first_position():
+                xbox.menu_a()
+            counter = 0
     return True
 
 
@@ -266,6 +308,7 @@ def use_and_use_again():
     memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(1)
+    counter = 0
     while not ready_select_sphere():
         if ready_use_sphere() or first_position():
             xbox.menu_b()
@@ -273,6 +316,11 @@ def use_and_use_again():
             xbox.menu_down()
         elif use_ready():
             xbox.menu_b()
+        counter += 1
+        if counter > 100:
+            while not first_position():
+                xbox.menu_a()
+            counter = 0
     if game_vars.use_pause():
         memory.main.wait_frames(6)
     return True
@@ -491,17 +539,22 @@ def move_shift_right(toon):
 def move_and_quit():
     logger.debug(f"move and quit - {s_grid_cursor_coords()}")
     memory.main.wait_frames(1)
-    xbox.menu_b()
+    if not first_position() and not move_use_menu():
+        xbox.menu_b()
     memory.main.wait_frames(1)
     while memory.main.s_grid_active():
         if move_complete():
             xbox.menu_b()
+        elif move_use_menu():
+            xbox.menu_a()
         elif first_position():
             logger.debug("Opening the Quit menu")
             xbox.menu_a()
         elif quit_grid_ready():
             logger.debug("quitting sphere grid")
             xbox.menu_b()
+        elif ready_select_sphere():
+            xbox.menu_a()
     while memory.main.menu_number() != 5:
         pass
     return True
@@ -509,17 +562,22 @@ def move_and_quit():
 
 def use_and_quit():
     memory.main.wait_frames(30 * 0.1)
-    xbox.menu_b()
+    if not first_position() and not move_use_menu():
+        xbox.menu_b()
     while memory.main.s_grid_active():
         if ready_use_sphere():
             logger.debug("Using the current item.")
             xbox.menu_b()
+        elif move_use_menu():
+            xbox.menu_a()
         elif first_position():
             logger.debug("Opening the Quit menu")
             xbox.menu_a()
         elif quit_grid_ready():
             logger.debug("quitting sphere grid")
             xbox.menu_b()
+        elif ready_select_sphere():
+            xbox.menu_a()
     while memory.main.menu_number() != 5:
         pass
     return True
@@ -590,17 +648,22 @@ def sphere_num(s_type) -> int:
     return 255
 
 
-def sel_sphere(s_type, shift):
+def sel_sphere(s_type, shift, coords=[0,0]):
     s_num = 255
     menu_pos = 0
     logger.debug(s_type)
-    s_num = sphere_num(s_type)
+    if isinstance(s_type, int):
+        s_num = s_type
+    else:
+        s_num = sphere_num(s_type)
     logger.debug(s_num)
     menu_pos = memory.main.get_grid_items_slot(s_num)
     logger.debug(menu_pos)
     if menu_pos == 255:
         logger.debug(f"Sphere {s_type} is not in inventory.")
-        return
+        xbox.menu_a()
+        xbox.menu_a()
+        return False
     while menu_pos != memory.main.get_grid_cursor_pos():
         if menu_pos > memory.main.get_grid_cursor_pos():
             if game_vars.use_pause():
@@ -633,8 +696,16 @@ def sel_sphere(s_type, shift):
                         xbox.trigger_l()
                 else:
                     xbox.tap_up()
+    break_counter = 0
     while not memory.main.sphere_grid_placement_open():
         xbox.menu_b()
+        break_counter += 1
+        if break_counter > 20:
+            xbox.menu_a()
+            memory.main.wait_frames(6)
+            xbox.menu_a()
+            memory.main.wait_frames(3)
+            return False
     if shift == "up":
         grid_up()
     if shift == "left":
@@ -725,5 +796,13 @@ def sel_sphere(s_type, shift):
         grid_down()
         grid_right()
         grid_right()
+    if coords != [0,0]:
+        coords_movement(coords)
+    break_counter = 0
     while memory.main.sphere_grid_placement_open():
         xbox.menu_b()
+        break_counter += 1
+        if break_counter > 20:
+            xbox.menu_a()
+            return False
+    return True

@@ -85,7 +85,7 @@ def load_into_game(gamestate: str, step_counter: str):
         if gamestate == "Nem_Farm":
             game_vars.nemesis_set(True)
         
-        if game_vars.nemesis():
+        if game_vars.nemesis() or game_vars.platinum():
             game_mode = "Nemesis"
         elif game_vars.story_mode():
             game_mode = "Story"
@@ -135,9 +135,11 @@ def load_into_game(gamestate: str, step_counter: str):
             memory.main.await_control()
             game_vars.set_blitz_win(value=(blitz_win == "True"))
             game_vars.end_game_version_set(value=int(end_ver))
-            if nemesis == str(game_vars.nemesis()):
+            if nemesis == str(game_vars.nemesis()) or game_vars.platinum():
                 game_vars.set_nea_zone(value=int(nea_zone))
                 game_vars.set_nem_checkpoint_ap(value=int(nem_ap))
+                from nemesis.menu import determine_current_grid
+                determine_current_grid()
 
             if spec_move != "none":
                 logger.debug(f"Special movement needed: {spec_move}")
@@ -146,12 +148,12 @@ def load_into_game(gamestate: str, step_counter: str):
                 logger.debug("No Special movement needed")
             if mrr_skip is True:
                 game_vars.mrr_skip_set(True)
+            memory.main.check_nea_armor()
 
             logger.debug(f"Blitz Win {game_vars.get_blitz_win()}")
             logger.debug(f"End game version {game_vars.end_game_version()}")
             logger.debug(f"NEA zone {game_vars.get_nea_zone()}")
             logger.debug(f"Nemesis checkpoint {game_vars.nem_checkpoint_ap()}")
-            memory.main.check_nea_armor()
 
     except Exception as err_msg:
         logger.debug(f"Error message: {err_msg}")

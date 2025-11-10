@@ -177,5 +177,31 @@
 			"checkpoint": 13,
 			"nea": "False"
 		}
+	},
+	"omega_ruins_(sphere)": {
+		"omega_ruins_(upper)": {
+			"direction": "f",
+			"checkpoint": 2,
+			"nea": "True"
+		},
+		"omega_ruins_(lower)": {
+			"direction": "f",
+			"checkpoint": 2,
+			"nea": "True"
+		}
+	},
+	"omega_ruins_(lower)": {
+		"omega_ruins_(upper)": {
+			"direction": "f",
+			"checkpoint": 24,
+			"nea": "True"
+		}
+	},
+	"omega_ruins_(upper)": {
+		"omega_ruins_(lower)": {
+			"direction": "b",
+			"checkpoint": 27,
+			"nea": "True"
+		}
 	}
 }

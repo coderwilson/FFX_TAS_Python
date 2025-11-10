@@ -193,7 +193,15 @@ def north_bank():
     memory.main.await_event()
     memory.main.wait_frames(30 * 1)
     memory.main.await_control()
-    if game_vars.csr():
+    if game_vars.platinum():
+        while not pathing.set_movement([43,-66]):
+            pass
+        pathing.primer()
+        while not pathing.set_movement([43,-66]):
+            pass
+        while not pathing.set_movement([14,-143]):
+            pass
+    elif game_vars.csr():
         memory.main.wait_frames(10)
         FFXC.set_movement(-1, -0.7)
         memory.main.wait_frames(6)

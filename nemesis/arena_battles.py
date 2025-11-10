@@ -19,7 +19,9 @@ import vars
 import xbox
 
 from memory.yojimbo_rng import zanmato_gil_needed, first_turn_action_occurs
-from players import CurrentPlayer, Rikku, Tidus, Wakka, Yojimbo, Yuna
+from players import CurrentPlayer, Rikku, Tidus, Wakka, Yojimbo, Yuna, Lulu
+from json_ai_files.write_seed import write_big_text
+from gamestate import game
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -48,8 +50,11 @@ def update_stream():
         if array3[i] == 1:
             success += 1
     complete_percent = int(success / total * 100)
-    str = f"Monster Arena Battles\nArena battle completion {complete_percent}%\n{success} / {total}"
-    write_custom_message(str)
+    if game.state == "Nem_Arena":
+        str = f"Monster Arena Battles\nArena battle completion {complete_percent}%\n{success} / {total}\n"
+        str += f"{game.state} | {game.step}"
+        write_big_text(str)
+        write_custom_message(str)
 
     
 
@@ -240,7 +245,16 @@ def aeon_start():
 
 
 @battle.utils.speedup_decorator
-def yojimbo_battle(flee_available:bool=True, diag_after=False):
+def yojimbo_battle(
+    flee_available:bool=True, 
+    diag_after:bool=False, 
+    arena:bool=True, 
+    anima:int=0
+):
+    if game.state == "Nem_Arena" and game_vars.platinum():
+        anima=1
+    success_check = False
+    aeon_summoned = False
     zanmato_gil_needed()  # Report
     # Incomplete
     screen.await_turn()
@@ -249,122 +263,151 @@ def yojimbo_battle(flee_available:bool=True, diag_after=False):
     elif not Yuna.is_turn():
         while memory.main.battle_active() and not Yuna.is_turn():
             if memory.main.turn_ready():
+                logger.debug(f"Not Yuna's turn.")
                 CurrentPlayer().defend()
                 memory.main.wait_frames(15)
     if memory.main.battle_active():
         logger.debug("Yuna Overdrive to summon Yojimbo")
-        Yuna.overdrive(aeon_num=5)
+        Yuna.overdrive(aeon_num=5+anima)
+        aeon_summoned=True
         if memory.main.game_over():
             return False
         
         needed_amount = zanmato_gil_needed()  # Set value
+        success_check = True
         if needed_amount > 255000:
             needed_amount = 1
+            success_check = False
         logger.debug(f"Pay the man: {needed_amount}")
         Yojimbo.pay(gil_value=needed_amount)
         memory.main.wait_frames(90)
-
     while memory.main.battle_active():
         if memory.main.turn_ready():
+            if Yuna.is_turn():
+                if not aeon_summoned:
+                    logger.debug("Yuna Overdrive to summon Yojimbo")
+                    Yuna.overdrive(aeon_num=5+anima)
+                    aeon_summoned = True
+                else:
+                    Yuna.defend()
             if Tidus.is_turn():
+                logger.debug("Tidus atempt flee")
                 if flee_available:
                     Tidus.flee()
+                    success_check = False
                 else:
                     CurrentPlayer().defend()
             elif Yojimbo.is_turn():
+                
                 # May still be able to get it?
                 needed_amount = zanmato_gil_needed()  # Set value
+                success_check = True
                 if needed_amount > 258000:
                     needed_amount = 1
+                    success_check = False
                 Yojimbo.pay(gil_value=needed_amount)
                 memory.main.wait_frames(90)
             else:
                 CurrentPlayer().defend()
     
         if memory.main.game_over():
+            success_check = False
             return False
     if memory.main.game_over():
+        success_check = False
         return False
     
-    logger.debug("Yojimbo Battle is complete.")
-    # After battle stuff
-    battle.main.wrap_up()
-    logger.debug("Yojimbo wrap-up is complete.")
-    memory.main.wait_frames(2)
-    if diag_after:
-        return True
-    while not memory.main.diag_skip_possible():
-        if memory.main.user_control():
+    if arena:
+        logger.debug("Yojimbo Battle is complete.")
+        # After battle stuff
+        battle.main.wrap_up()
+        logger.debug("Yojimbo wrap-up is complete.")
+        memory.main.wait_frames(2)
+        if diag_after:
             return True
-    logger.debug("Yojimbo - menu restored")
-    memory.main.wait_frames(1)
-    nemesis.arena_select.arena_menu_select(4)
-    #save_game(actually_save=False)
-    return memory.main.battle_arena_results()
+        while not memory.main.diag_skip_possible():
+            if memory.main.user_control():
+                return True
+        logger.debug("Yojimbo - menu restored")
+        memory.main.wait_frames(1)
+        nemesis.arena_select.arena_menu_select(4)
+        #save_game(actually_save=False)
+        return memory.main.battle_arena_results()
+    else:
+        memory.main.click_to_control()
+        return success_check
 
 
-def auto_life():
-    item_thrown = False
-    while not (memory.main.turn_ready() and Tidus.is_turn()):
-        if memory.main.turn_ready():
-            twin_slot = memory.main.get_use_items_slot(item_num=66)
-            three_slot = memory.main.get_use_items_slot(item_num=69)
-            ab_pot_slot = memory.main.get_use_items_slot(item_num=20)
-            if screen.turn_aeon():
-                CurrentPlayer().attack()
-            elif Yuna.is_turn() and not item_thrown:
-                logger.debug(f"Slots for throwable items: {twin_slot}, {three_slot}, {ab_pot_slot}")
-                if memory.main.get_encounter_id() in [785,788,797,799,800]:
-                    logger.debug("Do not throw an item for this battle.")
-                    Yuna.defend()
-                elif twin_slot != 255:
-                    # Twin stars, one target.
-                    battle.main.use_item(slot=twin_slot,target=0)
-                elif three_slot != 255:
-                    battle.main.use_item(slot=three_slot)
-                else:
-                    Yuna.defend()
-                #memory.main.wait_seconds(10)
-                item_thrown = True
-            elif Yuna.is_turn() and memory.main.get_encounter_id() == 762:
-                if Tidus.hp() < 1720:
-                    battle.main.use_item(slot=ab_pot_slot)
-                else:
-                    Yuna.defend()
-            elif not Tidus.is_turn():
-                CurrentPlayer().defend()
-        elif not memory.main.battle_active():
-            return False
-    while memory.main.battle_menu_cursor() != 22:
-        if not Tidus.is_turn():
-            logger.debug("Attempting Haste, but it's not Tidus's turn")
-            xbox.tap_up()
-            xbox.tap_up()
-            return
-        if memory.main.battle_menu_cursor() == 1:
-            xbox.tap_up()
-        else:
-            xbox.tap_down()
-    while not memory.main.other_battle_menu():
-        xbox.tap_b()
-    battle.main._navigate_to_position(1)
-    while memory.main.other_battle_menu():
-        xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
-    xbox.tap_b()
+# def battle.main.auto_life(target=0):
+#     item_thrown = False
+#     while not (memory.main.turn_ready() and Tidus.is_turn()):
+#         if memory.main.turn_ready():
+#             twin_slot = memory.main.get_use_items_slot(item_num=66)
+#             three_slot = memory.main.get_use_items_slot(item_num=69)
+#             ab_pot_slot = memory.main.get_use_items_slot(item_num=20)
+#             if screen.turn_aeon():
+#                 CurrentPlayer().attack()
+#             elif Yuna.is_turn() and not item_thrown:
+#                 logger.debug(f"Slots for throwable items: {twin_slot}, {three_slot}, {ab_pot_slot}")
+#                 if memory.main.get_encounter_id() in [785,788,797,799,800]:
+#                     logger.debug("Do not throw an item for this battle.")
+#                     Yuna.defend()
+#                 elif twin_slot != 255:
+#                     # Twin stars, one target.
+#                     battle.main.use_item(slot=twin_slot,target=0)
+#                 elif three_slot != 255:
+#                     battle.main.use_item(slot=three_slot)
+#                 else:
+#                     Yuna.defend()
+#                 #memory.main.wait_seconds(10)
+#                 item_thrown = True
+#             elif Yuna.is_turn() and memory.main.get_encounter_id() == 762:
+#                 if Tidus.hp() < 1720:
+#                     battle.main.use_item(slot=ab_pot_slot)
+#                 else:
+#                     Yuna.defend()
+#             elif not Tidus.is_turn():
+#                 CurrentPlayer().defend()
+#         elif not memory.main.battle_active():
+#             return False
+#     while memory.main.battle_menu_cursor() != 22:
+#         if not Tidus.is_turn():
+#             logger.debug("Attempting Haste, but it's not Tidus's turn")
+#             xbox.tap_up()
+#             xbox.tap_up()
+#             return
+#         if memory.main.battle_menu_cursor() == 1:
+#             xbox.tap_up()
+#         else:
+#             xbox.tap_down()
+#     while not memory.main.other_battle_menu():
+#         xbox.tap_b()
+#     battle.main._navigate_to_position(1)
+#     while memory.main.other_battle_menu():
+#         xbox.tap_b()
+#     xbox.tap_b()
+#     xbox.tap_b()
+#     xbox.tap_b()
+#     xbox.tap_b()
+#     xbox.tap_b()
 
 
 @battle.utils.speedup_decorator
-def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=False, skip_throw=False):
+def basic_quick_attacks(
+    mega_phoenix=False, 
+    od_version: int = 0, 
+    yuna_autos=False, 
+    skip_throw=False,
+    prefer_overdrives=False,
+    game_over_return:bool=False,
+    quick_return:bool=False
+):
     logger.info(f"Battle Start:{memory.main.get_encounter_id()}")
     FFXC.set_neutral()
     item_thrown = skip_throw
     quick_hit_count = 0
     restore_mp = False
-    yojimbo_summon = (
+    yojimbo_summon = game_vars.yojimbo_unlocked() and (
         bool(zanmato_gil_needed() > 258000) or
         bool(first_turn_action_occurs())
     )
@@ -378,7 +421,7 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                     #Tidus.overdrive(version=od_version)
                     Tidus.overdrive()
                 elif Tidus.mp() >= 36:
-                    battle.main.use_skill(1)  # Quick hit
+                    battle.main.quick_hit()  # Quick hit
                     quick_hit_count += 1
                 else:
                     Tidus.attack()
@@ -400,16 +443,21 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                         Yuna.defend()
                     elif twin_slot != 255:
                         # Twin stars, one target.
-                        battle.main.use_item(slot=twin_slot,target=0)
+                        # battle.main.use_item(slot=twin_slot,target=0)
+                        battle.main.use_item_new(item=66)
                     elif three_slot != 255:
-                        battle.main.use_item(slot=three_slot)
+                        # battle.main.use_item(slot=three_slot)
+                        battle.main.use_item_new(item=69)
                     else:
                         Yuna.defend()
                     #memory.main.wait_seconds(10)
                     item_thrown = True
                 elif yojimbo_summon:
                     logger.debug("Yuna will attempt to summon Yojimbo (RNG manip)")
-                    battle.main.aeon_summon(5)
+                    if game_vars.platinum():
+                        battle.main.aeon_summon(6)
+                    else:
+                        battle.main.aeon_summon(5)
                     yojimbo_summon = False
                     restore_mp = True
                 elif (
@@ -427,12 +475,20 @@ def basic_quick_attacks(mega_phoenix=False, od_version: int = 0, yuna_autos=Fals
                     Yuna.defend()
             elif Wakka.is_turn() and memory.main.get_encounter_id() == 777:
                 Wakka.aim()
+            elif Wakka.is_turn() and game_vars.platinum():
+                Wakka.attack()
+            elif Wakka.is_turn() and prefer_overdrives and memory.main.get_overdrive_battle(4) == 100:
+                Wakka.overdrive(reels="attack")
+            elif not Wakka.active():
+                battle.main.buddy_swap(Wakka)
             else:
                 CurrentPlayer().defend()
 
     # After battle stuff
     battle.main.wrap_up()
     logger.debug("Battle is complete.")
+    if (game_over_return and memory.main.game_over()) or quick_return:
+        return False
     memory.main.wait_frames(2)
     while not memory.main.diag_skip_possible():
         pass
@@ -479,11 +535,12 @@ def basic_attack(
     return memory.main.battle_arena_results()
 
 def restock_downs():
-    update_stream()
+    # update_stream()
     logger.debug("Restocking phoenix downs")
     if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) >= 80:
         logger.debug("Restock not needed. Disregard.")
         return
+    armor_check()
     arena_npc()
     nemesis.arena_select.arena_menu_select(3)
     memory.main.wait_frames(60)
@@ -513,12 +570,10 @@ def restock_downs():
 
 def battles_1():
     logger.info("We are ready to start fighting monsters!")
+    if memory.main.get_map() == 374:
+        logger.info("Returning to the airship.")
+        nemesis.arena_select.arena_return()
     update_stream()
-    if not memory.main.equipped_armor_has_ability(char_num=1, ability_num=0x800A):
-        menu.equip_armor(character=1, ability=0x800A, full_menu_close=False)
-    if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
-        menu.equip_armor(character=4, ability=0x800A)
-    memory.main.close_menu()
     menu.tidus_slayer(od_pos=0)
     logger.debug("Mark 1")
 
@@ -589,7 +644,7 @@ def battles_2():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=0)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(mega_phoenix=True, od_version=1,skip_throw=True):
         # Should use Slice & Dice
         logger.debug("Battle not completed successfully.")
@@ -597,7 +652,7 @@ def battles_2():
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=0)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=1, index=0)
     nemesis.arena_select.arena_menu_select(4)
     menu.tidus_slayer(od_pos=1)
@@ -623,13 +678,13 @@ def battles_2():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=4)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(mega_phoenix=True,skip_throw=True):
         logger.debug("Battle not completed successfully.")
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=4)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=0, index=4)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -699,14 +754,14 @@ def battles_2():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=10)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(yuna_autos=True, skip_throw=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=10)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=0, index=10)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -717,7 +772,7 @@ def battles_2():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=1)
     aeon_start()
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(skip_throw=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
@@ -725,7 +780,7 @@ def battles_2():
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=1)
         aeon_start()
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=0, index=1)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -807,13 +862,14 @@ def battles_2():
 
 def juggernaught_battle():
     attack_count = 0
+    nulblaze_used = False
     yojimbo_summon = (
         bool(zanmato_gil_needed() > 258000) or
         bool(first_turn_action_occurs())
     )
     mega_phoenix = False
     revive = False
-    auto_life()
+    battle.main.auto_life(target=0)
     while memory.main.battle_active():
         if memory.main.turn_ready():
             ab_pot_slot = memory.main.get_use_items_slot(item_num=20)
@@ -821,20 +877,26 @@ def juggernaught_battle():
                 if screen.faint_check() >= 2:
                     battle.main.revive(item_num=7)
                     mega_phoenix = True
+                elif attack_count > 5 and not nulblaze_used:
+                    battle.main.nulblaze()
+                    nulblaze_used = True
                 elif memory.main.get_overdrive_battle(0) == 100:
                     #Tidus.overdrive(version=od_version)
                     Tidus.overdrive()
+                    attack_count += 1
                 elif Tidus.mp() >= 36:
-                    battle.main.use_skill(1)  # Quick hit
+                    battle.main.quick_hit()  # Quick hit
+                    attack_count += 1
                 else:
                     Tidus.attack()
-                attack_count += 1
-                #if attack_count > 8:
-                #    nulblaze = False
+                    attack_count += 1
                 logger.warning(f"Attack count: {attack_count}")
             elif Yuna.is_turn() and yojimbo_summon and mega_phoenix:
                 logger.debug("Yuna will attempt to summon Yojimbo (RNG manip)")
-                battle.main.aeon_summon(5)
+                if game_vars.platinum():
+                    battle.main.aeon_summon(6)
+                else:
+                    battle.main.aeon_summon(5)
                 yojimbo_summon = False
                 revive = True
             elif Yojimbo.is_turn():
@@ -853,33 +915,115 @@ def jug_farm_done():
     logger.debug(f"Slot: {memory.main.get_item_slot(87)}")
     if memory.main.get_item_slot(87) > 250:
         return False
+    elif game_vars.platinum():
+        if memory.main.get_item_count_slot(memory.main.get_item_slot(87)) < 16:
+            return False
     else:
         if memory.main.get_item_count_slot(memory.main.get_item_slot(87)) < 7:
             return False
     return True
 
+def juggernaut_single():
+    memory.main.update_formation(Tidus, Wakka, Rikku)
+    arena_npc()
+    nemesis.arena_select.arena_menu_select(1)
+    nemesis.arena_select.start_fight(area_index=14, monster_index=12)
+    juggernaught_battle()
+    touch_save()
+    restock_downs()
+    game_vars.arena_success(array_num=1, index=12)
+    nemesis.arena_select.arena_menu_select(4)
 
-def juggernaut_farm():
-    check_yojimbo_possible()
+
+def juggernaut_farm(include_yojimbo:bool=True):
+    if include_yojimbo:
+        check_yojimbo_possible()
+    if include_yojimbo and game_vars.platinum():
+        logger.debug(f"Merging Plat and Nemesis. We already did Juggernaught farm. Return.")
+        return
     write_custom_message("Detour 1\nJuggernauts for\nMAXIMUM STRENGTH!!!")
-    memory.main.update_formation(Tidus, Yuna, Rikku)
+    if not memory.main.equipped_armor_has_ability(char_num=0, ability_num=0x800A):
+        menu.equip_armor(character=0, ability=0x800A, full_menu_close=False)
+    if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
+        menu.equip_armor(character=4, ability=0x800A)
+    power_count = memory.main.get_item_count_slot(memory.main.get_item_slot(87))
+    if game_vars.platinum():
+        memory.main.update_formation(Tidus, Wakka, Rikku)
+        big_text = f"Strength Sphere count: {power_count}/16"
+    else:
+        memory.main.update_formation(Tidus, Yuna, Rikku)
+        big_text = f"Strength Sphere count: {power_count}/7"
     while not jug_farm_done():
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=12)
+        write_big_text(big_text)
         juggernaught_battle()
         nemesis.arena_select.arena_menu_select(4)
+        power_count = memory.main.get_item_count_slot(memory.main.get_item_slot(87))
+        if game_vars.platinum():
+            memory.main.update_formation(Tidus, Wakka, Rikku)
+            big_text = f"Strength Sphere count: {power_count}/16"
+        else:
+            memory.main.update_formation(Tidus, Yuna, Rikku)
+            big_text = f"Strength Sphere count: {power_count}/7"
+        write_big_text(big_text)
         touch_save()
         restock_downs()
-        check_yojimbo_possible()
+        if include_yojimbo:
+            check_yojimbo_possible()
     logger.debug("Good to go on strength spheres")
     game_vars.arena_success(array_num=1, index=12)
     logger.debug("Starting menu to finish strength.")
     nemesis.arena_select.arena_menu_select(4)
     nemesis.menu.str_boost()
+    if not game_vars.platinum():
+        memory.main.update_formation(Tidus, Yuna, Rikku)
+    # write_custom_message("Detour 2\nSteal from evil eyes\nfor 48 musk\ninto confuseproof\non Wakka")
+    # musk_farm()
+    logger.debug("Touch save sphere, and then good to go.")
+
+
+def vidatu_farm_done():
+    logger.debug(f"Slot: {memory.main.get_item_slot(87)}")
+    if memory.main.get_item_slot(86) > 250:
+        return False
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(86)) < 99:
+        # 99 because we're going to need A LOT. Probably more than this.
+        return False
+    return True
+
+
+def vidatu_farm():
+    current = memory.main.get_item_count_slot(memory.main.get_item_slot(86))
+    write_custom_message(f"Detour 2\Vidatu for MP nodes\n{current}/99")
+    if not memory.main.equipped_armor_has_ability(char_num=0, ability_num=0x800A):
+        menu.equip_armor(character=0, ability=0x800A, full_menu_close=False)
+    if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
+        menu.equip_armor(character=4, ability=0x800A)
+    memory.main.update_formation(Tidus, Wakka, Rikku)
+    big_text = f"MP Sphere count: {current}/99"
+    while not vidatu_farm_done():
+        if memory.main.get_gil_value() < 10000:
+            item_dump()
+        arena_npc()
+        nemesis.arena_select.arena_menu_select(1)
+        nemesis.arena_select.start_fight(area_index=14, monster_index=4)
+        write_big_text(big_text)
+        basic_quick_attacks(mega_phoenix=False,skip_throw=True)
+        current = memory.main.get_item_count_slot(memory.main.get_item_slot(86))
+        big_text = f"MP Sphere count: {current}/99"
+        write_custom_message(f"Detour 2\Vidatu for MP nodes\n{current}/99")
+        nemesis.arena_select.arena_menu_select(4)
+        memory.main.update_formation(Tidus, Wakka, Rikku)
+        touch_save()
+        restock_downs()
+        if memory.main.get_gil_value() < 6100:
+            item_dump()
+    logger.debug("Good to go on MP spheres spheres")
+    game_vars.arena_success(array_num=1, index=4)
+    nemesis.arena_select.arena_menu_select(4)
     memory.main.update_formation(Tidus, Yuna, Rikku)
-    write_custom_message("Detour 2\nSteal from evil eyes\nfor 48 musk\ninto confuseproof\non Wakka")
-    #musk_farm()
     logger.debug("Touch save sphere, and then good to go.")
 
 
@@ -936,14 +1080,14 @@ def battles_3():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=11)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(mega_phoenix=True,skip_throw=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=13, monster_index=11)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=0, index=11)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -957,7 +1101,7 @@ def battles_3():
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=2)
     aeon_start()
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_attack(use_od=False):
         logger.debug("Battle not completed successfully.")
         restock_downs()
@@ -965,7 +1109,7 @@ def battles_3():
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=2)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=1, index=2)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -975,14 +1119,14 @@ def battles_3():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=9)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(mega_phoenix=True, od_version=1,skip_throw=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=9)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=1, index=9)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -994,14 +1138,14 @@ def battles_3():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=14, monster_index=10)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(mega_phoenix=True, od_version=1,skip_throw=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=14, monster_index=10)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=1, index=10)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -1015,14 +1159,14 @@ def battles_4():
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=15, monster_index=0)
-    auto_life()
+    battle.main.auto_life(target=0)
     while not basic_quick_attacks(mega_phoenix=True, od_version=1,skip_throw=True):
         logger.debug("Battle not completed successfully.")
         restock_downs()
         arena_npc()
         nemesis.arena_select.arena_menu_select(1)
         nemesis.arena_select.start_fight(area_index=15, monster_index=0)
-        auto_life()
+        battle.main.auto_life(target=0)
     game_vars.arena_success(array_num=2, index=0)
     nemesis.arena_select.arena_menu_select(4)
     restock_downs()
@@ -1062,7 +1206,7 @@ def item_dump():
     memory.main.wait_frames(90)
     xbox.menu_right()
     xbox.menu_b()
-    menu.sell_all(nea=True)
+    menu.sell_all(nea=False)
     while memory.main.menu_open():
         xbox.tap_back()
 
@@ -1076,7 +1220,7 @@ def quick_reset_logic():
 
 
 def check_yojimbo_possible():
-    update_stream()
+    # update_stream()
     if Yuna.overdrive_percent() != 100:
         return False
     if first_turn_action_occurs():
@@ -1088,6 +1232,7 @@ def check_yojimbo_possible():
         and memory.main.get_gil_value() < 265000
     ):
         item_dump()
+    armor_check()
 
     if (
         memory.main.overdrive_state_2()[1] == 100
@@ -1126,9 +1271,9 @@ def shinryu_battle():
                 '''
                 if (
                     memory.main.who_goes_first_after_current_turn([0,20]) == 20
-                    and not memory.main.state_auto_life()
+                    and not memory.main.state_battle.main.auto_life(target=0)
                 ):
-                    auto_life()
+                    battle.main.auto_life(target=0)
                 '''
                 if screen.faint_check() >= 2:
                     battle.main.revive(item_num=7)
@@ -1257,13 +1402,85 @@ def battles_5(completion_version: int):
         return False
 
 
-def recharge_overdrives():
+def recharge_overdrives(align_zan:bool=False):
+    start = 'arena'
+    if memory.main.get_map() == 374:
+        start = 'airship'
+        nemesis.arena_select.arena_return()
 
     logger.debug("Yuna is not charged. Recharging with tonberry.")
+    write_big_text("Overdrive recharge logic")
     arena_npc()
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=13, monster_index=9)
     screen.await_turn()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if not Yuna.active():
+                battle.main.buddy_swap(Yuna)
+            elif Yuna.is_turn():
+                if Yuna.overdrive_percent() != 100:
+                    Yuna.attack()
+                else:
+                    Yuna.defend()
+            elif not Tidus.active():
+                battle.main.buddy_swap(Tidus)
+            elif (
+                Tidus.is_turn() and
+                Tidus.overdrive_percent() == 100 and
+                Yuna.overdrive_percent() == 100
+            ):
+                battle.main.flee_all()
+            elif Tidus.is_turn() and Tidus.overdrive_percent() != 100:
+                CurrentPlayer().attack()
+            else:
+                CurrentPlayer().defend()
+
+    logger.debug("Battle is complete.")
+    nemesis.arena_select.arena_menu_select(4)
+    memory.main.wait_frames(2)
+    if align_zan and not zan_ready():
+        while not zan_ready():
+            touch_save()
+            memory.main.update_formation(Tidus, Lulu, Rikku)
+            restock_downs()
+            arena_npc()
+            nemesis.arena_select.arena_menu_select(1)
+            nemesis.arena_select.start_fight(area_index=1, monster_index=1)
+            screen.await_turn()
+            summon_complete = not game_vars.yojimbo_unlocked()
+            while memory.main.battle_active():
+                if memory.main.turn_ready():
+                    if Yojimbo.is_turn():
+                        summon_complete=True
+                        Yojimbo.pay(gil_value=1)
+                    elif not Yuna.active():
+                        battle.main.buddy_swap(Yuna)
+                    elif Yuna.is_turn():
+                        if not summon_complete:
+                            battle.main.aeon_summon(6)
+                        else:
+                            battle.main.flee_all()
+                    elif summon_complete:
+                        battle.main.flee_all()
+                    else:
+                        CurrentPlayer().defend()
+            nemesis.arena_select.arena_menu_select(4)
+            memory.main.wait_frames(2)
+    if start == 'airship':
+        return_to_airship()
+    else:
+        touch_save()
+
+def zan_ready():
+    needed_amount = zanmato_gil_needed()  # Set value
+    if needed_amount > memory.main.get_gil_value() or first_turn_action_occurs():
+        return False
+    if Yuna.overdrive_percent() < 100:
+        return False
+    return True
+
+def recharge_overdrives_overworld():
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if not Yuna.active():
@@ -1281,20 +1498,18 @@ def recharge_overdrives():
             elif Tidus.is_turn() and Tidus.overdrive_percent() != 100:
                 CurrentPlayer().attack()
             else:
-                CurrentPlayer().defend()
-
-    logger.debug("Battle is complete.")
-    nemesis.arena_select.arena_menu_select(4)
-    memory.main.wait_frames(2)
-    touch_save()
+                battle.main.escape_one()
 
 
 def yojimbo_advance_battle():
     # Advances Yojimbo's RNG.
+    aeon_id = 5
+    if game_vars.platinum():
+        aeon_id = 6
     while memory.main.battle_active():
         if memory.main.turn_ready():
             if Yuna.is_turn():
-                battle.main.aeon_summon(5)
+                battle.main.aeon_summon(aeon_id)
             elif screen.turn_aeon():
                 Yojimbo.pay(gil_value=1)
             elif not Yuna.active():
@@ -1332,16 +1547,19 @@ def nemesis_battle():
         needed_amount = zanmato_gil_needed()  # Set value
     nemesis.arena_select.arena_menu_select(4)
     memory.main.update_formation(Tidus, Yuna, Rikku)
-    save_game()
-    while not battles_5(completion_version=99):
-        nemesis.arena_select.arena_menu_select(4)
-        quick_reset_logic()
-    xbox.controller_handle()
+    touch_save()
+    battles_5(completion_version=99)
+    # while not battles_5(completion_version=99):
+    #     nemesis.arena_select.arena_menu_select(4)
+    #     quick_reset_logic()
+    # xbox.controller_handle()
     while not pathing.set_movement([-6, -27]):
         pass
     while not pathing.set_movement([-2, -2]):
         pass
     return_to_airship()
+    
+    write_big_text("")
 
 
 def return_to_sin():
@@ -1350,3 +1568,14 @@ def return_to_sin():
     menu.equip_weapon(character=0, ability=0x8001, full_menu_close=True)
     FFXC.set_movement(0, -1)
     memory.main.wait_frames(2)
+
+def armor_check():
+    if not memory.main.equipped_armor_has_ability(char_num=0, ability_num=0x8056):
+        # Auto-haste for Tidus
+        menu.equip_armor(character=1, ability=0x8056, full_menu_close=False)
+    if not memory.main.equipped_armor_has_ability(char_num=1, ability_num=0x800A):
+        # Auto-phoenix for Yuna
+        menu.equip_armor(character=1, ability=0x800A, full_menu_close=False)
+    if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
+        # Auto-phoenix for Wakka
+        menu.equip_armor(character=4, ability=0x800A)

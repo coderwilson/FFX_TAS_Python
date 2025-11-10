@@ -3,7 +3,8 @@
         "kimahri_force_heal": "True"
     },
     "59": {
-        "kimahri_force_heal": "True"
+        "kimahri_force_heal": "True",
+        "zan_luck": "False"
     },
     "78": {
         "kimahri_force_heal": "True"
@@ -245,6 +246,9 @@
         "zan_luck": "False"
     },
     "116": {
+        "zan_luck": "False"
+    },
+    "7": {
         "zan_luck": "False"
     }
 }

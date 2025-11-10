@@ -17,9 +17,10 @@ FFXC = xbox.controller_handle()
 def air_ship_path(version, checkpoint:int = 0):
     memory.main.click_to_control()
     distiller_purchase = False
+    mana_need = 7
     power_need = 28
     speed_need = 10
-    if game_vars.nemesis():
+    if game_vars.nemesis() or game_vars.platinum():
         power_need += 6
         speed_need -= 3
 
@@ -40,7 +41,6 @@ def air_ship_path(version, checkpoint:int = 0):
                     memory.main.get_mana() < 9
                 )
             ):
-                # Tyton to update this with the actual purchase.
                 while memory.main.diag_progress_flag() != 44:
                     if memory.main.user_control():
                         pathing.set_movement([-6, 6])
@@ -82,7 +82,7 @@ def air_ship_path(version, checkpoint:int = 0):
                     xbox.menu_b()
 
                 #  Mana spheres
-                if memory.main.get_speed() < 9:
+                if memory.main.get_mana() < mana_need:
                     while memory.main.equip_buy_row() != 8:
                         if memory.main.equip_buy_row() < 8:
                             xbox.tap_down()
@@ -91,10 +91,10 @@ def air_ship_path(version, checkpoint:int = 0):
                     while not memory.main.item_shop_menu() == 16:
                         xbox.tap_b()
                     while memory.main.purchasing_amount_items() != min(
-                        math.ceil((9 - memory.main.get_speed()) / 2), 3
+                        math.ceil((mana_need - memory.main.get_mana()) / 2), 3
                     ):
                         if memory.main.purchasing_amount_items() < min(
-                            math.ceil((9 - memory.main.get_speed()) / 2), 3
+                            math.ceil((mana_need - memory.main.get_mana()) / 2), 3
                         ):
                             xbox.tap_right()
                         else:
@@ -178,10 +178,13 @@ def air_ship_path(version, checkpoint:int = 0):
                 FFXC.set_neutral()
                 complete = True
             elif checkpoint == 46:  # Talk to Cid
-                while memory.main.user_control():
-                    pathing.set_movement([-230, 366])
-                    xbox.tap_b()
-                FFXC.set_neutral()
+                if memory.main.get_story_progress() < 3000:
+                    while memory.main.user_control():
+                        pathing.set_movement([-230, 366])
+                        xbox.tap_b()
+                    FFXC.set_neutral()
+                else:
+                    FFXC.set_neutral()
                 complete = True
 
             # Complete states

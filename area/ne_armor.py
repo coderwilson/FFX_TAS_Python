@@ -62,7 +62,7 @@ def to_hidden_cave():
     _, next_drop = rng_track.final_nea_check()
     nea_possible_check = True
     write_str = f"Next drop: {next_drop}\nRNG10: "
-    write_str += f"{memory.main.next_chance_rng_10()}"
+    write_str += str(memory.main.next_chance_rng_10())
     write_big_text(write_str)
     while memory.main.get_map() != 56:
         #if not nea_possible_check or next_drop == 99:
@@ -76,7 +76,7 @@ def to_hidden_cave():
             if checkpoint == 8 and (
                 next_drop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
-                write_big_text("")
+                write_big_text(f"Need {next_drop} Epaaj kills.")
                 if not last_report:
                     logger.info("Need more advances before entering cave.")
                     last_report = True
@@ -122,7 +122,7 @@ def to_hidden_cave():
                 nea_possible_check, next_drop = rng_track.final_nea_check()
                 rng_track.print_manip_info()
                 write_str = f"Next drop: {next_drop}\nRNG10: "
-                write_str += memory.main.next_chance_rng_10()
+                write_str += str(memory.main.next_chance_rng_10())
                 write_big_text(write_str)
             elif memory.main.menu_open():
                 xbox.tap_confirm()

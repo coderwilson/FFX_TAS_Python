@@ -79,7 +79,7 @@ def approach_save_sphere():
         logger.debug("Disregard, save sphere could not be found.")
         return False
     else:
-        logger.debug("80 second time-out logic.")
+        logger.debug("20 second time-out logic.")
         logger.debug("The run is NOT SOFT LOCKED")
         while not (
             memory.main.diag_progress_flag() == target_details[2]
@@ -88,7 +88,7 @@ def approach_save_sphere():
             # Time-out logic
             end_timer = datetime.datetime.now()
             total_time = end_timer - start_timer
-            if total_time.total_seconds() > 80:
+            if total_time.total_seconds() > 20:
                 logger.debug("Save sphere time out - could not reach save sphere.")
                 return False
 
@@ -140,6 +140,7 @@ def approach_save_sphere():
                             and memory.main.diag_skip_possible()
                         ):
                             xbox.tap_b()  # Causes over-zealous touching.
+    logger.debug(f"Approach complete.")
     FFXC.set_neutral()
     return True
 
@@ -161,7 +162,10 @@ def touch_and_go():
 
 
 def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int = 999):
-    if game_vars.nemesis() and save_num != 199:
+    if game_vars.platinum():
+        game_mode = "Platinum"
+        return  # Platinum runs don't save properly for some reason.
+    elif game_vars.nemesis() and save_num != 199:
         save_num += 100
         game_mode = "Nemesis"
     elif game_vars.story_mode() and save_num != 199:
@@ -197,6 +201,7 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
                 xbox.tap_up()
         else:
             while memory.main.load_game_pos() != save_pos:
+                logger.debug(f"Attempting to navigate to position {save_pos} | {memory.main.load_game_pos()}")
                 if memory.main.load_game_pos() + 4 < save_pos:
                     xbox.trigger_r()
                 elif memory.main.load_game_pos() < save_pos:
@@ -213,6 +218,10 @@ def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int
         xbox.tap_b()
         while not memory.main.user_control():
             xbox.tap_a()
+        if memory.main.get_map() == 374:
+            FFXC.set_movement(1,1)
+            memory.main.wait_frames(9)
+            FFXC.set_neutral()
 
         logger.debug(f"==== Save num {save_num}====")
         logger.debug(f"==== Save pos {save_pos}====")

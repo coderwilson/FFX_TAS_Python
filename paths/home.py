@@ -13,7 +13,7 @@ class BikanelDesert(AreaMovementBase):
         7: [147, -421],
         8: [197, -387],
         9: [220, -400],
-        10: [172, -569],
+        10: [232, -525],
         11: [441, -366],
         12: [228, -523],
         13: [206, -534],
@@ -85,6 +85,11 @@ class BikanelDesert(AreaMovementBase):
         88: [175, -481],  # Flip RNG
         89: [189, -478],
         90: [212, -439],
+        100: [112, 721],  # Primer 5 logic
+        102: [-24, 301],  # Primer 5 logic
+        104: [-432, 708],  # Primer 6 logic
+        105: [-491, 765],  # Primer 6 logic
+        107: [-432, 708],  # Primer 6 logic
     }
     checkpoint_fallback = {
         2: "Touching save sphere",
@@ -163,4 +168,10 @@ class BikanelHome(AreaMovementBase):
         85: [6, 44],
         86: [0, 0],  # Open chest
         87: [1, 157],
+        90: [50, 348],
+        91: [118, 416],
+        92: [128, 504],
+        # 93 to pick up primer
+        94: [118, 416],
+        95: [50, 348],
     }

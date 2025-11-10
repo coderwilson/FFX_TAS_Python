@@ -84,7 +84,7 @@ class TidusImpl(Player):
         elif version == 2:
             memory.main.wait_frames(11)
         elif version == 3:
-            memory.main.wait_frames(10)
+            memory.main.wait_frames(11)
         else:
             # Backup. I don't know how this can occur.
             memory.main.wait_frames(10)
@@ -92,7 +92,7 @@ class TidusImpl(Player):
         logger.info("Hit Overdrive")
 
         # Backup attempts, used with low-quality computers only. No impact normally.
-        memory.main.wait_frames(10)
+        memory.main.wait_frames(8)
         xbox.tap_b()  # Extra attempt in case of miss
         memory.main.wait_frames(10)
         xbox.tap_b()  # Extra attempt in case of miss
@@ -105,16 +105,5 @@ class TidusImpl(Player):
 
     def overdrive_active(self):
         return memory.main.read_val(0x00F3D6F4, 1) == 4
-
-    def flee(self):
-        logger.debug("Fleeing with Tidus")
-        self.navigate_to_battle_menu(20)
-        while not memory.main.other_battle_menu():
-            xbox.tap_b()
-        self._navigate_to_position(0)
-        while memory.main.other_battle_menu():
-            xbox.tap_b()
-        self._tap_targeting()
-
 
 Tidus = TidusImpl()

@@ -109,18 +109,16 @@ def check_ml_heals(seed_num):
         else:
             logger.debug("Catchall settings - determining lowest run time modifier")
             lowest_time = results[seed_num]['best_adj']
-            logger.debug("test1")
             for mod in results[seed_num].keys():
                 if mod == "best_adj":
                     continue
-                logger.debug("test2")
                 for heal_method in results[seed_num][mod].keys():
                     logger.debug(f"A: {lowest_time}")
                     logger.debug(f"B: {results[seed_num][mod][heal_method]['adjusted_time']}")
                     if lowest_time == results[seed_num][mod][heal_method]['adjusted_time']:
                         logger.debug("test4")
                         modifier=mod
-                        avina_heals = True
+                        #avina_heals = True
         
 
         '''

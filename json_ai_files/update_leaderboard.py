@@ -106,14 +106,14 @@ class TrackerManager:
             return 0  # If the seed does not exist, return 0% explored
 
         explored_variants = 0
-        total_variants = len(self.all_variants) + 1
+        total_variants = len(self.all_variants) # + 1
 
 
         for i in range(len(self.all_variants)):
             if self.all_variants[i] in results[str(seed_key)].keys():
                 explored_variants += 1  # Each category (e.g., standard, flip_lowroad) is a variant type
-                if "True" in results[str(seed_key)][self.all_variants[i]].keys():
-                    explored_variants += 1  # At least one "True" was attempted
+                #if "True" in results[str(seed_key)][self.all_variants[i]].keys():
+                #    explored_variants += 1  # At least one "True" was attempted
 
         return explored_variants,total_variants,int(explored_variants/total_variants*100)
     

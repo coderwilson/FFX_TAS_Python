@@ -11,6 +11,13 @@ class KimahriImpl(Player):
     def __init__(self):
         super().__init__("Kimahri", 3, [0, 20, 1])
     
+    def is_overdrive_learned(self, od_name:str) -> bool:
+        od_index = self.od_name_to_bit_num(od_name)
+        ret_val = bool(memory.main.kim_od_unlocks()[od_index] == 1)
+        logger.debug(f"Overdrive '{od_name}' learned: {ret_val}")
+        return ret_val
+
+
     def od_name_to_bit_num(self, od_name):
         od_name = od_name.lower()
         # Starting from index zero, here are the ones we know.

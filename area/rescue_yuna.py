@@ -130,12 +130,16 @@ def guards():
     write_big_text("")
 
     checkpoint = 0
+    get_primer = game_vars.platinum()
     while checkpoint < 8:
         if memory.main.user_control():
             # Map changes
             if checkpoint < 2 and memory.main.get_map() == 182:
                 checkpoint = 2
             # General pathing
+            elif checkpoint == 6 and get_primer:
+                pathing.primer()
+                get_primer = False
             elif pathing.set_movement(BevellePreTrials.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")

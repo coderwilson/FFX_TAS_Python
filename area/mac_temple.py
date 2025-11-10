@@ -197,6 +197,8 @@ def trials(destro=False):
     memory.main.await_control()
     # FFXC.set_movement(0,1)
     # memory.main.wait_frames(15)
+    if game_vars.story_mode() or game_vars.platinum():
+        destro = True
 
     if destro or game_vars.csr():
         checkpoint = 3
@@ -352,8 +354,17 @@ def trials(destro=False):
             FFXC.set_neutral()
 
 
-def escape(dark_aeon:bool = False):
+def escape(dark_aeon:bool = False) -> bool:
     memory.main.click_to_control()
+
+    # Foyer room can be a problem.
+    if memory.main.get_map() == 106:
+        while memory.main.get_map() != 153:
+            if memory.main.get_coords()[1] > -70:
+                pathing.set_movement([6,-75])
+            else:
+                pathing.set_movement([1,-180])
+    FFXC.set_neutral()
     
     logger.info("First, some menuing")
     menu_done = game_vars.get_blitz_win()
@@ -368,7 +379,9 @@ def escape(dark_aeon:bool = False):
 
         logger.info("Now to escape the Guado")
 
-    if dark_aeon:
+    if memory.main.get_map() == 192:
+        checkpoint = 19
+    elif dark_aeon:
         checkpoint = 3
     else:
         checkpoint = 0
@@ -404,9 +417,13 @@ def escape(dark_aeon:bool = False):
                             Tidus.attack()
                         else:
                             CurrentPlayer().defend()
+                    if memory.main.game_over():
+                        return False
                     battle.main.wrap_up()
                 elif not menu_done:
                     battle.main.mac_flee_xp()
+                    if memory.main.game_over():
+                        return False
                     if memory.main.get_tidus_slvl() >= 2:
                         menu.home_grid()
                         menu_done = True
@@ -416,12 +433,15 @@ def escape(dark_aeon:bool = False):
                     break
                 else:
                     battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
     logger.info("Done pathing. Now for the Wendigo fight.")
+    return True
     
 def attempt_wendigo():
     if battle.boss.wendigo():

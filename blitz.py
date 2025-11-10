@@ -111,7 +111,9 @@ def game_clock():
 def prep_half():
     # Map = 347, Dialog = 20
     logger.info("Prepping for next period of play.")
+
     while memory.main.get_map() != 62:
+        logger.info(memory.main.diag_progress_flag())
         if (
             memory.main.diag_progress_flag() == 135
         ):  # Select game mode (Tourney, League, Exhibiton, etc)
@@ -159,6 +161,42 @@ def prep_half():
                 xbox.menu_b()
                 xbox.menu_b()
                 time.sleep(6)
+        elif memory.main.diag_progress_flag() == 27:
+            logger.warning("Skill setting screen")
+            while not memory.main.diag_skip_possible():
+                pass
+            xbox.tap_back()
+            memory.main.wait_frames(9)
+            xbox.tap_confirm()
+            memory.main.wait_frames(9)
+            xbox.tap_back()
+            memory.main.wait_frames(25)
+            xbox.tap_confirm()
+        elif memory.main.diag_progress_flag() == 22:
+            logger.warning("Skill setting screen (2)")
+            xbox.tap_back()
+            memory.main.wait_seconds(1)
+            xbox.tap_back()
+            memory.main.wait_frames(9)
+            xbox.tap_confirm()
+            memory.main.wait_frames(9)
+        elif memory.main.diag_progress_flag() == 33:
+            logger.warning("Skill setting screen (3)")
+            xbox.tap_back()
+            memory.main.wait_seconds(1)
+            xbox.tap_back()
+            memory.main.wait_seconds(1)
+            xbox.tap_back()
+            memory.main.wait_frames(9)
+            xbox.tap_confirm()
+            memory.main.wait_frames(9)
+        elif memory.main.diag_progress_flag() == 103:
+            if memory.main.diag_skip_possible():
+                xbox.tap_back()
+                memory.main.wait_seconds(1)
+                xbox.tap_back()
+                memory.main.wait_frames(9)
+                xbox.menu_b()
         elif memory.main.diag_skip_possible():
             xbox.menu_b()
     logger.info("Prep complete.")
@@ -238,12 +276,17 @@ def game_stage():
             else:
                 current_stage = 2
         elif controlling_player() == 0:  # First forward moves to position and shoots.
-            if distance(0, 11) > 250:
+            if distance(0, 11) > 150:
                 current_stage = 3
             else:
                 current_stage = 4
-        elif controlling_player() == 1:  # Second forward shoots
-            current_stage = 4
+        elif controlling_player() == 1:
+            if player_array[controlling_player()].get_coords()[1] > -200:
+                current_stage = 3  # Advance if near goal already
+            else:
+                current_stage = 2  # Pass back
+            current_stage = 3
+            # current_stage = 4  # Just shoot. Only works well with Golden Arm
     else:
         # Logic that immediately moves to scoring phases if in overtime.
         if 570 < memory.main.get_story_progress() < 700:
@@ -536,13 +579,15 @@ def pass_ball(target=0, break_through=5):
 
 
 def shoot_ball(break_through=5):
-    if memory.main.get_story_progress() < 570 and controlling_player() == 0:
+    if memory.main.get_story_progress() > 700 and controlling_player() == 0:
+        break_through = 0
+    elif memory.main.get_story_progress() < 570 and controlling_player() == 0:
         if game_clock() > 167:
             break_through = 5
         else:
             break_through = 0
-    else:
-        break_through = 5
+    #else:
+    #    break_through = 5
     if select_shot_type():
         if cursor_1() == 1:
             xbox.menu_b()
@@ -615,7 +660,7 @@ def player_guarded(player_num):
 def tidus_move():
     current_stage = game_stage()
     if report_state:
-        logger.debug("Tidus movement")
+        logger.warning("Tidus movement")
     graav_distance = distance(0, 8)
 
     other_distance = 0
@@ -628,10 +673,7 @@ def tidus_move():
     if distance(0, 10) < 180:
         other_distance += 1
 
-    if memory.main.get_story_progress() > 700:
-        shoot_target = [-30, 585]
-    else:
-        shoot_target = [-60, 570]
+    shoot_target = [-60, 570]
 
     if current_stage > 15:
         if get_char_radius(0) < 390:
@@ -641,8 +683,9 @@ def tidus_move():
         if distance(0, 3) < 330:
             xbox.tap_x()
     elif memory.main.get_story_progress() > 700:
-        FFXC.set_movement(-1, -1)
-        xbox.tap_x()
+        shoot_target = [-80, 570]
+        if blitz_pathing.set_movement(shoot_target):
+            xbox.tap_x()
         # logger.debug(f"Post-story Blitzball. {current_stage}")
         # if other_distance >= 2:
         #    xbox.tap_x()
@@ -697,7 +740,7 @@ def tidus_move():
 def tidus_act():
     current_stage = game_stage()
     if report_state:
-        logger.debug("Tidus act")
+        logger.warning("Tidus act")
 
     other_distance = 0
     if distance(0, 6) < 280:
@@ -710,7 +753,10 @@ def tidus_act():
         other_distance += 1
 
     if memory.main.get_story_progress() > 700:
-        shoot_ball(break_through=0)
+        if player_array[0].current_hp() < 120:
+            shoot_ball(break_through=1)
+        else:
+            shoot_ball(break_through=0)
     elif current_stage > 15:
         if other_distance >= 2:
             shoot_ball(break_through=0)
@@ -757,11 +803,11 @@ def letty_move():
         find_safe_place()
         xbox.tap_x()
     elif current_stage >= 3:
-        blitz_pathing.set_movement([10, 580])
+        blitz_pathing.set_movement([10, -580])
         xbox.tap_x()
     elif current_stage in [1, 2]:
         if distance(3, 8) > 400 and distance(3, 10) > 400:
-            blitz_pathing.set_movement([10, 580])
+            blitz_pathing.set_movement([10, -580])
             xbox.tap_x()
         else:
             find_safe_place()
@@ -780,11 +826,14 @@ def letty_act():
     elif current_stage == 30:
         pass_ball(target=3)
     elif memory.main.get_story_progress() > 700:  # Post-storyline blitzball only
-        pass_target = random.choice(range(100))
-        if pass_target < 90:  # More likely to pass to first defender / second attacker.
-            pass_ball(target=1, break_through=0)
-        else:  # Otherwise, pass to first defender, set up like normal.
-            pass_ball(target=0, break_through=0)
+        if player_array[0].get_coords()[1] > 10:
+            pass_target = random.choice(range(100))
+            if pass_target < 70:  # More likely to pass to first defender / second attacker.
+                pass_ball(target=0, break_through=0)
+            else:  # Otherwise, pass to first defender, set up like normal.
+                pass_ball(target=1, break_through=0)
+        else:
+            pass_ball(target=3, break_through=0)
     elif current_stage >= 4:
         pass_ball(target=0)
     elif current_stage == 3:
@@ -829,10 +878,11 @@ def jassu_move():
     if distance(3, 10) < 350:
         other_distance += 1
 
-    if memory.main.get_story_progress() > 700:
-        working_forward()
-        xbox.tap_x()
-    elif current_stage == 20:
+    #if memory.main.get_story_progress() > 700:
+    #    working_forward()
+    #    if player_array[controlling_player()].get_coords()[1] > 50:
+    #        xbox.tap_x()
+    if current_stage == 20:
         find_safe_place()
         if (
             distance(0, 8) > 330
@@ -889,6 +939,8 @@ def jassu_move():
             xbox.tap_x()
             move_forward = True
         elif distance(3, 10) > 450:
+            if player_array[controlling_player()].get_coords()[0] > -40:
+                target_coords = [-80, -450]
             target_coords = radius_movement(radius=560, direction="forward")
             move_forward = True
         elif distance(3, 10) > 340:
@@ -938,9 +990,9 @@ def jassu_act():
     if distance(3, 10) < 350:
         other_distance += 1
 
-    if memory.main.get_story_progress() > 700:
-        pass_ball(1)
-    elif current_stage == 20:
+    #if memory.main.get_story_progress() > 700:
+    #    pass_ball(1)
+    if current_stage == 20:
         if (
             distance(0, 8) > 310
             and distance(0, 10) > 340
@@ -1002,21 +1054,17 @@ def other_move():  # fix
     current_stage = game_stage()
     me = controlling_player()
 
-    if me == 1 and memory.main.get_story_progress() > 700:
-        blitz_pathing.set_movement([10, 580])
-        xbox.tap_x()
-    elif me == 1 and memory.main.get_story_progress() < 700:
-        # Datto sucks at everything!
-        if current_stage in [4, 5]:
-            blitz_pathing.set_movement([10, 580])
-            xbox.tap_x()
+    if memory.main.get_story_progress() > 700:
+        if me == 1:
+            if blitz_pathing.set_movement([100, 530]):
+                xbox.tap_x()
         else:
-            if blitz_pathing.set_movement([480, -200]):
+            if blitz_pathing.set_movement([170, -400]):
                 xbox.tap_x()
     else:
         if get_char_radius(4) < 400:
             blitz_pathing.set_movement([480, -200])
-        elif player_array[4].get_coords()[1] < -500:
+        elif player_array[4].get_coords()[1] < -450:
             xbox.tap_x()
         else:
             radius_movement(radius=580, direction="back")
@@ -1026,16 +1074,23 @@ def other_act():
     current_stage = game_stage()
     me = controlling_player()
 
-    if me == 1:
-        # Datto sucks at everything!
-        if current_stage in [4, 5]:
-            shoot_ball()
+    if memory.main.get_story_progress() > 700:
+        if me == 1:
+            if player_array[controlling_player()].get_coords()[1] > 450:
+                shoot_ball(break_through=1)
+            else:
+                pass_ball(target=2, break_through=5)
         else:
-            pass_ball(target=4)
-    elif memory.main.get_story_progress() > 700:
-        pass_ball(target=1, break_through=5)
+            pass_ball(target=3, break_through=5)
     else:
-        pass_ball(target=3, break_through=5)
+        if me == 1:
+            # Datto sucks at everything!
+            if current_stage in [4, 5]:
+                shoot_ball()
+            else:
+                pass_ball(target=4)
+        else:
+            pass_ball(target=3, break_through=5)
 
 
 def blitz_movement():
@@ -1092,6 +1147,7 @@ def blitz_main(force_blitz_win):
     last_state = 0
     last_menu = 0
     last_phase = 99
+    last_dialog = memory.main.diag_progress_flag()
     while (
         memory.main.get_story_progress() < 582 or memory.main.get_story_progress() > 700
     ):  # End of Blitz
@@ -1188,6 +1244,9 @@ def blitz_main(force_blitz_win):
                             )
                             last_menu = 91
             else:
+                if last_dialog != memory.main.diag_progress_flag():
+                    last_dialog = memory.main.diag_progress_flag()
+                    logger.debug(f"Dialog progress change: {last_dialog}")
                 FFXC.set_neutral()
                 if last_state != 3:
                     logger.debug("Screen outside the Blitz sphere")
@@ -1245,6 +1304,8 @@ def blitz_main(force_blitz_win):
     time_diff = end_time - start_time
     total_time = int(time_diff.total_seconds())
     if game_vars.get_force_blitz_win() or game_vars.story_mode():
+        pass
+    elif game_vars.platinum():
         pass
     else:
         rng_track.record_blitz_results(duration=total_time)

@@ -436,7 +436,7 @@ def kim_od_unlocks():
     #results.append(1 if (bits &  64) else 0)
     #results.append(1 if (bits & 128) else 0)
 
-    logger.warning(f"Kim OD unlocks: {results}")
+    logger.info(f"Kim OD unlocks: {results}")
     return results
 
 
@@ -798,16 +798,42 @@ def get_max_hp():
     return [HP_Tidus, HP_Yuna, HP_Auron, HP_Kimahri, HP_Wakka, HP_Lulu, HP_Rikku]
 
 
-def get_tidus_mp():
+def get_max_mp(actor_index:int=0):
     global base_value
-    ret_val = process.read(base_value + 0xD3207C)
+    # Out of combat HP only
+    # logger.warning(f"Check: {actor_index}")
+
+    coord = base_value + 0x00D32084 + (actor_index * 0x94)
+    actor_max_mp = process.read(coord)
+    # logger.manip(f"Actor {actor_index} max MP: {actor_max_mp}")
+    return actor_max_mp
+
+
+def get_actor_mp(actor_id:int):
+    global base_value
+    offset = actor_id * 0x94
+    ret_val = process.read(base_value + 0xD3207C + offset)
     return ret_val
+
+def get_tidus_mp():
+    return get_actor_mp(actor_id=0)
+    # global base_value
+    # ret_val = process.read(base_value + 0xD3207C)
+    # return ret_val
 
 
 def get_yuna_mp():
-    global base_value
-    ret_val = process.read(base_value + 0xD32110)
-    return ret_val
+    return get_actor_mp(actor_id=1)
+    # global base_value
+    # ret_val = process.read(base_value + 0xD32110)
+    # return ret_val
+
+
+def get_rikku_mp():
+    return get_actor_mp(actor_id=6)
+    # global base_value
+    # ret_val = process.read(base_value + 0xD322F8)  # should be 0xD323DC
+    # return ret_val
 
 
 def get_order():
@@ -1159,7 +1185,7 @@ def get_throw_items_order():
     x = 0
     while x < len(item_array):
         try:
-            if item_array[x] > 18:
+            if item_array[x] > 19:
                 item_array.remove(item_array[x])
             else:
                 x += 1
@@ -1474,6 +1500,17 @@ def state_silence(character):
     return result
 
 
+def state_silence(character):
+    global process
+    global base_value
+    base_pointer = base_value + 0xD334CC
+    base_pointer_address = process.read(base_pointer)
+    offset = (0xF90 * character) + 0x609
+    result = process.read_bytes(int(base_pointer_address+offset), 1)
+    logger.debug(f"Silence turns remaining for char {character}: {result}")
+    return result
+
+
 def print_all_statuses():
     global process
     global base_value
@@ -1489,7 +1526,7 @@ def print_all_statuses():
         #logger.warning(process.read_bytes(int(base_pointer_address+offset), 1))
 
 
-def state_auto_life(character: int = 0):
+def state_auto_life(character: int = 0) -> bool:
     global process
     global base_value
     base_pointer = base_value + 0xD334CC
@@ -1830,6 +1867,14 @@ def new_game_cursor():
     global base_value
 
     key = base_value + 0x001467942
+    value = process.read_bytes(key, 1)
+    return value
+
+
+def blitz_recrut_swap_cursor():
+    global base_value
+
+    key = base_value + 0x001467E22
     value = process.read_bytes(key, 1)
     return value
 
@@ -2250,13 +2295,16 @@ def miihen_guy_coords():
 
 def distance(actor_index: int, alt_index:int = 0):
     # Assume index is passed in.
-    actor_coords = get_actor_coords(actor_index=actor_index)
-    player_coords = get_actor_coords(actor_index=alt_index)
-    distance = sqrt(
-        ((player_coords[0] - actor_coords[0]) ** 2)
-        + ((player_coords[1] - actor_coords[1]) ** 2)
-    )
-    return int(distance)
+    try:
+        actor_coords = get_actor_coords(actor_index=actor_index)
+        player_coords = get_actor_coords(actor_index=alt_index)
+        distance = sqrt(
+            ((player_coords[0] - actor_coords[0]) ** 2)
+            + ((player_coords[1] - actor_coords[1]) ** 2)
+        )
+        return int(distance)
+    except:
+        return 0
 
 
 def actor_index(actor_num: int = 41):
@@ -2394,6 +2442,10 @@ def char_accuracy(character: int = 0):
     return ret_val
 
 
+def consecutive_reached():
+    global base_value
+    return process.read_bytes(base_value + 0xD2CE90,1)
+
 def dodge_lightning(l_dodge_num):
     global base_value
 
@@ -2402,11 +2454,12 @@ def dodge_lightning(l_dodge_num):
             wait_frames(1)
         else:
             wait_frames(5)
-        xbox.tap_b()
+        xbox.menu_b()
         if get_game_speed() >= 1:
             wait_frames(3)
         else:
             wait_frames(5)
+        logger.warning(f"(Memory) DODGE: {process.read_bytes(base_value + 0xD2CE90,1)}")
         return True
     else:
         return False
@@ -2915,6 +2968,76 @@ def blitz_cursor():
     return cursor
 
 
+def blitz_league_prizes():
+    # 0x0120 for Status Reels
+    # 0x0018 for Jupiter Sigil
+    global base_value
+    ret_val = [0,0,0,0]
+    for i in range(3):
+        # First, second, third place prizes.
+        key = base_value + 0xD2E48C + (i*2)
+        ret_val[i] = process.read_bytes(key, 2)
+
+    # Top scorer
+    key = base_value + 0xD2E498
+    ret_val[3] = process.read_bytes(key, 2)
+    return ret_val
+
+
+def blitz_tournament_prizes():
+    # 0x011F for Attack Reels
+    # 0x0121 for Auroch Reels
+    global base_value
+    ret_val = [0,0,0,0]
+    for i in range(3):
+        # First, second, third place prizes.
+        key = base_value + 0xD2E492 + (i*2)
+        ret_val[i] = process.read_bytes(key, 2)
+
+    # Top scorer
+    key = base_value + 0xD2E49A
+    ret_val[3] = process.read_bytes(key, 2)
+    return ret_val
+
+
+def blitz_tournament_active():
+    return bool(blitz_tournament_prizes()[3] != 0)
+
+
+def wakka_total_battles():
+    global base_value
+    ret_val = process.read_bytes(base_value + 0xD322FC, 4)
+    return ret_val
+
+
+def rikku_total_steals():
+    global base_value
+    ret_val = process.read_bytes(base_value + 0xD30840, 4)
+    return ret_val
+
+
+def wakka_od_learned():
+    global base_value
+    ret_val = process.read_bytes(base_value + 0xD307FE, 1)
+    byte_val = ret_val[0] if isinstance(ret_val, (bytes, bytearray)) else ret_val
+    learned_array = [
+        bool(byte_val & (1 << 4)),
+        bool(byte_val & (1 << 5)),
+        bool(byte_val & (1 << 6)),
+        bool(byte_val & (1 << 7))
+    ]
+    return learned_array
+
+
+
+def rikku_learned_flee():
+    global base_value
+    ret_val = process.read_bytes(base_value + 0xD32415, 1)
+    byte_val = ret_val[0] if isinstance(ret_val, (bytes, bytearray)) else ret_val
+    return bool(byte_val & (1 << 0))
+
+
+
 # ------------------------------
 # Function for logging
 
@@ -3387,13 +3510,6 @@ def customize_menu_array():
 def check_nea_armor():
     ability = 0x801D
 
-    char_weaps = armor_array_character(0)  # Tidus
-    while len(char_weaps) > 0:
-        current_handle = char_weaps.pop(0)
-        if current_handle.has_ability(ability):
-            game_vars.set_ne_armor(0)
-            return True
-
     char_weaps = armor_array_character(1)  # Yuna
     while len(char_weaps) > 0:
         current_handle = char_weaps.pop(0)
@@ -3415,13 +3531,6 @@ def check_nea_armor():
             game_vars.set_ne_armor(3)
             return True
 
-    char_weaps = armor_array_character(4)  # Wakka
-    while len(char_weaps) > 0:
-        current_handle = char_weaps.pop(0)
-        if current_handle.has_ability(ability):
-            game_vars.set_ne_armor(4)
-            return True
-
     char_weaps = armor_array_character(5)  # Lulu
     while len(char_weaps) > 0:
         current_handle = char_weaps.pop(0)
@@ -3429,11 +3538,25 @@ def check_nea_armor():
             game_vars.set_ne_armor(5)
             return True
 
+    char_weaps = armor_array_character(4)  # Wakka
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
+            game_vars.set_ne_armor(4)
+            return True
+
     char_weaps = armor_array_character(6)  # Rikku
     while len(char_weaps) > 0:
         current_handle = char_weaps.pop(0)
         if current_handle.has_ability(ability):
             game_vars.set_ne_armor(6)
+            return True
+
+    char_weaps = armor_array_character(0)  # Tidus
+    while len(char_weaps) > 0:
+        current_handle = char_weaps.pop(0)
+        if current_handle.has_ability(ability):
+            game_vars.set_ne_armor(0)
             return True
 
     return False
@@ -4623,6 +4746,28 @@ def next_chance_rng_10_calm() -> int:
             return i - 3
 
 
+def next_chance_rng_10_ronso() -> int:
+    test_array = rng_10_array()
+    for i in range(len(test_array)):
+        if i < 3:
+            pass
+        elif (test_array[i] & 0x7FFFFFFF) % 255 < 60 and (
+            test_array[i + 9] & 0x7FFFFFFF
+        ) % 255 < 60:
+            return i - 3
+
+
+def next_chance_rng_10_ronso_calm() -> int:
+    test_array = rng_10_array()
+    for i in range(len(test_array)):
+        if i < 3:
+            pass
+        elif (test_array[i] & 0x7FFFFFFF) % 255 >= 60 and (
+            test_array[i + 9] & 0x7FFFFFFF
+        ) % 255 < 60:
+            return i - 3
+
+
 def no_chance_x3_rng_10_highbridge() -> int:
     test_array = rng_10_array()
     for i in range(len(test_array)):
@@ -4872,17 +5017,24 @@ def arena_cursor():  # Not working properly
     status = process.read_bytes(key, 2)
     return status
 
-def arena_cursor_1():  # left/right on monster select screen
+def arena_cursor_1():  # left/right on area select screen
     global base_value
 
     ptr = process.read_bytes(base_value + 0xD2A084, 4)
     return process.read_bytes(ptr + 0x10, 2)
 
-def arena_cursor_2():  # up/down on monster select screen
+def arena_cursor_2():  # up/down on area select screen
     global base_value
 
     ptr = process.read_bytes(base_value + 0xD2A084, 4)
     return process.read_bytes(ptr + 0x12, 2)
+
+def arena_cursor_3():  # up/down on monster select screen
+    global base_value
+
+    ptr = process.read_bytes(base_value + 0xD2A084, 4)
+    val = process.read_bytes(ptr + 0x12, 2)
+    return (val - 93)/38
 
 
 # Escape logic, and used for others
@@ -4946,3 +5098,9 @@ def disable_battle_music():
     original_value = process.read_bytes(address, size=1)
     modified_value = original_value | 0b00000101
     process.write_bytes(address, modified_value, size=1)
+
+def read_bytes_external(key, length, use_base:bool=True):
+    global base_value
+    if use_base:
+        key += base_value
+    return process.read_bytes(key, length)

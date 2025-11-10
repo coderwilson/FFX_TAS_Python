@@ -13,6 +13,7 @@ from paths import Besaid1, Besaid2, BesaidTrials
 from players import Lulu, Tidus, Wakka, Yuna
 import save_sphere
 from area.dream_zan import split_timer
+from paths.destro_spheres import besaid_destro_sphere
 
 FFXC = xbox.controller_handle()
 game_vars = vars.vars_handle()
@@ -33,6 +34,19 @@ def beach(lagoon_strats):
         memory.main.await_control()
         memory.main.wait_frames(30 * 4.5)
         FFXC.set_neutral()
+    
+    checkpoint = 0
+    if game_vars.platinum():
+        # We grab Yuna's celestial item first.
+        while checkpoint < 12:
+            if memory.main.user_control():
+                if checkpoint == 6:
+                    pathing.approach_actor_by_id(20482)
+                    memory.main.click_to_control()
+                    checkpoint += 1
+                elif pathing.set_movement(besaid_destro_sphere.execute(checkpoint)):
+                    checkpoint += 1
+                    logger.debug(f"Checkpoint {checkpoint}")
 
     # Pathing, lots of pathing.
     besaid_battles = 0
@@ -232,7 +246,7 @@ def _distance(n1, n2):
 
 def trials(destro:bool=False):
     checkpoint = 0
-    if game_vars.story_mode():
+    if game_vars.story_mode() or game_vars.platinum():
         destro=True
         memory.main.wait_seconds(7)
         xbox.tap_confirm()
@@ -406,8 +420,10 @@ def leaving(checkpoint = 17):
     memory.main.click_to_control()
     while not pathing.set_movement([0, 23]):
         pass
-    while not pathing.set_movement([0, -35]):
+    while not pathing.set_movement([0, -42]):
         pass
+    if game_vars.platinum():
+        pathing.primer()
     pathing.set_movement([0, -100])
     memory.main.await_event()
     FFXC.set_neutral()

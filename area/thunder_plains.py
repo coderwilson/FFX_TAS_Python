@@ -34,23 +34,29 @@ def south_pathing():
 
     memory.main.update_formation(Tidus, Wakka, Auron)
     memory.main.close_menu()
-    count50 = 0
+    count_dodges = memory.main.l_strike_count()
+    if game_vars.platinum():
+        total_dodges = 200
+    else:
+        total_dodges = 50
     checkpoint = 0
     save_touched = False
     battle_count = 0
 
     with logging_redirect_tqdm():
-        with tqdm(total=50) as pbar:
+        with tqdm(total=total_dodges) as pbar:
             while memory.main.get_map() != 256:
                 if memory.main.user_control():
                     # Lightning dodging
                     if memory.main.dodge_lightning(game_vars.get_l_strike()):
                         game_vars.set_l_strike(memory.main.l_strike_count())
                         if checkpoint == 34:
-                            count50 += 1
+                            count_dodges = memory.main.l_strike_count()
                             pbar.update(1)
-                            write_big_text(f"Dodging {count50}/50")
+                            write_big_text(f"Dodging {count_dodges}/{total_dodges}")
                     elif checkpoint == 2 and game_vars.nemesis():
+                        checkpoint = 20
+                    elif checkpoint == 2 and game_vars.platinum():
                         checkpoint = 20
                     elif checkpoint == 3 and not save_touched:
                         if next_enc_dist in range(375,415):
@@ -81,9 +87,12 @@ def south_pathing():
                         checkpoint += 1
                         logger.info("Now ready to dodge some lightning.")
                     elif checkpoint == 34:
-                        if count50 == 50:
+                        memory_dodges = memory.main.consecutive_reached()
+                        if memory_dodges == 50 and game_vars.nemesis():
                             checkpoint += 1
-                        else:  # Dodging fifty bolts.
+                        elif memory_dodges == 200 and game_vars.platinum():
+                            checkpoint += 1
+                        else:
                             FFXC.set_neutral()
                     elif checkpoint == 39:  # Back to the normal path
                         checkpoint = 10
@@ -95,7 +104,7 @@ def south_pathing():
                             checkpoint += 1
                             logger.debug(f"Checkpoint {checkpoint}")
                             if checkpoint == 34:
-                                write_big_text("Dodging 0/50")
+                                write_big_text(f"Dodging {memory.main.l_strike_count()}/{total_dodges}")
                 else:
                     FFXC.set_neutral()
                     if (
@@ -248,6 +257,7 @@ def agency():
     # Arrive at the travel agency
     memory.main.click_to_control()
     checkpoint = 0
+    sigil_obtained = not game_vars.platinum()
 
     while memory.main.get_map() != 162:
         str_count = memory.main.get_item_count_slot(memory.main.get_item_slot(87))
@@ -282,7 +292,7 @@ def agency():
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
-                if game_vars.nemesis():
+                if game_vars.nemesis() or game_vars.platinum():
                     # Back in and out to spawn the chest
                     FFXC.set_movement(-1, 1)
                     while memory.main.get_map() != 263:
@@ -302,6 +312,34 @@ def agency():
             ):
                 pathing.set_movement([-73, 45])
                 xbox.tap_b()
+            elif (
+                checkpoint == 9
+                and not sigil_obtained
+            ):
+                item_index = memory.main.get_item_slot(9)
+                item_count = 0
+                
+                if item_index == 255:
+                    while memory.main.get_item_slot(9) == 255:
+                        logger.debug(f"A - Index: {item_index} | Count: {item_count}")
+                        pathing.approach_coords([-70,45])
+                        FFXC.set_neutral()
+                        #memory.main.click_to_control()
+                else:
+                    item_count = memory.main.get_item_count_slot(item_index)
+                    while memory.main.get_item_count_slot(item_index) == item_count:
+                        logger.debug(f"B - Index: {item_index} | Count: {item_count}")
+                        pathing.approach_coords([-70,45])
+                        FFXC.set_neutral()
+                        #memory.main.click_to_control()
+                
+                logger.debug("Next one should be Lulu's item.")
+                # Now we have all items except Lulu's celestial. One more time.
+                pathing.approach_coords([-70,45])
+                FFXC.set_neutral()
+                logger.debug("Got it. Let's get going!")
+                #memory.main.click_to_control()
+                sigil_obtained = True
             elif checkpoint == 11:
                 #game_vars.set_blitz_win(value=True)
                 FFXC.set_movement(0, 1)

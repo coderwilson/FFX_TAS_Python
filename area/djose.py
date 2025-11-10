@@ -8,7 +8,7 @@ from pathing import approach_coords
 import vars
 import xbox
 from paths import DjoseDance, DjoseExit, DjosePath, DjoseTrials
-from players import Auron, Tidus, Wakka
+from players import Auron, Tidus, Wakka, Kimahri
 from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,6 @@ def path():
     count_battles = 0
     checkpoint = 0
     last_cp = 0
-    stone_breath = 0
     logger.info("Starting Djose pathing section")
 
     while memory.main.get_map() != 76:  # All the way into the temple
@@ -36,9 +35,12 @@ def path():
             last_cp = checkpoint
 
         if memory.main.user_control():
-            if checkpoint in [47, 48] and stone_breath == 1:
+            if checkpoint == 17 and game_vars.platinum():
+                pathing.primer()
+                checkpoint += 1
+            if checkpoint in [47, 48] and Kimahri.is_overdrive_learned("stone breath"):
                 checkpoint = 49
-            elif checkpoint == 49 and stone_breath == 0:
+            elif checkpoint == 49 and not Kimahri.is_overdrive_learned("stone breath"):
                 checkpoint = 47
             # This is for the fabled Djose skip and not yet viable. Feel free to re-try.
             elif checkpoint == 42 and game_vars.try_djose_skip():
@@ -92,9 +94,9 @@ def path():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 logger.debug("Starting battle")
-                if stone_breath == 0:
+                if not Kimahri.is_overdrive_learned("stone breath"):
                     logger.debug("Still looking for Stone Breath.")
-                stone_breath = battle.main.djose(stone_breath, battle_count=count_battles)
+                battle.main.djose(battle_count=count_battles)
                 logger.debug("Battles complete.")
                 count_battles += 1
             elif memory.main.menu_open():
@@ -136,9 +138,9 @@ def path():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 logger.debug("Starting battle")
-                if stone_breath == 0:
+                if not Kimahri.is_overdrive_learned("stone breath"):
                     logger.debug("Still looking for Stone Breath.")
-                stone_breath = battle.main.djose(stone_breath, battle_count=count_battles)
+                battle.main.djose(battle_count=count_battles)
                 logger.debug("Battles complete.")
                 count_battles += 1
             elif memory.main.menu_open():
@@ -180,7 +182,7 @@ def temple():
 
 def trials(destro:bool=False):
     logger.info("Starting Trials section.")
-    if game_vars.story_mode():
+    if game_vars.story_mode() or game_vars.platinum():
         destro = True
     memory.main.click_to_control()
 

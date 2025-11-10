@@ -208,11 +208,27 @@
 		"sticky": "True"
 	},
 	"omega_ruins_(lower)": {
+		"first_battle": 23,
+		"last_battle": 24,
+		"return_direction": "b",
+		"return_start": 23,
+		"sphere": 0,
+		"sticky": "False"
+	},
+	"omega_ruins_(sphere)": {
 		"first_battle": 1,
 		"last_battle": 2,
 		"return_direction": "b",
 		"return_start": 1,
-		"sphere": 1,
+		"sphere": 0,
+		"sticky": "False"
+	},
+	"omega_ruins_(upper)": {
+		"first_battle": 27,
+		"last_battle": 29,
+		"return_direction": "b",
+		"return_start": 27,
+		"sphere": 0,
 		"sticky": "False"
 	},
 	"zanarkand_(overpass)": {
