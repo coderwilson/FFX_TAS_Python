@@ -55,10 +55,23 @@ def check_gems():
     logger.debug(f"Total gems: {gems}")
     return gems
 
-    
 
 def calm_lands(checkpoint = 0, plat_second_pass=False):
     memory.main.await_control()
+
+    # # This just for testing.
+    # paths, best = rng_track.purifico_to_nea(
+    #     stage=2,
+    #     report=False
+    # )
+    # while paths != [2,0,1,0]:
+    #     memory.main.advance_rng_10()
+    #     paths, best = rng_track.purifico_to_nea(
+    #         stage=2,
+    #         report=False
+    #     )
+    #     logger.debug(paths)
+
     # Start by getting away from the save sphere
     if memory.main.get_map() == 329:
         while memory.main.get_map() != 223:
@@ -76,20 +89,12 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
     battle.main.heal_up(full_menu_close=True)
     
     # Determine variables for the path forward.
-    routes, best = rng_track.purifico_to_nea(stage=2)
-    half = int(len(routes)/2)
-    game_vars.set_def_x_drop(bool((best % 4) >= 2))
-    game_vars.set_nea_after_bny(bool(best >= half))
-    if (not 2 in routes) and (not 1 in routes):
-        if not game_vars.nemesis() and not game_vars.platinum():
-            game_vars.set_nea_ignore(True)
-    #logger.manip(f"X drop: {game_vars.get_def_x_drop()}, Ronso first: {game_vars.get_nea_after_bny()}")
-
-    #rng_track.print_manip_info(pre_x= True)
+    _, defender_x_drop, _, _, paths = rng_track.nea_track()
+    
     # Enter the cutscene where Yuna muses about ending her journey.
     if not (memory.main.get_coords()[1] >= -1620 and memory.main.user_control()):
         checkpoint = 0
-    
+    calm_report()
 
     dest_map = 279
     if (game_vars.nemesis() or game_vars.platinum()) and checkpoint <= 2:
@@ -108,7 +113,7 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                             checkpoint -= 1
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
-                        elif game_vars.get_def_x_drop() and memory.main.next_chance_rng_10() != 0:
+                        elif defender_x_drop and memory.main.next_chance_rng_10() != 0:
                             checkpoint -= 1
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
@@ -117,18 +122,27 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                 if pathing.set_movement(CalmLands.execute(checkpoint)):
                     checkpoint += 1
                     if checkpoint == 17:
-                        if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
+                        if check_gems() < 2:
                             checkpoint -= 1
+                            write_big_text(f"Not enough gems: {check_gems()}/{2}")
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
-                        elif game_vars.get_def_x_drop() and memory.main.next_chance_rng_10() != 0:
+                        elif memory.main.get_yuna_slvl() < needed_levels:
                             checkpoint -= 1
+                            write_big_text(f"Yuna under-level: {memory.main.get_yuna_slvl()}/{needed_levels}")
+                            FFXC.set_movement(-1, -1)
+                            memory.main.wait_frames(60)
+                        elif defender_x_drop and memory.main.next_chance_rng_10() != 0:
+                            checkpoint -= 1
+                            write_big_text(f"Misaligned drop: {defender_x_drop} - {memory.main.next_chance_rng_10()}\n{paths}")
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
                     logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if screen.battle_screen():
+            if memory.main.battle_active():
+                while not memory.main.turn_ready() and not memory.main.game_over():
+                    pass
                 enc_id = memory.main.get_encounter_id()
                 if check_gems() < 2 and enc_id in [273,275,281,283]:
                     battle.main.calm_lands_gems()
@@ -141,34 +155,45 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                 else:
                     battle.main.calm_lands_manip()
                 memory.main.click_to_control_3()
+                calm_report()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
+                _, defender_x_drop, _, _, paths = rng_track.nea_track()
                 logger.warning(f"Checkpoint test: {checkpoint}")
+                
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.menu_b()
             
 
-            # Let's report after battle the big text on screen.
-            if check_gems() < 2:
-                report_str = f"Need to steal {2 - check_gems()} gem(s)."
-            elif game_vars.get_nea_ignore():
-                report_str = "Skipping NEA"
-            else:
-                report_str = "NEA: "
-                if game_vars.get_nea_after_bny():
-                    report_str += "After Ronso, "
-                else:
-                    report_str += "Before Ronso, "
-                if game_vars.get_def_x_drop():
-                    report_str += "yes drop on X"
-                else:
-                    report_str += "no drop on X"
-                report_str += f"\nDrop Alignment: {memory.main.next_chance_rng_10()}"
+def calm_report():
+    rng_track.print_manip_info()
 
-            write_big_text(report_str)
+def calm_report_old():
+    # Let's report after battle the big text on screen.
+    _, defender_x_drop, ronso_first, _, paths = rng_track.nea_track()
+    report_str = f"Need to steal {max(0,2 - check_gems())} gem(s).\n"
+    report_str += "NEA: "
+    if ronso_first:
+        report_str += "After Ronso, "
+    else:
+        report_str += "Before Ronso, "
+    if defender_x_drop:
+        report_str += "yes drop on X"
+    else:
+        report_str += "no drop on X"
+    rng10_array = memory.main.next_chance_rng_10_full()
+    align_array = []
+    for i in range(12):
+        if i in rng10_array:
+            align_array.append(i)
+    # logger.warning(f"Array check: {align_array}")
 
+    report_str += f"\nDrop Alignments: {align_array}"
+    report_str += f"\nPaths: {paths}"
+
+    write_big_text(report_str)
 
 def defender_x():
     memory.main.await_control()
@@ -177,7 +202,7 @@ def defender_x():
     while not pathing.set_movement([67, -255]):
         pass
     FFXC.set_movement(0, 1)
-    rng_track.print_manip_info(pre_x=True)
+    
     memory.main.await_event()
     FFXC.set_neutral()
 
@@ -201,6 +226,7 @@ def defender_x():
 
 
 def to_the_ronso(checkpoint: int = 2):
+    rng_track.print_manip_info()
     if checkpoint < 6:
         while memory.main.get_map() != 259:
             if memory.main.user_control():
@@ -214,6 +240,8 @@ def to_the_ronso(checkpoint: int = 2):
         checkpoint = 0
 
     # Now in screen with Ronso
+    logger.manip(memory.main.rng_array_from_index(index=13, array_len=20))
+    # memory.main.wait_frames(300)
     while memory.main.get_map() != 244:
         if memory.main.user_control():
             if pathing.set_movement(KelkRonso.execute(checkpoint)):
@@ -225,7 +253,11 @@ def to_the_ronso(checkpoint: int = 2):
                 battle.boss.biran_yenke()
                 logger.warning(f"NE Armor check: {game_vars.ne_armor()}")
                 if game_vars.ne_armor() == 255:
+                    rng_track.print_manip_info()
+                    logger.manip(memory.main.rng_array_from_index(index=13, array_len=10))
+                    # memory.main.wait_frames(300)
                     return
+                
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
 
@@ -348,6 +380,11 @@ def gagazet_climb(checkpoint: int = 0):
                     # Silence grenade negates the need for overdrive here.
                     battle.main.flee_all()
                     memory.main.click_to_control()
+                    if (
+                        memory.main.overdrive_state_2()[6] == 100
+                         or memory.main.get_item_slot(39) < 100
+                    ) and game_vars.ne_armor() != 255:
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 else:
                     battle.main.gagazet_path()
                     memory.main.click_to_control()
@@ -355,11 +392,10 @@ def gagazet_climb(checkpoint: int = 0):
                         memory.main.update_formation(Tidus, Kimahri, Auron)
                     else:
                         memory.main.update_formation(Tidus, Rikku, Auron)
-                    memory.main.click_to_control()
                     if (
                         memory.main.overdrive_state_2()[6] == 100
-                        and game_vars.ne_armor() != 255
-                    ):
+                         or memory.main.get_item_slot(39) < 100
+                    ) and game_vars.ne_armor() != 255:
                         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
@@ -533,29 +569,64 @@ def dream_old(checkpoint: int = 0):
 
 
 def cave():
-    checkpoint = 0
-
-    while memory.main.get_map() != 272:
-        if memory.main.user_control():
-            if memory.main.get_map() == 309 and memory.main.get_coords()[0] > 1160:
-                FFXC.set_movement(0.5, 1)
-                memory.main.wait_frames(3)
-                FFXC.set_movement(0, 1)
-                memory.main.wait_frames(6)
-            elif pathing.set_movement(GagazetPostDream.execute(checkpoint)):
-                checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
+    FFXC.set_neutral()
+    logger.warning(f"Map: {memory.main.get_map()}")
+    if memory.main.get_map() == 309:
+        # Standard start point, right after Tidus nap/dream.
+        checkpoint = 0
+        while memory.main.get_map() != 272:
+            if memory.main.user_control():
+                if memory.main.get_map() == 309 and memory.main.get_coords()[0] > 1160:
+                    FFXC.set_movement(0.5, 1)
+                    memory.main.wait_frames(3)
+                    FFXC.set_movement(0, 1)
+                    memory.main.wait_frames(6)
+                elif pathing.set_movement(GagazetPostDream.execute(checkpoint)):
+                    checkpoint += 1
+                    logger.debug(f"Checkpoint {checkpoint}")
+            else:
+                FFXC.set_neutral()
+                if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                    xbox.tap_confirm()
+                elif memory.main.menu_open():
+                    xbox.tap_confirm()
+        return cave()
+    elif memory.main.get_map() == 272:
+        memory.main.await_control()
+        # memory.main.wait_frames(90)
+        if pathing.distance_coords([-152,-1494]) < 30:
+            # Standard start spot, approaching from Sactuary Keeper.
+            checkpoint = 0
+            logger.warning("Mark 1")
+        elif pathing.distance_coords([178,-352]) < 30:
+            # After first trial
+            checkpoint = 43
+            logger.warning("Mark 2")
         else:
-            FFXC.set_neutral()
-            if memory.main.diag_skip_possible() and not game_vars.story_mode():
-                xbox.tap_confirm()
-            elif memory.main.menu_open():
-                xbox.tap_confirm()
+            # After second trial
+            checkpoint = 43
+            logger.warning("Mark 3")
+    elif memory.main.get_map() == 310:
+        memory.main.await_control()
+        if pathing.distance_coords([-72,-459]) > 30:
+            # Before first trial
+            checkpoint = 8
+        else:
+            # Before second trial
+            checkpoint = 30
+    else:
+        # Default. Anything we can do with this?
+        checkpoint = 0
+    if game_vars.ne_armor() in range(7):
+        if not memory.main.equipped_armor_has_ability(
+            char_num=game_vars.ne_armor(), ability_num=0x801D
+        ):
+            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
 
     memory.main.await_control()
-    logger.info("Gagazet cave section")
+    logger.info(f"Gagazet cave section: {checkpoint}")
+    memory.main.wait_frames(90)
 
-    checkpoint = 0
     power_needed = 6
     while memory.main.get_map() != 311:
         if memory.main.user_control():
@@ -711,6 +782,8 @@ def cave():
                         battle.main.flee_all()
                 else:
                     battle.main.flee_all()
+            elif memory.main.game_over():
+                return False
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif checkpoint == 6 or checkpoint == 54:
@@ -721,7 +794,7 @@ def cave():
                     xbox.tap_confirm()
 
     xbox.click_to_battle()
-    battle.boss.s_keeper()
+    return battle.boss.s_keeper()
 
 
 def wrap_up():

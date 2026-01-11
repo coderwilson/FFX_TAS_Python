@@ -247,7 +247,8 @@ def rin_equip_dump(
     sell_nea:bool=False, 
     stock_downs:bool=False, 
     stock_distillers:bool=False,
-    b_squad:bool=False
+    b_squad:bool=False,
+    cap:bool=False
 ):
     write_big_text("Dumping extra equipments")
     if game_vars.nemesis():
@@ -274,7 +275,7 @@ def rin_equip_dump(
     xbox.menu_b()
 
     logger.debug("Now activating sell-all logic")
-    menu.sell_all(nea=sell_nea)
+    menu.sell_all(nea=sell_nea,capture=cap)
     logger.debug("Sell all complete.")
     memory.main.close_menu()
     write_big_text("")
@@ -397,41 +398,35 @@ def rin_equip_dump(
                 xbox.tap_down()
         xbox.menu_b()  # Got any weapons?
         memory.main.wait_frames(60)
-        xbox.menu_b()  # Select weapons.
-        while memory.main.equip_buy_row() != 3:
+        xbox.menu_b()  # Purchase equipment
+        if not game_vars.plat_triple_ap_check()[5]:
+            # Lulu weapon, only if not obtained earlier.
             while memory.main.equip_buy_row() != 3:
-                if memory.main.equip_buy_row() > 3:
-                    xbox.tap_up()
-                else:
-                    xbox.tap_down()
-            memory.main.wait_frames(1)
-        xbox.menu_b()
-        memory.main.wait_frames(60)
-        xbox.menu_up()
-        memory.main.wait_frames(60)
-        xbox.menu_b()
-        memory.main.wait_frames(60)
-        xbox.menu_up()
-        memory.main.wait_frames(60)
-        xbox.menu_b()
-        memory.main.wait_frames(60)
+                while memory.main.equip_buy_row() != 3:
+                    if memory.main.equip_buy_row() > 3:
+                        xbox.tap_up()
+                    else:
+                        xbox.tap_down()
+                memory.main.wait_frames(1)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
 
-        # Lulu armor
-        xbox.menu_a()
-        memory.main.wait_frames(60)
-        xbox.tap_right()
-        memory.main.wait_frames(60)
-        xbox.menu_b()  # Select armors.
         while memory.main.equip_buy_row() != 10:
+            # Lulu armor
             while memory.main.equip_buy_row() != 10:
                 if memory.main.equip_buy_row() > 10:
                     xbox.tap_up()
                 else:
                     xbox.tap_down()
             memory.main.wait_frames(1)
-        xbox.menu_b()
-        memory.main.wait_frames(60)
-        xbox.menu_up()
         memory.main.wait_frames(60)
         xbox.menu_b()
         memory.main.wait_frames(60)
@@ -439,7 +434,10 @@ def rin_equip_dump(
         memory.main.wait_frames(60)
         xbox.menu_b()
         memory.main.wait_frames(60)
-        write_big_text("")
+        xbox.menu_up()
+        memory.main.wait_frames(60)
+        xbox.menu_b()
+        memory.main.wait_frames(60)
 
 
     write_big_text("")
@@ -465,6 +463,8 @@ def arena_npc():
     while not memory.main.user_control():
         if memory.main.diag_progress_flag() == 74 and memory.main.diag_skip_possible():
             return
+        elif memory.main.menu_open():
+            xbox.menu_a()
     if memory.main.get_map() != 307:
         return
     while not (
@@ -639,6 +639,8 @@ def return_to_airship(extra_save=False):
     logger.debug("Attempting Return to Airship")
     while not memory.main.user_control():
         pass
+    while memory.main.menu_open():
+        xbox.menu_a()
 
     memory.main.get_save_sphere_details()
     
@@ -719,7 +721,7 @@ def od_check(preferred_mode:int=999):
 
 
 
-def od_change(character:int, set_od_mode:int):
+def od_change(character:int, set_od_mode:int, full_menu_close:bool=True):
     memory.main.open_menu()
     while get_menu_cursor_pos() != 3:
         while get_menu_cursor_pos() != 3:
@@ -754,7 +756,11 @@ def od_change(character:int, set_od_mode:int):
                 xbox.tap_up()
         memory.main.wait_frames(3)
     xbox.menu_b()
-    memory.main.close_menu()
+    
+    if full_menu_close:
+        memory.main.close_menu()
+    else:
+        memory.main.back_to_main_menu()
     
 def od_check_2():
     # od_mode_unlocks, od_mode_pos, od_mode_current
@@ -767,19 +773,19 @@ def od_check_2():
                 # Comrade better than Stoic
                 od_change(character=character, set_od_mode=2)
     
-def distill_spheres(big_three=True):
+def distill_spheres():
     power = memory.main.get_item_count_slot(memory.main.get_item_slot(16))
     mana = memory.main.get_item_count_slot(memory.main.get_item_slot(17))
     speed = memory.main.get_item_count_slot(memory.main.get_item_slot(18))
     ability = memory.main.get_item_count_slot(memory.main.get_item_slot(19))
     
     if not memory.main.equipped_armor_has_ability(char_num=0, ability_num=0x800A):
+        logger.debug("Spheres: armor for Tidus")
         menu.equip_armor(character=0, ability=0x800A, full_menu_close=False)
     if not memory.main.equipped_armor_has_ability(char_num=4, ability_num=0x800A):
+        logger.debug("Spheres: armor for Wakka")
         menu.equip_armor(character=4, ability=0x800A, full_menu_close=False)
     menu.equip_weapon(character=0, ability=0x800F,full_menu_close=False)
-    menu.equip_weapon(character=4, ability=0x800F,full_menu_close=False)
-    menu.equip_weapon(character=6, ability=0x800F,full_menu_close=False)
     memory.main.update_formation(Tidus, Wakka, Rikku)
     if memory.main.get_gil_value() < 10000:
         item_dump()
@@ -891,7 +897,4 @@ def distill_spheres(big_three=True):
         ability_count = memory.main.get_item_count_slot(memory.main.get_item_slot(73))
     arena_menu_select(4)
     
-    if big_three:
-        menu.equip_weapon(character=0, ability=0x8004,full_menu_close=False)
-        menu.equip_weapon(character=4, ability=0x8004,full_menu_close=False)
-        menu.equip_weapon(character=6, ability=0x801A,full_menu_close=False)
+    menu.equip_weapon(character=0, ability=0x8004,full_menu_close=False)

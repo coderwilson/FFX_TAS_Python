@@ -26,7 +26,7 @@ def south_pathing():
     if game_vars.story_mode():
         memory.main.wait_seconds(62)
     memory.main.click_to_control_3()
-    next_enc_dist = memory.main.distance_to_encounter()
+    next_enc_dist,_ = memory.main.distance_to_encounter()
     #next_enc_dist = 380  # Testing only
     logger.warning(f"Next encounter distance: {next_enc_dist}")
 
@@ -355,6 +355,8 @@ def agency():
             elif checkpoint in [9,11]:
                 xbox.tap_confirm()
 
+def check_speed():
+    return memory.main.get_speed()
 
 def north_pathing(battle_count: int):
     memory.main.click_to_control()
@@ -362,6 +364,7 @@ def north_pathing(battle_count: int):
 
     l_strike_count = memory.main.l_strike_count()
     lunar_slot = memory.main.get_item_slot(56) != 255
+    speed_count = check_speed()
 
     checkpoint = 0
     while memory.main.get_map() != 110:
@@ -370,11 +373,20 @@ def north_pathing(battle_count: int):
             if memory.main.dodge_lightning(l_strike_count):
                 logger.debug("Dodge")
                 l_strike_count = memory.main.l_strike_count()
+                
+            elif (
+                checkpoint >= 19 and 
+                memory.main.get_speed() < 3 and
+                memory.main.get_item_slot(35) != 255
+            ):
+                checkpoint = 17
+                logger.debug(f"Low on speed spheres. Checkpoint {checkpoint}")
             #elif game_vars.csr() and checkpoint == 14:
             #    checkpoint = 24
             elif checkpoint == 19 and not game_vars.get_blitz_win() and not lunar_slot:
                 checkpoint -= 2
                 logger.debug(f"No lunar curtain. Checkpoint {checkpoint}")
+                
 
             # General pathing
             elif memory.main.user_control():
@@ -390,6 +402,7 @@ def north_pathing(battle_count: int):
                 if not result:
                     return False
                 lunar_slot = memory.main.get_item_slot(56) != 255
+                speed_count = check_speed()
             elif memory.main.menu_open():
                 xbox.tap_b()
             elif memory.main.game_over():

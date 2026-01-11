@@ -42,7 +42,7 @@ def od_mode_current(char_index) -> int:
     if true_mode == 2:
         return 0 # aVIna will always treat Stoic as position zero
     elif true_mode < 2:
-        return true_mode + 1
+        return (true_mode + 1)
     else:
         return true_mode
 

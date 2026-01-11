@@ -37,10 +37,9 @@ def check_spheres():
     need_speed = False
     if memory.main.get_speed() < 5:
         need_speed = True
-        # Reprogram battle logic to throw some kind of grenades.
 
     # Same for Power spheres
-    if game_vars.nemesis():
+    if game_vars.nemesis() or game_vars.platinum():
         if (
             memory.main.get_power() >= 28
             or (
@@ -50,8 +49,14 @@ def check_spheres():
             )
             or (memory.main.get_speed() >= 9 and memory.main.get_power() >= 24)
         ):
+            logger.warning(f"A-{memory.main.get_power()}")
+            logger.warning(f"A-{memory.main.get_speed()}")
+            logger.warning(f"A-{15 + math.ceil((9 - memory.main.get_speed()) / 2)}")
             need_power = False
         else:
+            logger.warning(f"C-{memory.main.get_power()}")
+            logger.warning(f"C-{memory.main.get_speed()}")
+            logger.warning(f"C-{15 + math.ceil((9 - memory.main.get_speed()) / 2)}")
             need_power = True
 
     elif (
@@ -63,8 +68,14 @@ def check_spheres():
         )
         or (memory.main.get_speed() >= 9 and memory.main.get_power() >= 15)
     ):
+        logger.warning(f"B-{memory.main.get_power()}")
+        logger.warning(f"B-{memory.main.get_speed()}")
+        logger.warning(f"B-{15 + math.ceil((9 - memory.main.get_speed()) / 2)}")
         need_power = False
     else:
+        logger.warning(f"D-{memory.main.get_power()}")
+        logger.warning(f"D-{memory.main.get_speed()}")
+        logger.warning(f"D-{15 + math.ceil((9 - memory.main.get_speed()) / 2)}")
         need_power = True
     return need_speed, need_power
 
@@ -98,6 +109,13 @@ def desert():
         tele_count = 0
     else:
         tele_count = memory.main.get_item_count_slot(tele_slot)
+
+    special_slot = memory.main.get_item_slot(76)
+    if special_slot != 255 and memory.unlocks.has_ability_unlocked(
+        character_index=0,
+        ability_name="Steal"
+    ):
+        menu.tidus_learns_steal()
 
     charge_state = memory.main.overdrive_state()[6] == 100
     # Bomb cores, sleeping powders, smoke bombs, silence grenades
@@ -368,6 +386,7 @@ def desert():
             if memory.main.battle_active():  # Lots of battle logic here.
                 if checkpoint < 7 and memory.main.get_encounter_id() == 197:
                     # First battle in desert
+                    guards_report_items()
                     if not battle.main.zu():
                         return False
                 elif memory.main.get_encounter_id() == 234:  # Sandragora logic
@@ -375,7 +394,7 @@ def desert():
                     if checkpoint < 55:
                         if not sandy1:
                             battle.main.sandragora(1)
-                            next_enc_dist = memory.main.distance_to_encounter()
+                            next_enc_dist,_ = memory.main.distance_to_encounter()
                             logger.warning(f"Next Enc distance: {next_enc_dist}")
                             sandy1 = True
                         else:

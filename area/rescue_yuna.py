@@ -566,8 +566,11 @@ def via_purifico():
                 FFXC.set_movement(0, 1)
         elif memory.main.battle_active():
             logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
+            logger.warning(f"Rescue count check: {game_vars.get_rescue_count()}")
+            # memory.main.wait_frames(300)  # For testing
             if memory.main.get_encounter_id() < 258:
                 larvae_count += 1
+                game_vars.add_rescue_count()
             battle.boss.isaaru()
             if memory.main.game_over():
                 logger.warning("via_purifico function, RETURN FALSE")
@@ -617,13 +620,14 @@ def evrae_altana():
                 logger.debug(f"Checkpoint: {checkpoint}")
         else:
             if screen.battle_screen():
-                battle.boss.evrae_altana()
-                logger.debug("Mark")
-                logger.debug(memory.main.get_encounter_id())
-                if memory.main.get_encounter_id() == 266:
-                    paths, best = rng_track.purifico_to_nea(stage=1)
-                    write_big_text(str(paths))
-                    logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
+                if battle.boss.evrae_altana():
+                    logger.debug("Mark")
+                    logger.debug(memory.main.get_encounter_id())
+                    if memory.main.get_encounter_id() == 266:
+                        paths, best = rng_track.purifico_to_nea(stage=1)
+                        write_big_text(str(paths))
+                        logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
+                
             elif memory.main.battle_wrap_up_active():
                 xbox.menu_b()
 
@@ -734,10 +738,10 @@ def natus_formation(battles: int = 0, full_menu_close: bool = True):
 
 def seymour_natus():
     memory.main.click_to_control()
-    start_count = game_vars.get_rescue_count()
-    if start_count == 0:
-        start_count = 3
-        game_vars.set_rescue_count(value=start_count)
+    # start_count = game_vars.get_rescue_count()
+    # if start_count == 0:
+    #     start_count = 3
+    #     game_vars.set_rescue_count(value=start_count)
 
     delay_grid = True
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
@@ -767,16 +771,11 @@ def seymour_natus():
                 if memory.main.battle_type() == 2:
                     battle.main.flee_all()
                     battle.main.wrap_up()
+                elif memory.main.get_encounter_id() == 272:  # Seymour Natus
+                    battle.boss.seymour_natus()
+                    break
                 else:
-                    battle.boss.seymour_natus(delay_grid)
-                    battle.main.wrap_up()
-                    '''
-                    if complete == 1 and not game_vars.csr():
-                        memory.main.click_to_diag_progress(num=9)
-                        memory.main.click_to_control()
-                    else:
-                        battle.main.wrap_up()
-                    '''
+                    battle.main.highbridge_rescue_battle(delay_grid=delay_grid)
 
                 memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=True)
@@ -787,7 +786,8 @@ def seymour_natus():
                     else:
                         menu.seymour_natus_blitz_loss()
                 memory.main.close_menu()
-                logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
+                logger.warning(f"Rescue count check: {game_vars.get_rescue_count()}")
+                # memory.main.wait_frames(300)  # For testing
                 #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
                 #rng_track.print_manip_info()
             elif memory.main.battle_wrap_up_active():

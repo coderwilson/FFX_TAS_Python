@@ -656,98 +656,145 @@ class SphereGrid:
                             queue.append((neighbor_id, distance + 1))
         return None, None # No node of target type found
 
-    def find_dead_end(
-        self, character_id: int
-    ) -> tuple[int | None, int | None]:
+    def find_path_to_nearest_dead_end(
+        self, start_node_id: int, character_id: str, MAX_DISTANCE:int = 8
+    ) -> list[int]:
+        from collections import deque
         """
-        Finds the nearest unactivated dead-end node from the specified character's current position
-        using BFS, taking into account locked (impassable) nodes and character activation status.
+        Finds the shortest path (list of node IDs) from start_node_id to the 
+        nearest unactivated dead-end node, limited to a maximum path length of 8.
 
         Args:
-            character_id (int): The ID of the current character (e.g., 0 for Tidus).
+            start_node_id (int): The ID of the starting node.
+            character_id (str): The ID of the current character.
 
         Returns:
-            tuple[int | None, int | None]: A tuple containing the ID of the nearest
-            unactivated dead-end node and its distance from the start node, or (None, None)
-            if no unactivated dead-end node is found or the character/start node is invalid/impassable.
+            list[int]: The shortest path as a list of node IDs (including start and end), 
+            or an empty list if no unactivated dead-end node is found within 8 steps.
         """
         character_name = name_from_number(character_id)
         if character_name == "Unknown":
             logger.error(f"Invalid character ID provided: {character_id}. Cannot determine character name.")
-            return None, None
+            return []
 
-        start_node_id = self.character_at_node(character_id)
-        if start_node_id is None: # Assuming character_at_node might return None if actor_id is invalid
+        actual_start_node_id = self.character_at_node(character_id)
+        if actual_start_node_id is None:
             logger.error(f"Could not determine start node ID for character ID {character_id}.")
-            return None, None
-
-        logger.debug(f"Searching for nearest unactivated dead end from {start_node_id} (character {character_name})")
-
-        # Define the set of known dead-end node IDs here.
-        dead_end_nodes_ids = {
-            705,811,375,815,35,300,90,746,703,650,547,541,829,813,478,844,
-            850,721,755,700,824,804,641,773,777,765,735,741,742,826,835,809,
-            91,745,787,788,761,676,748
-        }
-
-        start_node = self.get_node(start_node_id)
-        if not start_node:
-            logger.debug(f"Error: Start node {start_node_id} not found in grid data.")
-            return None, None
+            return []
         
-        # Ensure the start node's current type and unlocked status are up-to-date
-        start_node.update_node_type()
-        start_node.unlocked_by_characters # This will update its internal _unlocked_by_characters by reading memory
+        start_node_id = actual_start_node_id
 
-        if not self._is_node_traversable(start_node_id):
-            logger.debug(f"Error: Start node {start_node_id} is not traversable for finding nearest dead end.")
-            return None, None
+        logger.debug(f"Searching for shortest path to nearest unactivated dead end from {start_node_id} (character {character_name}) with max distance of {MAX_DISTANCE}.")
+
+        # --- Dead-End Node Identification ---
+        # This setup remains the same: identify all dead-end nodes in the grid
+        all_nodes = self.get_all_nodes()
+        dead_end_nodes_ids = set()
+        accounted_for = []
+
+        for node_id in all_nodes:
+            current_node = self.get_node(node_id)
+            if not current_node: continue
+            
+            # 1. Degree 1 check
+            if len(current_node.adjacent_node_ids) == 1:
+                dead_end_nodes_ids.add(node_id)
+            # 2. Degree 2 pair check (cul-de-sac)
+            # N has two neighbors, N1 and N2.
+            elif (
+                len(current_node.adjacent_node_ids) == 2 and
+                not node_id in accounted_for
+            ):
+                N1, N2 = current_node.adjacent_node_ids
+                
+                # Check N1: Is N1 also Degree 2?
+                N1_node = self.get_node(N1)
+                N2_node = self.get_node(N2)
+                if N1_node and len(N1_node.adjacent_node_ids) == 2:
+                    if (
+                        node_id in N1_node.adjacent_node_ids and
+                        N2 in N1_node.adjacent_node_ids
+                    ):
+                        dead_end_nodes_ids.add(node_id)
+                        accounted_for.append(N1)
+                elif N2_node and len(N2_node.adjacent_node_ids) == 2:
+                    if (
+                        node_id in N2_node.adjacent_node_ids and
+                        N1 in N2_node.adjacent_node_ids
+                    ):
+                        dead_end_nodes_ids.add(node_id)
+                        accounted_for.append(N2)
+        
+        start_node = self.get_node(start_node_id)
+        if not start_node or not self._is_node_traversable(start_node_id):
+            logger.debug(f"Error: Start node {start_node_id} is invalid or not traversable.")
+            return []
 
         # Optimization: Check if the start node itself is an unactivated dead end
-        # A dead end is "unactivated" if the specific character has not activated it.
+        start_node.update_node_type()
+        start_node.unlocked_by_characters
         if start_node_id in dead_end_nodes_ids and \
            not start_node.unlocked_by_characters.get(character_name, False):
             logger.debug(f"Start node {start_node_id} is an unactivated dead end.")
-            return start_node_id, 0
+            return [start_node_id] # Path is just the node itself
 
-        queue = deque([(start_node_id, 0)])  # (current_node_id, distance)
+        # Begin BFS: We track the full path to the current node
+        # queue = [(current_node_id, distance, path_list)]
+        queue = deque([(start_node_id, 0, [start_node_id])])
         visited = {start_node_id}
 
         while queue:
-            current_node_id, distance = queue.popleft()
+            current_node_id, distance, path = queue.popleft()
             current_node = self.get_node(current_node_id)
 
-            if current_node:
-                for neighbor_id in current_node.adjacent_node_ids:
-                    if neighbor_id not in visited:
-                        visited.add(neighbor_id)
+            if not current_node:
+                continue
+
+            # Skip processing neighbors if we are already at the distance limit
+            if distance >= MAX_DISTANCE:
+                continue
+
+            for neighbor_id in current_node.adjacent_node_ids:
+                if neighbor_id not in visited:
+                    
+                    new_distance = distance + 1
+                    
+                    # If the next step exceeds the 8-node limit, skip the neighbor
+                    if new_distance > MAX_DISTANCE:
+                        continue 
                         
-                        neighbor_node = self.get_node(neighbor_id)
-                        if not neighbor_node:
-                            logger.warning(f"Neighbor node {neighbor_id} not found in grid data, skipping.")
-                            continue
+                    visited.add(neighbor_id)
+                    neighbor_node = self.get_node(neighbor_id)
+                    
+                    if not neighbor_node:
+                        logger.warning(f"Neighbor node {neighbor_id} not found, skipping.")
+                        continue
 
-                        # Update neighbor's type and unlocked status from memory before checks
-                        neighbor_node.update_node_type()
-                        neighbor_node.unlocked_by_characters # Update the character unlock status from memory
+                    neighbor_node.update_node_type()
+                    neighbor_node.unlocked_by_characters
 
-                        # Check if the neighbor is traversable (not a locked key sphere node)
-                        if not self._is_node_traversable(neighbor_id):
-                            logger.debug(f"Neighbor {neighbor_id} is impassable (locked).")
-                            continue 
+                    # Check if the neighbor is traversable
+                    if not self._is_node_traversable(neighbor_id):
+                        logger.debug(f"Neighbor {neighbor_id} is impassable (locked), stopping path.")
+                        # Do NOT queue impassable nodes, but keep track of visited to prevent re-checking
+                        continue
 
-                        # Check if the neighbor is a dead end AND not activated by the current character
-                        if neighbor_id in dead_end_nodes_ids and \
-                           not neighbor_node.unlocked_by_characters.get(character_name, False):
-                            logger.debug(f"Found nearest unactivated dead end: {neighbor_id} at distance {distance + 1}")
-                            return neighbor_id, distance + 1
+                    new_path = path + [neighbor_id]
 
-                        # If not the target, and traversable, add to queue for further exploration
-                        queue.append((neighbor_id, distance + 1))
+                    # CHECK FOR THE TARGET: Unactivated Dead End
+                    if neighbor_id in dead_end_nodes_ids and \
+                       not neighbor_node.unlocked_by_characters.get(character_name, False):
+                        
+                        logger.debug(f"Found nearest unactivated dead end: {neighbor_id} at distance {new_distance}. Path found.")
+                        # The path includes the dead end node
+                        return new_path
+                        
+                    # Queue the neighbor for the next iteration
+                    queue.append((neighbor_id, new_distance, new_path))
         
-        logger.debug("No unactivated dead end node found.")
-        return None, None
-    
+        logger.debug(f"No unactivated dead end found within {MAX_DISTANCE} steps from {start_node_id}. Returning empty path.")
+        return []
+
     def _resolve_sphere_identifier(self, sphere_input: Union[int, str]) -> str | None:
         """
         Internal helper to resolve a sphere input (ID or name) to its canonical string name.

@@ -1075,7 +1075,18 @@
         },
         "99": {
             "Nemesis": {
-                "save_num": "164",
+                "save_num": "185",
+                "blitz_win_value": "True",
+                "end_game_version_val": "4",
+                "nea_zone": "2",
+                "nem_ap_val": "27",
+                "special_movement": "none",
+                "mrr_skip": true
+            }
+        },
+        "100": {
+            "Nemesis": {
+                "save_num": "186",
                 "blitz_win_value": "True",
                 "end_game_version_val": "4",
                 "nea_zone": "2",

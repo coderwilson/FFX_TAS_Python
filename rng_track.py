@@ -7,6 +7,7 @@ import logs
 import memory.main
 import vars
 from tracker.ffx_rng_tracker.data.monsters import MONSTERS
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -242,7 +243,8 @@ def item_to_be_dropped(
     pre_advance_12: int = 0,
     pre_advance_13: int = 0,
     party_size: int = 7,
-    report:bool = True
+    report:bool = True,
+    kill_pref:str = None
 ):
     test_mode = False
     slot_mod = slot_modifier(enemy=enemy)
@@ -323,6 +325,8 @@ def item_to_be_dropped(
         character = 3
     elif enemy in ["defender_x", "maze_larva"]:
         character = user_1
+    elif kill_pref == "aeon":
+        character = user_1
 
     # rng13 logic here, determine which ability goes where.
     ability_list, advances = ability_to_be_dropped(
@@ -356,6 +360,7 @@ def ability_to_be_dropped(
     enemy: str = "ghost", equip_type: int = 0, slots: int = 1, advances: int = 0,
     ability_count:int=1, char:int = 0
 ):
+    advances_returned = ability_count
     test_mode = False  # Doesn't functionally change, but prints more stuff.
     outcomes = drop_ability_list(enemy=enemy, equip_type=equip_type)
     filled_slots = [99] * slots
@@ -367,12 +372,13 @@ def ability_to_be_dropped(
     
     found = 0
     ptr = 0  # Pointer that indicates how many advances needed for this evaluation
-    test_array = memory.main.rng_13_array(array_len=50 + advances)
+    test_array = memory.main.rng_13_array(array_len=60 + advances)
     
     if test_mode:
         logger.debug(f"Enemy: {enemy} - Outcomes: {outcomes}")
 
-    while 99 in filled_slots and ptr < 50 + advances and found < ability_count:
+    # while 99 in filled_slots and ptr < 50 + advances and found < ability_count:
+    while 99 in filled_slots and ptr < ability_count:
         # Increment to match the first (and subsequent) advance(s)
         try:
             ptr += 1
@@ -383,11 +389,12 @@ def ability_to_be_dropped(
             if test_mode:
                 logger.debug(f"AP: {array_pos}")
                 logger.debug(f"Res: {outcomes[array_pos]}")
-            if outcomes[array_pos] in filled_slots:
+            ability_id = int(outcomes[array_pos])
+            if ability_id in filled_slots:
                 pass
             else:
                 filled_slots.remove(99)
-                filled_slots.append(int(outcomes[array_pos]))
+                filled_slots.append(ability_id)
                 found += 1
                 if test_mode:
                     logger.debug(filled_slots)
@@ -406,7 +413,7 @@ def ability_to_be_dropped(
     if test_mode:
         logger.debug(f"Filled Slots fin: {filled_slots}")
 
-    return [filled_slots, ptr]
+    return [filled_slots, advances_returned]
 
 
 def report_dropped_item(
@@ -740,64 +747,66 @@ def zombie_track(report=False):
     return zombie_results
 
 
-def nea_track(pre_defender_x:bool = False, report=False):
-    drop_x = False
-    bny = False
-    advances = 0
-    #logger.warning(memory.main.rng_array_from_index(index=12, array_len=20))
-    #logger.warning(memory.main.rng_array_from_index(index=13, array_len=20))
-    if pre_defender_x:
-        stage = 2
+def check_gems():
+    gem_slot = memory.main.get_item_slot(34)
+    if gem_slot < 200:
+        gems = memory.main.get_item_count_slot(gem_slot)
     else:
-        stage = 3
-    
-    paths, best = purifico_to_nea(
-        stage=stage,
-        report=False
-    )
-    if best == 99:
-        return (99,99)
-    
-    bny = bool(best >= len(paths)/2)
-    if stage == 2:
-        drop_x = bool((best % 4) >= 2)
-        if not drop_x:
-            advances = 1
-    
-    if drop_x != game_vars.get_def_x_drop():
-        game_vars.set_def_x_drop(drop_x)
-    #logger.manip(f"    BnY: {bny}")
-    #logger.manip(f"BnY_var: {game_vars.get_nea_after_bny()}")
-    if bny != game_vars.get_nea_after_bny():
-        game_vars.set_nea_after_bny(bny)
-    if report:
-        logger.manip(
-            f"Defender X: {game_vars.get_def_x_drop()}, Ronso before NEA: {game_vars.get_nea_after_bny()}"
-        )
-    
-    #if not drop_x and not bny:
-    #    return (paths[best], memory.main.next_chance_rng_10_calm())
-    #elif not drop_x and memory.main.next_chance_rng_10() != 0:
-    #    return (paths[best], 0)
-    #else:
-    return (advances, memory.main.next_chance_rng_10())
-    # Note return of 0 means we don't need any extra mobs, other than X or Ronso.
+        gems = 0
+
+    gem_slot = memory.main.get_item_slot(28)
+    if gem_slot < 200:
+        gems += memory.main.get_item_count_slot(gem_slot)
+    logger.debug(f"Total gems: {gems}")
+    return gems
 
 
 def print_manip_info(pre_x=False):
-    if pre_x:
-        purifico_to_nea(stage=2, report=True)
+    
+    if memory.main.get_story_progress() < 2220:
+        stage = 0  # Should be Via Purifico
+    elif memory.main.get_story_progress() in range(2220,2300):
+        stage = 1  # Between Altana and Highbridge
+    elif memory.main.get_story_progress() in range(2300,2401):
+        stage = 2  # After Seymour through Calm Lands
+    elif memory.main.get_story_progress() <= 2510:
+        stage = 3  # After Defender X
     else:
-        purifico_to_nea(stage=3, report=True)
-    _, advances = nea_track(pre_defender_x=pre_x, report=True)
-    logger.manip(f"Setting up for NEA | " + \
-    f"X: {game_vars.get_def_x_drop()} | " + \
-    f"B&Y: {game_vars.get_nea_after_bny()}")
-    logger.manip(f"We need {advances} extra advances for next equipment drop.")
-    logger.manip(f"(One advance per steal, three per player or enemy death)")
+        stage = 4  # After Ronso, last chance.
+    # Let's report after battle the big text on screen.
+    _, defender_x_drop, ronso_first, epaaj_count, paths = nea_track()
+    if stage == 2:
+        report_str = f"Need to steal {max(0,2 - check_gems())} gem(s).\n"
+    else:
+        report_str = ""
+    report_str += "NEA: "
+    if stage < 4:
+        if ronso_first:
+            report_str += "After Ronso, "
+        else:
+            report_str += "Before Ronso, "
+    if stage < 3:
+        if defender_x_drop:
+            report_str += "yes drop on X"
+        else:
+            report_str += "no drop on X"
+    # report_str += f"\nPlus {epaaj_count} Epaaj kills"
+    rng10_array = memory.main.next_chance_rng_10_full()
+    align_array = []
+    for i in range(12):
+        if i in rng10_array:
+            align_array.append(i)
+    # logger.warning(f"Array check: {align_array}")
+
+    report_str += f"\nDrop Alignments: {align_array}\n"
+    if len(paths) != 1:
+        report_str += f"Paths: {paths}"
+
+    write_big_text(report_str)
     
 
 def desert_to_evrae_equip_drop_count() -> []:
+    # This has never worked. :D
     drop_count = [1,1,1]  # Evrae will always drop one equipment.
     test_array = memory.main.rng_10_array()
     ptr = 3 # Ignore first two rolls, we don't care about item drops.
@@ -1103,9 +1112,9 @@ def purifico_to_nea(
     # parent_array passes in enemies that will drop earlier, passed from earlier in the run.
     # ptr is our position on the RNG10 array. Needs to be pre-advanced to last check +3.
     if len(parent_array) == 0:
-        results = [[],[]]
+        results = [[]]
     else:
-        results = [[*parent_array],[*parent_array]]
+        results = [[*parent_array]]
     test_array = memory.main.rng_10_array()
     
     chance = 60
@@ -1113,18 +1122,16 @@ def purifico_to_nea(
         # First larva
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("maze_larva")
-            results[1].append("maze_larva")
             logger.debug("First larvae drops item.")
         ptr += 3
         # Second larva
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("maze_larva")
-            results[1].append("maze_larva")
             logger.debug("Second larvae drops item.")
         ptr += 3
         
         # Two larvae path
-        results[1].append("evrae_altana")
+        results.append(results[0] + ["evrae_altana"])
         #ptr+3
         #Ifrit
         #ptr+6
@@ -1156,40 +1163,49 @@ def purifico_to_nea(
         ptr += 15
     
     if stage <= 1:  # Highbridge start
+        logger.warning(f"Rescue count check: {game_vars.get_rescue_count()}")
         chance = 30
         if stage == 1 and game_vars.get_rescue_count() <= 2:
+            logger.debug(f"Mark 1: {(test_array[ptr] & 0x7FFFFFFF) % 255}")
             # YKT-63, alt to third larva
             if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
                 results[0].append("ykt-63")
-                results[1].append("ykt-63")
-                logger.debug("Robot 1 drops item (overlap from third larvae)")
+                logger.debug("Robot B drops item (overlap from third larvae)")
             ptr += 3
         # YKT-63
+        logger.debug(f"Mark 2: {(test_array[ptr] & 0x7FFFFFFF) % 255}")
         if (test_array[ptr] & 0x7FFFFFFF) % 255 < chance:
             results[0].append("ykt-63")
-            results[1].append("ykt-63")
-            logger.debug("Robot 2 drops item")
+            if stage == 0:
+                results[1].append("ykt-63")
+            logger.debug("Robot A drops item")
         ptr += 3
         results[0].append("seymour_natus")
-        results[1].append("seymour_natus")
+        if stage == 0:
+            results[1].append("seymour_natus")
         ptr += 3
     
     # The rest of these, we can control in the Calm Lands.
     # No need to follow RNG10 through this logic.
-    # Eight possible permutations.
+    # Eight possible permutations (with some duplication if starting after Via)
     if stage <= 2:  # Start of calm lands, or before.
-        for i in range(2):
+        for i in range(len(results)):
             results.append(results[i] + ["defender_x"])
-        for i in range(4):
+        for i in range(len(results)):
             results.append(results[i] + ["yenke_ronso","biran_ronso"])
-        for i in range(8):
+        for i in range(len(results)):
             results[i] = results[i] + ["ghost"]
+        # logger.warning(f"RNG test (A): {results}")
         
     elif stage == 3:
-        for i in range(2):
-            results[i] = results[i] + ["yenke_ronso","biran_ronso","ghost"]
+        for i in range(len(results)):
+            results.append(results[i] + ["yenke_ronso","biran_ronso"])
+        for i in range(len(results)):
             results[i] = results[i] + ["ghost"]
-    # else stage 4 == after B&Y completed. No extra info needed.
+        # logger.warning(f"RNG test (B): {results}")
+        # memory.main.wait_frames(300)
+    else:  # stage 4 == after B&Y completed. No extra info needed.
+        return ([final_nea_check()[0]], final_nea_check()[1])
     
     # Now to find results.
     preferable = []
@@ -1204,11 +1220,10 @@ def purifico_to_nea(
         preferable.append(quality)
         quality = 0
         
-    best = len(results)-1
-    for i in range(best,-1,-1):
+    best = 0
+    for i in range(len(results)):
         # Prefer overwriting with the lower value in each case.
-        if preferable[i] >= preferable[best]:
-            # No need to search for what does not exist.
+        if preferable[i] > preferable[best]:
             best = i
     
     if report:
@@ -1217,15 +1232,62 @@ def purifico_to_nea(
         logger.warning(f"Preferable check: {preferable} | best = {best}")
         #logger.warning(results[best])
     
-    # Returned values are in this order:
-    # best_array (extra kills needed on each path)
-    # best (the preferred path to success)
+        # For testing
+        if preferable[best] == 0:
+            logger.warning("No path found.")
+        else:
+            logger.warning(f"Best Path: {results[best]}")
+    
     if preferable[best] == 0:
         return (preferable, 99)
     else:
         return (preferable, best)
+
+
+def nea_track(report=False):
+    defender_x_drop = False
+    ronso_first = False
+    epaaj_count = final_nea_check()[1]
+
+    if memory.main.get_story_progress() < 2220:
+        stage = 0  # Should be Via Purifico
+    elif memory.main.get_story_progress() in range(2220,2300):
+        stage = 1  # Between Altana and Highbridge
+    elif memory.main.get_story_progress() in range(2300,2401):
+        stage = 2  # After Seymour through Calm Lands
+    elif memory.main.get_story_progress() <= 2510:
+        stage = 3  # After Defender X
+    else:
+        stage = 4  # After Ronso, last chance.
     
+    # At stage 4, there can only be one path, either backtrack (Epaaj count) or move forward.
+    if stage == 4:
+        return [False, False, False, epaaj_count, [epaaj_count]]
     
+    paths, best = purifico_to_nea(
+        stage=stage,
+        report=True
+    )
+
+    if best == 99:  # No ideal path found.
+        return [False, False, True, epaaj_count, paths]
+    
+    if stage == 0 and best % 2 == 0:
+        force_third_larvae = True
+    else:
+        force_third_larvae = False
+
+    half_length = len(paths)/2
+
+    # logger.warning(f"Best: {best} | Half-length: {half_length} | calc {(best % half_length)}/{half_length/2}")
+    # memory.main.wait_frames(900)
+
+    defender_x_drop = bool((best % half_length) >= half_length/2)
+    ronso_first = bool(best >= half_length)
+    
+    return [force_third_larvae, defender_x_drop, ronso_first, epaaj_count, paths]
+    # return (advances, memory.main.next_chance_rng_10())
+
 
 def party_size_rng_alignment(enemy_name) -> int:
     if enemy_name in [
@@ -1250,6 +1312,7 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
     advances = 0
     extras = 0
     #logger.warning(enemies)
+    path_str = "====================\n"
     
     for i in range(len(enemies)):
         party_size = party_size_rng_alignment(enemies[i])
@@ -1272,6 +1335,9 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
             e_owner = memory.main.name_from_number(equipment.owner_alt())
         else:
             e_owner = memory.main.name_from_number(equipment.owner())
+        e_owner_1 = equipment.owner()
+        e_owner_2 = equipment.owner_alt()
+        slots = equipment.slots
         e_ab_count = len([i for i in equipment.abilities() if i != 255])
         #if report:
         #    logger.manip(f"Enemy {enemies[i]} drops {e_type} for {e_owner} with {e_ab_count} abilities.")
@@ -1281,12 +1347,16 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
             condition = "with"
         if "yenke_ronso" in enemies:
             condition2 = "with"
+        # path_str += f"== {enemies[i]} drops {e_type} with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.\n"
+        path_str += f"== Owner: {e_owner_1} (or {e_owner_2}), Type: {e_type}, {e_ab_count}/{slots}\n"
+        path_str += f"== {equipment.abilities()}\n"
+        path_str += "==\n"
         if enemies[i] == "ghost":
-            #logger.warning("Found one!")
-            #if report:
-                #logger.manip(f"Ghost {e_type} drops NEA with {steals} steals and {extras} extras, {condition} X, {condition2} Ronso.")
-                #logger.manip(f"Owner: {e_owner}, Type: {e_type}, {e_ab_count} - {equipment.abilities()}")
             if equipment.equipment_type() == 1 and equipment.has_ability(0x801D):
+                if report:
+                    logger.info("Found one!")
+                    logger.manip(path_str)
+                    logger.manip(enemies)
                 return (True, equipment, extras)
             else:
                 return (False, equipment, extras)
@@ -1298,27 +1368,22 @@ def rng_alignment_before_nea(enemies, steals:int = 0, report:bool=False):
     return (False, equipment, extras)
 
 
-def final_nea_check(with_ronso:bool = False):
-    max_drop = 3
+def final_nea_check():
+    max_drop = 10
     ghost_array = ["ghost"]
-    ronso_array = []
     epaaj_array = []
-    if with_ronso:
-        ronso_array = ["yenke_ronso","biran_ronso"]
     result_possible = False
     for i in range(max_drop+1):
-        results = ronso_array + epaaj_array + ghost_array
-        result_possible, _, _ = rng_alignment_before_nea(enemies=results, report=True)
+        results = epaaj_array + ghost_array
+
+
+        result_possible, _, extras = rng_alignment_before_nea(enemies=results, report=True)
         if result_possible:
-            if len(ronso_array) == 0:
-                check = "without"
-            else:
-                check = "with"
-            logger.warning(f"===  Final check found with {i} extra Epaaj drops, {check} ronso first.  ===")
-            return (result_possible, i)
+            logger.warning(f"===  Final check found with {extras} extra Epaaj drops.  ===")
+            return (result_possible, extras)
         epaaj_array.append("epaaj")
     logger.warning(f"===  Final check NOT found!!!  ===")
-    return (result_possible, 99)
+    return (False, 99)
 
 def next_action_escape(character: int = 0):
     index = 20 + character

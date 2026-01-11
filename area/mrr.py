@@ -24,6 +24,15 @@ def arrival():
     logger.info("Arrival at MRR")
     memory.main.click_to_control()
     memory.main.close_menu()
+    ptr = 0
+    total_dist = 0
+    dist_array = []
+    for i in range(10):
+        temp_dist, temp_ptr = memory.main.distance_to_encounter(danger_val=35, rng_advances=ptr)
+        dist_array.append(temp_dist)
+        total_dist += temp_dist
+        ptr += temp_ptr
+    logger.manip(f"Encounter distances: {dist_array}")
 
     checkpoint = 0
     while memory.main.get_map() != 92:

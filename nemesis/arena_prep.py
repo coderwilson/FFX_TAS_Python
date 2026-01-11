@@ -9,6 +9,7 @@ import battle.utils
 import load_game
 import memory.main
 import menu
+from memory.yojimbo_rng import zanmato_gil_needed, first_turn_action_occurs
 import nemesis.arena_select
 from nemesis.arena_select import (
     arena_npc,
@@ -25,7 +26,7 @@ import screen
 import vars
 import xbox
 import pyautogui
-from area.platinum import next_blitzball, grid_check, grid_check_early
+from area.platinum import next_blitzball, grid_check, grid_check_early, tonberry_levels_battle
 from json_ai_files.write_seed import write_custom_message
 from area.dream_zan import new_game
 from paths.nem import (
@@ -42,7 +43,7 @@ from paths.nem import (
     ThunderPlainsFarm,
     YojimboFarm,
 )
-from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna, Kimahri
+from players import Auron, CurrentPlayer, Lulu, Rikku, Tidus, Wakka, Yuna, Kimahri, Yojimbo
 from gamestate import game
 from area.dream_zan import split_timer
 from json_ai_files.write_seed import write_big_text
@@ -52,37 +53,6 @@ logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 FFXC = xbox.controller_handle()
 test_mode = False
-
-# The following functions extend the regular Bahamut run. Farming sections.
-
-
-# def auto_life():
-#     while not (memory.main.turn_ready() and Tidus.is_turn()):
-#         if memory.main.turn_ready():
-#             if screen.turn_aeon():
-#                 CurrentPlayer().attack()
-#             elif not Tidus.is_turn():
-#                 CurrentPlayer().defend()
-#     while memory.main.battle_menu_cursor() != 22:
-#         if not Tidus.is_turn():
-#             logger.debug("Attempting Auto-life, but it's not Tidus's turn")
-#             xbox.tap_up()
-#             xbox.tap_up()
-#             return
-#         if memory.main.battle_menu_cursor() == 1:
-#             xbox.tap_up()
-#         else:
-#             xbox.tap_down()
-#     while not memory.main.other_battle_menu():
-#         xbox.tap_b()
-#     battle.main._navigate_to_position(1)
-#     while memory.main.other_battle_menu():
-#         xbox.tap_b()
-#     xbox.tap_b()
-#     xbox.tap_b()
-#     xbox.tap_b()
-#     xbox.tap_b()
-#     xbox.tap_b()
 
 
 def unlock_omega(x:int = 72,y:int = -36):
@@ -148,6 +118,119 @@ def unlock_omega(x:int = 72,y:int = -36):
     write_custom_message(f"Cho?\nCHO?!?!\nCHOCOBOOO!!!\nAnd mirror\n{game.state} {game.step}")
 
 
+def battle_farm_defer(yuna_attack=True, fayth_cave=True) -> bool:
+
+    battles = memory.main.wakka_total_battles()
+    steals = memory.main.rikku_total_steals()
+    write_big_text(f"Defer battle\n{battles} | {steals}")
+    logger.debug(f"Defer Battle Start: {memory.main.get_encounter_id()}")
+    FFXC.set_neutral()
+
+    anima_unlocked = False
+    if game_vars.platinum():
+        if game.state == "Nem_Arena":
+            anima_unlocked = True
+        elif game.state == "Platinum" and game.step >= 4:
+            anima_unlocked = True
+
+    # Defer battle means we can manipulate some RNG.
+    yojimbo_advance = not zan_ready()
+    if yojimbo_advance and game.state == "Nem_Farm" and game.step < 8:
+        # Not unlocked yet.
+        yojimbo_advance = False
+    if yojimbo_advance and game.state == "Platinum" and game.step < 2:
+        # Not unlocked yet.
+        yojimbo_advance = False
+    
+    if fayth_cave and memory.main.battle_type() == 2:
+        screen.await_turn()
+        battle.main.flee_all()
+    elif memory.main.get_encounter_id() in [321, 329]:
+        screen.await_turn()
+        battle.main.flee_all()
+    else:
+        while memory.main.battle_active():
+            if memory.main.turn_ready():
+                if fayth_cave and screen.faint_check() in [1, 2]:
+                    battle.main.revive()
+                elif lancet_check() and not Kimahri.active():
+                    battle.main.buddy_swap(Kimahri)
+                elif lancet_check() and Kimahri.is_turn():
+                    lancet_learn()
+                elif Tidus.is_turn():
+                    if memory.main.get_encounter_id() in [154, 156, 164]:
+                        # Confusion is a dumb mechanic in this game.
+                        CurrentPlayer().attack(target_id=22, direction_hint="l")
+                    elif memory.main.get_encounter_id() == 281:
+                        CurrentPlayer().attack(target_id=22, direction_hint="r")
+                    elif memory.main.get_encounter_id() == 283:
+                        CurrentPlayer().attack(target_id=21, direction_hint="u")
+                    elif memory.main.get_encounter_id() == 284:
+                        CurrentPlayer().attack(target_id=23, direction_hint="d")
+                    else:
+                        CurrentPlayer().attack()
+                elif Yojimbo.is_turn():
+                    Yojimbo.pay(1)
+                elif Yuna.is_turn():
+                    if yojimbo_advance:
+                        yojimbo_advance = False
+                        Yuna.overdrive(aeon_num=5+anima_unlocked)
+                    elif yuna_attack:
+                        if memory.main.get_encounter_id() in [154, 156, 164]:
+                            # Confusion is a dumb mechanic in this game.
+                            CurrentPlayer().attack(target_id=22, direction_hint="l")
+                        elif memory.main.get_encounter_id() == 281:
+                            CurrentPlayer().attack(target_id=21, direction_hint="l")
+                        elif memory.main.get_encounter_id() == 283:
+                            CurrentPlayer().attack(target_id=22, direction_hint="d")
+                        elif memory.main.get_encounter_id() == 284:
+                            CurrentPlayer().attack(target_id=22, direction_hint="d")
+                        else:
+                            CurrentPlayer().attack()
+                    else:
+                        battle.main.escape_one()
+                elif Rikku.is_turn():
+                    if memory.main.battle_type() == 2:
+                        battle.main.escape_one()
+                    elif not battle.main.check_tidus_ok():
+                        battle.main.escape_one()
+                    elif memory.main.get_encounter_id() in [203,208,212,215,226]:
+                        battle.main.steal_new(6)
+                    elif memory.main.get_encounter_id() == 219:
+                        battle.main.escape_one()
+                    elif memory.main.get_map() in [137, 138]:
+                        # Bikanel is dangerous
+                        battle.main.escape_one()
+                    elif memory.main.next_chance_rng_10() % 3 == 1:
+                        # More chances for item drops, maybe?
+                        battle.main.steal_new(6)
+                        steals = memory.main.rikku_total_steals()
+                        write_big_text(f"Basic battle\n{battles} | {steals}")
+                    # elif steals < 201 and game_vars.platinum():
+                    #     battle.main.steal_new(actor=6)
+                    #     steals = memory.main.rikku_total_steals()
+                    #     write_big_text(f"Basic battle\n{battles} | {steals}")
+                    else:
+                        Rikku.defend()
+                elif Wakka.is_turn() and game_vars.platinum() and game.step >= 8:
+                    Wakka.defend()
+                else:
+                    battle.main.escape_one()
+    
+    if memory.main.game_over():
+        while memory.main.get_map() != 23:
+            xbox.tap_b()
+        new_game(gamestate="Nem_Farm")
+        load_game.load_save_num(0)
+        return False
+    else:
+        battles = memory.main.wakka_total_battles()
+        steals = memory.main.rikku_total_steals()
+        write_big_text(f"Basic battle\n{battles} | {steals}")
+        battle.main.wrap_up()
+        nemesis.menu.perform_next_grid()
+        return True
+
 @battle.utils.speedup_decorator
 def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -> bool:
     # grid_instance = get_grid() # Get the grid instance
@@ -197,8 +280,6 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
                             CurrentPlayer().attack(target_id=22, direction_hint="d")
                         else:
                             CurrentPlayer().attack()
-                    # elif lulu_levels and not Lulu.active():
-                    #     battle.main.buddy_swap(Lulu)
                     else:
                         battle.main.escape_one()
                 elif Rikku.is_turn():
@@ -213,19 +294,18 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
                     elif memory.main.get_map() in [137, 138]:
                         # Bikanel is dangerous
                         battle.main.escape_one()
-                    elif steals < 201 and game_vars.platinum():
-                        battle.main.steal_new(actor=6)
+                    elif memory.main.next_chance_rng_10() % 3 == 1:
+                        # More chances for item drops, maybe?
+                        battle.main.steal_new(6)
                         steals = memory.main.rikku_total_steals()
                         write_big_text(f"Basic battle\n{battles} | {steals}")
+                    # elif steals < 201 and game_vars.platinum():
+                    #     battle.main.steal_new(actor=6)
+                    #     steals = memory.main.rikku_total_steals()
+                    #     write_big_text(f"Basic battle\n{battles} | {steals}")
                     else:
                         Rikku.defend()
-                # elif Lulu.is_turn():
-                #     lulu_levels = False
-                #     battle.main.escape_one()
-                # elif not Lulu.active() and lulu_levels:
-                #     battle.main.buddy_swap(Lulu)
                 elif Wakka.is_turn() and game_vars.platinum() and game.step >= 8:
-                    # Wakka.attack()  # Not working yet.
                     Wakka.defend()
                 else:
                     battle.main.escape_one()
@@ -242,6 +322,14 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
         battle.main.wrap_up()
         nemesis.menu.perform_next_grid()
         return True
+
+def zan_ready():
+    needed_amount = zanmato_gil_needed()  # Set value
+    if needed_amount > memory.main.get_gil_value() or first_turn_action_occurs():
+        return False
+    if Yuna.overdrive_percent() < 100:
+        return False
+    return True
 
 
 def advanced_complete_check():
@@ -412,8 +500,11 @@ def advanced_battle_logic() -> bool:
                         encounter_id in [386]
                         and not auto_life_used
                     ):
-                        battle.main.auto_life(target=0)
-                        auto_life_used = True
+                        if Tidus.mp() >= 97:
+                            battle.main.auto_life(target=0)
+                            auto_life_used = True
+                        else:
+                            battle.main.flee_all()
                     elif (
                         encounter_id in [383,426,430,440,443]
                         and memory.main.get_enemy_current_hp()[0] > 9999
@@ -501,6 +592,14 @@ def advanced_battle_logic() -> bool:
                                 battle.main.use_item_new(item=41)
                             else:
                                 CurrentPlayer().defend()
+                    elif Tidus.hp() < 1200:
+                        if memory.main.get_item_slot(20) != 255:
+                            battle.main.use_item(20)
+                        else:
+                            battle.main.escape_one()
+                    elif memory.main.next_chance_rng_10() % 3 == 1:
+                        # More chances for item drops, maybe?
+                        battle.main.steal_new(6)
                     elif rikku_turn and game_vars.platinum():
                         battle.main.buddy_swap(Lulu)
                         CurrentPlayer().defend()
@@ -512,7 +611,9 @@ def advanced_battle_logic() -> bool:
                     #     Wakka.defend()
                     # else:
                         # Wakka.attack() # Not working yet.
-                    if wakka_turn and game_vars.platinum():
+                    if Tidus.hp() < 1200 and memory.main.get_item_slot(20) == 255:
+                        battle.main.escape_one()
+                    elif wakka_turn and game_vars.platinum():
                         battle.main.buddy_swap(Yuna)
                         CurrentPlayer().defend()
                     else:
@@ -802,6 +903,7 @@ def od_to_ap():  # Calm Lands purchases
     )
     write_big_text("OD to AP (equip)")
     menu.equip_weapon(character=0, ability=0x8011)
+    game_vars.plat_triple_ap_update(0)
     xbox.tap_up()
     xbox.tap_up()
     xbox.tap_up()
@@ -1072,28 +1174,6 @@ def one_mp_ready():
     return True
 
 
-def tonberry_levels_battle():
-    write_big_text("Farming XP via Tonberries")
-    write_custom_message(f"Nemesis stage 4.5\nOD > AP on Stoic\nfor massive AP\n{game.state} {game.step}")
-    screen.await_turn()
-    tidus_turns = 0
-    while memory.main.battle_active():
-        if memory.main.turn_ready():
-            if Tidus.is_turn():
-                tidus_turns += 1
-                if tidus_turns == 5:
-                    Tidus.flee()
-                elif memory.main.get_overdrive_battle(character=0) == 100:
-                    Tidus.overdrive()
-                else:
-                    battle.main.attack()
-            else:
-                CurrentPlayer().defend()
-
-    logger.debug("Battle is complete.")
-    battle.main.wrap_up()
-    logger.debug("Now back in control.")
-
 
 def lv1_bribe():
     memory.main.update_formation(Tidus, Rikku, Wakka)
@@ -1144,6 +1224,9 @@ def quick_levels(force_levels: int = 26, mon="cactuar"):
             nemesis.arena_select.arena_menu_select(4)
             while nemesis.menu.perform_next_grid():
                 pass
+            if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 30:
+                restock_downs()
+                nemesis.arena_select.arena_menu_select(4)
         menu.tidus_slayer(od_pos=0)
 
 
@@ -1154,7 +1237,7 @@ def lv4_bribe():
     logger.debug("Need Lv.4 key sphere for sphere grid")
     nemesis.arena_select.arena_menu_select(1)
     nemesis.arena_select.start_fight(area_index=8, monster_index=7)
-    battle.main.bribe_battle(spare_change_value=245000)
+    battle.main.bribe_battle(spare_change_value=200000)  # 196, but faster to input.
     nemesis.arena_select.arena_menu_select(4)
 
 
@@ -2649,7 +2732,7 @@ def calm(cap_num: int = 1, auto_haste=False, airship_return=True, force_levels=0
     return memory.main.arena_farm_check(zone="calm", end_goal=cap_num, report=False)
 
 
-def gagazet_next(end_goal: int):
+def gagazet_next(end_goal: int,short:bool=True):
     next1 = rng_track.coming_battles(area="gagazet_(mountain)", battle_count=2)[0]
     next2 = rng_track.coming_battles(area="gagazet_(cave)", battle_count=2)[0]
     next3 = rng_track.coming_battles(area="zanarkand_(overpass)", battle_count=2)[0]
@@ -2668,38 +2751,39 @@ def gagazet_next(end_goal: int):
 
     if memory.main.get_yuna_mp() < 30:
         return 8
-    if farm_array[0] < end_goal and "bandersnatch" in next2:
-        return 2
-    if farm_array[0] < end_goal and "bandersnatch" in next1:
-        return 1
-    if farm_array[9] < end_goal and "behemoth" in next2:
-        return 2
-    if farm_array[9] < end_goal and "behemoth" in next3:
-        return 3
-    if farm_array[1] < end_goal and "dark_flan" in next2:
-        return 2
-    if farm_array[1] < end_goal and "dark_flan" in next3:
-        return 3
-    if farm_array[10] < end_goal and "mandragora" in next2:
-        return 2
-    if farm_array[10] < end_goal and "mandragora" in next3:
-        return 3
-    if farm_array[6] < end_goal and "grendel" in next2:
-        return 2
-    if farm_array[6] < end_goal and "grendel" in next3:
-        return 3
-    if farm_array[2] < end_goal and "ahriman" in next2:
-        return 2
-    if farm_array[2] < end_goal and "ahriman" in next3:
-        return 3
-    if farm_array[7] < end_goal and "bashura" in next2:
-        return 2
-    if farm_array[7] < end_goal and "bashura" in next3:
-        return 3
-    if farm_array[11] < end_goal and "grenade" in next1:
-        return 1
-    if farm_array[3] < end_goal and "grat" in next1:
-        return 1
+    if not short:
+        if farm_array[0] < end_goal and "bandersnatch" in next2:
+            return 2
+        if farm_array[0] < end_goal and "bandersnatch" in next1:
+            return 1
+        if farm_array[9] < end_goal and "behemoth" in next2:
+            return 2
+        if farm_array[9] < end_goal and "behemoth" in next3:
+            return 3
+        if farm_array[1] < end_goal and "dark_flan" in next2:
+            return 2
+        if farm_array[1] < end_goal and "dark_flan" in next3:
+            return 3
+        if farm_array[10] < end_goal and "mandragora" in next2:
+            return 2
+        if farm_array[10] < end_goal and "mandragora" in next3:
+            return 3
+        if farm_array[6] < end_goal and "grendel" in next2:
+            return 2
+        if farm_array[6] < end_goal and "grendel" in next3:
+            return 3
+        if farm_array[2] < end_goal and "ahriman" in next2:
+            return 2
+        if farm_array[2] < end_goal and "ahriman" in next3:
+            return 3
+        if farm_array[7] < end_goal and "bashura" in next2:
+            return 2
+        if farm_array[7] < end_goal and "bashura" in next3:
+            return 3
+        if farm_array[11] < end_goal and "grenade" in next1:
+            return 1
+        if farm_array[3] < end_goal and "grat" in next1:
+            return 1
     if farm_array[4] < end_goal and "achelous" in next4:
         return 4
     if farm_array[5] < end_goal and "maelspike" in next4:
@@ -2708,8 +2792,12 @@ def gagazet_next(end_goal: int):
         return 4
     if farm_array[4] < end_goal and "splasher_3" in next4:
         return 4
-    if memory.main.arena_farm_check(zone="gagazet", end_goal=end_goal):
-        return 9
+    if short:
+        if memory.main.arena_farm_check(zone="gagazet_short", end_goal=end_goal):
+            return 9
+    else:
+        if memory.main.arena_farm_check(zone="gagazet", end_goal=end_goal):
+            return 9
     logger.debug("Couldn't find a special case")
     if memory.main.get_map() == 225:
         return 3
@@ -2721,11 +2809,13 @@ def gagazet_next(end_goal: int):
         return 2
 
 
-def gagazet(cap_num: int = 10):
+def gagazet(cap_num: int = 10,short:bool=True):
+    if game_vars.platinum():
+        grid_check_early()
     write_big_text("Gagazet farm")
     # air_ship_destination(dest_num=14)
     navigate_to_airship_destination("Gagazet")
-    pref_area = gagazet_next(end_goal=cap_num)
+    pref_area = gagazet_next(end_goal=cap_num,short=short)
 
     # Check if we need the extra Lv.4 key sphere. False == needed.
     if (
@@ -2776,47 +2866,74 @@ def gagazet(cap_num: int = 10):
             # Portal Combat
             if checkpoint == 2:
                 logger.warning("Portal transportation (A)")
-                while memory.main.user_control():
-                    FFXC.set_movement(1, 1)
-                FFXC.set_neutral()
-                memory.main.wait_frames(30)
-                if pref_area in [2, 4]:
-                    xbox.tap_down()
-                    checkpoint = 3
-                else:
-                    xbox.tap_up()
-                    xbox.tap_up()
-                    checkpoint = 22
-                last_map = memory.main.get_map()
-                while last_map == memory.main.get_map():
-                    xbox.menu_b()
-                memory.main.await_control()
+                while memory.main.get_map() == 259:
+                    if memory.main.user_control():
+                        pathing.set_movement([70,120])
+                    else:
+                        FFXC.set_neutral()
+                        if memory.main.diag_progress_flag() == 229:
+                            if pref_area in [2, 4]:
+                                while memory.main.portal_cursor() != 1:
+                                    while memory.main.portal_cursor() != 1:
+                                        xbox.tap_down()
+                                    memory.main.wait_frames(1)
+                                while memory.main.get_map() == 259:
+                                    xbox.menu_b()
+                                checkpoint = 3
+                            else:
+                                while memory.main.portal_cursor() != 3:
+                                    while memory.main.portal_cursor() != 3:
+                                        xbox.tap_up()
+                                while memory.main.get_map() == 259:
+                                    xbox.menu_b()
+                                checkpoint = 22
+                        
                 logger.debug(f"Updated Checkpoint {checkpoint}")
             if checkpoint == 21:
-                last_map = memory.main.get_map()
                 logger.warning("Portal transportation (B)")
-                FFXC.set_movement(1, -1)
-                memory.main.await_event()
-                FFXC.set_neutral()
-                while last_map == memory.main.get_map():
-                    xbox.menu_b()
-                memory.main.await_control()
-                if pref_area in [8, 9]:
-                    checkpoint = 41
-                else:
-                    checkpoint = 1
+                while memory.main.get_map() == 272:
+                    if memory.main.user_control():
+                        pathing.set_movement([100,-1040])
+                    else:
+                        FFXC.set_neutral()
+                        if memory.main.diag_progress_flag() == 31:
+                            while memory.main.portal_cursor() != 0:
+                                while memory.main.portal_cursor() != 0:
+                                    xbox.tap_down()
+                                memory.main.wait_frames(1)
+                            while memory.main.get_map() == 272:
+                                xbox.menu_b()
+                            if pref_area in [8, 9]:
+                                checkpoint = 41
+                            else:
+                                checkpoint = 1
+                logger.debug(f"Updated Checkpoint {checkpoint}")
+
             elif checkpoint == 29:
                 logger.warning("Portal transportation (C)")
-                FFXC.set_movement(0, -1)
-                memory.main.wait_frames(4)
-                FFXC.set_neutral()
-                last_map = memory.main.get_map()
-                while last_map == memory.main.get_map():
-                    xbox.menu_b()
+                while memory.main.get_map() == 313:
+                    if memory.main.user_control():
+                        if pathing.distance_coords([115,40],use_raw_coords=True) < 15:
+                            FFXC.set_neutral()
+                            memory.main.wait_frames(9)
+                            while pathing.distance_coords([115,40],use_raw_coords=True) > 15:
+                                pathing.set_movement([115,40])
+                                memory.main.wait_frames(4)
+                                FFXC.set_neutral()
+                                memory.main.wait_frames(4)
+                            FFXC.set_movement(0,-1)
+                            memory.main.wait_frames(4)
+                            FFXC.set_neutral()
+                            memory.main.wait_frames(4)
+                            while memory.main.get_map() == 313:
+                                xbox.menu_b()
+                    else:
+                        FFXC.set_neutral()
                 if pref_area in [8, 9]:
                     checkpoint = 41
                 else:
                     checkpoint = 1
+                logger.debug(f"Updated Checkpoint {checkpoint}")
 
             # Branches, decisions
             if checkpoint in [0, 1] and pref_area == 1:  # Straight to mountain path
@@ -2895,7 +3012,7 @@ def gagazet(cap_num: int = 10):
                     battle_farm_all(yuna_attack=False)
                 else:
                     battle_farm_all()
-                pref_area = gagazet_next(end_goal=cap_num)
+                pref_area = gagazet_next(end_goal=cap_num,short=short)
                 logger.debug(f"Next area: {pref_area}")
             #elif memory.main.menu_open() or memory.main.diag_skip_possible():
             #    xbox.tap_b()
@@ -2967,7 +3084,7 @@ def stolen_fayth_cave(cap_num: int = 10, just_yojimbo:bool=False):
     # air_ship_destination(dest_num=14)
     navigate_to_airship_destination("Gagazet")
     memory.main.update_formation(Tidus, Yuna, Wakka)
-    if not memory.main.equipped_weapon_has_ability(
+    if not memory.main.equipped_armor_has_ability(
         char_num=game_vars.ne_armor(), ability_num=0x801D
     ):
         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)

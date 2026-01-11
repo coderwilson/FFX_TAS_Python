@@ -50,6 +50,16 @@ class AllVars:
         self.force_loop = config_vars.get("force_loop", False)
         self.legacy_soundtrack = config_vars.get("original_soundtrack", True)
         self.generate_saves = config_vars.get("generate_saves", False)
+        self.plat_triple_ap = [
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False
+            ]
+        self.plat_test_mode = False
 
         # === Future functions / foundations ===
         self.kilika_skip = True
@@ -145,6 +155,17 @@ class AllVars:
         # at a lower rate of speed. Very rarely used.
         self.artificial_pauses = config_vars.get("artificial_pauses", False)
 
+    def set_plat_test_mode(self):
+        self.plat_test_mode = True
+
+    def check_plat_test_mode(self):
+        return self.plat_test_mode
+
+    def plat_triple_ap_check(self):
+        return self.plat_triple_ap
+    
+    def plat_triple_ap_update(self, pos):
+        self.plat_triple_ap[pos] = True
 
     def ml_heals(self):
         return self.ml_heals_val
@@ -286,6 +307,9 @@ class AllVars:
 
     def yojimbo_get_index(self):
         return self.yojimbo_index
+
+    def yojimbo_set_index(self, value):
+        self.yojimbo_index = value
 
     def yojimbo_increment_index(self):
         self.yojimbo_index += 1

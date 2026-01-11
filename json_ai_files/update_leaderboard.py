@@ -117,6 +117,19 @@ class TrackerManager:
 
         return explored_variants,total_variants,int(explored_variants/total_variants*100)
     
+    def get_variant_exploration_percentage(self,variant):
+        with open(resultpath, "r") as fp:
+            results = json.load(fp)
+        explored_variants = 0
+        total_variants = 256.0
+        for i in range(256):
+            if str(i) in results.keys():
+                if variant in results[str(i)].keys():
+                    explored_variants = explored_variants + 1
+        val_out = explored_variants / total_variants * 100
+        val_out = round(val_out,2)
+        return val_out
+
     def get_total_exploration_percentage(self):
         with open(resultpath, "r") as fp:
             results = json.load(fp)
@@ -207,8 +220,16 @@ def build_file_str():
         
         i += 1
     
-    total_seed_percent = seed_results.get_total_exploration_percentage()
-    file_str += f"Seed completion progress: {total_seed_percent}%\n"
+    # If you want all exploration, go with this:
+    # total_seed_percent = seed_results.get_total_exploration_percentage()
+    # file_str += f"Seed completion progress: {total_seed_percent}%\n"
+
+    # If instead you want a specific variant, go with this:
+    variant = "standard"
+    total_seed_percent = seed_results.get_variant_exploration_percentage(variant)
+    file_str += f"{variant} variant completion progress: {total_seed_percent}%\n"
+
+    # Continue building the file.
     file_str += f"Suggested seeds: {pick_missing_five()}\n"
     return file_str
 

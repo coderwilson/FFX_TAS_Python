@@ -9,2371 +9,580 @@
             }
         }
     },
-    "160": {
-        "best_adj": "2:57:30",
+    "39": {
+        "best_adj": "3:00:08",
         "standard": {
             "False": {
-                "raw_time": "3:09:37.925160",
-                "blitz_time": "426",
-                "adjusted_time": "3:02:31",
-                "nea_manip_battle_count": "3"
+                "raw_time": "3:06:51.697743",
+                "blitz_time": "403",
+                "adjusted_time": "3:00:08",
+                "nea_manip_battle_count": "2"
             }
         },
         "flip_lowroad": {
             "False": {
-                "raw_time": "3:07:02.929402",
-                "blitz_time": "406",
-                "adjusted_time": "3:00:16",
-                "nea_manip_battle_count": "3"
+                "raw_time": "3:17:28.009954",
+                "blitz_time": "702",
+                "adjusted_time": "3:05:46",
+                "nea_manip_battle_count": "9"
             }
         },
         "flip_bikanel": {
             "False": {
-                "raw_time": "3:06:24.519476",
-                "blitz_time": "397",
-                "adjusted_time": "2:59:47",
-                "nea_manip_battle_count": "3"
+                "raw_time": "3:07:30.769289",
+                "blitz_time": "393",
+                "adjusted_time": "3:00:57",
+                "nea_manip_battle_count": "2"
             }
         },
         "flip_highroad": {
             "False": {
-                "raw_time": "3:27:58.537663",
-                "blitz_time": "426",
-                "adjusted_time": "3:20:52",
-                "nea_manip_battle_count": "3"
+                "raw_time": "3:09:37.112597",
+                "blitz_time": "466",
+                "adjusted_time": "3:01:51",
+                "nea_manip_battle_count": "4"
             }
         },
         "flip_lowroad:flip_bikanel": {
             "False": {
-                "raw_time": "3:14:59.438286",
-                "blitz_time": "441",
-                "adjusted_time": "3:07:38",
-                "nea_manip_battle_count": "2"
+                "raw_time": "3:09:09.781708",
+                "blitz_time": "403",
+                "adjusted_time": "3:02:26",
+                "nea_manip_battle_count": "9"
             }
         },
         "flip_highroad:flip_bikanel": {
             "False": {
-                "raw_time": "3:05:42.687838",
-                "blitz_time": "406",
-                "adjusted_time": "2:58:56",
-                "nea_manip_battle_count": "2"
+                "raw_time": "3:09:45.607868",
+                "blitz_time": "481",
+                "adjusted_time": "3:01:44",
+                "nea_manip_battle_count": "9"
             }
         },
         "flip_lowroad:flip_highroad": {
             "False": {
-                "raw_time": "3:07:34.652189",
-                "blitz_time": "426",
-                "adjusted_time": "3:00:28",
-                "nea_manip_battle_count": "2"
+                "raw_time": "3:11:40.507264",
+                "blitz_time": "485",
+                "adjusted_time": "3:03:35",
+                "nea_manip_battle_count": "1"
             }
         },
         "flip_lowroad:flip_highroad:flip_bikanel": {
             "False": {
-                "raw_time": "3:05:40.248640",
-                "blitz_time": "425",
-                "adjusted_time": "2:58:35",
-                "nea_manip_battle_count": "2"
-            }
-        }
-    },
-    "24": {
-        "best_adj": "3:11:44",
-        "standard": {
-            "False": {
-                "raw_time": "3:26:09.496457",
-                "blitz_time": "638",
-                "adjusted_time": "3:15:31",
-                "nea_manip_battle_count": "28"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:18:57.613301",
-                "blitz_time": "433",
-                "adjusted_time": "3:11:44",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "149": {
-        "best_adj": "3:03:39",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:39.048994",
-                "blitz_time": "473",
-                "adjusted_time": "3:10:46",
-                "nea_manip_battle_count": "6"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:04.174663",
-                "blitz_time": "505",
-                "adjusted_time": "3:03:39",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "154": {
-        "best_adj": "3:03:00",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:04.627177",
-                "blitz_time": "544",
-                "adjusted_time": "3:03:00",
+                "raw_time": "3:08:09.780596",
+                "blitz_time": "402",
+                "adjusted_time": "3:01:27",
                 "nea_manip_battle_count": "5"
             }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:11:21.125553",
-                "blitz_time": "491",
-                "adjusted_time": "3:03:10",
-                "nea_manip_battle_count": "6"
-            }
         }
     },
-    "26": {
-        "best_adj": "3:08:10",
+    "247": {
+        "best_adj": "3:02:53",
         "standard": {
             "False": {
-                "raw_time": "3:16:12.241694",
-                "blitz_time": "482",
-                "adjusted_time": "3:08:10",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "74": {
-        "best_adj": "3:09:20",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:13.593796",
-                "blitz_time": "413",
-                "adjusted_time": "3:09:20",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "189": {
-        "best_adj": "3:00:04",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:39.940996",
-                "blitz_time": "623",
-                "adjusted_time": "3:01:16",
-                "nea_manip_battle_count": "5"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:08:19.065885",
-                "blitz_time": "465",
-                "adjusted_time": "3:00:34",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:12:00.399960",
-                "blitz_time": "547",
+                "raw_time": "3:10:09.254084",
+                "blitz_time": "436",
                 "adjusted_time": "3:02:53",
-                "nea_manip_battle_count": "5"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:08:49.213344",
-                "blitz_time": "525",
-                "adjusted_time": "3:00:04",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:10:16.211843",
-                "blitz_time": "552",
-                "adjusted_time": "3:01:04",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:11:12.026249",
-                "blitz_time": "460",
-                "adjusted_time": "3:03:32",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad:flip_highroad": {
-            "False": {
-                "raw_time": "3:08:44.828912",
-                "blitz_time": "461",
-                "adjusted_time": "3:01:03",
-                "nea_manip_battle_count": "4"
-            }
-        }
-    },
-    "78": {
-        "best_adj": "3:07:48",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:56.202457",
-                "blitz_time": "488",
-                "adjusted_time": "3:07:48",
-                "nea_manip_battle_count": "16"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:20:55.342902",
-                "blitz_time": "397",
-                "adjusted_time": "3:14:18",
-                "nea_manip_battle_count": "38"
-            }
-        }
-    },
-    "89": {
-        "best_adj": "3:03:59",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:42.264150",
-                "blitz_time": "463",
-                "adjusted_time": "3:03:59",
-                "nea_manip_battle_count": "9"
-            }
-        }
-    },
-    "111": {
-        "best_adj": "3:11:12",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:26.618228",
-                "blitz_time": "434",
-                "adjusted_time": "3:11:12",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "144": {
-        "best_adj": "3:16:35",
-        "standard": {
-            "False": {
-                "raw_time": "3:26:44.757517",
-                "blitz_time": "609",
-                "adjusted_time": "3:16:35",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "9": {
-        "best_adj": "3:05:28",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:52.403308",
-                "blitz_time": "444",
-                "adjusted_time": "3:05:28",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "3": {
-        "best_adj": "3:08:11",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:50.795948",
-                "blitz_time": "459",
-                "adjusted_time": "3:08:11",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "31": {
-        "best_adj": "3:02:05",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:43.045644",
-                "blitz_time": "504",
-                "adjusted_time": "3:09:19",
-                "nea_manip_battle_count": "19"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:16:23.144114",
-                "blitz_time": "472",
-                "adjusted_time": "3:08:31",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:09:23.437208",
-                "blitz_time": "438",
-                "adjusted_time": "3:02:05",
                 "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "155": {
-        "best_adj": "3:07:11",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:26.965768",
-                "blitz_time": "590",
-                "adjusted_time": "3:07:36",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:14:04.538138",
-                "blitz_time": "413",
-                "adjusted_time": "3:07:11",
-                "nea_manip_battle_count": "14"
-            }
-        }
-    },
-    "162": {
-        "best_adj": "3:04:41",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:16.658321",
-                "blitz_time": "467",
-                "adjusted_time": "3:08:29",
-                "nea_manip_battle_count": "12"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:03.495865",
-                "blitz_time": "442",
-                "adjusted_time": "3:04:41",
-                "nea_manip_battle_count": "9"
-            }
-        }
-    },
-    "164": {
-        "best_adj": "3:02:06",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:46.633411",
-                "blitz_time": "478",
-                "adjusted_time": "3:06:48",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:47.206400",
-                "blitz_time": "641",
-                "adjusted_time": "3:02:06",
-                "nea_manip_battle_count": "4"
-            }
-        }
-    },
-    "180": {
-        "best_adj": "3:05:43",
-        "standard": {
-            "False": {
-                "raw_time": "3:47:36.346911",
-                "blitz_time": "645",
-                "adjusted_time": "3:36:51",
-                "nea_manip_battle_count": "74"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:16:21.916844",
-                "blitz_time": "638",
-                "adjusted_time": "3:05:43",
-                "nea_manip_battle_count": "18"
-            }
-        }
-    },
-    "58": {
-        "best_adj": "3:06:27",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:40.189405",
-                "blitz_time": "433",
-                "adjusted_time": "3:06:27",
-                "nea_manip_battle_count": "10"
-            }
-        }
-    },
-    "239": {
-        "best_adj": "3:10:20",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:34.507067",
-                "blitz_time": "494",
-                "adjusted_time": "3:10:20",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "142": {
-        "best_adj": "3:08:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:14.375787",
-                "blitz_time": "439",
-                "adjusted_time": "3:08:55",
-                "nea_manip_battle_count": "1"
-            }
-        }
-    },
-    "252": {
-        "best_adj": "3:10:10",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:06.123284",
-                "blitz_time": "416",
-                "adjusted_time": "3:10:10",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:21:06.799588",
-                "blitz_time": "415",
-                "adjusted_time": "3:14:11",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "29": {
-        "best_adj": "3:09:28",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:39.347933",
-                "blitz_time": "431",
-                "adjusted_time": "3:09:28",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "76": {
-        "best_adj": "3:07:26",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:02.756452",
-                "blitz_time": "576",
-                "adjusted_time": "3:07:26",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "5": {
-        "best_adj": "3:01:45",
-        "standard": {
-            "False": {
-                "raw_time": "3:08:11.773109",
-                "blitz_time": "386",
-                "adjusted_time": "3:01:45",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:11:23.559363",
-                "blitz_time": "387",
-                "adjusted_time": "3:04:56",
-                "nea_manip_battle_count": "6"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:23:17.508298",
-                "blitz_time": "386",
-                "adjusted_time": "3:16:51",
-                "nea_manip_battle_count": "41"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:18:56.514701",
-                "blitz_time": "386",
-                "adjusted_time": "3:12:30",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:13:11.241854",
-                "blitz_time": "386",
-                "adjusted_time": "3:06:45",
-                "nea_manip_battle_count": "16"
-            }
-        }
-    },
-    "6": {
-        "best_adj": "3:08:46",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:38.867493",
-                "blitz_time": "472",
-                "adjusted_time": "3:08:46",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:17:56.418538",
-                "blitz_time": "492",
-                "adjusted_time": "3:09:44",
-                "nea_manip_battle_count": "0"
             }
         }
     },
     "41": {
-        "best_adj": "2:59:11",
+        "best_adj": "3:04:07",
         "standard": {
             "False": {
-                "raw_time": "3:07:29.153112",
-                "blitz_time": "440",
-                "adjusted_time": "3:00:09",
-                "nea_manip_battle_count": "5"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:09:57.130475",
-                "blitz_time": "519",
-                "adjusted_time": "3:01:18",
-                "nea_manip_battle_count": "9"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:09:19.155782",
-                "blitz_time": "462",
-                "adjusted_time": "3:01:37",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:07:45.861222",
-                "blitz_time": "462",
-                "adjusted_time": "3:00:03",
-                "nea_manip_battle_count": "9"
-            }
-        },
-        "flip_lowroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:08:46.587484",
-                "blitz_time": "440",
-                "adjusted_time": "3:01:26",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:08:04.781945",
-                "blitz_time": "440",
-                "adjusted_time": "3:00:44",
+                "raw_time": "3:14:00.618611",
+                "blitz_time": "593",
+                "adjusted_time": "3:04:07",
                 "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad:flip_highroad": {
-            "False": {
-                "raw_time": "3:10:30.299074",
-                "blitz_time": "440",
-                "adjusted_time": "3:03:10",
-                "nea_manip_battle_count": "8"
-            }
-        },
-        "flip_lowroad:flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:08:17.771526",
-                "blitz_time": "463",
-                "adjusted_time": "3:00:34",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "232": {
-        "best_adj": "3:07:20",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:31.586492",
-                "blitz_time": "551",
-                "adjusted_time": "3:07:20",
-                "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "48": {
-        "best_adj": "3:06:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:48.779542",
-                "blitz_time": "473",
-                "adjusted_time": "3:06:55",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:17:27.778720",
-                "blitz_time": "475",
-                "adjusted_time": "3:09:32",
-                "nea_manip_battle_count": "0"
             }
         }
     },
     "196": {
-        "best_adj": "2:58:43",
+        "best_adj": "3:02:24",
         "standard": {
             "False": {
-                "raw_time": "3:06:13.319220",
-                "blitz_time": "450",
-                "adjusted_time": "2:58:43",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:08:59.439292",
-                "blitz_time": "456",
-                "adjusted_time": "3:01:23",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:10:25.981748",
-                "blitz_time": "432",
-                "adjusted_time": "3:03:13",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:08:51.327365",
-                "blitz_time": "432",
-                "adjusted_time": "3:01:39",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_lowroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:07:37.333514",
-                "blitz_time": "405",
-                "adjusted_time": "3:00:52",
+                "raw_time": "3:09:03.765610",
+                "blitz_time": "399",
+                "adjusted_time": "3:02:24",
                 "nea_manip_battle_count": "6"
             }
-        },
-        "flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:17:45.482008",
-                "blitz_time": "392",
-                "adjusted_time": "3:11:13",
-                "nea_manip_battle_count": "28"
-            }
-        },
-        "flip_lowroad:flip_highroad": {
-            "False": {
-                "raw_time": "3:12:09.646652",
-                "blitz_time": "404",
-                "adjusted_time": "3:05:25",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad:flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:10:15.381484",
-                "blitz_time": "392",
-                "adjusted_time": "3:03:43",
-                "nea_manip_battle_count": "7"
-            }
         }
     },
-    "8": {
-        "best_adj": "3:02:30",
+    "160": {
+        "best_adj": "3:00:09",
         "standard": {
             "False": {
-                "raw_time": "3:09:54.797550",
-                "blitz_time": "444",
-                "adjusted_time": "3:02:30",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:09:26.483049",
-                "blitz_time": "410",
-                "adjusted_time": "3:02:36",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:19:44.749461",
-                "blitz_time": "597",
-                "adjusted_time": "3:09:47",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "22": {
-        "best_adj": "3:03:26",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:35.009353",
-                "blitz_time": "410",
-                "adjusted_time": "3:03:45",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:11:11.217551",
-                "blitz_time": "465",
-                "adjusted_time": "3:03:26",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "233": {
-        "best_adj": "3:05:59",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:25.814652",
-                "blitz_time": "386",
-                "adjusted_time": "3:05:59",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "102": {
-        "best_adj": "3:02:22",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:26.059206",
-                "blitz_time": "424",
-                "adjusted_time": "3:02:22",
-                "nea_manip_battle_count": "10"
-            }
-        }
-    },
-    "33": {
-        "best_adj": "3:01:33",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:04.536801",
-                "blitz_time": "412",
-                "adjusted_time": "3:11:12",
-                "nea_manip_battle_count": "31"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:15:55.133270",
-                "blitz_time": "403",
-                "adjusted_time": "3:09:12",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:10:35.789800",
-                "blitz_time": "415",
-                "adjusted_time": "3:03:40",
-                "nea_manip_battle_count": "14"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:08:33.521531",
-                "blitz_time": "420",
-                "adjusted_time": "3:01:33",
-                "nea_manip_battle_count": "14"
-            }
-        }
-    },
-    "118": {
-        "best_adj": "3:00:34",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:48.662193",
-                "blitz_time": "526",
-                "adjusted_time": "3:04:02",
-                "nea_manip_battle_count": "8"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:08:16.917212",
-                "blitz_time": "462",
-                "adjusted_time": "3:00:34",
-                "nea_manip_battle_count": "1"
-            }
-        }
-    },
-    "10": {
-        "best_adj": "3:21:19",
-        "standard": {
-            "False": {
-                "raw_time": "3:30:42.529202",
-                "blitz_time": "563",
-                "adjusted_time": "3:21:19",
-                "nea_manip_battle_count": "9"
-            }
-        }
-    },
-    "151": {
-        "best_adj": "3:01:41",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:40.980738",
-                "blitz_time": "539",
+                "raw_time": "3:08:40.321942",
+                "blitz_time": "419",
                 "adjusted_time": "3:01:41",
                 "nea_manip_battle_count": "3"
             }
         },
         "flip_lowroad": {
             "False": {
-                "raw_time": "3:21:39.532049",
-                "blitz_time": "539",
-                "adjusted_time": "3:12:40",
+                "raw_time": "3:17:50.509622",
+                "blitz_time": "426",
+                "adjusted_time": "3:10:44",
+                "nea_manip_battle_count": "3"
+            }
+        },
+        "flip_bikanel": {
+            "False": {
+                "raw_time": "3:06:55.809386",
+                "blitz_time": "406",
+                "adjusted_time": "3:00:09",
+                "nea_manip_battle_count": "3"
+            }
+        }
+    },
+    "189": {
+        "best_adj": "3:04:39",
+        "standard": {
+            "False": {
+                "raw_time": "3:12:23.306213",
+                "blitz_time": "464",
+                "adjusted_time": "3:04:39",
+                "nea_manip_battle_count": "11"
+            }
+        }
+    },
+    "67": {
+        "best_adj": "2:58:32",
+        "standard": {
+            "False": {
+                "raw_time": "3:05:15.176174",
+                "blitz_time": "403",
+                "adjusted_time": "2:58:32",
+                "nea_manip_battle_count": "4"
+            }
+        },
+        "flip_lowroad": {
+            "False": {
+                "raw_time": "3:06:58.454479",
+                "blitz_time": "476",
+                "adjusted_time": "2:59:02",
+                "nea_manip_battle_count": "2"
+            }
+        },
+        "flip_bikanel": {
+            "False": {
+                "raw_time": "3:09:28.398153",
+                "blitz_time": "476",
+                "adjusted_time": "3:01:32",
+                "nea_manip_battle_count": "2"
+            }
+        },
+        "flip_highroad": {
+            "False": {
+                "raw_time": "3:09:16.335767",
+                "blitz_time": "476",
+                "adjusted_time": "3:01:20",
+                "nea_manip_battle_count": "2"
+            }
+        }
+    },
+    "181": {
+        "best_adj": "3:04:23",
+        "standard": {
+            "False": {
+                "raw_time": "3:11:09.017244",
+                "blitz_time": "406",
+                "adjusted_time": "3:04:23",
+                "nea_manip_battle_count": "4"
+            }
+        }
+    },
+    "191": {
+        "best_adj": "3:03:29",
+        "standard": {
+            "False": {
+                "raw_time": "3:10:02.731013",
+                "blitz_time": "393",
+                "adjusted_time": "3:03:29",
+                "nea_manip_battle_count": "7"
+            }
+        }
+    },
+    "128": {
+        "best_adj": "3:02:08",
+        "standard": {
+            "False": {
+                "raw_time": "3:10:15.962812",
+                "blitz_time": "487",
+                "adjusted_time": "3:02:08",
+                "nea_manip_battle_count": "2"
+            }
+        }
+    },
+    "73": {
+        "best_adj": "3:02:10",
+        "standard": {
+            "False": {
+                "raw_time": "3:12:32.600079",
+                "blitz_time": "622",
+                "adjusted_time": "3:02:10",
+                "nea_manip_battle_count": "4"
+            }
+        }
+    },
+    "7": {
+        "best_adj": "3:05:42",
+        "standard": {
+            "False": {
+                "raw_time": "3:13:31.133804",
+                "blitz_time": "469",
+                "adjusted_time": "3:05:42",
+                "nea_manip_battle_count": "21"
+            }
+        }
+    },
+    "21": {
+        "best_adj": "3:05:50",
+        "standard": {
+            "False": {
+                "raw_time": "3:13:11.528110",
+                "blitz_time": "441",
+                "adjusted_time": "3:05:50",
+                "nea_manip_battle_count": "6"
+            }
+        }
+    },
+    "54": {
+        "best_adj": "3:06:31",
+        "standard": {
+            "False": {
+                "raw_time": "3:16:11.414299",
+                "blitz_time": "580",
+                "adjusted_time": "3:06:31",
+                "nea_manip_battle_count": "4"
+            }
+        }
+    },
+    "33": {
+        "best_adj": "3:16:01",
+        "standard": {
+            "False": {
+                "raw_time": "3:23:36.829479",
+                "blitz_time": "455",
+                "adjusted_time": "3:16:01",
+                "nea_manip_battle_count": "43"
+            }
+        }
+    },
+    "210": {
+        "best_adj": "3:04:14",
+        "standard": {
+            "False": {
+                "raw_time": "3:11:05.830697",
+                "blitz_time": "411",
+                "adjusted_time": "3:04:14",
+                "nea_manip_battle_count": "7"
+            }
+        }
+    },
+    "152": {
+        "best_adj": "3:10:14",
+        "standard": {
+            "False": {
+                "raw_time": "3:19:29.728027",
+                "blitz_time": "555",
+                "adjusted_time": "3:10:14",
+                "nea_manip_battle_count": "20"
+            }
+        }
+    },
+    "27": {
+        "best_adj": "3:18:51",
+        "standard": {
+            "False": {
+                "raw_time": "3:26:34.762736",
+                "blitz_time": "463",
+                "adjusted_time": "3:18:51",
+                "nea_manip_battle_count": "36"
+            }
+        }
+    },
+    "23": {
+        "best_adj": "3:03:46",
+        "standard": {
+            "False": {
+                "raw_time": "3:10:36.197857",
+                "blitz_time": "410",
+                "adjusted_time": "3:03:46",
+                "nea_manip_battle_count": "9"
+            }
+        }
+    },
+    "143": {
+        "best_adj": "3:03:48",
+        "standard": {
+            "False": {
+                "raw_time": "3:12:04.154627",
+                "blitz_time": "496",
+                "adjusted_time": "3:03:48",
+                "nea_manip_battle_count": "5"
+            }
+        }
+    },
+    "225": {
+        "best_adj": "3:03:56",
+        "standard": {
+            "False": {
+                "raw_time": "3:11:16.752877",
+                "blitz_time": "440",
+                "adjusted_time": "3:03:56",
+                "nea_manip_battle_count": "3"
+            }
+        }
+    },
+    "91": {
+        "best_adj": "3:01:30",
+        "standard": {
+            "False": {
+                "raw_time": "3:08:20.377999",
+                "blitz_time": "410",
+                "adjusted_time": "3:01:30",
+                "nea_manip_battle_count": "1"
+            }
+        }
+    },
+    "195": {
+        "best_adj": "3:04:41",
+        "standard": {
+            "False": {
+                "raw_time": "3:12:03.303116",
+                "blitz_time": "442",
+                "adjusted_time": "3:04:41",
+                "nea_manip_battle_count": "22"
+            }
+        }
+    },
+    "251": {
+        "best_adj": "3:11:26",
+        "standard": {
+            "False": {
+                "raw_time": "3:20:28.910162",
+                "blitz_time": "542",
+                "adjusted_time": "3:11:26",
                 "nea_manip_battle_count": "0"
             }
         }
     },
     "71": {
-        "best_adj": "3:02:03",
+        "best_adj": "3:05:47",
         "standard": {
             "False": {
-                "raw_time": "3:11:57.624396",
-                "blitz_time": "486",
-                "adjusted_time": "3:03:51",
+                "raw_time": "3:13:24.699863",
+                "blitz_time": "457",
+                "adjusted_time": "3:05:47",
                 "nea_manip_battle_count": "2"
             }
-        },
-        "flip_lowroad": {
+        }
+    },
+    "97": {
+        "best_adj": "3:03:45",
+        "standard": {
             "False": {
-                "raw_time": "3:09:45.961835",
-                "blitz_time": "462",
-                "adjusted_time": "3:02:03",
+                "raw_time": "3:14:40.336034",
+                "blitz_time": "655",
+                "adjusted_time": "3:03:45",
                 "nea_manip_battle_count": "6"
             }
         }
     },
-    "222": {
-        "best_adj": "3:05:18",
+    "248": {
+        "best_adj": "3:02:25",
         "standard": {
             "False": {
-                "raw_time": "3:13:10.065640",
-                "blitz_time": "472",
-                "adjusted_time": "3:05:18",
+                "raw_time": "3:09:36.358041",
+                "blitz_time": "431",
+                "adjusted_time": "3:02:25",
                 "nea_manip_battle_count": "1"
             }
-        }
-    },
-    "36": {
-        "best_adj": "3:00:46",
-        "standard": {
+        },
+        "flip_lowroad": {
             "False": {
-                "raw_time": "3:07:25.211786",
-                "blitz_time": "399",
-                "adjusted_time": "3:00:46",
+                "raw_time": "3:12:49.790957",
+                "blitz_time": "445",
+                "adjusted_time": "3:05:24",
                 "nea_manip_battle_count": "4"
             }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:28:06.559478",
-                "blitz_time": "399",
-                "adjusted_time": "3:21:27",
-                "nea_manip_battle_count": "44"
-            }
         }
     },
-    "138": {
-        "best_adj": "3:02:10",
+    "215": {
+        "best_adj": "3:08:14",
         "standard": {
             "False": {
-                "raw_time": "3:09:51.324628",
-                "blitz_time": "461",
-                "adjusted_time": "3:02:10",
-                "nea_manip_battle_count": "9"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:13:04.631187",
-                "blitz_time": "467",
-                "adjusted_time": "3:05:17",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "116": {
-        "best_adj": "3:13:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:21:26.745059",
-                "blitz_time": "451",
-                "adjusted_time": "3:13:55",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "32": {
-        "best_adj": "3:12:02",
-        "standard": {
-            "False": {
-                "raw_time": "3:20:20.052522",
-                "blitz_time": "498",
-                "adjusted_time": "3:12:02",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "91": {
-        "best_adj": "3:01:27",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:54.573086",
-                "blitz_time": "507",
-                "adjusted_time": "3:01:27",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:20:08.955358",
-                "blitz_time": "588",
-                "adjusted_time": "3:10:20",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "65": {
-        "best_adj": "3:07:22",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:06.936214",
-                "blitz_time": "404",
-                "adjusted_time": "3:07:22",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "39": {
-        "best_adj": "2:59:26",
-        "standard": {
-            "False": {
-                "raw_time": "3:07:35.205087",
-                "blitz_time": "489",
-                "adjusted_time": "2:59:26",
-                "nea_manip_battle_count": "2"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:15:05.538136",
-                "blitz_time": "475",
-                "adjusted_time": "3:07:10",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:07:19.473342",
+                "raw_time": "3:15:50.680896",
                 "blitz_time": "456",
-                "adjusted_time": "2:59:43",
-                "nea_manip_battle_count": "2"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:14:12.611949",
-                "blitz_time": "392",
-                "adjusted_time": "3:07:40",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:14:46.013168",
-                "blitz_time": "507",
-                "adjusted_time": "3:06:19",
-                "nea_manip_battle_count": "9"
-            }
-        }
-    },
-    "75": {
-        "best_adj": "3:01:25",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:25.772750",
-                "blitz_time": "540",
-                "adjusted_time": "3:01:25",
-                "nea_manip_battle_count": "9"
-            }
-        }
-    },
-    "1": {
-        "best_adj": "3:04:57",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:06.745369",
-                "blitz_time": "489",
-                "adjusted_time": "3:04:57",
-                "nea_manip_battle_count": "9"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:39:48.990244",
-                "blitz_time": "487",
-                "adjusted_time": "3:31:41",
-                "nea_manip_battle_count": "55"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:23:03.983225",
-                "blitz_time": "448",
-                "adjusted_time": "3:15:35",
-                "nea_manip_battle_count": "19"
-            }
-        }
-    },
-    "212": {
-        "best_adj": "3:10:08",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:40.131293",
-                "blitz_time": "392",
-                "adjusted_time": "3:10:08",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "100": {
-        "best_adj": "3:01:59",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:46.376097",
-                "blitz_time": "467",
-                "adjusted_time": "3:01:59",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "247": {
-        "best_adj": "2:59:22",
-        "standard": {
-            "False": {
-                "raw_time": "3:06:37.177810",
-                "blitz_time": "435",
-                "adjusted_time": "2:59:22",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:09:31.655226",
-                "blitz_time": "434",
-                "adjusted_time": "3:02:17",
-                "nea_manip_battle_count": "6"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:09:36.218863",
-                "blitz_time": "449",
-                "adjusted_time": "3:02:07",
-                "nea_manip_battle_count": "6"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:16:28.592174",
-                "blitz_time": "435",
-                "adjusted_time": "3:09:13",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "214": {
-        "best_adj": "3:09:48",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:34.202590",
-                "blitz_time": "466",
-                "adjusted_time": "3:09:48",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "211": {
-        "best_adj": "3:06:52",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:28.036324",
-                "blitz_time": "456",
-                "adjusted_time": "3:06:52",
-                "nea_manip_battle_count": "23"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:16:01.633824",
-                "blitz_time": "522",
-                "adjusted_time": "3:07:19",
+                "adjusted_time": "3:08:14",
                 "nea_manip_battle_count": "13"
             }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:17:15.629785",
-                "blitz_time": "434",
-                "adjusted_time": "3:10:01",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:38:03.727813",
-                "blitz_time": "520",
-                "adjusted_time": "3:29:23",
-                "nea_manip_battle_count": "51"
-            }
         }
     },
-    "184": {
-        "best_adj": "3:05:27",
+    "96": {
+        "best_adj": "3:03:28",
         "standard": {
             "False": {
-                "raw_time": "3:16:16.696700",
-                "blitz_time": "498",
-                "adjusted_time": "3:07:58",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:05.128635",
-                "blitz_time": "398",
-                "adjusted_time": "3:05:27",
-                "nea_manip_battle_count": "16"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:14:04.792064",
-                "blitz_time": "463",
-                "adjusted_time": "3:06:21",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:14:19.658064",
-                "blitz_time": "387",
-                "adjusted_time": "3:07:52",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "34": {
-        "best_adj": "3:02:38",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:11.823161",
-                "blitz_time": "393",
-                "adjusted_time": "3:02:38",
-                "nea_manip_battle_count": "9"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:15:14.259083",
-                "blitz_time": "397",
-                "adjusted_time": "3:08:37",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "157": {
-        "best_adj": "3:08:00",
-        "standard": {
-            "False": {
-                "raw_time": "3:22:58.750610",
-                "blitz_time": "406",
-                "adjusted_time": "3:16:12",
-                "nea_manip_battle_count": "20"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:18:01.744588",
-                "blitz_time": "601",
-                "adjusted_time": "3:08:00",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "177": {
-        "best_adj": "3:06:30",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:41.246315",
-                "blitz_time": "551",
-                "adjusted_time": "3:06:30",
-                "nea_manip_battle_count": "4"
-            }
-        }
-    },
-    "178": {
-        "best_adj": "3:08:06",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:13.141040",
-                "blitz_time": "427",
-                "adjusted_time": "3:08:06",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "37": {
-        "best_adj": "3:02:48",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:52.162773",
-                "blitz_time": "424",
-                "adjusted_time": "3:02:48",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "73": {
-        "best_adj": "3:03:01",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:50.500110",
-                "blitz_time": "589",
-                "adjusted_time": "3:03:01",
-                "nea_manip_battle_count": "10"
-            }
-        }
-    },
-    "105": {
-        "best_adj": "3:12:44",
-        "standard": {
-            "False": {
-                "raw_time": "3:19:53.114820",
-                "blitz_time": "429",
-                "adjusted_time": "3:12:44",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "238": {
-        "best_adj": "3:08:27",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:04.415855",
-                "blitz_time": "457",
-                "adjusted_time": "3:08:27",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "21": {
-        "best_adj": "3:01:41",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:26.709161",
-                "blitz_time": "465",
-                "adjusted_time": "3:01:41",
-                "nea_manip_battle_count": "5"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:11:27.470087",
-                "blitz_time": "463",
-                "adjusted_time": "3:03:44",
+                "raw_time": "3:12:41.538527",
+                "blitz_time": "553",
+                "adjusted_time": "3:03:28",
                 "nea_manip_battle_count": "5"
             }
         }
     },
     "50": {
-        "best_adj": "3:17:26",
+        "best_adj": "3:10:18",
         "standard": {
             "False": {
-                "raw_time": "3:24:51.739722",
-                "blitz_time": "445",
-                "adjusted_time": "3:17:26",
-                "nea_manip_battle_count": "28"
+                "raw_time": "3:18:29.347052",
+                "blitz_time": "491",
+                "adjusted_time": "3:10:18",
+                "nea_manip_battle_count": "27"
             }
         }
     },
-    "64": {
-        "best_adj": "3:00:42",
+    "155": {
+        "best_adj": "3:03:11",
         "standard": {
             "False": {
-                "raw_time": "3:07:36.639285",
-                "blitz_time": "414",
-                "adjusted_time": "3:00:42",
+                "raw_time": "3:10:21.683427",
+                "blitz_time": "430",
+                "adjusted_time": "3:03:11",
                 "nea_manip_battle_count": "3"
             }
-        },
-        "flip_lowroad": {
+        }
+    },
+    "77": {
+        "best_adj": "3:03:45",
+        "standard": {
             "False": {
-                "raw_time": "3:11:02.886763",
-                "blitz_time": "414",
-                "adjusted_time": "3:04:08",
+                "raw_time": "3:13:26.741765",
+                "blitz_time": "581",
+                "adjusted_time": "3:03:45",
+                "nea_manip_battle_count": "11"
+            }
+        }
+    },
+    "102": {
+        "best_adj": "3:10:45",
+        "standard": {
+            "False": {
+                "raw_time": "3:17:33.681722",
+                "blitz_time": "408",
+                "adjusted_time": "3:10:45",
                 "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "218": {
-        "best_adj": "3:03:04",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:47.102035",
-                "blitz_time": "426",
-                "adjusted_time": "3:04:41",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:10:56.258336",
-                "blitz_time": "472",
-                "adjusted_time": "3:03:04",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "161": {
-        "best_adj": "3:04:18",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:20.189503",
-                "blitz_time": "422",
-                "adjusted_time": "3:04:18",
-                "nea_manip_battle_count": "1"
             }
         }
     },
     "159": {
-        "best_adj": "3:02:06",
+        "best_adj": "3:04:37",
         "standard": {
             "False": {
-                "raw_time": "3:09:20.745956",
-                "blitz_time": "434",
-                "adjusted_time": "3:02:06",
+                "raw_time": "3:11:41.859999",
+                "blitz_time": "424",
+                "adjusted_time": "3:04:37",
                 "nea_manip_battle_count": "7"
             }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:19:53.912925",
-                "blitz_time": "423",
-                "adjusted_time": "3:12:50",
-                "nea_manip_battle_count": "6"
-            }
         }
     },
-    "14": {
-        "best_adj": "3:01:08",
-        "standard": {
-            "False": {
-                "raw_time": "3:08:14.877426",
-                "blitz_time": "426",
-                "adjusted_time": "3:01:08",
-                "nea_manip_battle_count": "2"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:10:30.058569",
-                "blitz_time": "426",
-                "adjusted_time": "3:03:24",
-                "nea_manip_battle_count": "8"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:10:47.468478",
-                "blitz_time": "426",
-                "adjusted_time": "3:03:41",
-                "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "63": {
-        "best_adj": "3:07:57",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:40.809385",
-                "blitz_time": "403",
-                "adjusted_time": "3:07:57",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "194": {
-        "best_adj": "3:03:07",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:36.833902",
-                "blitz_time": "449",
-                "adjusted_time": "3:03:07",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "56": {
-        "best_adj": "3:02:35",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:26.380049",
-                "blitz_time": "411",
-                "adjusted_time": "3:02:35",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "44": {
-        "best_adj": "3:11:15",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:54.286845",
-                "blitz_time": "399",
-                "adjusted_time": "3:11:15",
-                "nea_manip_battle_count": "20"
-            }
-        }
-    },
-    "108": {
-        "best_adj": "3:06:57",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:24.751554",
-                "blitz_time": "447",
-                "adjusted_time": "3:06:57",
-                "nea_manip_battle_count": "2"
-            }
-        }
-    },
-    "59": {
-        "best_adj": "3:07:38",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:58.830976",
-                "blitz_time": "620",
-                "adjusted_time": "3:07:38",
-                "nea_manip_battle_count": "15"
-            }
-        }
-    },
-    "67": {
-        "best_adj": "2:57:27",
-        "standard": {
-            "False": {
-                "raw_time": "3:07:38.848254",
-                "blitz_time": "391",
-                "adjusted_time": "3:01:07",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:05:06.834772",
-                "blitz_time": "459",
-                "adjusted_time": "2:57:27",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:08:32.476776",
-                "blitz_time": "461",
-                "adjusted_time": "3:00:51",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:06:59.158614",
-                "blitz_time": "461",
-                "adjusted_time": "2:59:18",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_lowroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:09:28.487380",
-                "blitz_time": "391",
-                "adjusted_time": "3:02:57",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:07:44.859792",
-                "blitz_time": "487",
-                "adjusted_time": "2:59:37",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad:flip_highroad": {
-            "False": {
-                "raw_time": "3:07:24.905365",
-                "blitz_time": "432",
-                "adjusted_time": "3:00:12",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_lowroad:flip_highroad:flip_bikanel": {
-            "False": {
-                "raw_time": "3:06:02.446514",
-                "blitz_time": "404",
-                "adjusted_time": "2:59:18",
-                "nea_manip_battle_count": "2"
-            }
-        }
-    },
-    "237": {
-        "best_adj": "2:59:38",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:43.142816",
-                "blitz_time": "391",
-                "adjusted_time": "3:11:12",
-                "nea_manip_battle_count": "30"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:53.879047",
-                "blitz_time": "428",
-                "adjusted_time": "3:05:45",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:06:46.130305",
-                "blitz_time": "428",
-                "adjusted_time": "2:59:38",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_highroad": {
-            "False": {
-                "raw_time": "3:14:36.366410",
-                "blitz_time": "428",
-                "adjusted_time": "3:07:28",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "204": {
-        "best_adj": "3:04:07",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:09.485741",
-                "blitz_time": "422",
-                "adjusted_time": "3:04:07"
-            }
-        }
-    },
-    "96": {
-        "best_adj": "3:06:58",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:30.547475",
-                "blitz_time": "392",
-                "adjusted_time": "3:06:58"
-            }
-        }
-    },
-    "101": {
-        "best_adj": "3:04:40",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:37.026482",
-                "blitz_time": "477",
-                "adjusted_time": "3:04:40",
-                "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "62": {
-        "best_adj": "3:01:18",
-        "standard": {
-            "False": {
-                "raw_time": "3:08:47.915257",
-                "blitz_time": "449",
-                "adjusted_time": "3:01:18",
-                "nea_manip_battle_count": "2"
-            }
-        }
-    },
-    "83": {
-        "best_adj": "3:04:52",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:33.747797",
-                "blitz_time": "461",
-                "adjusted_time": "3:04:52",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "18": {
-        "best_adj": "3:08:11",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:11.603626",
-                "blitz_time": "480",
-                "adjusted_time": "3:08:11",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "117": {
-        "best_adj": "3:20:02",
-        "standard": {
-            "False": {
-                "raw_time": "3:27:28.842285",
-                "blitz_time": "446",
-                "adjusted_time": "3:20:02",
-                "nea_manip_battle_count": "40"
-            }
-        }
-    },
-    "72": {
-        "best_adj": "3:03:03",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:21.180564",
-                "blitz_time": "498",
-                "adjusted_time": "3:03:03",
-                "nea_manip_battle_count": "11"
-            }
-        }
-    },
-    "28": {
-        "best_adj": "3:06:23",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:10.443500",
-                "blitz_time": "407",
-                "adjusted_time": "3:06:23",
-                "nea_manip_battle_count": "11"
-            }
-        }
-    },
-    "166": {
-        "best_adj": "3:10:11",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:08.859382",
-                "blitz_time": "417",
-                "adjusted_time": "3:10:11",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "148": {
-        "best_adj": "3:08:38",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:00.706094",
-                "blitz_time": "562",
-                "adjusted_time": "3:08:38",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "241": {
-        "best_adj": "3:05:36",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:19.884942",
-                "blitz_time": "463",
-                "adjusted_time": "3:05:36",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "139": {
-        "best_adj": "3:01:04",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:22.621405",
-                "blitz_time": "558",
-                "adjusted_time": "3:01:04",
-                "nea_manip_battle_count": "1"
-            }
-        }
-    },
-    "49": {
-        "best_adj": "3:21:00",
-        "standard": {
-            "False": {
-                "raw_time": "3:27:26.627496",
-                "blitz_time": "386",
-                "adjusted_time": "3:21:00",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "143": {
-        "best_adj": "3:03:32",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:10.426799",
-                "blitz_time": "458",
-                "adjusted_time": "3:03:32",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "195": {
-        "best_adj": "3:02:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:54.768759",
-                "blitz_time": "479",
-                "adjusted_time": "3:02:55",
-                "nea_manip_battle_count": "10"
-            }
-        }
-    },
-    "69": {
-        "best_adj": "3:00:15",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:12.538117",
-                "blitz_time": "429",
-                "adjusted_time": "3:02:03",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:07:40.725831",
-                "blitz_time": "445",
-                "adjusted_time": "3:00:15",
-                "nea_manip_battle_count": "2"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:19:06.990315",
-                "blitz_time": "651",
-                "adjusted_time": "3:08:15",
-                "nea_manip_battle_count": "1"
-            }
-        }
-    },
-    "7": {
-        "best_adj": "3:06:32",
-        "standard": {
-            "False": {
-                "raw_time": "3:34:03.389693",
-                "blitz_time": "455",
-                "adjusted_time": "3:26:28",
-                "nea_manip_battle_count": "13"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:15:00.595029",
-                "blitz_time": "508",
-                "adjusted_time": "3:06:32",
-                "nea_manip_battle_count": "20"
-            }
-        }
-    },
-    "16": {
-        "best_adj": "3:07:24",
-        "standard": {
-            "False": {
-                "raw_time": "3:31:51.710649",
-                "blitz_time": "1021",
-                "adjusted_time": "3:14:50",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:17:54.373065",
-                "blitz_time": "630",
-                "adjusted_time": "3:07:24",
-                "nea_manip_battle_count": "16"
-            }
-        }
-    },
-    "17": {
-        "best_adj": "3:09:01",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:48.896059",
-                "blitz_time": "587",
-                "adjusted_time": "3:09:01",
-                "nea_manip_battle_count": "4"
-            }
-        }
-    },
-    "43": {
-        "best_adj": "3:02:04",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:09.972321",
-                "blitz_time": "425",
-                "adjusted_time": "3:02:04",
-                "nea_manip_battle_count": "5"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:11:36.860331",
-                "blitz_time": "480",
-                "adjusted_time": "3:03:36",
-                "nea_manip_battle_count": "2"
-            }
-        }
-    },
-    "119": {
-        "best_adj": "2:59:21",
-        "standard": {
-            "False": {
-                "raw_time": "3:07:32.737835",
-                "blitz_time": "491",
-                "adjusted_time": "2:59:21",
-                "nea_manip_battle_count": "1"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:41.597455",
-                "blitz_time": "451",
-                "adjusted_time": "3:05:10",
-                "nea_manip_battle_count": "15"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:13:47.674847",
-                "blitz_time": "556",
-                "adjusted_time": "3:04:31",
-                "nea_manip_battle_count": "15"
-            }
-        }
-    },
-    "213": {
-        "best_adj": "3:02:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:53.456682",
-                "blitz_time": "478",
-                "adjusted_time": "3:02:55",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "0": {
-        "best_adj": "3:02:32",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:57.563496",
-                "blitz_time": "404",
-                "adjusted_time": "3:03:13",
-                "nea_manip_battle_count": "5"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:09:15.593622",
-                "blitz_time": "403",
-                "adjusted_time": "3:02:32",
-                "nea_manip_battle_count": "3"
-            }
-        },
-        "flip_bikanel": {
-            "False": {
-                "raw_time": "3:11:52.096160",
-                "blitz_time": "520",
-                "adjusted_time": "3:03:12",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "190": {
-        "best_adj": "3:05:32",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:26.637249",
-                "blitz_time": "414",
-                "adjusted_time": "3:05:32",
-                "nea_manip_battle_count": "13"
-            }
-        }
-    },
-    "115": {
-        "best_adj": "3:03:02",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:43.139160",
-                "blitz_time": "581",
-                "adjusted_time": "3:03:02",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "25": {
-        "best_adj": "3:07:59",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:38.715796",
-                "blitz_time": "459",
-                "adjusted_time": "3:07:59",
-                "nea_manip_battle_count": "21"
-            }
-        }
-    },
-    "205": {
-        "best_adj": "2:59:48",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:33.568328",
-                "blitz_time": "585",
-                "adjusted_time": "2:59:48",
-                "nea_manip_battle_count": "4"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:15:59.614416",
-                "blitz_time": "409",
-                "adjusted_time": "3:09:10",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "113": {
-        "best_adj": "3:05:14",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:01.822650",
-                "blitz_time": "410",
-                "adjusted_time": "3:09:11",
-                "nea_manip_battle_count": "0"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:12:44.711457",
-                "blitz_time": "450",
-                "adjusted_time": "3:05:14",
-                "nea_manip_battle_count": "11"
-            }
-        }
-    },
-    "197": {
-        "best_adj": "3:16:02",
-        "standard": {
-            "False": {
-                "raw_time": "3:23:07.297187",
-                "blitz_time": "425",
-                "adjusted_time": "3:16:02",
-                "nea_manip_battle_count": "36"
-            }
-        }
-    },
-    "4": {
-        "best_adj": "3:00:58",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:00.082873",
-                "blitz_time": "482",
-                "adjusted_time": "3:00:58",
-                "nea_manip_battle_count": "5"
-            }
-        }
-    },
-    "70": {
-        "best_adj": "3:06:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:17:33.498704",
-                "blitz_time": "638",
-                "adjusted_time": "3:06:55",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "120": {
-        "best_adj": "3:01:57",
-        "standard": {
-            "False": {
-                "raw_time": "3:08:52.707945",
-                "blitz_time": "415",
-                "adjusted_time": "3:01:57",
-                "nea_manip_battle_count": "2"
-            }
-        }
-    },
-    "173": {
-        "best_adj": "3:00:46",
-        "standard": {
-            "False": {
-                "raw_time": "3:07:57.649912",
-                "blitz_time": "431",
-                "adjusted_time": "3:00:46",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "182": {
-        "best_adj": "3:06:02",
-        "standard": {
-            "False": {
-                "raw_time": "3:14:07.412513",
-                "blitz_time": "485",
-                "adjusted_time": "3:06:02",
-                "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "30": {
-        "best_adj": "3:05:24",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:58.832155",
-                "blitz_time": "634",
-                "adjusted_time": "3:05:24",
-                "nea_manip_battle_count": "11"
-            }
-        }
-    },
-    "42": {
-        "best_adj": "3:14:32",
-        "standard": {
-            "False": {
-                "raw_time": "3:22:09.925768",
-                "blitz_time": "457",
-                "adjusted_time": "3:14:32",
-                "nea_manip_battle_count": "11"
-            }
-        }
-    },
-    "123": {
-        "best_adj": "3:01:43",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:45.399930",
-                "blitz_time": "542",
-                "adjusted_time": "3:01:43",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "216": {
-        "best_adj": "3:10:54",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:07.277112",
-                "blitz_time": "433",
-                "adjusted_time": "3:10:54",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "124": {
-        "best_adj": "3:04:18",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:50.916092",
-                "blitz_time": "452",
-                "adjusted_time": "3:04:18",
-                "nea_manip_battle_count": "4"
-            }
-        }
-    },
-    "133": {
-        "best_adj": "3:04:41",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:51.531605",
-                "blitz_time": "490",
-                "adjusted_time": "3:04:41",
-                "nea_manip_battle_count": "11"
-            }
-        }
-    },
-    "2": {
+    "212": {
         "best_adj": "3:07:40",
         "standard": {
             "False": {
-                "raw_time": "3:17:53.804659",
-                "blitz_time": "613",
+                "raw_time": "3:18:00.605444",
+                "blitz_time": "620",
                 "adjusted_time": "3:07:40",
+                "nea_manip_battle_count": "14"
+            }
+        }
+    },
+    "78": {
+        "best_adj": "3:07:49",
+        "standard": {
+            "False": {
+                "raw_time": "3:14:50.954591",
+                "blitz_time": "421",
+                "adjusted_time": "3:07:49",
+                "nea_manip_battle_count": "0"
+            }
+        }
+    },
+    "3": {
+        "best_adj": "3:11:25",
+        "standard": {
+            "False": {
+                "raw_time": "3:18:08.811449",
+                "blitz_time": "403",
+                "adjusted_time": "3:11:25",
+                "nea_manip_battle_count": "0"
+            }
+        }
+    },
+    "104": {
+        "best_adj": "3:09:41",
+        "standard": {
+            "False": {
+                "raw_time": "3:17:07.170187",
+                "blitz_time": "446",
+                "adjusted_time": "3:09:41",
+                "nea_manip_battle_count": "7"
+            }
+        }
+    },
+    "145": {
+        "best_adj": "3:10:06",
+        "standard": {
+            "False": {
+                "raw_time": "3:17:33.890096",
+                "blitz_time": "447",
+                "adjusted_time": "3:10:06",
                 "nea_manip_battle_count": "15"
             }
         }
     },
     "61": {
-        "best_adj": "3:13:32",
+        "best_adj": "3:11:15",
         "standard": {
             "False": {
-                "raw_time": "3:22:01.834526",
-                "blitz_time": "509",
-                "adjusted_time": "3:13:32",
+                "raw_time": "3:18:23.905803",
+                "blitz_time": "428",
+                "adjusted_time": "3:11:15",
                 "nea_manip_battle_count": "0"
             }
         }
     },
-    "186": {
-        "best_adj": "3:08:29",
+    "17": {
+        "best_adj": "3:06:51",
         "standard": {
             "False": {
-                "raw_time": "3:15:21.934504",
-                "blitz_time": "412",
-                "adjusted_time": "3:08:29",
-                "nea_manip_battle_count": "15"
+                "raw_time": "3:18:48.849833",
+                "blitz_time": "717",
+                "adjusted_time": "3:06:51",
+                "nea_manip_battle_count": "5"
             }
         }
     },
-    "55": {
-        "best_adj": "3:15:39",
+    "116": {
+        "best_adj": "3:05:15",
         "standard": {
             "False": {
-                "raw_time": "3:24:12.659314",
-                "blitz_time": "513",
-                "adjusted_time": "3:15:39",
-                "nea_manip_battle_count": "24"
-            }
-        }
-    },
-    "165": {
-        "best_adj": "3:04:41",
-        "standard": {
-            "False": {
-                "raw_time": "3:12:18.703482",
-                "blitz_time": "457",
-                "adjusted_time": "3:04:41",
-                "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "68": {
-        "best_adj": "3:03:27",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:01.104028",
-                "blitz_time": "454",
-                "adjusted_time": "3:03:27",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "125": {
-        "best_adj": "3:03:35",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:20.716326",
-                "blitz_time": "405",
-                "adjusted_time": "3:03:35",
-                "nea_manip_battle_count": "8"
-            }
-        }
-    },
-    "131": {
-        "best_adj": "3:04:08",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:38.831481",
-                "blitz_time": "450",
-                "adjusted_time": "3:04:08",
-                "nea_manip_battle_count": "1"
-            }
-        }
-    },
-    "137": {
-        "best_adj": "3:05:56",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:34.166787",
-                "blitz_time": "458",
-                "adjusted_time": "3:05:56",
-                "nea_manip_battle_count": "17"
-            }
-        }
-    },
-    "140": {
-        "best_adj": "3:02:48",
-        "standard": {
-            "False": {
-                "raw_time": "3:09:14.639840",
-                "blitz_time": "386",
-                "adjusted_time": "3:02:48",
-                "nea_manip_battle_count": "3"
-            }
-        }
-    },
-    "112": {
-        "best_adj": "3:08:39",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:59.038562",
-                "blitz_time": "500",
-                "adjusted_time": "3:08:39",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "99": {
-        "best_adj": "3:09:46",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:45.104062",
-                "blitz_time": "539",
-                "adjusted_time": "3:09:46",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "229": {
-        "best_adj": "3:12:02",
-        "standard": {
-            "False": {
-                "raw_time": "3:19:08.279651",
-                "blitz_time": "426",
-                "adjusted_time": "3:12:02",
-                "nea_manip_battle_count": "13"
-            }
-        }
-    },
-    "20": {
-        "best_adj": "3:05:26",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:21.268122",
-                "blitz_time": "595",
-                "adjusted_time": "3:05:26",
-                "nea_manip_battle_count": "18"
-            }
-        }
-    },
-    "23": {
-        "best_adj": "3:03:22",
-        "standard": {
-            "False": {
-                "raw_time": "3:10:11.172979",
-                "blitz_time": "409",
-                "adjusted_time": "3:03:22",
-                "nea_manip_battle_count": "7"
-            }
-        },
-        "flip_lowroad": {
-            "False": {
-                "raw_time": "3:14:11.040926",
-                "blitz_time": "563",
-                "adjusted_time": "3:04:48",
-                "nea_manip_battle_count": "1"
-            }
-        }
-    },
-    "79": {
-        "best_adj": "3:09:46",
-        "standard": {
-            "False": {
-                "raw_time": "3:18:59.753272",
-                "blitz_time": "553",
-                "adjusted_time": "3:09:46",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "77": {
-        "best_adj": "3:03:55",
-        "standard": {
-            "False": {
-                "raw_time": "3:11:16.348736",
+                "raw_time": "3:12:36.381045",
                 "blitz_time": "441",
-                "adjusted_time": "3:03:55",
-                "nea_manip_battle_count": "11"
+                "adjusted_time": "3:05:15",
+                "nea_manip_battle_count": "8"
             }
         }
     },
-    "215": {
-        "best_adj": "3:10:40",
+    "32": {
+        "best_adj": "3:04:21",
         "standard": {
             "False": {
-                "raw_time": "3:18:57.339602",
-                "blitz_time": "497",
-                "adjusted_time": "3:10:40",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "135": {
-        "best_adj": "3:08:47",
-        "standard": {
-            "False": {
-                "raw_time": "3:16:54.527195",
-                "blitz_time": "487",
-                "adjusted_time": "3:08:47",
-                "nea_manip_battle_count": "0"
-            }
-        }
-    },
-    "244": {
-        "best_adj": "3:01:03",
-        "standard": {
-            "False": {
-                "raw_time": "3:08:46.268020",
-                "blitz_time": "463",
-                "adjusted_time": "3:01:03",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "228": {
-        "best_adj": "3:05:39",
-        "standard": {
-            "False": {
-                "raw_time": "3:13:58.302469",
-                "blitz_time": "499",
-                "adjusted_time": "3:05:39",
-                "nea_manip_battle_count": "6"
-            }
-        }
-    },
-    "97": {
-        "best_adj": "3:08:19",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:46.459998",
-                "blitz_time": "447",
-                "adjusted_time": "3:08:19",
-                "nea_manip_battle_count": "20"
-            }
-        }
-    },
-    "170": {
-        "best_adj": "3:08:03",
-        "standard": {
-            "False": {
-                "raw_time": "3:15:00.970972",
-                "blitz_time": "417",
-                "adjusted_time": "3:08:03",
-                "nea_manip_battle_count": "29"
+                "raw_time": "3:11:30.458169",
+                "blitz_time": "429",
+                "adjusted_time": "3:04:21",
+                "nea_manip_battle_count": "4"
             }
         }
     }

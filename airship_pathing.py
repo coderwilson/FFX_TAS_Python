@@ -7,6 +7,7 @@ import pathing
 import vars
 import xbox
 from paths import Airship
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -18,7 +19,7 @@ def air_ship_path(version, checkpoint:int = 0):
     memory.main.click_to_control()
     distiller_purchase = False
     mana_need = 7
-    power_need = 28
+    power_need = 24  # 28 minus four per the guide.
     speed_need = 10
     if game_vars.nemesis() or game_vars.platinum():
         power_need += 6
@@ -36,11 +37,16 @@ def air_ship_path(version, checkpoint:int = 0):
                 and not distiller_purchase
                 and checkpoint == 5
                 and (
-                    memory.main.get_speed() < speed_need or 
+                    memory.main.get_speed() < speed_need or
                     memory.main.get_power() < power_need or
-                    memory.main.get_mana() < 9
+                    memory.main.get_mana() < mana_need
                 )
             ):
+                dist_msg = "Rin sphere check:\n"
+                dist_msg += f"Power: {memory.main.get_power()}/{power_need}\n"
+                dist_msg += f"Speed: {memory.main.get_speed()}/{speed_need}\n"
+                dist_msg += f"Mana: {memory.main.get_mana()}/{mana_need}"
+                write_big_text(dist_msg)
                 while memory.main.diag_progress_flag() != 44:
                     if memory.main.user_control():
                         pathing.set_movement([-6, 6])
@@ -249,7 +255,7 @@ def air_ship_path(version, checkpoint:int = 0):
                 xbox.tap_confirm()
             elif checkpoint == 42 and memory.main.diag_progress_flag() == 210:
                 xbox.tap_confirm()
-
+    write_big_text("")
     logger.info("End of section, Airship pathing")
 
 

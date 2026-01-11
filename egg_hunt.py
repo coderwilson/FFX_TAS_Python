@@ -8,6 +8,9 @@ import battle.main
 import logs
 import memory.main
 import xbox
+import vars
+game_vars = vars.vars_handle()
+from players import Tidus, Rikku, Kimahri
 
 logger = logging.getLogger(__name__)
 
@@ -51,10 +54,20 @@ def compute_escape_vector(player_pos, ice_array, target, avoidance_radius=15):
     return np.array([0.0, 0.0])
 
 
+def under_level() -> bool:
+    if game_vars.end_game_version() == 3:
+        if memory.main.get_yuna_slvl() < 22:
+            return True
+    else:
+        if memory.main.get_yuna_slvl() < 18:
+            return True
+    return False
 
 
 def engage():
     FFXC = xbox.controller_handle()
+    if under_level():
+        memory.main.update_formation(Tidus, Rikku, Kimahri)
     logger.info("Start egg hunt")
     start_time = time.time()
     battle_count = 0
@@ -71,10 +84,17 @@ def engage():
         player_pos = np.array(player)
 
         if memory.main.battle_active():
-            logger.info("Battle engaged - using flee.")
+            if under_level():
+                logger.info("Battle engaged - using impulse for levels.")
+                battle.main.calm_impulse()
+                memory.main.update_formation(Tidus, Rikku, Kimahri)
+            else:
+                logger.info("Battle engaged - using flee.")
+                FFXC.set_neutral()
+                battle.main.flee_all()
+                battle_count += 1
+        elif under_level():
             FFXC.set_neutral()
-            battle.main.flee_all()
-            battle_count += 1
         else:
             egg_array = memory.main.build_eggs()
             ice_array = (

@@ -9,6 +9,7 @@ import menu_grid
 import vars
 import xbox
 from players import Auron, Rikku, Tidus, Wakka, Yuna, Lulu
+from memory.sphere_grid import cursor_current_node
 
 game_vars = vars.vars_handle()
 
@@ -1036,8 +1037,19 @@ def mac_temple():
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_move()
         #grid_left()
-    #grid_left()
-    menu_grid.coords_movement([446,-1040])
+    # grid_left()
+    levels = memory.main.get_tidus_slvl()
+    logger.info(f"Current node: {cursor_current_node()} - Levels: {levels}")
+    if cursor_current_node() == 617:
+        if levels >= 2:
+            menu_grid.coords_movement([446,-1040])  # Strength node
+        else:
+            menu_grid.coords_movement([462,-996])  # Evasion node
+    else:  # Nem/Plat variant 2 (Def node)
+        if levels >= 5:
+            menu_grid.coords_movement([446,-1040])  # Strength node
+        else:
+            menu_grid.coords_movement([462,-996])  # Evasion node
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     if game_vars.nemesis() or game_vars.platinum():
@@ -1097,6 +1109,14 @@ def after_seymour():
         menu_grid.sel_sphere("mp", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("mana", "none")
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
+
+def tidus_learns_steal():
+    open_grid(character=0)
+    menu_grid.use_first()
+    menu_grid.sel_sphere("special", "none", coords=[-703,220])
+    
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
@@ -1205,8 +1225,11 @@ def sort_items(full_menu_close=True):
     else:
         memory.main.back_to_main_menu()
 
+def equip_celestial(character):
+    equip_weapon(character=character, special="celestial")
 
-def equip_weapon(*, character, ability=None, full_menu_close=True, special="none"):
+
+def equip_weapon(*, character, ability=None, ability_list=None, full_menu_close=True, special="none"):
     logger.debug(f"Equipping Weapon with ability {ability}")
     memory.main.await_control()
 
@@ -1216,17 +1239,24 @@ def equip_weapon(*, character, ability=None, full_menu_close=True, special="none
         logger.debug(weapon_handles[i].abilities())
     weapon_num = 255
 
-    abilityarray = []
-    if not ability:
+    if ability_list is not None:
+        abilityarray = ability_list
+    else:
         abilityarray = []
-    elif isinstance(ability, int):
-        abilityarray = [ability]
-    elif isinstance(ability, list):
-        abilityarray = ability
+        if not ability:
+            abilityarray = []
+        elif isinstance(ability, int):
+            abilityarray = [ability]
+        elif isinstance(ability, list):
+            abilityarray = ability
 
     for index, current_weapon in enumerate(weapon_handles):
         if special == "brotherhood":
-            if current_weapon.abilities() == [0x8063, 0x8064, 0x802A, 0x8000]:
+            if current_weapon.is_brotherhood():
+                weapon_num = index
+                break
+        elif special == "celestial":
+            if current_weapon.is_celestial():
                 weapon_num = index
                 break
         elif special == "brotherhoodearly":
@@ -2045,10 +2075,10 @@ def after_ronso_blitz_loss():
         menu_grid.use_shift_right("Lulu")
         menu_grid.move_first()
         menu_grid.coords_movement([123.0, 897.0])
-        grid_up()
-        grid_up()
-        grid_up()
-        grid_up()
+        # grid_up()
+        # grid_up()
+        # grid_up()
+        # grid_up()
         menu_grid.move_shift_left("Yuna")
         menu_grid.use_first()
         menu_grid.sel_sphere("friend", "none")
@@ -2084,11 +2114,14 @@ def find_equipment_index(*, owner, equipment_type, ability_array=[], slot_count)
 
 
 def ability_to_customize_ref(ability_index):
-    if (
-        memory.main.customize_menu_array()[memory.main.assign_ability_to_equip_cursor()]
-        == ability_index
-    ):
-        return True
+    try:
+        if (
+            memory.main.customize_menu_array()[memory.main.assign_ability_to_equip_cursor()]
+            == ability_index
+        ):
+            return True
+    except:
+        pass
     return False
 
 
@@ -2104,6 +2137,7 @@ def add_ability(
     close_menu=True,
     full_menu_close=True,
 ):
+    FFXC.set_neutral()
     if navigate_to_equip_menu:
         if not memory.main.menu_open():
             memory.main.open_menu()
@@ -2119,43 +2153,60 @@ def add_ability(
         ability_array=ability_array,
         slot_count=slot_count,
     )
-    logger.manip(f"Equipment abilities: {ability_array}")
-    logger.manip(f"Equipment is in slot {item_to_modify}")
-    while memory.main.item_menu_row() != item_to_modify:
+    if item_to_modify != None:
+        logger.manip(f"Equipment abilities: {ability_array}")
+        logger.manip(f"Equipment is in slot {item_to_modify}")
         while memory.main.item_menu_row() != item_to_modify:
-            # logger.manip(f"{item_to_modify} | {memory.main.item_menu_row()}")
-            if memory.main.item_menu_row() < item_to_modify:
-                if item_to_modify - memory.main.item_menu_row() > 9:
-                    xbox.trigger_r()
+            while memory.main.item_menu_row() != item_to_modify:
+                # logger.manip(f"{item_to_modify} | {memory.main.item_menu_row()}")
+                if memory.main.item_menu_row() < item_to_modify:
+                    if item_to_modify - memory.main.item_menu_row() > 9:
+                        xbox.trigger_r()
+                    else:
+                        xbox.tap_down()
                 else:
-                    xbox.tap_down()
-            else:
-                if (
-                    memory.main.item_menu_row() - item_to_modify > 5
-                    and memory.main.item_menu_row() > 8
-                ):
-                    xbox.trigger_l()
-                else:
-                    xbox.tap_up()
-        memory.main.wait_frames(2)
-    while not memory.main.heal_menu_open():
-        xbox.tap_b()
-    while not ability_to_customize_ref(ability_index):  # Find the right ability
+                    if (
+                        memory.main.item_menu_row() - item_to_modify > 5
+                        and memory.main.item_menu_row() > 8
+                    ):
+                        xbox.trigger_l()
+                    else:
+                        xbox.tap_up()
+            memory.main.wait_frames(2)
+        while memory.main.heal_menu_open() == 0:
+            xbox.menu_b()
+        loop_counter = 200
+        slow_mode = False
         while not ability_to_customize_ref(ability_index):  # Find the right ability
-            xbox.tap_down()
-        memory.main.wait_frames(2)
-    while memory.main.information_active():
-        xbox.tap_b()
-    while memory.main.equip_buy_row() != 1:
-        pass
-    while memory.main.equip_buy_row() != 0:
-        xbox.tap_up()
-    while not memory.main.information_active():
-        xbox.tap_b()
-    if exit_out_of_current_weapon:
-        while memory.main.heal_menu_open():
-            xbox.menu_a()
-            memory.main.wait_frames(1)
+            while not ability_to_customize_ref(ability_index):  # Find the right ability
+                xbox.tap_down()
+                if slow_mode:
+                    memory.main.wait_frames(2)
+                    test_value = memory.main.customize_menu_array()[memory.main.assign_ability_to_equip_cursor()]
+                    logger.debug(test_value)
+                    memory.main.wait_frames(60)
+                loop_counter -= 1
+                if loop_counter <= 0:
+                    for i in range(200):
+                        xbox.tap_up()
+                        loop_counter += 1
+                    slow_mode = True
+            memory.main.wait_frames(2)
+        while memory.main.information_active():
+            xbox.tap_b()
+        while memory.main.equip_buy_row() != 1:
+            pass
+        while memory.main.equip_buy_row() != 0:
+            xbox.tap_up()
+        while not memory.main.information_active():
+            xbox.tap_b()
+        if exit_out_of_current_weapon:
+            while memory.main.heal_menu_open():
+                xbox.menu_a()
+                memory.main.wait_frames(1)
+        logger.warning(f"Ability added: {ability_index}")
+    else:
+        logger.warning(f"Item not found: {ability_array}")
     if close_menu:
         if full_menu_close:
             memory.main.close_menu()
@@ -2271,16 +2322,32 @@ def tidus_slayer(od_pos: int = 2):
     memory.main.close_menu()
     # memory.main.wait_frames(90)  # Testing
 
+def print_equip_array(full_array):
+    try:
+        for equip_num in range(len(full_array)):
+            # Check existence first
+            item = full_array[equip_num]
+            logger.debug(f"Owner: {item.owner()} | abilities: {item.abilities()}")
+    except Exception as e:
+        logger.warning(e)
+
+
 
 def sell_all(
-        nea: bool = False,
-        tstrike: bool = True, 
-        gil_need: int = None
-    ):
+    nea: bool = False,
+    tstrike: bool = True,
+    capture:bool = False,
+    odap:bool = False,
+    gil_need: int = None
+):
+    odap = False  # Don't want to mess with this for now.
     # Assume already on the sell items screen, index zero
     full_array = memory.main.all_equipment()
+    print_equip_array(full_array)
     sell_item = True
     sell_row = memory.main.equip_sell_row()  # Starts with first non-equipped equipment.
+    for i in range(len(full_array)):
+        pass
 
     with logging_redirect_tqdm():
         with tqdm(total=len(full_array)) as pbar:
@@ -2292,12 +2359,12 @@ def sell_all(
                         else:
                             xbox.tap_down()
                         memory.main.wait_frames(1)
+                    # logger.info("Now attempting to sell:")
+                    # memory.main.get_equip_legit(memory.main.equip_sell_row(), report=True)
+                    # memory.main.wait_frames(30)
                     if memory.main.equip_sell_row() > 8:
                         memory.main.wait_frames(11)
-                    if full_array[memory.main.equip_sell_row()].is_equipped() != 255:
-                        # Currently equipped
-                        sell_item = False
-                    if full_array[memory.main.equip_sell_row()].is_equipped() == 0:
+                    if full_array[memory.main.equip_sell_row()].is_equipped():
                         # Currently equipped
                         sell_item = False
                     if full_array[memory.main.equip_sell_row()].has_ability(0x8056):
@@ -2309,14 +2376,6 @@ def sell_all(
                     if full_array[memory.main.equip_sell_row()].has_ability(0x800A):
                         # Auto-Phoenix
                         sell_item = False
-                    if game_vars.platinum():
-                        # Come back to Triple AP later. We'd want only one per char to be kept.
-                        # if full_array[memory.main.equip_sell_row()].has_ability(0x8013):
-                        #     # Triple AP
-                        #     sell_item = False
-                        if full_array[memory.main.equip_sell_row()].has_ability(0x8011):
-                            # OD>AP
-                            sell_item = False
                     if full_array[memory.main.equip_sell_row()].abilities() == [
                         0x8072,
                         255,
@@ -2339,18 +2398,18 @@ def sell_all(
                         in [0, 4]
                     ):
                         sell_item = False  # Don't sell thunder strikes for Tidus/Wakka
-                    if full_array[memory.main.equip_sell_row()].abilities() == [
-                        0x8063,
-                        0x8064,
-                        0x802A,
-                        0x8000,
-                    ]:
-                        # Brotherhood
+                    if capture and full_array[memory.main.equip_sell_row()].has_ability(0x801D):
+                        sell_item = False  # Don't sell capture weapons until explicitly passed in.
+                    if not odap:
+                        if full_array[memory.main.equip_sell_row()].has_ability(0x8011):
+                            sell_item = False
+                        if full_array[memory.main.equip_sell_row()].has_ability(0x800F):
+                            sell_item = False
+                        if full_array[memory.main.equip_sell_row()].has_ability(0x8013):
+                            sell_item = False
+                    if full_array[memory.main.equip_sell_row()].is_brotherhood():
                         sell_item = False
-                    if full_array[memory.main.equip_sell_row()].abilities() == [
-                        32793, 32783, 32772, 32773,
-                    ]:
-                        # Brotherhood
+                    if full_array[memory.main.equip_sell_row()].is_celestial():
                         sell_item = False
 
                     if sell_item:
@@ -2372,7 +2431,9 @@ def sell_all(
                         return
                     else:
                         sell_row += 1
-            except:
+            except Exception as e:
+                logger.warning(f"Error: {e}")
+                memory.main.wait_frames(900)
                 return
 
 

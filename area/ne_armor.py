@@ -28,10 +28,10 @@ FFXC = xbox.controller_handle()
 
 
 def loop_back_from_ronso(checkpoint=0):
-    write_big_text("")
     memory.main.update_formation(Tidus, Rikku, Auron)
     battle.main.heal_up(full_menu_close=True)
-    rng_track.print_manip_info()
+    # rng_track.print_manip_info()
+    next_green(report=True)
     logger.info("Looping back to the Ronso")
     while checkpoint != 18:
         if memory.main.user_control():
@@ -47,23 +47,43 @@ def loop_back_from_ronso(checkpoint=0):
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
 
+def epaaj_report():
+    # 1. Prep variables
+    nea_possible_check, next_drop = rng_track.final_nea_check()
+    check_zone = rng_track.singles_battles(area="calm_lands_(gorge)")[0]
+    rng10_array = memory.main.next_chance_rng_10_full()
+    align_array = []
+    for i in range(25):
+        if i in rng10_array:
+            align_array.append(i)
+    rng10_array2 = memory.main.next_chance_rng_10_full(drop_chance_val=12)
+    align_array2 = []
+    for i in range(25):
+        if i in rng10_array2:
+            align_array2.append(i)
+    _, _, _, epaaj_test, paths = rng_track.nea_track()
+    # 2. Build string
+    write_str = f"Epaaj_drops: {align_array}\nMech_drops: {align_array2}\n"
+    # write_str += f"Next battle: {check_zone}\n"
+    if len(paths) != 1:
+        write_str += f"paths: {paths} | {epaaj_test}\n"
+    write_str += f"Need {next_drop} Equipment drops before cave."
+    # 3. Write to big text
+    write_big_text(write_str)  # Pick one
+    # rng_track.print_manip_info()  # Pick one
 
 def to_hidden_cave():
-    next_green(report=True)
     memory.main.update_formation(Tidus, Rikku, Auron)
     battle.main.heal_up(full_menu_close=True)
-    rng_track.print_manip_info()
     last_report = False
     first_save = False
     checkpoint = 0
     prep_battles = 0
-    #next_drop, advances = rng_track.nea_track()
-    #nea_possible_check, next_drop = rng_track.final_nea_check()
-    _, next_drop = rng_track.final_nea_check()
-    nea_possible_check = True
-    write_str = f"Next drop: {next_drop}\nRNG10: "
-    write_str += str(memory.main.next_chance_rng_10())
-    write_big_text(write_str)
+    nea_possible_check, next_drop = rng_track.final_nea_check()
+    if next_drop >= 1:
+        epaaj_report()
+    else:
+        next_green(report=True)
     while memory.main.get_map() != 56:
         #if not nea_possible_check or next_drop == 99:
         #    return False
@@ -76,7 +96,6 @@ def to_hidden_cave():
             if checkpoint == 8 and (
                 next_drop >= 1 or memory.main.next_chance_rng_10() >= 9
             ):
-                write_big_text(f"Need {next_drop} Epaaj kills.")
                 if not last_report:
                     logger.info("Need more advances before entering cave.")
                     last_report = True
@@ -99,31 +118,33 @@ def to_hidden_cave():
             FFXC.set_neutral()
             if memory.main.battle_active():
                 last_report = False
-                logger.info("### Starting manip battle")
-                rng_track.print_manip_info()
-                memory.main.wait_frames(2)
-                if next_drop >= 1:
-                    if memory.main.next_chance_rng_10() != 0:
-                        battle.main.advance_rng_10(memory.main.next_chance_rng_10())
-                    else:
-                        battle.main.advance_rng_12()
-                elif memory.main.next_chance_rng_10():
-                    battle.main.advance_rng_10(memory.main.next_chance_rng_10())
-                else:
-                    logger.error("Failed to determine next steps, requires dev review.")
-                    logger.error(f"RNG10: {memory.main.next_chance_rng_10()}")
-                    logger.error(f"RNG12: {memory.main.next_chance_rng_12()}")
-                    battle.main.flee_all()
+                # rng_track.print_manip_info()
+                memory.main.wait_frames(9)
+                logger.info(f"### Starting manip battle: {memory.main.get_encounter_id()}")
+                battle.main.gorge_manip_battle(epaaj_kills=next_drop)
+                # if next_drop >= 1:
+                #     if memory.main.next_chance_rng_10() != 0:
+                #         battle.main.advance_rng_10(memory.main.next_chance_rng_10())
+                #     else:
+                #         battle.main.advance_rng_12()
+                # elif memory.main.next_chance_rng_10():
+                #     battle.main.advance_rng_10(memory.main.next_chance_rng_10())
+                # else:
+                #     logger.error("Failed to determine next steps, requires dev review.")
+                #     logger.error(f"RNG10: {memory.main.next_chance_rng_10()}")
+                #     logger.error(f"RNG12: {memory.main.next_chance_rng_12()}")
+                #     battle.main.flee_all()
                 prep_battles += 1
                 game_vars.ne_battles_increment()
                 memory.main.update_formation(Tidus, Rikku, Auron)
                 save_sphere.touch_and_go()
-                #next_drop, advances = rng_track.nea_track()
                 nea_possible_check, next_drop = rng_track.final_nea_check()
-                rng_track.print_manip_info()
-                write_str = f"Next drop: {next_drop}\nRNG10: "
-                write_str += str(memory.main.next_chance_rng_10())
-                write_big_text(write_str)
+
+                if next_drop >= 1:
+                    epaaj_report()
+                else:
+                    next_green(report=True)
+
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
@@ -177,9 +198,9 @@ def drop_hunt():
     logger.info("Now in the cave. Ready to try to get the NE armor.")
     memory.main.update_formation(Tidus, Rikku, Auron)
 
-    go_green = next_green()
+    go_green = next_green(report=True)
 
-    rng_track.print_manip_info()
+    # rng_track.print_manip_info()
     checkpoint = 0
     pre_ghost_battles = 0
     while game_vars.ne_armor() == 255:
@@ -199,7 +220,7 @@ def drop_hunt():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
-                write_big_text("")
+                # write_big_text("")
                 if memory.main.get_encounter_id() in [319, 323]:
                     battle.main.ghost_kill()
                 else:
@@ -208,7 +229,7 @@ def drop_hunt():
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=False)
                 memory.main.check_nea_armor()
-                next_green()
+                next_green(report=True)
                 if game_vars.ne_armor() == 255:
                     if next_green() and not go_green:
                         go_green = True

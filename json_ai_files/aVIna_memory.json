@@ -1,6 +1,7 @@
 {
     "54": {
-        "kimahri_force_heal": "True"
+        "kimahri_force_heal": "True",
+        "zan_luck": "False"
     },
     "59": {
         "kimahri_force_heal": "True",
@@ -13,7 +14,8 @@
         "kimahri_force_heal": "True"
     },
     "169": {
-        "kimahri_force_heal": "True"
+        "kimahri_force_heal": "True",
+        "zan_luck": "False"
     },
     "224": {
         "kimahri_force_heal": "True"
@@ -42,7 +44,8 @@
         "kimahri_force_heal": "True"
     },
     "101": {
-        "kimahri_force_heal": "True"
+        "kimahri_force_heal": "True",
+        "zan_luck": "False"
     },
     "99": {
         "kimahri_force_heal": "True"
@@ -107,7 +110,8 @@
         "kimahri_force_heal": "True"
     },
     "91": {
-        "kimahri_force_heal": "True"
+        "kimahri_force_heal": "True",
+        "zan_luck": "False"
     },
     "119": {
         "kimahri_force_heal": "True"
@@ -249,6 +253,9 @@
         "zan_luck": "False"
     },
     "7": {
+        "zan_luck": "False"
+    },
+    "212": {
         "zan_luck": "False"
     }
 }
