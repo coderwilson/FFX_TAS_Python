@@ -22,7 +22,8 @@ def remaining_time(max:int=99, current:int=99, coords=[]):
     if len(coords) >= 2:
         logger.debug(f"Soft lock check: {int(max - current)} seconds to reset - Coords: {coords}")
     else:
-        logger.manip(f"Encounter distance: {memory.main.distance_to_encounter()}")
+        dist,_ = memory.main.distance_to_encounter()
+        logger.manip(f"Encounter distance: {dist}")
 
 
 def _distance(n1, n2):
@@ -85,7 +86,7 @@ def loop_back(checkpoint = 0):
         memory.main.await_control()
     remaining_time()
 
-    next_enc_dist = memory.main.distance_to_encounter()
+    next_enc_dist,_ = memory.main.distance_to_encounter()
     force_enc = next_enc_dist < 295
     path = [
         [-169,-446],
@@ -423,7 +424,7 @@ def advance_to_aftermath():
                     pass
                 if memory.main.game_over():
                     avina_memory.add_battle_to_memory(
-                        seed=seed_str, area="mrr_heals", key=battle_num - 1
+                        seed=seed_str, area="mrr_heals", battle_num=battle_num - 1
                     )
                     return False
                 battle.main.flee_all()

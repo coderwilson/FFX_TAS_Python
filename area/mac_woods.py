@@ -364,7 +364,12 @@ def lake():
     if memory.main.get_hp()[3] < 1000:  # Otherwise we under-level Tidus off of Crawler
         battle.main.heal_up(full_menu_close=False)
 
-    memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
+    # memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
+    if memory.main.get_speed() >= 5:
+        memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
+    else:
+        memory.main.update_formation(Yuna, Wakka, Rikku, full_menu_close=False)
+    
     menu.m_lake_grid()
     memory.main.await_control()
 
@@ -378,12 +383,26 @@ def lake():
             if checkpoint == 2 and get_primer:
                 pathing.primer()
                 get_primer = False
+            if (
+                checkpoint >= 3 and 
+                memory.main.get_speed() < 5 and
+                memory.main.get_item_slot(35) != 255
+            ):
+                checkpoint = 1
             if pathing.set_movement(MacalaniaLake.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.battle_active() and memory.main.get_encounter_id() != 194:
+            if memory.main.battle_active() and memory.main.get_speed() < 5:
+                logger.warning("LOW SPEED SPHERES!!! Start")
+                battle.main.mac_lake_recover()
+                if memory.main.get_speed() >= 5:
+                    memory.main.update_formation(Tidus, Kimahri, Lulu)
+                else:
+                    memory.main.update_formation(Yuna, Wakka, Rikku)
+                logger.warning("LOW SPEED SPHERES!!! End")
+            elif memory.main.battle_active() and memory.main.get_encounter_id() != 194:
                 battle.main.flee_all()
             elif memory.main.menu_open():
                 xbox.tap_confirm()

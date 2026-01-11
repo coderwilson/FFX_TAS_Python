@@ -384,6 +384,8 @@ def klikk_crimson(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion
         else:
             if memory.main.diag_skip_possible():
                 xbox.tap_b()
+    if memory.main.game_over():
+        return "stage_2"
     logger.info("Klikk fight complete")
     split_timer()
     logger.debug(f"map: {memory.main.get_map()}")
@@ -400,6 +402,7 @@ def klikk_crimson(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion
             xbox.tap_b()  # Maybe not skippable dialog, but whatever.
     FFXC.set_neutral()
     memory.main.wait_frames(1)
+    return "success"
 
 
 @battle.utils.speedup_decorator
@@ -1855,7 +1858,6 @@ def evrae():
                 else:
                     CurrentPlayer().defend()
                     logger.manip(f"Remaining steals: {remaining_steals}")
-    split_timer()
     if memory.main.game_over():
         return False
     else:
@@ -1990,8 +1992,8 @@ def evrae_trueRNG():
 @battle.utils.speedup_decorator
 def isaaru():
     xbox.click_to_battle()
-    if memory.main.get_encounter_id() < 258:
-        game_vars.add_rescue_count()
+    # if memory.main.get_encounter_id() < 258:
+    #     game_vars.add_rescue_count()
 
     logger.info("Starting battle: Isaaru")
     while memory.main.battle_active():  # AKA end of battle screen
@@ -2066,9 +2068,12 @@ def evrae_altana():
                     thrown_item = True
                 else:
                     battle.main.altana_heal()
+    if memory.main.game_over():
+        return False
     wrap_up()
     if game_vars.god_mode():
         rng_track.force_preempt()
+    return True
 
 
 def evrae_altana_steal():
@@ -2091,130 +2096,41 @@ def evrae_altana_steal():
         rng_track.force_preempt()
 
 
-def highbridge_attack():
-    if memory.main.get_enemy_current_hp().count(0) == 1:
-        return False
-    elif memory.main.get_encounter_id() == 271:
-        CurrentPlayer().attack(target_id=21, direction_hint="l")
-    else:
-        CurrentPlayer().attack()
-    return True
-
-
 @battle.utils.speedup_decorator
-def seymour_natus(delay_grid:bool):
-    while not memory.main.turn_ready():
-        pass  # This is so we don't trigger the wrong battle.
+def seymour_natus():
     aeon_summoned = False
-    if game_vars.story_mode() and memory.main.get_encounter_id() != 272:
-        if memory.main.battle_type() == 2:
-            # Ambushed
-            flee_all()
-        else:
-            battle.main.calm_impulse()  # Repurposed, does what we want already.
-        wrap_up()
-    elif memory.main.get_encounter_id() == 272:  # Seymour Natus
-        logger.info("Seymour Natus engaged")
-        while memory.main.battle_active():
-            if memory.main.turn_ready():
-                if Tidus.is_turn():
-                    if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis() or game_vars.platinum():
-                        battle.main.buddy_swap(Lulu)
-                        screen.await_turn()
-                        CurrentPlayer().swap_battle_weapon()
-                    elif aeon_summoned:
-                        battle.main.tidus_haste("d", character=1)
-                    else:
-                        CurrentPlayer().attack()
-                elif Lulu.is_turn():
-                    battle.main.buddy_swap(Tidus)
+    logger.info("Seymour Natus engaged")
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                if memory.main.get_lulu_slvl() < 35 or game_vars.nemesis() or game_vars.platinum():
+                    battle.main.buddy_swap(Lulu)
                     screen.await_turn()
-                    xbox.tap_up()
+                    CurrentPlayer().swap_battle_weapon()
+                elif aeon_summoned:
+                    battle.main.tidus_haste("d", character=1)
+                else:
                     CurrentPlayer().attack()
-                elif Yuna.is_turn():
-                    if not aeon_summoned:
-                        battle.main.aeon_summon(4)
-                        aeon_summoned = True
-                    else:
-                        CurrentPlayer().attack()
-                        #battle.main.aeon_summon(2)
-                elif screen.turn_aeon():
-                    Bahamut.attack()
-                    xbox.skip_dialog(3)  # Finishes the fight.
+            elif Lulu.is_turn():
+                battle.main.buddy_swap(Tidus)
+                screen.await_turn()
+                xbox.tap_up()
+                CurrentPlayer().attack()
+            elif Yuna.is_turn():
+                if not aeon_summoned:
+                    battle.main.aeon_summon(4)
+                    aeon_summoned = True
                 else:
-                    CurrentPlayer().defend()
-        logger.warning("Natus complete, returning 1")
-        split_timer()
-        return 1
-    elif (
-        memory.main.next_chance_rng_10(30) == 0
-        and memory.main.next_chance_rng_12() == 1
-    ):
-        steal_occurred = False
-        while memory.main.battle_active():
-            if (
-                game_vars.completed_rescue_fights() and 
-                not delay_grid
-            ):
-                battle.main.flee_all()
-            elif memory.main.turn_ready():
-                if Rikku.is_turn() and not steal_occurred:
-                    battle.main.steal()
-                    steal_occurred = True
-                elif not Rikku.active() and not steal_occurred:
-                    battle.main.buddy_swap(Rikku)
-                elif Tidus.is_turn() or Yuna.is_turn():
-                    if not highbridge_attack():
-                        battle.main.flee_all()
-                elif not Tidus.active():
-                    battle.main.buddy_swap(Tidus)
-                elif not Yuna.active():
-                    battle.main.buddy_swap(Yuna)
-                else:
-                    CurrentPlayer().defend()
-    elif memory.main.get_encounter_id() == 270:  # YAT-63 x2
-        while memory.main.battle_active():
-            if game_vars.completed_rescue_fights() and not delay_grid:
-                battle.main.flee_all()
-            elif memory.main.turn_ready():
-                if Tidus.is_turn() or Yuna.is_turn():
-                    if memory.main.get_enemy_current_hp().count(0) == 1:
-                        battle.main.flee_all()
-                        game_vars.add_rescue_count()
-                    else:
-                        highbridge_attack()
-                else:
-                    CurrentPlayer().defend()
-    elif memory.main.get_encounter_id() == 269:  # YAT-63 with two guard guys
-        while memory.main.battle_active():
-            if game_vars.completed_rescue_fights() and not delay_grid:
-                battle.main.flee_all()
-            elif memory.main.turn_ready():
-                if Tidus.is_turn() or Yuna.is_turn():
-                    if memory.main.get_enemy_current_hp().count(0) == 1:
-                        battle.main.flee_all()
-                        game_vars.add_rescue_count()
-                    else:
-                        highbridge_attack()
-                else:
-                    CurrentPlayer().defend()
-    elif memory.main.get_encounter_id() == 271:  # one YAT-63, two YAT-99
-        while memory.main.battle_active():
-            if game_vars.completed_rescue_fights() and not delay_grid:
-                battle.main.flee_all()
-            elif memory.main.turn_ready():
-                if Tidus.is_turn() or Yuna.is_turn():
-                    if memory.main.get_enemy_current_hp().count(0) == 1:
-                        battle.main.flee_all()
-                        game_vars.add_rescue_count()
-                    else:
-                        highbridge_attack()
-                else:
-                    CurrentPlayer().defend()
-
-    if game_vars.god_mode():
-        rng_track.force_preempt()
-    return 0
+                    CurrentPlayer().attack()
+                    #battle.main.aeon_summon(2)
+            elif screen.turn_aeon():
+                Bahamut.attack()
+                xbox.skip_dialog(3)  # Finishes the fight.
+            else:
+                CurrentPlayer().defend()
+    logger.warning("Natus complete")
+    split_timer()
+    return
 
 
 @battle.utils.speedup_decorator

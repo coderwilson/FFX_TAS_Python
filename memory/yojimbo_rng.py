@@ -51,6 +51,8 @@ def first_turn_compat_change() -> int:
     else:
         logger.warning("++ Yojimbo first turn, expect Wakizashi (multi)")
         return 3
+    # Note that Zanmatou will never occur on the first turn for end-game bosses.
+    # Any time we see it as a first-turn actio is on zan level 0.
 
 
 def zanmato_gil_needed(zan_level: int = 5) -> int:

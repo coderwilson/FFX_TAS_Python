@@ -389,6 +389,13 @@ def battle_cursor_3():
     except:
         return 255
 
+def portal_cursor():
+    try:
+        key = base_value + 0x001467A7A
+        return process.read_bytes(key, 1)
+    except:
+        return 255
+    
 
 def overdrive_menu_active():
     global base_value
@@ -672,18 +679,19 @@ def get_coords():
     return [x, y]
 
 
-def distance_to_encounter(danger_val:int = 35):
+def distance_to_encounter(danger_val:int = 35, rng_advances = 0):
     # Defaults to 35 for Clasko skip & thunder plains.
     grace_period = int(danger_val // 2)
     threat_mod = danger_val * 4
 
-    rng_array = rng_array_from_index(index=0, array_len=800)
+    rng_array = rng_array_from_index(index=0, array_len=800+rng_advances)
     for i in range(400):
-        check_rng = (rng_array[i+1] & 0x7FFFFFFF) & 255
+        ptr = i+1+rng_advances
+        check_rng = (rng_array[ptr] & 0x7FFFFFFF) & 255
         check_value = (i) * 256 // threat_mod
         if check_rng < check_value:
-            return (i+grace_period) * 10
-    return 999
+            return ((i+grace_period) * 10,i+1)
+    return (999,0)
 
 
 def ammes_fix(actor_index: int = 0):
@@ -936,12 +944,11 @@ def get_phoenix():
 
 
 def get_power():
-    global base_value
-
-    key = get_item_slot(70)
-    power = get_item_count_slot(key)
-    logger.debug(f"Power spheres: {power}")
-    return power
+    power_slot = get_item_slot(70)
+    if power_slot == 255:
+        return 0
+    else:
+        return get_item_count_slot(power_slot)
 
 
 def set_power(qty):
@@ -967,12 +974,11 @@ def get_mana():
 
 
 def get_speed():
-    global base_value
-
-    key = get_item_slot(72)
-    speed = get_item_count_slot(key)
-    #logger.debug(f"Speed spheres: {speed}")
-    return speed
+    speed_slot = get_item_slot(72)
+    if speed_slot == 255:
+        return 0
+    else:
+        return get_item_count_slot(speed_slot)
 
 
 def set_speed(qty):
@@ -1324,6 +1330,17 @@ def get_items_count():
 def get_item_count_slot(item_slot) -> int:
     global base_value
     return process.read_bytes(base_value + 0x00D30B5C + item_slot, 1)
+
+
+def set_item_count(item_num, quantity) -> int:
+    if not game_vars.check_plat_test_mode():
+        # We do not want to do this unless in Platinum test mode.
+        return
+    global base_value
+    item_slot = get_item_slot(item_num)
+    key = base_value + 0x00D30B5C + item_slot
+    process.write_bytes(key, quantity, 1)
+    return
 
 
 def get_menu_display_characters():
@@ -3082,46 +3099,128 @@ def get_equip_type(equip_num):
     ret_val = process.read_bytes(key, 1)
     return ret_val
 
-
-def get_equip_legit(equip_num):
-    #return True
+def get_equip_legit_byte(equip_num):
     global base_value
-    report = False  # Reports illegitimate equipments for troubleshooting.
 
     base_pointer = base_value + 0x00D30F2C
     key = base_pointer + (0x16 * equip_num) + 0x03
     ret_val = process.read_bytes(key, 1)
-    if not get_equip_exists(equip_num=equip_num):
-        #logger.debug(f"Equip num/pos {equip_num} does not exist.")
-        return False
+    return ret_val
+
+def get_equip_legit(equip_num, report:bool=False):
+    #return True
+    global base_value
+
+    base_pointer = base_value + 0x00D30F2C
+    key = base_pointer + (0x16 * equip_num) + 0x03
+    ret_val = process.read_bytes(key, 1)
+    owner = get_equip_owner(equip_num=equip_num)
     if report:
         logger.warning(f"========Legitimacy check {equip_num}=========")
-        logger.warning(f"Owner: {get_equip_owner(equip_num=equip_num)}")
+        logger.warning(f"Owner: {owner}")
         if get_equip_type(equip_num) == 1:
             type_val = "Armor"
         else:
             type_val = "Weapon"
         logger.warning(f"Type: {type_val}")
-        logger.warning(f"Legitimacy: {ret_val}")
+        logger.warning(f"Legitimacy: {ret_val} | {(ret_val & 2)}")
         logger.warning(f"Abilities: {get_equip_abilities(equip_num=equip_num)}")
         logger.warning("====================================")
-    if ret_val in [0, 8, 9]:
-        return True
-    if ret_val == 4 and 32793 in get_equip_abilities(equip_num=equip_num):
+    if not get_equip_exists(equip_num=equip_num):
+        #logger.debug(f"Equip num/pos {equip_num} does not exist.")
+        return False
+    if ret_val == 2:
+        # Equipment is hidden (i.e. char not in party, or Seymour/aeons)
+        return False
+    if owner in range(7):
         return True
     return False
 
+def analyze_equipment(max_equip_count=200):
+    """
+    Iterates through all equipment items, checking for items that exist 
+    but fail the legitimacy check.
+    """
+    all_items = []
+    print("--- Starting Illegitimate Equipment Analysis ---")
+    
+    for equip_num in range(max_equip_count):
+        # Check existence first
+        exists = get_equip_exists(equip_num)
+
+        if exists:
+            # If it exists, check for legitimacy
+            is_legit = get_equip_legit(equip_num)
+            
+            # The core condition: Exists AND NOT Legitimate
+            # if not is_legit:
+            try:
+                # Instantiate Equipment class to gather all item attributes
+                item = Equipment(equip_num)
+                if item.owner() < 8:
+                    all_items.append({
+                        "num": equip_num,
+                        "type": item.equipment_type(),
+                        "owner": item.owner(),
+                        "abilities": item.abilities(),
+                        "slots": item.slot_count(),
+                        "is_equipped": item.is_equipped(),
+                        "is_legit": get_equip_legit(equip_num),
+                        "legit_byte": item.check_legit_byte()
+                    })
+
+            except Exception as e:
+                # Log an error if object creation fails (shouldn't happen here)
+                logger.warning(f"Error creating Equipment object for #{equip_num}: {e}")
+
+    # Print Summary Report
+    if all_items:
+        print(f"\n[!!!] Found {len(all_items)} item(s):")
+        print("-------------------------------------------------------")
+        for item in all_items:
+            type_label = "Armor" if item['type'] == 1 else "Weapon"
+            equipped_status = "Yes" if item['is_equipped'] == 1 else "No"
+            # print(f"| ID: {item['num']:<4} | Type: {type_label:<6} | Owner: {item['owner']:<3} | Slots: {item['slots']:<1} | legit_byte: {item['legit']}")
+            print(f"| ID: {item['num']:<4} | Owner: {item['owner']:<3} | legit: {item['is_legit']} | legit_byte: {item['legit_byte']} | Abilities: {item['abilities']}")
+        print("-------------------------------------------------------")
+    else:
+        print("\nAnalysis complete. No illegitimate existing equipment found.")
+    
+    print("--- Analysis Finished ---")
+    return all_items
+
+
+# def is_equip_brotherhood(equip_num):
+#     if get_equip_owner(equip_num) == 0:
+#         global base_value
+#         base_pointer = base_value + 0x00D30F2C
+#         key = base_pointer + (0x16 * equip_num) + 0x03
+#         ret_val = process.read_bytes(key, 1)
+#         if ret_val == 9:
+#             return True
+#     return False
+
+def get_equip_flags(equip_num):
+    global base_value
+    base_pointer = base_value + 0x00D30F2C
+    # Offset 0x03 is the flags byte
+    key = base_pointer + (0x16 * equip_num) + 0x03
+    return process.read_bytes(key, 1)
 
 def is_equip_brotherhood(equip_num):
-    if get_equip_owner(equip_num) == 0:
-        global base_value
-        base_pointer = base_value + 0x00D30F2C
-        key = base_pointer + (0x16 * equip_num) + 0x03
-        ret_val = process.read_bytes(key, 1)
-        if ret_val == 9:
-            return True
-    return False
+    flags = get_equip_flags(equip_num)
+    # Check if the 3rd bit (0x08) is set
+    return (flags & 0x08) != 0
 
+def is_equip_celestial(equip_num):
+    flags = get_equip_flags(equip_num)
+    # Check if the 2nd bit (0x04) is set
+    return (flags & 0x04) != 0
+
+def is_equip_hidden(equip_num):
+    flags = get_equip_flags(equip_num)
+    # Check if the 1st bit (0x02) is set
+    return (flags & 0x02) != 0
 
 def get_equip_owner(equip_num):
     global base_value
@@ -3141,7 +3240,7 @@ def get_equip_slot_count(equip_num):
     return ret_val
 
 
-def get_equip_currently_equipped(equip_num):
+def get_equip_equipped_by(equip_num):
     global base_value
 
     base_pointer = base_value + 0x00D30F2C
@@ -3183,10 +3282,11 @@ class Equipment:
         self.equip_owner = get_equip_owner(equip_num)
         self.equip_owner_alt = get_equip_owner(equip_num)
         self.equip_abilities = get_equip_abilities(equip_num)
-        self.equip_status = get_equip_currently_equipped(equip_num)
+        self.equip_status = get_equip_equipped_by(equip_num)
         self.slots = get_equip_slot_count(equip_num)
         self.exists = get_equip_exists(equip_num)
-        self.brotherhood = is_equip_brotherhood(equip_num)
+        # Store the raw flags byte for bitwise checking
+        self.flags = get_equip_flags(equip_num)
 
     def create_custom(
         self, e_type: int, e_owner_1: int, e_owner_2: int, e_slots: int, e_abilities
@@ -3195,10 +3295,10 @@ class Equipment:
         self.equip_owner = e_owner_1
         self.equip_owner_alt = e_owner_2
         self.equip_abilities = e_abilities
-        self.equip_status = 0
+        self.equip_status = 255
         self.slots = e_slots
         self.exists = 1
-        self.brotherhood = False
+        self.flags = 0  # Default no flags
 
     def equipment_type(self):
         return self.equip_type
@@ -3217,8 +3317,11 @@ class Equipment:
             return True
         return False
 
-    def is_equipped(self):
-        return self.equip_status
+    def is_equipped(self) -> bool:
+        return (self.equip_status != 255)
+
+    def check_legit_byte(self):
+        return self.legit_byte
 
     def slot_count(self):
         return self.slots
@@ -3227,19 +3330,27 @@ class Equipment:
         return self.exists
 
     def is_brotherhood(self):
-        return self.brotherhood
+        """Returns True if the Brotherhood flag (bit 3) is set."""
+        return (self.flags & 0x08) != 0
+
+    def is_celestial(self):
+        """Returns True if the Celestial flag (bit 2) is set."""
+        return (self.flags & 0x04) != 0
+
+    def is_hidden(self):
+        """Returns True if the Hidden flag (bit 1) is set."""
+        return (self.flags & 0x02) != 0
+        
+    def check_legit_byte(self):
+        """Returns the raw flags byte for debugging."""
+        return self.flags
 
 
 def all_equipment():
-    first_equipment = True
+    equip_handle_array = []
     for i in range(200):
-        current_handle = Equipment(i)
-        if get_equip_legit(i) and current_handle.equip_exists():
-            if first_equipment:
-                equip_handle_array = [Equipment(i)]
-                first_equipment = False
-            else:
-                equip_handle_array.append(Equipment(i))
+        if get_equip_legit(i):
+            equip_handle_array.append(Equipment(i))
     return equip_handle_array
 
 
@@ -3255,11 +3366,7 @@ def weapon_array_character(char_num):
         #logger.debug(f"Abilities: {current_handle.abilities()}")
         #logger.debug("===========================")
         if current_handle.owner() == char_num and current_handle.equipment_type() == 0:
-            if first_equipment:
-                char_weaps = [current_handle]
-                first_equipment = False
-            else:
-                char_weaps.append(current_handle)
+            char_weaps.append(current_handle)
     return char_weaps
 
 
@@ -3267,7 +3374,7 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
     equip_handles = weapon_array_character(char_num)
     while len(equip_handles) > 0:
         current_handle = equip_handles.pop(0)
-        if current_handle.is_equipped() == char_num:
+        if current_handle.is_equipped():
             # logger.debug(f"Owner: {current_handle.owner()}")
             # logger.debug(f"Equipped: {current_handle.is_equipped()}")
             # logger.debug(f"Has Ability: {current_handle.has_ability(ability_num)}")
@@ -3276,6 +3383,21 @@ def equipped_weapon_has_ability(char_num: int = 1, ability_num: int = 32769):
             else:
                 return False
 
+def equipped_weapon_slot_count(char_num:int):
+    equip_handles = weapon_array_character(char_num)
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.is_equipped():
+            return current_handle.slot_count()
+
+
+
+def equipped_weapon_current_abilities(char_num: int = 1):
+    equip_handles = weapon_array_character(char_num)
+    while len(equip_handles) > 0:
+        current_handle = equip_handles.pop(0)
+        if current_handle.is_equipped():
+            return current_handle.abilities()
 
 def check_thunder_strike() -> int:
     results = 0
@@ -3293,6 +3415,39 @@ def check_thunder_strike() -> int:
             results += 2
             break
     return results
+
+def check_any_odap(char_id:int, prio_odap:bool=False) -> list:
+    char_weaps = weapon_array_character(char_id)
+    best_weap = []
+    best_value = 0
+    new_weap = []
+    new_value = 0
+    for current_handle in char_weaps:
+        if not current_handle.is_celestial():
+            if current_handle.has_ability(0x800F):
+                new_weap.append(0x800F)
+                new_value += 3
+            if current_handle.has_ability(0x8013):
+                new_weap.append(0x8013)
+                new_value += 3
+            if current_handle.has_ability(0x800E):
+                new_weap.append(0x800E)
+                new_value += 2
+            if current_handle.has_ability(0x8012):
+                new_weap.append(0x8012)
+                new_value += 2
+            if current_handle.has_ability(0x8011):
+                new_weap.append(0x8011)
+                if prio_odap:
+                    new_value += 8
+                else:
+                    new_value += 1
+        if new_value > best_value:
+            best_weap = new_weap
+            best_value = new_value
+        new_weap = []
+        new_value = 0
+    return best_weap
 
 
 def check_zombie_strike():
@@ -3501,7 +3656,7 @@ def weapon_armor_cursor():
 def customize_menu_array():
     ret_array = []
     global base_value
-    for x in range(60):
+    for x in range(90):
         offset = 0x1197730 + (x * 4)
         ret_array.append(process.read_bytes(base_value + offset, 2))
     return ret_array
@@ -3605,7 +3760,7 @@ def equipped_armor_has_ability(char_num: int, ability_num: int = 0x801D):
         equip_handles = armor_array_character(char_num)
         while len(equip_handles) > 0:
             current_handle = equip_handles.pop(0)
-            if current_handle.is_equipped() == char_num:
+            if current_handle.is_equipped():
                 if current_handle.has_ability(ability_num):
                     return True
                 else:
@@ -4722,16 +4877,14 @@ def next_chance_rng_10(drop_chance_val: int = 60,min_steals = 0) -> int:
             return i - 3
 
 
-def next_chance_rng_10_full(drop_chance_val: int = 60) -> int:
+def next_chance_rng_10_full(drop_chance_val: int = 60, advances = 0) -> int:
     test_array = rng_10_array()
-    results_array = [False, False, False]
+    results_array = []
     for i in range(len(test_array)):
         if i < 3:
             pass
-        elif (test_array[i] & 0x7FFFFFFF) % 255 < drop_chance_val:
-            results_array.append(True)
-        else:
-            results_array.append(False)
+        elif (test_array[i+advances] & 0x7FFFFFFF) % 255 < drop_chance_val:
+            results_array.append(i - 3)
     return results_array
 
 
@@ -4784,7 +4937,7 @@ def no_chance_x3_rng_10_highbridge() -> int:
 def advance_rng_10():
     global base_value
     key = base_value + 0xD35F00
-    process.write(key, rng_10_array()[1])
+    process.write_bytes(key, rng_10_array()[1], 4)
 
 
 def rng_12():
@@ -4977,7 +5130,9 @@ def arena_farm_check(
     if zone == "calm":
         zone_indexes = [4, 13, 19, 33, 55, 57, 72, 73, 80]
     if zone == "gagazet":
-        zone_indexes = [14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86]
+        zone_indexes = [14, 20, 37, 39, 45, 46, 49, 58, 60, 69, 84, 86]  # Full list
+    if zone == "gagazet_short":
+        zone_indexes = [45, 46, 60]  # Swimmers only.
     if zone == "stolenfayth":
         zone_indexes = [7, 26, 44, 48, 54, 66, 68, 92, 98]
     if zone == "justtonberry":

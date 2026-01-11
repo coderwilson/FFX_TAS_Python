@@ -702,7 +702,7 @@ class Player:
     def flee(self):
         if not self.knows_flee():
             logger.warning(f"{self.name} does not know Flee")
-            self.defend()
+            self.escape_one()
             return False
         logger.debug(f"Fleeing with {self.name}")
         self.use_special_by_name(command_name="Flee")
@@ -955,9 +955,10 @@ class Player:
     def overdrive_percent(self, combat=False) -> int:
         combat = memory.main.battle_active()  # Overwrites passed variable.
         if combat:
-            return self._read_char_battle_state_address(
-                PlayerMagicNumbers.BATTLE_OVERDRIVE
-            )
+            return memory.main.get_overdrive_battle(self.raw_id())
+            # return self._read_char_battle_state_address(
+            #     PlayerMagicNumbers.BATTLE_OVERDRIVE
+            # )
         else:
             return self._read_char_stat_offset_address(PlayerMagicNumbers.OVERDRIVE)
 

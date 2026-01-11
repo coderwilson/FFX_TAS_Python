@@ -13,6 +13,7 @@ import save_sphere
 import tts
 import vars
 import xbox
+import time
 from paths import AllStartsHere, TidusHomeMovement
 from players import Auron, CurrentPlayer, Tidus
 from json_ai_files.write_seed import write_seed_num, write_seed_err, write_big_text
@@ -26,7 +27,9 @@ logger = logging.getLogger(__name__)
 
 def split_timer():
     logger.warning("SPLIT! Sending to timer.")
-    pyautogui.press("num1")
+    pyautogui.keyDown("num1")
+    time.sleep(0.3)
+    pyautogui.keyUp("num1")
 
 
 def new_game(gamestate):

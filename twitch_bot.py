@@ -454,19 +454,19 @@ class Bot(commands.Bot):
         arg_array = []
         print(ctx.message.content)
         time.sleep(2)
-        # arg_array.append("-state")
-        # arg_array.append("Nem_Farm")
-        # arg_array.append("-step")
-        # arg_array.append("1")
-        # arg_array.append("-platinum")
-        # arg_array.append("True")
-
         arg_array.append("-state")
         arg_array.append("Nem_Farm")
         arg_array.append("-step")
-        arg_array.append("99")
+        arg_array.append("100")
         arg_array.append("-platinum")
         arg_array.append("True")
+
+        # arg_array.append("-state")
+        # arg_array.append("Nem_Farm")
+        # arg_array.append("-step")
+        # arg_array.append("99")
+        # arg_array.append("-platinum")
+        # arg_array.append("True")
 
         # arg_array.append("-state")
         # arg_array.append("Nem_Farm")
@@ -635,6 +635,8 @@ class Bot(commands.Bot):
     # Launch FFX
     @commands.command(aliases=("game_start", "launch_game"))
     async def start_game(self, ctx: commands.Context):
+        if await self.get_current_obs_scene() != "FFX TAS runs":
+            await self.change_obs_scene("FFX TAS runs")
         if self.game is None and self.marbles is None:
             cwd = os.getcwd()
             print(cwd)
@@ -653,6 +655,8 @@ class Bot(commands.Bot):
     # Kill FFX
     @commands.command(aliases=("game_stop", "halt_game"))
     async def stop_game(self, ctx: commands.Context):
+        if await self.get_current_obs_scene() == "FFX TAS runs":
+            await self.change_obs_scene("FFX Idle")
         write_big_text("")
         if self.game is not None:
             self.game.terminate()
@@ -747,10 +751,8 @@ class Bot(commands.Bot):
     @commands.command()
     async def help(self, ctx: commands.Context):
         await ctx.send(
-            "Primary commands: !all, !halt_all, !stuck, !skip_split, !undo_split | "
-            + "There are four categories which can be started with the following commands. "
-            + "CSR speedrun: '!all', Classic speedrun: '!all classic', "
-            + "Story mode: '!all story', Nemesis run: '!all nem'"
+            "Primary commands: !kill, !stuck, !all, !skip_split, !undo_split | " + \
+            "Instructions for starting a run are on screen after running !stuck command."
         )
     
     # Start All
@@ -839,7 +841,9 @@ class Bot(commands.Bot):
     async def marbles(self, ctx: commands.Context):
         #await ctx.send("Sorry, Marbles is currently broken.")
         
+        
         await self.marbles_end(ctx)
+        await self.change_obs_scene("Marbles scene")
         if self.marbles is None and self.game is None:
             '''
             # First need to launch the game.
@@ -892,9 +896,109 @@ class Bot(commands.Bot):
     async def stuck(self, ctx: commands.Context):
         #await ctx.send("Attempting to un-stuck the system. Stand by.")
         if self.is_valid_user(ctx):
+            await self.change_obs_scene("FFX Idle")
             await self.kill(ctx)
             await self.marbles_end(ctx)
             await ctx.send("Everything should now be unstuck.")
+    
+    async def get_current_obs_scene(self) -> str:
+        try:
+            ws = obsws("localhost", 4455, "G7v9Xp2rLwB4qZ8M")
+            ws.connect()
+
+            response = ws.call(requests.GetCurrentProgramScene())
+            current_scene = response.getSceneName()
+
+            ws.disconnect()
+            print(f"Current OBS scene: {current_scene}")
+            return current_scene
+
+        except Exception as e:
+            print(f"[ERROR] Could not get current OBS scene: {e}")
+            return None
+    
+    @commands.command()
+    async def scene(self, ctx: commands.Context):
+        last_scene = await self.get_current_obs_scene()
+        if last_scene != "FFX TAS runs":
+            await self.change_obs_scene("FFX TAS runs")
+        else:
+            await self.change_obs_scene("FFX Idle")
+    
+    async def change_obs_scene(self, scene_name: str, host="localhost", port=4455, password="G7v9Xp2rLwB4qZ8M", timeout=5):
+        """
+        Change OBS program scene, verify success, and return True/False.
+        Runs blocking obswebsocket calls in a thread so the event loop is not blocked.
+        """
+        loop = asyncio.get_running_loop()
+
+        def _blocking_change():
+            try:
+                ws = obsws(host, port, password)
+                ws.connect()
+            except Exception as e:
+                return {"ok": False, "error": f"Could not connect to OBS WebSocket: {e}"}
+
+            try:
+                # Try to get list of scenes
+                try:
+                    scenes_resp = ws.call(requests.GetSceneList())
+                    # try a few different ways to extract names depending on library version
+                    try:
+                        scenes = [s.getSceneName() for s in scenes_resp.getScenes()]
+                    except Exception:
+                        # fallback if objects are dicts
+                        scenes = [s.get("sceneName") or s.get("name") for s in scenes_resp.getScenes()]
+                except Exception as e:
+                    ws.disconnect()
+                    return {"ok": False, "error": f"GetSceneList failed: {e}"}
+
+                # Debug: return available scenes if not found
+                if scene_name not in scenes:
+                    ws.disconnect()
+                    return {"ok": False, "error": "Scene not found", "available_scenes": scenes}
+
+                # Set the scene
+                try:
+                    ws.call(requests.SetCurrentProgramScene(sceneName=scene_name))
+                except Exception as e:
+                    ws.disconnect()
+                    return {"ok": False, "error": f"SetCurrentProgramScene failed: {e}"}
+
+                # Verify
+                try:
+                    cur = ws.call(requests.GetCurrentProgramScene())
+                    try:
+                        cur_name = cur.getSceneName()
+                    except Exception:
+                        # fallback to dict access if needed
+                        cur_name = cur.get("currentProgramScene") or cur.get("sceneName") or None
+                except Exception as e:
+                    ws.disconnect()
+                    return {"ok": False, "error": f"GetCurrentProgramScene failed: {e}"}
+
+                ws.disconnect()
+                return {"ok": True, "current_scene": cur_name}
+            except Exception as e:
+                try:
+                    ws.disconnect()
+                except Exception:
+                    pass
+                return {"ok": False, "error": f"Unexpected error: {e}"}
+
+        # run blocking work in default ThreadPoolExecutor
+        result = await loop.run_in_executor(None, _blocking_change)
+
+        # print/log useful debug info
+        if not result.get("ok"):
+            print(f"[OBS] change_obs_scene failed: {result.get('error')}")
+            if "available_scenes" in result:
+                print(f"[OBS] Available scenes: {result['available_scenes']}")
+            return False
+
+        cur = result.get("current_scene")
+        print(f"[OBS] Successfully switched. Current scene: {cur}")
+        return True
 
 # Main entry point of script
 if __name__ == "__main__":

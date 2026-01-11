@@ -231,7 +231,7 @@ def next_ap_needed(checkpoint):
     if checkpoint == 5:
         return 11
     if checkpoint == 6:
-        return 9
+        return 12
     if checkpoint == 7:
         return 9
     if checkpoint == 8:
@@ -1425,11 +1425,21 @@ def str_boost():
         menu_grid.move_and_use()
         menu_grid.sel_sphere("ability", "none")
         menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("ability", "none")
-        menu_grid.use_and_use_again()
         menu_grid.sel_sphere("strength", "none")
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
+
+        # Now to update some nodes in memory
+        grid_instance = get_grid()
+        grid_instance.check_all_node_types()  # General update
+        current_node = grid_instance.get_node(341)  # Usually needs fixing
+        current_node.change_node_type(0x05)
+        current_node.set_unlocked_status(character_id="Tidus", status=True)
+        
+        current_node = grid_instance.get_node(338)  # Usually needs fixing
+        current_node.set_unlocked_status(character_id="Tidus", status=True)
+
+
     menu_grid.use_and_quit()
         
     memory.main.close_menu()

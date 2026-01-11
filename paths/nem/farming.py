@@ -115,7 +115,7 @@ class MiihenFarm(AreaMovementBase):
         36: [14, -68],  # Entrance towards area 2
         37: [185, -223],
         38: [227, -274],
-        39: [270, -320],  # Into lower area
+        39: [260, -310],  # Into lower area
         40: [800, 650],  # Return
         41: [708, 335],
         42: [740, 450],
@@ -532,8 +532,8 @@ class SinFarm(AreaMovementBase):
         38: [351, 710],
         39: [252, 756],
         40: [227, 780],
-        41: [220, 929],
-        42: [216, 976],  # Save sphere
+        41: [201, 924],
+        42: [197, 986],  # Save sphere
         43: [218, 1100],  # Forwards towards Seymour
         44: [414, -888],  # Back towards Seymour
         45: [369, -713],

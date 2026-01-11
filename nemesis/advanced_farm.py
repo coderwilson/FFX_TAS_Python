@@ -12,9 +12,11 @@ import nemesis.menu
 from nemesis.arena_prep import (
     rin_equip_dump,
     battle_farm_all,
+    battle_farm_defer,
     advanced_battle_logic,
     yojimbo_dialog,
-    arena_return
+    arena_return,
+    zan_ready
 )
 import nemesis.arena_select
 from nemesis.arena_select import (
@@ -23,6 +25,7 @@ from nemesis.arena_select import (
     distill_spheres,
     return_to_airship
 )
+from nemesis.arena_battles import one_eye_battle,vidatu_farm
 import pathing
 import rng_track
 import save_sphere
@@ -171,8 +174,38 @@ def next_zone_check(phase: int = 3, current_zone: str = "none", advances: int = 
 
 
 def choose_next_zone(last_zone: str, phase: int):
-    temp = next_zone_check(phase=phase, current_zone=last_zone, advances=0)
-    check_zone = temp
+    check_zone = next_zone_check(phase=phase, current_zone=last_zone, advances=0)
+
+    # First, check for a One-eye battle that would be useful
+    if (
+        game_vars.platinum() and
+        check_zone[1] == "any" and
+        memory.main.get_item_slot(107) != 255 and  # Door to tomorrow x10 for OD>AP
+        memory.main.get_item_count_slot(memory.main.get_item_slot(107)) >= 10
+    ):
+        if (
+            (game.state == "Nem_Farm" and game.step >= 10) or
+            (game.state == "Platinum" and game.step >= 3)
+        ):
+            next_item_aeon,_ = rng_track.item_to_be_dropped(enemy="one-eye",kill_pref="aeon")
+            next_item_char,_ = rng_track.item_to_be_dropped(enemy="one-eye")
+            if (
+                32787 in next_item_aeon.equip_abilities and
+                next_item_aeon.slots == 3 and
+                game_vars.plat_triple_ap_check()[next_item_aeon.equip_owner_alt] == False
+            ):
+                check_zone = ["aeon", "one-eye", next_item_aeon.equip_owner_alt, 0]
+                return check_zone
+            elif (
+                32787 in next_item_char.equip_abilities and
+                next_item_char.slots == 3 and
+                next_item_char.equip_owner != 9 and
+                game_vars.plat_triple_ap_check()[next_item_aeon.equip_owner] == False
+            ):
+                check_zone = ["any", "one-eye", next_item_aeon.equip_owner, 0]
+                return check_zone
+
+    # If no Plat% - Triple-AP weapon with three slots, proceed with the farm.
     sticky = path_get_info(zone=str(last_zone))["sticky"]
     if check_zone[1] != last_zone:
         # Logic to prefer staying in the same area over constant bouncing.
@@ -194,8 +227,8 @@ def choose_next_zone(last_zone: str, phase: int):
                 check_zone = temp3
             elif zone_to_zone(last_zone, temp3[1])[0]:
                 check_zone = temp3
+    
     return check_zone
-
 
 def complete_check(phase: int = 3):
     if phase == 1:
@@ -443,167 +476,203 @@ def full_farm(phase: int):
                     last_zone = check_zone[1]
             else:
                 check_zone[1] = last_zone
-
-        if get_map() == 374:
-            logger.debug(f"P.down Slot: {memory.main.get_item_slot(6)}")
-            logger.debug(
-                "P.down Count: "
-                + f"{memory.main.get_item_count_slot(memory.main.get_item_slot(6))}"
-            )
-            if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 30:
-                rin_equip_dump(stock_downs=True)
-            mana = memory.main.get_item_count_slot(memory.main.get_item_slot(17))
-            if phase == 5 and mana < 4 and game_vars.platinum():
-                arena_return()
-                distill_spheres()
+        
+        if check_zone[1] == "one-eye":
+            if get_map() == 307:
+                pass
+            elif get_map() != 374:
+                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
                 return_to_airship()
-            zone_int = get_zone_int(zone=check_zone[1])
-            zone_name = get_zone_airship_name(zone=check_zone[1])
-            logger.debug(f"Landing in zone number {zone_int}")
-            # air_ship_destination(dest_num=zone_int)
-            navigate_to_airship_destination(destination_name=zone_name)
+            if get_map() == 374:
+                arena_return()
+            one_eye_battle(killer=check_zone[0],drops_for=check_zone[2],cap_weap=False)
+            vidatu_farm()
+            return_to_airship()
+            memory.main.await_control()
+            check_zone = choose_next_zone(last_zone="none", phase=phase)
+        else:
+            if get_map() == 374:
+                logger.debug(f"P.down Slot: {memory.main.get_item_slot(6)}")
+                logger.debug(
+                    "P.down Count: "
+                    + f"{memory.main.get_item_count_slot(memory.main.get_item_slot(6))}"
+                )
+                if memory.main.get_item_count_slot(memory.main.get_item_slot(6)) < 30:
+                    rin_equip_dump(stock_downs=True)
+                mana = memory.main.get_item_count_slot(memory.main.get_item_slot(17))
+                if phase == 5 and mana < 4 and game_vars.platinum():
+                    arena_return()
+                    distill_spheres()
+                    return_to_airship()
+                zone_int = get_zone_int(zone=check_zone[1])
+                zone_name = get_zone_airship_name(zone=check_zone[1])
+                logger.debug(f"Landing in zone number {zone_int}")
+                # air_ship_destination(dest_num=zone_int)
+                navigate_to_airship_destination(destination_name=zone_name)
+                report_remaining(phase=phase)
+                counts = report_need_single(phase=phase, mon_name=check_zone[0])
+                logger.info(f"Target (B): {check_zone[0]}: {counts[0]}/{counts[1]}")
+                path_to_battle(zone=check_zone[1])
+                menu.remove_all_nea()
+            elif adjacent[0] and last_zone != check_zone[1]:
+                logger.debug("=== Moving adjacent")
+                path_to_battle(
+                    zone=check_zone[1], checkpoint=adjacent[1], direction=adjacent[2]
+                )
+                menu.remove_all_nea()
+            else:
+                logger.debug("=== Staying in same zone")
+
+            last_zone = check_zone[1]
             report_remaining(phase=phase)
             counts = report_need_single(phase=phase, mon_name=check_zone[0])
-            logger.info(f"Target (B): {check_zone[0]}: {counts[0]}/{counts[1]}")
-            path_to_battle(zone=check_zone[1])
-            menu.remove_all_nea()
-        elif adjacent[0] and last_zone != check_zone[1]:
-            logger.debug("=== Moving adjacent")
-            path_to_battle(
-                zone=check_zone[1], checkpoint=adjacent[1], direction=adjacent[2]
+            logger.info(
+                f"Target (C): {check_zone[0]}: {counts[0]}/{counts[1]} | {check_zone[3]}"
             )
-            menu.remove_all_nea()
-        else:
-            logger.debug("=== Staying in same zone")
+            battle_start(zone=check_zone[1])
+            check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
+            battle.main.wrap_up()
+            report_remaining(phase=phase)
+            if phase == 3:
+                memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
+            else:
+                memory.main.update_formation(Tidus, Wakka, Rikku, full_menu_close=False)
+            if memory.main.get_hp()[0] < 1100 and memory.main.get_map() != 310:
+                # Low health, but not swimming
+                battle.main.heal_up(3)
+            memory.main.close_menu()
+            if phase < 5:
+                nemesis.menu.perform_next_grid()
+            elif game_vars.platinum():
+                grid_check_early()
+            logger.info(f"Loop (C), phase {phase}")
 
-        last_zone = check_zone[1]
-        report_remaining(phase=phase)
-        counts = report_need_single(phase=phase, mon_name=check_zone[0])
-        logger.info(
-            f"Target (C): {check_zone[0]}: {counts[0]}/{counts[1]} | {check_zone[3]}"
-        )
-        battle_start(zone=check_zone[1])
-        check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
-        battle.main.wrap_up()
-        report_remaining(phase=phase)
-        if phase == 3:
-            memory.main.update_formation(Tidus, Yuna, Wakka, full_menu_close=False)
-        else:
-            memory.main.update_formation(Tidus, Wakka, Rikku, full_menu_close=False)
-        if memory.main.get_hp()[0] < 1100 and memory.main.get_map() != 310:
-            # Low health, but not swimming
-            battle.main.heal_up(3)
-        memory.main.close_menu()
-        if phase < 5:
-            nemesis.menu.perform_next_grid()
-        if game_vars.platinum():
-            grid_check_early()
-
-        logger.debug(f"Zone name (D): {check_zone[1]}")
-        counts = report_need_single(phase=phase, mon_name=check_zone[0])
-        logger.debug(f"Mon (D): {check_zone[0]}: {counts[0]}/{counts[1]}")
-        adjacent = zone_to_zone(last_zone, check_zone[1])
-        logger.debug(f"Adjacent: {adjacent}")
-        shadow_slot = memory.main.get_item_slot(41)
-        if shadow_slot == 255:
-            shadow_count = 0
-        else:
-            shadow_count = memory.main.get_item_count_slot(shadow_slot)
-        if shadow_count < 8 and game.state == "Nem_Farm" and game.step >= 10:
-            # Out of shadow gems
-            logger.info("Out of shadow gems, let's go get some more.")
-            path_to_save(zone=last_zone)
-            return_to_airship()
-            logger.warning("Attempting to return to arena.")
-            arena_return()
-            while shadow_count < 8:
-                nemesis.arena_select.arena_npc()
-                nemesis.arena_select.arena_menu_select(1)
-                nemesis.arena_select.start_fight(area_index=7, monster_index=4)
-                battle.main.shadow_gem_farm()
-                nemesis.arena_select.arena_menu_select(4)
-                shadow_slot = memory.main.get_item_slot(41)
-                if shadow_slot == 255:
-                    shadow_count = 0
-                else:
-                    shadow_count = memory.main.get_item_count_slot(shadow_slot)
-            return_to_airship()
-            return full_farm(phase=phase)
-        mp_slot = memory.main.get_item_slot(86)
-        if mp_slot == 255:
-            mp_count = 0
-        else:
-            mp_count = memory.main.get_item_count_slot(mp_slot)
-        
-        # Optional report
-        logger.debug(f"== Tidus: {memory.main.get_tidus_mp()} / {min(20,Tidus.max_mp())}")
-        logger.debug(f"== Yuna: {memory.main.get_yuna_mp()} / {min(50,Yuna.max_mp())}")
-        logger.debug(f"== Rikku: {memory.main.get_rikku_mp()} / {min(20,Rikku.max_mp())}")
-        
-        if mp_count < 8 and game.state == "Nem_Farm" and game.step >= 10 and game_vars.platinum():
-            # Out of MP spheres
-            logger.info("Low on MP spheres, let's go get some more.")
-            path_to_save(zone=last_zone)
-            return_to_airship()
-            logger.warning("Attempting to return to arena.")
-            arena_return()
-            menu.equip_weapon(character=0, ability=32772,full_menu_close=True)  # Evade & Counter (Caldabolg)
-            nemesis.arena_battles.vidatu_farm()
-            return_to_airship()
-            menu.equip_weapon(character=0, ability=32781,full_menu_close=True)  # One MP cost (capture)
-            return full_farm(phase=phase)
-        elif (
-            memory.main.get_tidus_mp() < min(20,Tidus.max_mp()) or
-            memory.main.get_yuna_mp() < min(50,Yuna.max_mp()) or
-            memory.main.get_rikku_mp() < min(20,Rikku.max_mp())
-        ):
-            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            logger.debug("== Out of mana, returning to save sphere.")
+            logger.debug(f"Zone name (D): {check_zone[1]}")
+            counts = report_need_single(phase=phase, mon_name=check_zone[0])
+            logger.debug(f"Mon (D): {check_zone[0]}: {counts[0]}/{counts[1]}")
+            adjacent = zone_to_zone(last_zone, check_zone[1])
+            logger.debug(f"Adjacent: {adjacent}")
+            shadow_slot = memory.main.get_item_slot(41)
+            if shadow_slot == 255:
+                shadow_count = 0
+            else:
+                shadow_count = memory.main.get_item_count_slot(shadow_slot)
+            if shadow_count < 8 and game.state == "Nem_Farm" and game.step >= 10:
+                # Out of shadow gems
+                logger.info("Out of shadow gems, let's go get some more.")
+                path_to_save(zone=last_zone)
+                return_to_airship()
+                logger.warning("Attempting to return to arena.")
+                arena_return()
+                while shadow_count < 8:
+                    nemesis.arena_select.arena_npc()
+                    nemesis.arena_select.arena_menu_select(1)
+                    nemesis.arena_select.start_fight(area_index=7, monster_index=4)
+                    battle.main.shadow_gem_farm()
+                    nemesis.arena_select.arena_menu_select(4)
+                    shadow_slot = memory.main.get_item_slot(41)
+                    if shadow_slot == 255:
+                        shadow_count = 0
+                    else:
+                        shadow_count = memory.main.get_item_count_slot(shadow_slot)
+                return_to_airship()
+                return full_farm(phase=phase)
+            mp_slot = memory.main.get_item_slot(86)
+            if mp_slot == 255:
+                mp_count = 0
+            else:
+                mp_count = memory.main.get_item_count_slot(mp_slot)
+            
+            # Optional report
             logger.debug(f"== Tidus: {memory.main.get_tidus_mp()} / {min(20,Tidus.max_mp())}")
             logger.debug(f"== Yuna: {memory.main.get_yuna_mp()} / {min(50,Yuna.max_mp())}")
             logger.debug(f"== Rikku: {memory.main.get_rikku_mp()} / {min(20,Rikku.max_mp())}")
-            path_to_save(zone=last_zone)
-            force_save = phase == 5
-            return_to_airship(extra_save=force_save)
-            if game_vars.platinum():
-                grid_check_early()
-                next_blitzball()
-            if len(memory.main.all_equipment()) > 150:
-                rin_equip_dump()
-        elif adjacent[0]:
-            if adjacent[3] == "True":
-                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-        elif check_zone[1] != last_zone and check_zone[1] != "any":
-            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            logger.info(f"== Moving to zone: {check_zone[1]}")
-            logger.info(f"Mon (A): {check_zone[0]}")
-            if (
-                "cave" in last_zone and 
-                phase == 4 and 
-                not game_vars.yojimbo_unlocked() and 
-                memory.main.get_gil_value() >= 550000
-            ):
-                path_to_yojimbo()
-            else:
+            
+            if mp_count < 4 and game.state == "Nem_Farm" and game.step >= 10 and game_vars.platinum():
+                # Out of MP spheres
+                logger.info("Low on MP spheres, let's go get some more.")
                 path_to_save(zone=last_zone)
                 return_to_airship()
-            if game_vars.platinum():
-                grid_check_early()
-                next_blitzball()
-            if len(memory.main.all_equipment()) > 150:
-                rin_equip_dump()
-        elif complete_check(phase=phase):
-            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-            logger.debug("== Farming complete, returning to airship.")
-        else:
-            pass
+                logger.warning("Attempting to return to arena.")
+                arena_return()
+                menu.equip_weapon(character=0, ability=32772,full_menu_close=True)  # Evade & Counter (Caldabolg)
+                vidatu_farm()
+                return_to_airship()
+                menu.equip_weapon(character=0, ability=32781,full_menu_close=True)  # One MP cost (capture)
+                return full_farm(phase=phase)
+            elif (
+                memory.main.get_tidus_mp() < min(20,Tidus.max_mp()) and
+                memory.main.get_map() in [203,204]
+            ):
+                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                logger.debug("== Out of mana for Tidus, returning to save sphere.")
+                logger.debug(f"== Tidus: {memory.main.get_tidus_mp()} / {min(20,Tidus.max_mp())}")
+                path_to_save(zone=last_zone)
+                save_sphere.touch_and_go()
+                last_zone = "inside_sin_(front)"
+                check_zone = choose_next_zone(last_zone=last_zone, phase=phase)
+                logger.warning(f"Sin Zones check: {last_zone} > {check_zone[1]}")
+                adjacent = zone_to_zone(last_zone, check_zone[1])
+                if check_zone[1] == last_zone:
+                    menu.remove_all_nea()
+            elif (
+                memory.main.get_tidus_mp() < min(20,Tidus.max_mp()) or
+                memory.main.get_yuna_mp() < min(50,Yuna.max_mp()) or
+                memory.main.get_rikku_mp() < min(20,Rikku.max_mp())
+            ):
+                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                logger.debug("== Out of mana, returning to save sphere.")
+                logger.debug(f"== Tidus: {memory.main.get_tidus_mp()} / {min(20,Tidus.max_mp())}")
+                logger.debug(f"== Yuna: {memory.main.get_yuna_mp()} / {min(50,Yuna.max_mp())}")
+                logger.debug(f"== Rikku: {memory.main.get_rikku_mp()} / {min(20,Rikku.max_mp())}")
+                path_to_save(zone=last_zone)
+                force_save = phase == 5
+                return_to_airship(extra_save=force_save)
+                if game_vars.platinum():
+                    if phase >= 5:
+                        grid_check_early()
+                    next_blitzball()
+                    logger.info(f"Loop (B), phase {phase}")
+                if len(memory.main.all_equipment()) > 150:
+                    rin_equip_dump()
+            elif adjacent[0]:
+                if adjacent[3] == "True":
+                    menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+            elif check_zone[1] != last_zone and check_zone[1] != "any":
+                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                logger.info(f"== Moving to zone: {check_zone[1]}")
+                logger.info(f"Mon (A): {check_zone[0]}")
+                if (
+                    "cave" in last_zone and 
+                    phase == 4 and 
+                    not game_vars.yojimbo_unlocked() and 
+                    memory.main.get_gil_value() >= 550000
+                ):
+                    path_to_yojimbo()
+                else:
+                    path_to_save(zone=last_zone)
+                    return_to_airship()
+                if game_vars.platinum():
+                    if phase >= 5:
+                        grid_check_early()
+                    next_blitzball()
+                    logger.info(f"Loop (A), phase {phase}")
+                if len(memory.main.all_equipment()) > 150:
+                    rin_equip_dump()
+            elif complete_check(phase=phase):
+                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                logger.debug("== Farming complete, returning to airship.")
+            else:
+                pass
 
     if get_map() != 374:
         path_to_save(zone=last_zone)
         return_to_airship()
         if game_vars.platinum():
-            grid_check_early()
+            if phase >= 5:
+                grid_check_early()
             next_blitzball()
+    logger.info(f"End of farm section, phase {phase}")
     if len(memory.main.all_equipment()) > 150 or phase in [5,6,7]:
         rin_equip_dump(sell_nea=True)
 
@@ -1137,6 +1206,8 @@ def battle_start(zone: str):
     results = False
     if get_map() in [203, 204, 258, 271]:
         results = advanced_battle_logic()
+    elif zone == "any":
+        results = battle_farm_defer()
     else:
         results = battle_farm_all()
     if results:

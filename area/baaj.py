@@ -223,6 +223,8 @@ def klikk_fight_crimson(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_
     while memory.main.battle_active():
         if Tidus.is_turn():
             Tidus.attack()
+        if memory.main.game_over():
+            return "stage_1"
 
     if game_vars.story_mode():
         memory.main.wait_seconds(51)
@@ -234,7 +236,7 @@ def klikk_fight_crimson(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_
         screen.await_turn()
     else:
         xbox.click_to_battle()
-    battle.boss.klikk_crimson(tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, klikk_steals)
+    return battle.boss.klikk_crimson(tidus_potion_klikk, tidus_potion_turn, rikku_potion_klikk, klikk_steals)
 
 
 def distance(n1, n2):
@@ -562,7 +564,7 @@ def ab_swimming_2_crimson(ruins_encounter_strat: int):
                     xbox.tap_b()
                 memory.main.wait_frames(4)
             elif memory.main.get_map() == 64:
-                if memory.main.get_coords()[0] < -4:
+                if memory.main.get_coords()[0] < -4 and not game_vars.csr():
                     pathing.set_movement([-2, 47])
                 else:
                     pathing.set_movement([73, 1])

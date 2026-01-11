@@ -1493,10 +1493,10 @@ def spirit_lance(skip_dodges:bool=False):
     FFXC.set_neutral()
     logger.debug("Waiting for cactuar stone to change status.")
     
-    memory.main.set_game_speed(2)
+    # memory.main.set_game_speed(2)
     while not memory.main.cactuar_stone_4():
         logger.debug(f"Cactuar status: {memory.main.cactuar_stone_4()}")
-    memory.main.set_game_speed(0)
+    # memory.main.set_game_speed(0)
     
     for i in range(2):
         while not pathing.set_movement([-165,577]):
@@ -3858,6 +3858,7 @@ def ice_destro(godhand:int = 1, baaj:int = 1):
                 logger.debug(f"Yojimbo results: {success}")
                 if success:
                     split_timer()
+                    memory.main.update_formation(0, 4, 6)
                     area.mac_temple.escape(dark_aeon=True)
                     checkpoint = 33
                 else:

@@ -145,6 +145,9 @@ def configuration_setup():
         write_big_text(current_big_text().replace("New game", "Load game"))
         game_vars.rng_seed_num_set(256)
         game_length = "Loading mid point for testing."
+        if game_vars.platinum():
+            game_vars.set_plat_test_mode()
+            logger.warning("Plat test mode is now active!!!")
     elif game_vars.rng_mode() == "set":
         game_length = f"Full Run, set seed: [{game_vars.rng_seed_num()}]"
     elif game_vars.rng_mode() == "preferred":
@@ -414,15 +417,26 @@ def perform_TAS():
                         game.step = 3
 
                     if game.step == 3:
-                        if truerng:
-                            area.baaj.klikk_fight_classic()
+                        # if truerng:
+                        #     area.baaj.klikk_fight_classic()
+                        # else:
+                        ret_val = area.baaj.klikk_fight_crimson(
+                            tidus_potion_klikk=strats["tidus_potion_klikk"],
+                            tidus_potion_turn=strats["tidus_potion_turn"],
+                            rikku_potion_klikk=strats["rikku_potion_klikk"],
+                            klikk_steals=klikk_steals
+                        )
+                        logger.info(f"Return check: {ret_val}")
+                        # memory.main.wait_frames(900)
+                        if ret_val == "success":
+                            game.step = 4
+                            maybe_create_save(save_num=21)
                         else:
-                            area.baaj.klikk_fight_crimson(tidus_potion_klikk=strats["tidus_potion_klikk"],
-                                                tidus_potion_turn=strats["tidus_potion_turn"],
-                                                rikku_potion_klikk=strats["rikku_potion_klikk"],
-                                                klikk_steals=klikk_steals)
-                        game.step = 4
-                        maybe_create_save(save_num=21)
+                            logger.warning(f"Return check: {ret_val}")
+                            # memory.main.wait_frames(30)
+                            reset.reset_to_main_menu()
+                            area.dream_zan.new_game(gamestate="reload_autosave")
+                            load_game.load_save_num(0)
 
                     if game.step == 4:
                         # Klikk fight done. Now to wait for the Al Bhed ship.
@@ -813,8 +827,14 @@ def perform_TAS():
                         area.mac_temple.arrival()
                     area.mac_temple.start_seymour_fight()
                     if area.mac_temple.seymour_fight():
+                        logger.info(f"Seymour section complete.")
                         game.step = 5
                     else:
+                        logger.info(f"Seymour section fail! Resetting!")
+                        xbox.tap_confirm()
+                        xbox.tap_confirm()
+                        xbox.tap_confirm()
+                        xbox.tap_confirm()
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
                         load_game.load_save_num(0)
@@ -875,6 +895,7 @@ def perform_TAS():
                 if game.step == 1:
                     area.rescue_yuna.pre_evrae()
                     if battle.boss.evrae():
+                        split_timer()
                         area.rescue_yuna.guards()
                         game.step = 2
                     else:
@@ -935,9 +956,12 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    if game_vars.get_nea_after_bny() or game_vars.get_nea_ignore():
+                    _, _, ronso_first, _, _ = rng_track.nea_track()
+                    if ronso_first:
+                        logger.info(f"B&Y battle before NEA")
                         game.step = 3
                     else:
+                        logger.info(f"Straight to NEA area")
                         game.step = 2
                         # Something about final_nea_check is not working.
                         
@@ -973,13 +997,14 @@ def perform_TAS():
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()
-                    drop_check,_ = rng_track.final_nea_check()
+                    _, _, _, epaaj_count, _ = rng_track.nea_track()
                     logger.warning(f"NE Armor check main: {game_vars.ne_armor()}")
-                    logger.warning(f"  NEA can drop main: {drop_check}")
-                    if game_vars.get_nea_ignore():
-                        area.gagazet.to_the_ronso(checkpoint=6)
-                        game.step = 4
-                    elif game_vars.get_nea_after_bny() and game_vars.ne_armor() == 255:
+                    logger.warning(f"Epaaj count to next drop: {epaaj_count}")
+                    if game_vars.ne_armor() == 255 and (
+                        epaaj_count != 99 or
+                        game_vars.platinum() or
+                        game_vars.nemesis()
+                    ):
                         area.ne_armor.loop_back_from_ronso()
                         game.step = 2
                     else:
@@ -1009,17 +1034,18 @@ def perform_TAS():
                     game.step = 7
 
                 if game.step == 7:
-                    area.gagazet.cave()
-                    area.gagazet.wrap_up()
-                    game.step = 1
-                    game.state = "Zanarkand"
-                    maybe_create_save(save_num=47)
+                    if area.gagazet.cave():
+                        area.gagazet.wrap_up()
+                        game.step = 1
+                        game.state = "Zanarkand"
+                        maybe_create_save(save_num=47)
                 
                 if game.step == 10:
                     nemesis.changes.calm_lands_1()
-                    success,direct = rng_track.final_nea_check()
-                    _,indirect = rng_track.final_nea_check(with_ronso=True)
-                    if success and direct <= indirect:
+                    # success,direct = rng_track.final_nea_check()
+                    # _,indirect = rng_track.final_nea_check(with_ronso=True)
+                    _, _, ronso_first, _, _ = rng_track.nea_track()
+                    if ronso_first:
                         game.step = 2
                     else:
                         game.step = 3
@@ -1034,13 +1060,13 @@ def perform_TAS():
                     area.gagazet.defender_x()
                     logger.debug("Determining next decision")
 
-                    extra_drops, _ = rng_track.nea_track()
-                    if extra_drops in [0, 1]:
-                        logger.info(f"Straight to NEA area: {extra_drops}")
-                        game.step = 2
-                    else:
-                        logger.info(f"B&Y battle before NEA: {extra_drops}")
+                    _, _, ronso_first, _, _ = rng_track.nea_track()
+                    if ronso_first:
+                        logger.info(f"B&Y battle before NEA")
                         game.step = 3
+                    else:
+                        logger.info(f"Straight to NEA area")
+                        game.step = 2
                 
                 if game.step == 15:
                     logger.warning("Mirror1")
@@ -1203,6 +1229,9 @@ def perform_TAS():
                 elif game.step == 2:
                     nemesis.advanced_farm.full_farm(phase=9)
                     area.platinum.showcase_1()
+                    game.step = 13
+                
+                elif game.step == 13:
                     area.platinum.farming_power_spheres()
                     game.state = "Nem_Farm"
                     game.step = 10
@@ -1337,6 +1366,9 @@ def perform_TAS():
                 if game.step == 10:
                     area.platinum.rikku_provoke()
                     # area.platinum.armor_fix()
+                    if game_vars.platinum():
+                        # More power spheres for the grid
+                        nemesis.arena_prep.gagazet(short=True)
                     nemesis.advanced_farm.full_farm(phase=5)
                     split_timer()
                     # Back to arena for auto-life and auto-haste
@@ -1344,17 +1376,20 @@ def perform_TAS():
                     maybe_create_save(save_num=60)
 
                 if game.step == 11:
+                    if game_vars.nem_checkpoint_ap() < 27:
+                        game_vars.set_nem_checkpoint_ap(27)
                     logger.info(f"Attack Reels check: {memory.main.wakka_od_learned()[1]}")
                     if game_vars.platinum() and not memory.main.wakka_od_learned()[1]:
                         logger.warning("Flipping to Plat logic")
                         game.state = "Platinum"
                         game.step = 1
                     else:
-                        nemesis.arena_prep.gagazet()
                         game.step = 12
                         maybe_create_save(save_num=61)
 
                 if game.step == 12:
+                    if not game_vars.platinum():
+                        nemesis.arena_prep.gagazet(short=True)
                     nemesis.advanced_farm.full_farm(phase=6)
                     nemesis.advanced_farm.full_farm(phase=8)
                     game.step = 13
@@ -1402,15 +1437,41 @@ def perform_TAS():
                 if game.step == 99:
                     # Use this to load directly into Platinum logic
                     # game.state = "Platinum"
+                    # area.platinum.showcase_2(jump_in_from_save=True)
+                    game.state = "Nem_Arena"
+                    # game.state = "Nem_Farm"
+                    game.step = 6
 
-                    game.state = "Nem_Farm"
-                    # game.step = 11
-                    game.step = 90  # Omega/Nova unlock
-                    # game_vars.set_nem_checkpoint_ap(27)
+                    game_vars.plat_triple_ap_check()[1] = 1
+                    game_vars.plat_triple_ap_check()[2] = 1
+                    game_vars.plat_triple_ap_check()[3] = 1
+                    # game_vars.plat_triple_ap_check()[4] = 1
+                    # game_vars.plat_triple_ap_check()[5] = 1
+                    game_vars.plat_triple_ap_check()[6] = 1
+
+                    game_vars.yojimbo_set_index(12)  # Ready for Nemesis.
+
+                    game_vars.set_nem_checkpoint_ap(27)
                     # nemesis.arena_select.add_airship_unlocked_location("Penance")  # Only on Plat 7
-                    # nemesis.arena_select.add_airship_unlocked_location("Baaj")
-                    # nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
-                    nemesis.arena_select.add_airship_unlocked_location("Omega")
+                    nemesis.arena_select.add_airship_unlocked_location("Baaj")
+                    nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
+                    nemesis.arena_select.add_airship_unlocked_location("Omega")  # Nem_Farm 1
+                    logger.warning(f"Loading into state {game.state} step {game.step}")
+                    
+                if game.step == 100:
+                    game.state = "Platinum"
+                    game.step = 6
+                    game_vars.plat_triple_ap_check()[1] = 1
+                    game_vars.plat_triple_ap_check()[2] = 1
+                    game_vars.plat_triple_ap_check()[3] = 1
+                    game_vars.plat_triple_ap_check()[4] = 1
+                    game_vars.plat_triple_ap_check()[5] = 1
+                    game_vars.plat_triple_ap_check()[6] = 1
+                    game_vars.set_nem_checkpoint_ap(27)
+                    nemesis.arena_select.add_airship_unlocked_location("Baaj")
+                    nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
+                    nemesis.arena_select.add_airship_unlocked_location("Omega")  # Nem_Farm 1
+                    memory.main.check_nea_armor()
                     logger.warning(f"Loading into state {game.state} step {game.step}")
 
             # Nemesis Arena section
@@ -1452,9 +1513,15 @@ def perform_TAS():
 
                 if game.step == 7:
                     if game_vars.platinum():
-                        # nemesis.arena_select.return_to_airship()
                         game.state = "Platinum"
                         game.step = 5
+
+                        # For testing, we want to do these two steps.
+                        # It will self-recover afterwards.
+                        # nemesis.arena_select.return_to_airship()
+                        # save_sphere.touch_and_save(
+                        #     save_num=170, game_state=Nem_Farm, step_count=99
+                        # )
                     else:
                         nemesis.arena_battles.return_to_sin()
                         game.state = "Sin"

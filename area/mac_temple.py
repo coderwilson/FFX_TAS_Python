@@ -165,16 +165,37 @@ def arrival():
 
 def start_seymour_fight():
     memory.main.click_to_control()
-    while not pathing.set_movement([9, -53]):
-        pass  # Allows us to move to the Seymour fight.
-    FFXC.set_movement(1, 0)
-    memory.main.await_event()
-    FFXC.set_neutral()
+
+    while not memory.main.battle_active():
+        if memory.main.user_control():
+            if memory.main.get_map() == 106:
+                # Foyer, Jyscal skip room.
+                if memory.main.get_coords()[0] < -20:
+                    pathing.set_movement([0, 8])
+                elif memory.main.get_coords()[0] > 20:
+                    pathing.set_movement([0, 8])
+                elif memory.main.get_coords()[1] < 4:
+                    pathing.set_movement([0, 8])
+                elif memory.main.get_coords()[1] < 40:
+                    pathing.set_movement([0, 42])
+                else:
+                    pathing.set_movement([0, 160])
+            elif memory.main.get_map() == 239:
+                # Frozen bridge (trials room)
+                pathing.set_movement([9, -180])
+            else:
+                # Must be in Seymour's room.
+                pathing.set_movement([1, 1])
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_confirm()
 
 
 def seymour_fight():
     logger.info("Fighting Seymour Guado")
     if not battle.main.seymour_guado():
+        logger.info(f"Seymour section fail! Resetting! (A)")
         return False
 
     # Name for Shiva
@@ -189,6 +210,7 @@ def seymour_fight():
             checkpoint += 1
 
     FFXC.set_neutral()
+    logger.info(f"Seymour section complete. (A)")
     return True
 
 
@@ -197,13 +219,13 @@ def trials(destro=False):
     memory.main.await_control()
     # FFXC.set_movement(0,1)
     # memory.main.wait_frames(15)
+    if memory.main.get_story_progress() == 1545 and not game_vars.csr():
+        checkpoint = 0
+    else:
+        checkpoint = 3
     if game_vars.story_mode() or game_vars.platinum():
         destro = True
 
-    if destro or game_vars.csr():
-        checkpoint = 3
-    else:
-        checkpoint = 0
     last_checkpoint = checkpoint
     while memory.main.get_map() != 153:
         if memory.main.user_control():
@@ -314,7 +336,7 @@ def trials(destro=False):
             elif checkpoint == 96:
                 memory.main.check_near_actors(False)
                 pathing.approach_actor_by_id(20482)
-                memory.main.click_to_control()
+                memory.main.click_to_control_dumb()
                 checkpoint += 1
             elif checkpoint == 106:
                 approach_coords([1,7])
@@ -430,7 +452,7 @@ def escape(dark_aeon:bool = False) -> bool:
                     memory.main.update_formation(Tidus, Yuna, Rikku)
                     memory.main.close_menu()
                 elif memory.main.get_encounter_id() == 195:
-                    break
+                    return True
                 else:
                     battle.main.flee_all()
                 if memory.main.game_over():

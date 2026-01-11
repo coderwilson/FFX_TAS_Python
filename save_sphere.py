@@ -162,10 +162,10 @@ def touch_and_go():
 
 
 def touch_and_save(save_num: int = 999, game_state: str = "tbd", step_count: int = 999):
-    if game_vars.platinum():
-        game_mode = "Platinum"
-        return  # Platinum runs don't save properly for some reason.
-    elif game_vars.nemesis() and save_num != 199:
+    # if game_vars.platinum():
+    #     game_mode = "Platinum"
+    #     return  # Platinum runs don't save properly for some reason.
+    if game_vars.nemesis() and save_num != 199:
         save_num += 100
         game_mode = "Nemesis"
     elif game_vars.story_mode() and save_num != 199:

@@ -5,7 +5,8 @@ import screen
 import logs
 import memory.get
 import memory.main
-from memory.unlocks import has_ability_unlocked
+from memory.main import equipped_weapon_has_ability
+from memory.unlocks import has_ability_unlocked, od_mode_unlocks, od_mode_current
 from menu import open_grid, equip_armor
 import memory.sphere_grid
 import menu
@@ -32,8 +33,8 @@ import load_game
 import area.chocobos
 from json_ai_files.write_seed import write_big_text, write_custom_message
 from nemesis.arena_battles import (
-    yojimbo_battle, 
-    recharge_overdrives_overworld, 
+    yojimbo_battle,
+    recharge_overdrives_overworld,
     juggernaut_farm,
     vidatu_farm,
     restock_downs,
@@ -48,7 +49,7 @@ from nemesis.arena_select import (
     navigate_to_airship_destination,
     add_airship_unlocked_location,
     remove_airship_unlocked_location,
-    air_ship_destination, 
+    air_ship_destination,
     return_to_airship,
     od_change,
     arena_menu_select,
@@ -65,7 +66,9 @@ from sphere_grid.completion_functions import (
     get_grid,
     nearest_interesting_node,
     stock_return_sphere,
-    restock_mp
+    restock_mp,
+    count_still_locked,
+    update_completion_report
 )
 from gamestate import game
 from paths.nem import YojimboFarm, OmegaFarm
@@ -988,16 +991,17 @@ def farming_power_spheres():
     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
     return_to_airship()
 
-def showcase_2():
-    blitz_rewards_in_luca()
+def showcase_2(jump_in_from_save:bool=False):
     godhand = 0
     baaj=0
-    primer_cleanup_1()
-    # primer_cleanup_2()  # Now performed during the Nova section.
-    split_timer()
-    if not zan_ready():
-        recharge_overdrives(align_zan=True)
-    area.chocobos.sun_crest(godhand=godhand, baaj=baaj, face_bahamut=True, get_crest=False)
+    if not jump_in_from_save:
+        blitz_rewards_in_luca()
+        primer_cleanup_1()  # Now performed prior to level grind.
+        # primer_cleanup_2()  # Now performed during the Nova section.
+        split_timer()
+        if not zan_ready():
+            recharge_overdrives(align_zan=True)
+        area.chocobos.sun_crest(godhand=godhand, baaj=baaj, face_bahamut=True, get_crest=False)
     if not zan_ready():
         recharge_overdrives(align_zan=True)
     area.chocobos.besaid_destro(godhand=godhand, baaj=baaj, jecht_sphere=True, checkpoint=12)
@@ -1067,12 +1071,9 @@ def steal_lv_4_keys():
     stock_all_locks(limit=4)
 
 
-def count_still_locked(actor_id:int) -> int:
-    grid_instance = get_grid() # Get the grid instance
-    return grid_instance.count_all_unlockables(actor_id)
-
 def cactuar_levels_battle():
     write_big_text("Farming XP via Cactuars")
+    update_completion_report()
     haste = False
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -1094,150 +1095,337 @@ def cactuar_levels_battle():
     battle.main.wrap_up()
     logger.debug("Now back in control.")
 
-def power_farm(big_three:bool = False):
+
+def tonberry_levels_battle():
+    write_big_text("Farming XP via Tonberries")
+    # write_custom_message(f"Nemesis stage 4.5\nOD > AP on Stoic\nfor massive AP\n{game.state} {game.step}")
+    screen.await_turn()
+    tidus_turns = 0
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                tidus_turns += 1
+                if tidus_turns == 8:
+                    Tidus.flee()
+                elif memory.main.get_overdrive_battle(character=0) == 100:
+                    Tidus.overdrive()
+                else:
+                    battle.main.attack()
+            else:
+                CurrentPlayer().defend()
+
+    logger.debug("Battle is complete.")
+    battle.main.wrap_up()
+    logger.debug("Now back in control.")
+
+
+def get_weapon_value(char:int):
+    try:
+        if not equipped_weapon_has_ability(
+            char_num=char, ability_num=0x8011
+        ):
+            # No OD > AP, no value.
+            return 0
+
+        value = 1
+        if equipped_weapon_has_ability(
+            char_num=char, ability_num=0x8013
+        ):
+            # Triple_AP
+            value += 3
+        elif equipped_weapon_has_ability(
+            char_num=char, ability_num=0x8012
+        ):
+            # Double_AP
+            value += 2
+        if equipped_weapon_has_ability(
+            char_num=char, ability_num=0x800F
+        ):
+            # Triple_OD
+            value += 3
+        elif equipped_weapon_has_ability(
+            char_num=char, ability_num=0x800E
+        ):
+            # Double_OD
+            value += 2
+        return value
+    except:
+        return 0
+
+
+def power_farm():
     if memory.main.get_map() == 374:
         arena_return(godhand=1, baaj=1)
     remaining_array = [0]*7
     for i in range(7):
         remaining_array[i] = count_still_locked(actor_id=i)
-
-    if big_three:
-        od_change(character=0, set_od_mode=0)
-        od_change(character=4, set_od_mode=0)
-        od_change(character=6, set_od_mode=0)
+    if memory.main.equipped_armor_has_ability(
+        char_num=game_vars.ne_armor(), ability_num=0x801D
+    ) and game_vars.ne_armor() != 2:
+        # Auron does not get auto-phoenix.
+        # Everyone else should be sure to equip auto-phoenix again.
+        try:
+            menu.equip_armor(character=game_vars.ne_armor(), ability=0x800A)
+        except:
+            # This char has no Auto-Phoenix. Only occurs for Auron.
+            pass
     
-    complete = False
-    while not complete:
-        if big_three:
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=0, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=0, ability=0x8011,full_menu_close=False)
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=4, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=4, ability=0x8011,full_menu_close=False)
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=6, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=6, ability=0x8011,full_menu_close=False)
-            memory.main.update_formation(Tidus, Wakka, Rikku)
-        elif remaining_array[5] != 0:
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=1, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=1, ability=0x8011,full_menu_close=False)
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=3, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=3, ability=0x8011,full_menu_close=False)
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=5, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=5, ability=0x8011,full_menu_close=False)
-            memory.main.update_formation(Yuna, Kimahri, Lulu)
-            od_check_2()
-        else:
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=1, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=1, ability=0x8011,full_menu_close=False)
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=3, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=3, ability=0x8011,full_menu_close=False)
-            if not memory.main.equipped_weapon_has_ability(
-                char_num=2, ability_num=0x8011
-            ):
-                menu.equip_weapon(character=2, ability=0x8011,full_menu_close=False)
-            memory.main.update_formation(Yuna, Kimahri, Auron)
-            od_check_2()
-        if memory.main.get_gil_value() < 10000:
+    while any(remaining_array):
+        
+        if memory.main.get_gil_value() < 10000 or len(memory.main.all_equipment()) > 150:
+            menu.auto_sort_equipment()
+            arena_npc()
+            arena_menu_select(2)
             item_dump()
+            arena_menu_select(4)
+            menu.auto_sort_equipment()
+        # od_check_2()
+        power_formation = []
+        for weap_value in range(8,-1,-1):
+            for character in range(1,7): #  Tidus should always be the last.
+                if (
+                    remaining_array[character] != 0 and
+                    get_weapon_value(character) == weap_value and
+                    not character in power_formation and
+                    len(power_formation) < 3
+                ):
+                    power_formation.append(character)
+        if len(power_formation) < 3:
+            for character in range(0,7):
+                if (
+                    not character in power_formation and
+                    len(power_formation) < 3
+                ):
+                    power_formation.append(character)
+        
+        for i in range(3):
+            # Find and equip the best weapon.
+            logger.warning(f"Selected formation: {power_formation}")
+            best_weap = memory.main.check_any_odap(power_formation[i], prio_odap=True)
+            logger.warning(f"Best weap for {power_formation[i]}: {best_weap}")
+            equip_handles = memory.main.weapon_array_character(power_formation[i])
+            for current_handle in equip_handles:
+                equip_weapon=True
+                for j in range(len(best_weap)):
+                    if not current_handle.has_ability(best_weap[j]):
+                        equip_weapon=False
+                if current_handle.is_equipped():
+                    equip_weapon=False
+                    logger.warning(f"Curr weap for {power_formation[i]}: {current_handle.abilities()}")
+                if equip_weapon: 
+                    menu.equip_weapon(
+                        character=power_formation[i], 
+                        ability_list=best_weap,
+                        full_menu_close=False
+                    )
+            # memory.main.wait_frames(300)
+                
+            # Now set the most preferable overdrive mode.
+            logger.debug(f"Unlocks for {power_formation[i]}: {od_mode_unlocks(power_formation[i])}")
+            logger.debug(f"Current - {od_mode_current(power_formation[i])}")
+            if (
+                od_mode_unlocks(power_formation[i])[2] == 1 and
+                od_mode_current(power_formation[i]) != 2 and
+                power_formation[i] != 0
+            ):
+                od_change(character=power_formation[i], set_od_mode=2, full_menu_close=False)
+            elif (
+                od_mode_current(power_formation[i]) != 0 and
+                (
+                    od_mode_unlocks(power_formation[i])[2] == 0 or
+                    power_formation[i] == 0
+                )
+            ):
+                od_change(character=power_formation[i], set_od_mode=0, full_menu_close=False)
+        memory.main.update_formation(
+            power_formation[0],
+            power_formation[1],
+            power_formation[2]
+        )
         
         arena_npc()
         arena_menu_select(1)
-        start_fight(area_index=13, monster_index=5)
-        cactuar_levels_battle()
+        if all(element == 0 for element in remaining_array[1:]):
+            start_fight(area_index=13, monster_index=9)
+            tonberry_levels_battle()
+        else:
+            start_fight(area_index=13, monster_index=5)
+            cactuar_levels_battle()
+        update_completion_report()
         arena_menu_select(4)
         restock_downs()
         response = grid_check()
         if response == "low_spheres":
-            distill_spheres(big_three=big_three)
+            logger.debug("Low Spheres")
+            distill_spheres()
         elif response == "low_filler_spheres":
+            logger.debug("Low MP fillers")
             restock_mp()
-        
-        total_remaining = 0
+            
         for i in range(7):
             remaining_array[i] = count_still_locked(actor_id=i)
-            total_remaining += remaining_array[i]
-        completion = round((6020-total_remaining)/60.20,2)
-        logger.info(f"Remaining sphere grid across all characters: {remaining_array}")
-        report_str = f"Complete: {completion}% ({total_remaining} remain)\nPer-char: {remaining_array}"
-        write_custom_message(report_str)
-        # memory.main.wait_seconds(30)
-        if (
-            big_three and 
-            remaining_array[0] == 0 and
-            remaining_array[4] == 0 and
-            remaining_array[6] == 0
-        ):
-            complete = True
-            menu.equip_weapon(character=0, ability=0x800F,full_menu_close=False)
-            menu.equip_weapon(character=4, ability=0x800F,full_menu_close=False)
-            menu.equip_weapon(character=6, ability=0x800F,full_menu_close=False)
-        elif (
-            remaining_array[0] == 0 and
-            remaining_array[1] == 0 and
-            remaining_array[2] == 0 and
-            remaining_array[3] == 0 and
-            remaining_array[4] == 0 and
-            remaining_array[5] == 0 and
-            remaining_array[6] == 0
-        ):
-            complete = True
-            menu.equip_weapon(character=1, ability=0x800F,full_menu_close=False)
-            menu.equip_weapon(character=2, ability=0x800F,full_menu_close=False)
-            menu.equip_weapon(character=3, ability=0x800F,full_menu_close=False)
-            menu.equip_weapon(character=5, ability=0x800F,full_menu_close=False)
+    
+    # All done farming, let's re-equip celestials.
+    menu.auto_sort_equipment()
+    for i in range(7):
+        menu.equip_celestial(i)
+    # memory.main.update_formation(Tidus, Wakka, Rikku)
+
+def overdrive_buff(drops_for:int):
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(111)) >= 30:
+        menu.add_ability(
+            owner=drops_for,
+            equipment_type=0,
+            ability_array=[32787, 0x8011, 255, 255],
+            ability_index=0x800F,
+            slot_count=3,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            close_menu=True,
+            full_menu_close=True,
+        )
+    elif memory.main.get_item_count_slot(memory.main.get_item_slot(110)) >= 30:
+        menu.add_ability(
+            owner=drops_for,
+            equipment_type=0,
+            ability_array=[32787, 0x8011, 255, 255],
+            ability_index=0x800E,
+            slot_count=3,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            close_menu=True,
+            full_menu_close=True,
+        )
+
+def buff_equipped_weapon(char_id:int):
+    ability_array = memory.main.equipped_weapon_current_abilities(char_id)
+    logger.info(f"Customizing weapon for {char_id}")
+    logger.info(f"Current abilities: {ability_array}")
+    used_slots = 0
+    for i in range(4):
+        if ability_array[i] != 255:
+            used_slots += 1
+    total_slots = memory.main.equipped_weapon_slot_count(char_id)
+
+    # memory.main.wait_frames(90)
+    while total_slots > used_slots:
+        action_taken = False
+        if not 0x8011 in ability_array:
+            menu.add_ability(
+                owner=char_id,
+                equipment_type=0,
+                ability_array=ability_array,
+                ability_index=0x8011,
+                slot_count=total_slots,
+                navigate_to_equip_menu=True,
+                exit_out_of_current_weapon=True,
+                close_menu=True,
+                full_menu_close=True,
+            )
+            used_slots += 1
+            action_taken = True
+        
+        elif not (equipped_weapon_has_ability(0x800E) or equipped_weapon_has_ability(0x800F)):
+            if memory.main.get_item_count_slot(memory.main.get_item_slot(111)) >= 30:
+                menu.add_ability(
+                    owner=char_id,
+                    equipment_type=0,
+                    ability_array=ability_array,
+                    ability_index=0x800F,
+                    slot_count=total_slots,
+                    navigate_to_equip_menu=True,
+                    exit_out_of_current_weapon=True,
+                    close_menu=True,
+                    full_menu_close=True,
+                )
+                used_slots += 1
+                action_taken = True
+        
+            elif memory.main.get_item_count_slot(memory.main.get_item_slot(110)) >= 30:
+                menu.add_ability(
+                    owner=char_id,
+                    equipment_type=0,
+                    ability_array=ability_array,
+                    ability_index=0x800E,
+                    slot_count=total_slots,
+                    navigate_to_equip_menu=True,
+                    exit_out_of_current_weapon=True,
+                    close_menu=True,
+                    full_menu_close=True,
+                )
+                used_slots += 1
+                action_taken = True
+        
+        elif not (equipped_weapon_has_ability(0x8013) or equipped_weapon_has_ability(0x8012)):
+            if memory.main.get_item_count_slot(memory.main.get_item_slot(108)) >= 50:
+                menu.add_ability(
+                    owner=char_id,
+                    equipment_type=0,
+                    ability_array=ability_array,
+                    ability_index=0x8013,
+                    slot_count=total_slots,
+                    navigate_to_equip_menu=True,
+                    exit_out_of_current_weapon=True,
+                    close_menu=True,
+                    full_menu_close=True,
+                )
+                used_slots += 1
+                action_taken = True
+        
+            elif memory.main.get_item_count_slot(memory.main.get_item_slot(9)) >= 20:
+                menu.add_ability(
+                    owner=char_id,
+                    equipment_type=0,
+                    ability_array=ability_array,
+                    ability_index=0x8012,
+                    slot_count=total_slots,
+                    navigate_to_equip_menu=True,
+                    exit_out_of_current_weapon=True,
+                    close_menu=True,
+                    full_menu_close=True,
+                )
+                used_slots += 1
+                action_taken = True
+        # memory.main.wait_frames(90)
+        if not action_taken:
+            return
+        ability_array = memory.main.equipped_weapon_current_abilities(char_id)
+        logger.info(f"Customizing weapon for {char_id}")
+        logger.info(f"Current abilities: {ability_array}")
+
+def best_odap_weapons():
+    for i in [5,2,1,3,4,6,0]:
+        if game_vars.plat_triple_ap_check()[i]:
+            # ability_array = memory.main.equipped_weapon_current_abilities(i)
+            # if ability_array == [0x8013,0x8011,255,255]:
+            #     overdrive_buff(i)
+            if not equipped_weapon_has_ability(char_num=i, ability_num=0x8013):
+                menu.equip_weapon(character=i, ability=0x8013)
+            buff_equipped_weapon(i)
+        else:
+            chosen_abilities = memory.main.check_any_odap(i)
+            logger.warning(f"Char {i} can equip ability {chosen_abilities}")
+            # memory.main.wait_frames(180)
+            if len(chosen_abilities) != 0:
+                menu.equip_weapon(character=i, ability_list=chosen_abilities)
+                game_vars.plat_triple_ap_check()[i] = 1
+                buff_equipped_weapon(i)
 
 def prep_back_line():
+    write_big_text(f"Now, bribe extra Mega-Phoenix's.")
+    arena_npc()
+    arena_menu_select(1)
+    start_fight(area_index=9, monster_index=7)
+    battle.main.bribe_battle(spare_change_value=250000)
+    arena_menu_select(4)
     write_big_text(f"Let's prep some B-squad equipment.")
+    
     return_to_airship()
-    rin_equip_dump(b_squad=True)
+    rin_equip_dump(cap=True, b_squad=True)
+
     write_big_text(f"Now to Kilika")
     # air_ship_destination(3)
     navigate_to_airship_destination("Kilika")
-    logger.info(f"Lulu weapon (1)")
-    menu.add_ability(
-        owner=5,
-        equipment_type=0,
-        ability_array=[0x8068, 255, 255, 255],
-        ability_index=0x800F,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        full_menu_close=False,
-    )
-    logger.info(f"Lulu weapon (2)")
-    menu.add_ability(
-        owner=5,
-        equipment_type=0,
-        ability_array=[0x8068, 0x800F, 255, 255],
-        ability_index=0x8011,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        full_menu_close=False,
-    )
-    logger.info(f"Lulu weapon (3)")
-    menu.add_ability(
-        owner=5,
-        equipment_type=0,
-        ability_array=[0x8068, 0x800F, 0x8011, 255],
-        ability_index=0x8012,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        full_menu_close=True,
-    )
     while not pathing.set_movement([-25, -246]):
         pass
     while not pathing.set_movement([-47, -209]):
@@ -1246,61 +1434,163 @@ def prep_back_line():
         pass
     while not pathing.set_movement([-108, -169]):
         pass
-    pathing.approach_actor_by_id(8231)
-    FFXC.set_neutral()
-    memory.main.wait_frames(60)
-    xbox.tap_b()  # Talking to the old lady
-    memory.main.wait_frames(60)
-    while not memory.main.equipment_buy_ready():
-        xbox.menu_b()  # Buy equipment
-    memory.main.wait_frames(6)
 
-    # Yuna weapon
-    while memory.main.equip_buy_row() != 1:
-        while memory.main.equip_buy_row() != 1:
-            if memory.main.equip_buy_row() > 1:
+    if (
+        game_vars.plat_triple_ap_check()[5] and
+        game_vars.plat_triple_ap_check()[1] and
+        game_vars.plat_triple_ap_check()[2] and
+        game_vars.plat_triple_ap_check()[3]
+    ):
+        logger.info("Everyone has a triple AP weap already.")
+        logger.info("There is no need to buy new weapons, only armor.")
+        pathing.approach_actor_by_id(8231)
+        FFXC.set_neutral()
+        memory.main.wait_frames(60)
+        xbox.tap_b()  # Talking to the old lady
+        memory.main.wait_frames(60)
+        while not memory.main.equipment_buy_ready():
+            xbox.menu_b()  # Buy equipment
+        memory.main.wait_frames(6)
+    else:
+        first=255
+        if not game_vars.plat_triple_ap_check()[5]:
+            logger.info(f"Lulu weapon (1)")
+            if memory.main.get_item_count_slot(memory.main.get_item_slot(107)) >= 10:
+                menu.add_ability(
+                    owner=5,
+                    equipment_type=0,
+                    ability_array=[0x8068, 255, 255, 255],
+                    ability_index=0x8011,
+                    slot_count=4,
+                    navigate_to_equip_menu=True,
+                    full_menu_close=False,
+                )
+            # memory.main.wait_frames(90)
+            logger.info(f"Lulu weapon (2)")
+            if memory.main.get_item_count_slot(memory.main.get_item_slot(108)) >= 50:
+                menu.add_ability(
+                    owner=5,
+                    equipment_type=0,
+                    ability_array=[0x8068, 0x8011, 255, 255],
+                    ability_index=8013,
+                    slot_count=4,
+                    navigate_to_equip_menu=True,
+                    full_menu_close=False,
+                )
+                first=0x8013
+            elif memory.main.get_item_count_slot(memory.main.get_item_slot(9)) >= 20:
+                menu.add_ability(
+                    owner=5,
+                    equipment_type=0,
+                    ability_array=[0x8068, 0x8011, 255, 255],
+                    ability_index=0x8012,
+                    slot_count=4,
+                    navigate_to_equip_menu=True,
+                    full_menu_close=False,
+                )
+                first=0x8012
+            # memory.main.wait_frames(90)
+            logger.info(f"Lulu weapon (3)")
+            if memory.main.get_item_count_slot(memory.main.get_item_slot(111)) >= 30:
+                menu.add_ability(
+                    owner=5,
+                    equipment_type=0,
+                    ability_array=[0x8068, 0x8011, first, 255],
+                    ability_index=0x800F,
+                    slot_count=4,
+                    navigate_to_equip_menu=True,
+                    full_menu_close=True,
+                )
+            elif memory.main.get_item_count_slot(memory.main.get_item_slot(110)) >= 30:
+                menu.add_ability(
+                    owner=5,
+                    equipment_type=0,
+                    ability_array=[0x8068, 0x8011, first, 255],
+                    ability_index=0x800E,
+                    slot_count=4,
+                    navigate_to_equip_menu=True,
+                    full_menu_close=True,
+                )
+            else:
+                memory.main.close_menu()
+        # memory.main.wait_frames(180)
+        pathing.approach_actor_by_id(8231)
+        FFXC.set_neutral()
+        memory.main.wait_frames(60)
+        xbox.tap_b()  # Talking to the old lady
+        memory.main.wait_frames(60)
+        while not memory.main.equipment_buy_ready():
+            xbox.menu_b()  # Buy equipment
+        memory.main.wait_frames(6)
+
+        # Yuna weapon
+        if not game_vars.plat_triple_ap_check()[1]:
+            while memory.main.equip_buy_row() != 1:
+                while memory.main.equip_buy_row() != 1:
+                    if memory.main.equip_buy_row() > 1:
+                        xbox.tap_up()
+                    else:
+                        xbox.tap_down()
+                memory.main.wait_frames(1)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+        
+        # Kimahri weapon
+        if not game_vars.plat_triple_ap_check()[3]:
+            while memory.main.equip_buy_row() != 4:
+                while memory.main.equip_buy_row() != 4:
+                    if memory.main.equip_buy_row() > 4:
+                        xbox.tap_up()
+                    else:
+                        xbox.tap_down()
+                memory.main.wait_frames(1)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+        
+        # Auron weapon
+        if not game_vars.plat_triple_ap_check()[2]:
+            while memory.main.equip_buy_row() != 5:
+                while memory.main.equip_buy_row() != 5:
+                    if memory.main.equip_buy_row() > 5:
+                        xbox.tap_up()
+                    else:
+                        xbox.tap_down()
+                memory.main.wait_frames(1)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+            memory.main.wait_frames(60)
+            xbox.menu_up()
+            memory.main.wait_frames(60)
+            xbox.menu_b()
+
+    # Lulu armor
+    while memory.main.equip_buy_row() != 10:
+        while memory.main.equip_buy_row() != 10:
+            if memory.main.equip_buy_row() > 10:
                 xbox.tap_up()
             else:
                 xbox.tap_down()
-        memory.main.wait_frames(1)
-    xbox.menu_b()
+        memory.main.wait_frames(6)
     memory.main.wait_frames(60)
-    xbox.menu_up()
-    memory.main.wait_frames(60)
-    xbox.menu_b()
-    memory.main.wait_frames(60)
-    xbox.menu_up()
-    memory.main.wait_frames(60)
-    xbox.menu_b()
-    memory.main.wait_frames(60)
-    
-    # Kimahri weapon
-    while memory.main.equip_buy_row() != 4:
-        while memory.main.equip_buy_row() != 4:
-            if memory.main.equip_buy_row() > 4:
-                xbox.tap_up()
-            else:
-                xbox.tap_down()
-        memory.main.wait_frames(1)
-    xbox.menu_b()
-    memory.main.wait_frames(60)
-    xbox.menu_up()
-    memory.main.wait_frames(60)
-    xbox.menu_b()
-    memory.main.wait_frames(60)
-    xbox.menu_up()
-    memory.main.wait_frames(60)
-    xbox.menu_b()
-    memory.main.wait_frames(60)
-    
-    # Auron weapon
-    while memory.main.equip_buy_row() != 5:
-        while memory.main.equip_buy_row() != 5:
-            if memory.main.equip_buy_row() > 5:
-                xbox.tap_up()
-            else:
-                xbox.tap_down()
-        memory.main.wait_frames(1)
     xbox.menu_b()
     memory.main.wait_frames(60)
     xbox.menu_up()
@@ -1333,83 +1623,116 @@ def prep_back_line():
 
     memory.main.close_menu()
     memory.main.click_to_control()
-    logger.info(f"Yuna weapon (1)")
-    menu.add_ability(
-        owner=1,
-        equipment_type=0,
-        ability_array=[0x800B, 0x8000, 255, 255],
-        ability_index=0x8011,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=False,
-        full_menu_close=False,
-    )
-    logger.info(f"Yuna weapon (2)")
-    menu.add_ability(
-        owner=1,
-        equipment_type=0,
-        ability_array=[0x800B, 0x8000, 0x8011, 255],
-        ability_index=0x801A,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=True,
-        full_menu_close=False,
-    )
-    logger.info(f"Auron weapon (1)")
-    menu.add_ability(
-        owner=2,
-        equipment_type=0,
-        ability_array=[0x800B, 0x8000, 255, 255],
-        ability_index=0x8011,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=False,
-        full_menu_close=False,
-    )
-    logger.info(f"Auron weapon (2)")
-    menu.add_ability(
-        owner=2,
-        equipment_type=0,
-        ability_array=[0x800B, 0x8000, 0x8011, 255],
-        ability_index=0x800F,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=True,
-        full_menu_close=False,
-    )
-    logger.info(f"Kimahri weapon (1)")
-    menu.add_ability(
-        owner=3,
-        equipment_type=0,
-        ability_array=[0x800B, 0x8000, 255, 255],
-        ability_index=0x8011,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=False,
-        full_menu_close=False,
-    )
-    logger.info(f"Kimahri weapon (2)")
-    menu.add_ability(
-        owner=3,
-        equipment_type=0,
-        ability_array=[0x800B, 0x8000, 0x8011, 255],
-        ability_index=0x800F,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=True,
-        full_menu_close=False,
-    )
-    logger.info(f"Kimahri armor (1)")
-    menu.add_ability(
-        owner=3,
-        equipment_type=1,
-        ability_array=[0x8072, 255, 255, 255],
-        ability_index=0x800A,
-        slot_count=4,
-        navigate_to_equip_menu=True,
-        exit_out_of_current_weapon=True,
-        full_menu_close=True,
-    )
+    if not game_vars.plat_triple_ap_check()[1]:
+        logger.info(f"Yuna weapon (1)")
+        menu.add_ability(
+            owner=1,
+            equipment_type=0,
+            ability_array=[0x800B, 0x8000, 255, 255],
+            ability_index=0x8011,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=False,
+            full_menu_close=False,
+        )
+        logger.info(f"Yuna weapon (2)")
+        menu.add_ability(
+            owner=1,
+            equipment_type=0,
+            ability_array=[0x800B, 0x8000, 0x8011, 255],
+            ability_index=0x801A,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            full_menu_close=False,
+        )
+    if not game_vars.plat_triple_ap_check()[2]:
+        logger.info(f"Auron weapon (1)")
+        menu.add_ability(
+            owner=2,
+            equipment_type=0,
+            ability_array=[0x800B, 0x8000, 255, 255],
+            ability_index=0x8011,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=False,
+            full_menu_close=False,
+        )
+        logger.info(f"Auron weapon (2)")
+        menu.add_ability(
+            owner=2,
+            equipment_type=0,
+            ability_array=[0x800B, 0x8000, 0x8011, 255],
+            ability_index=0x800F,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            full_menu_close=False,
+        )
+    if not game_vars.plat_triple_ap_check()[3]:
+        logger.info(f"Kimahri weapon (1)")
+        menu.add_ability(
+            owner=3,
+            equipment_type=0,
+            ability_array=[0x800B, 0x8000, 255, 255],
+            ability_index=0x8011,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=False,
+            full_menu_close=False,
+        )
+        logger.info(f"Kimahri weapon (2)")
+        menu.add_ability(
+            owner=3,
+            equipment_type=0,
+            ability_array=[0x800B, 0x8000, 0x8011, 255],
+            ability_index=0x800F,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            full_menu_close=False,
+        )
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(7)) >= 20:
+        logger.info(f"Kimahri armor (1)")
+        menu.add_ability(
+            owner=3,
+            equipment_type=1,
+            ability_array=[0x8072, 255, 255, 255],
+            ability_index=0x800A,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            full_menu_close=True,
+        )
+    logger.warning("Test - Lulu armor check")
+    logger.warning(memory.main.get_item_count_slot(memory.main.get_item_slot(7)))
+    # memory.main.wait_frames(900)
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(7)) >= 20:
+        logger.info(f"Lulu armor (1)")
+        menu.add_ability(
+            owner=5,
+            equipment_type=1,
+            ability_array=[0x8072, 255, 255, 255],
+            ability_index=0x800A,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            full_menu_close=True,
+        )
+    else:
+        logger.info(f"Not enough Mega.P.downs")
+    if memory.main.get_item_count_slot(memory.main.get_item_slot(7)) >= 20:
+        logger.info(f"Kimahri armor (1)")
+        menu.add_ability(
+            owner=3,
+            equipment_type=1,
+            ability_array=[0x8072, 255, 255, 255],
+            ability_index=0x800A,
+            slot_count=4,
+            navigate_to_equip_menu=True,
+            exit_out_of_current_weapon=True,
+            full_menu_close=True,
+        )
     memory.main.close_menu()
     memory.main.await_control()
     
@@ -1422,21 +1745,27 @@ def prep_back_line():
     return_to_airship()
     arena_return(godhand=1, baaj=1)
 
+def equip_all_odap():
+    for i in range(6):
+        menu.equip_weapon(character=i, ability=0x8011,full_menu_close=False)
+    menu.equip_weapon(character=6, ability=0x8011,full_menu_close=True)
+
 def plat_finish_1():
+    write_big_text("Best weapons")
+    best_odap_weapons()
     write_big_text("Clear spheres")
     buy_clear_sheres()
     write_big_text("Lv.4 Key Spheres")
     steal_lv_4_keys()
-    write_big_text("Power farm big three")
-    power_farm(big_three=True)
-    split_timer()
-
-def plat_finish_2():
+    equip_all_odap()
     write_big_text("Prep the B-squad")
     prep_back_line()
-    split_timer()
-    write_big_text("Power farm B-squad")
+    # primer_cleanup_1()
+
+def plat_finish_2():
+    write_big_text("Power farm all characters")
     power_farm()
+    split_timer()
 
     write_big_text("Dark Yojimbo")
     dark_yojimbo()
@@ -1445,7 +1774,6 @@ def plat_finish_2():
         recharge_overdrives(align_zan=True)
     primer_cleanup_1(sisters_return=True)
     dark_sisters()
-    # primer_cleanup_1(sisters_return=True) # Handled earlier, move here at some point.
     write_big_text("Dark Ixion")
     if not zan_ready():
         recharge_overdrives(align_zan=True)
@@ -1775,7 +2103,7 @@ def dark_yojimbo():
     menu.add_ability(
         owner=5,
         equipment_type=1,
-        ability_array=[0x8073, 255, 255, 255],
+        ability_array=[0x8072, 0x800A, 255, 255],
         ability_index=0x8038,
         slot_count=4,
         navigate_to_equip_menu=True,
@@ -1786,20 +2114,14 @@ def dark_yojimbo():
     menu.add_ability(
         owner=5,
         equipment_type=1,
-        ability_array=[0x8073, 0x8038, 255, 255],
+        ability_array=[0x8072, 0x800A, 0x8038, 255],
         ability_index=0x805B,
         slot_count=4,
         navigate_to_equip_menu=True,
         full_menu_close=False
     )
     memory.main.update_formation(Lulu, Wakka, Yuna, full_menu_close=False)
-    menu.equip_weapon(character=1, ability=0x800F,full_menu_close=False)
-    menu.equip_weapon(character=5, ability=0x800F,full_menu_close=True)
-    # od_change(character=5, set_od_mode=0)
-    # od_change(character=1, set_od_mode=0)
-    od_change(character=4, set_od_mode=0)
     navigate_to_airship_destination("Gagazet")
-    
 
     # Fist, have to get to the cave.
     last_map = memory.main.get_map()
@@ -2575,6 +2897,7 @@ def grid_check():
                     locks=4,
                     clear_luck=True
                 )
+                update_completion_report()
                 logger.info(f"Level ups returned value: {ret_val}")
                 if ret_val == "dest_reached":
                     return grid_check()
@@ -2595,11 +2918,11 @@ def grid_check_early(force=False):
     # memory.main.wait_seconds(5)
     slot = memory.main.get_item_slot(86)
     if slot == 255:
-        logger.debug("No MP spheres, we haven't reached that point yet.")
+        logger.debug("No MP spheres, we haven't reached that point yet. (C)")
         return
     count = memory.main.get_item_count_slot(slot)
     if count < 4:
-        logger.debug("No MP spheres, we haven't reached that point yet.")
+        logger.debug("No MP spheres, we haven't reached that point yet. (D)")
         return
 
     grid_instance = get_grid() # Get the grid instance
@@ -2702,11 +3025,11 @@ def grid_check_early(force=False):
                         if not (game.state == 'Nem_Farm' and game.step <= 12):
                             destination=706
                 
-                # In case we don't have a pre-planned path, path towards dead ends.
-                if destination == None:
-                    pref_path, _ = grid_instance.find_dead_end(character_id=x)
-                    if pref_path is not None:
-                        destination = pref_path
+                # # In case we don't have a pre-planned path, path towards dead ends.
+                # if destination == None:
+                #     pref_path = grid_instance.find_path_to_nearest_dead_end(start_node=?, x)
+                #     if pref_path is not None:
+                #         destination = pref_path
 
                 if perform:
                     ret_val = max_level_ups(
