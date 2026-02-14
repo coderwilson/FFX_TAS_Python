@@ -21,16 +21,12 @@ while map == get_map():
     if current_time != last_time:
         coords = get_actor_coords(actor_index=0)
         coords = get_coords() + [0]
-        if i % 2 == 0:
+        if memory.main.s_grid_active():
+            print(f"Grid Cursor coords: {memory.main.s_grid_cursor_coords()}")
+        else:
             print(f"Coords: [{round(coords[0], 2)}, {round(coords[1],2)}, {round(coords[2],2)}] | " + \
                 f" | Angle: {round(angle,2)} | Dialog: {diag_progress_flag()}" + \
                 f" | Story: {get_story_progress()} | Map: {get_map()}")
-        else:
-            # print(f"Coords: [{round(coords[0], 2)}, {round(coords[1],2)}, {round(coords[2],2)}] | " + \
-            #     f" | Angle: {round(angle,2)} | Dialog: {diag_progress_flag()}" + \
-            #     f" | Story: {get_story_progress()} | Map: {get_map()}")
-            print(f"Grid Cursor coords: {memory.main.s_grid_cursor_coords()}")
-            # pass
         # print(f"Dialog: {diag_progress_flag()} | Skippable: {memory.main.diag_skip_possible()} | Menu: {memory.main.menu_open()}")
         # print(f"Battle Number: {get_encounter_id()} | Battle: {memory.main.battle_active()}")
         # memory.main.check_near_actors_print()

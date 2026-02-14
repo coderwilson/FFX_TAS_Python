@@ -66,7 +66,10 @@ class TrackerManager:
                 pass
             else:
                 self.add_tracker(key, results[key]["best_adj"])
-        self.order_by_timedelta()
+        try:
+            self.order_by_timedelta()
+        except:
+            pass
 
     def get_manip_battle_count(self, seed_key) -> str:
         with open(resultpath, "r") as fp:
@@ -205,29 +208,35 @@ def build_file_str():
     file_str = "RNG Seed Leaderboard, Real-time minus Blitzball\n"
     top_runs = seed_results.get_top_runs()
     i = 1
-    for result in top_runs:
-        file_str += f"{i:>4}: {result.seed_num:>3},  {result.delta} "
+    try:
+        for result in top_runs:
+            file_str += f"{i:>4}: {result.seed_num:>3},  {result.delta} "
 
-        variant = seed_results.get_best_variant_for_seed(str(result.seed_num))
-        file_str += f"({variant}) "
+            variant = seed_results.get_best_variant_for_seed(str(result.seed_num))
+            file_str += f"({variant}) "
 
-        battle_count = seed_results.get_manip_battle_count(str(result.seed_num))
-        if battle_count == '0':
-            battle_count = "skip"
+            battle_count = seed_results.get_manip_battle_count(str(result.seed_num))
+            if battle_count == '0':
+                battle_count = "skip"
 
-        _, _, seed_percent = seed_results.get_seed_exploration_percentage(result.seed_num)
-        file_str += f"({seed_percent}%)\n"
-        
-        i += 1
+            _, _, seed_percent = seed_results.get_seed_exploration_percentage(result.seed_num)
+            file_str += f"({seed_percent}%)\n"
+            
+            i += 1
+    except:
+        pass
     
-    # If you want all exploration, go with this:
-    # total_seed_percent = seed_results.get_total_exploration_percentage()
-    # file_str += f"Seed completion progress: {total_seed_percent}%\n"
+    try:
+        # If you want all exploration, go with this:
+        # total_seed_percent = seed_results.get_total_exploration_percentage()
+        # file_str += f"Seed completion progress: {total_seed_percent}%\n"
 
-    # If instead you want a specific variant, go with this:
-    variant = "standard"
-    total_seed_percent = seed_results.get_variant_exploration_percentage(variant)
-    file_str += f"{variant} variant completion progress: {total_seed_percent}%\n"
+        # If instead you want a specific variant, go with this:
+        variant = "standard"
+        total_seed_percent = seed_results.get_variant_exploration_percentage(variant)
+        file_str += f"{variant} variant completion progress: {total_seed_percent}%\n"
+    except:
+        pass
 
     # Continue building the file.
     file_str += f"Suggested seeds: {pick_missing_five()}\n"

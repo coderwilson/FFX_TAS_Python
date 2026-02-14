@@ -76,6 +76,7 @@ def decide_nea(bonus_advance: int = 0):
 
 
 def decide_luck():
+    return False  # Marathon safety.
     # Pull from JSON file to get dynamic value.
     decision = False
     force_luck = True
@@ -254,10 +255,11 @@ def dome_interior():
     re_equip_ne = False
     logger.info("Start of Zanarkand Dome section")
     friend_slot = memory.main.get_item_slot(97)
-    if game_vars.story_mode() or game_vars.end_game_version() == 4:
-        yuna_levels_needed = 8
-    else:
-        yuna_levels_needed = 6
+    yuna_levels_needed = 0
+    # if game_vars.story_mode() or game_vars.end_game_version() == 4:
+    #     yuna_levels_needed = 8
+    # else:
+    #     yuna_levels_needed = 6
     if friend_slot == 255:
         friend_count = 0
     else:

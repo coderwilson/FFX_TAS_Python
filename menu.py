@@ -1486,27 +1486,30 @@ def via_purifico():
     open_grid(character=2)  # Auron
 
     menu_grid.move_first()
-    grid_right()
-    grid_right()
-    grid_right()
+    menu_grid.coords_movement([467,35])
+    # grid_right()
+    # grid_right()
+    # grid_right()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("Lv2", "none")
     menu_grid.use_and_move()
-    grid_right()
-    grid_right()
-    grid_right()
-    grid_right()
+    menu_grid.coords_movement([800,-161])
+    # grid_right()
+    # grid_right()
+    # grid_right()
+    # grid_right()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("Lv2", "none")
     menu_grid.use_and_move()
-    grid_up()
-    grid_up()
-    memory.main.wait_frames(30 * 0.3)
-    grid_location = memory.main.s_grid_cursor_coords()
-    # We have extra levels, changes the path slightly.
-    if grid_location != [789,-485]:
-        grid_up()
-        grid_left()
+    menu_grid.coords_movement([789,-485])
+    # grid_up()
+    # grid_up()
+    # memory.main.wait_frames(30 * 0.3)
+    # grid_location = memory.main.s_grid_cursor_coords()
+    # # We have extra levels, changes the path slightly.
+    # if grid_location != [789,-485]:
+    #     grid_up()
+    #     grid_left()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("mana", "none")
 
@@ -1519,16 +1522,18 @@ def via_purifico():
         via_from_battle_site()
     
     else:
-        grid_up()
-        grid_up()
+        menu_grid.coords_movement([-537,-462])
+        # grid_up()
+        # grid_up()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("Lv4", "none")
         menu_grid.use_and_move()
-        grid_right()
-        grid_right()
-        grid_right()
-        grid_right()
-        grid_left()
+        menu_grid.coords_movement([-284,-582])
+        # grid_right()
+        # grid_right()
+        # grid_right()
+        # grid_right()
+        # grid_left()
         menu_grid.move_and_use()
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_use_again()
@@ -1548,10 +1553,11 @@ def via_purifico():
     menu_grid.sel_sphere("power", "none")
 
     menu_grid.use_and_move()
-    grid_right()
-    grid_right()
-    grid_right()
-    grid_up()
+    menu_grid.coords_movement([1062,-541])
+    # grid_right()
+    # grid_right()
+    # grid_right()
+    # grid_up()
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()
@@ -1704,25 +1710,14 @@ def seymour_natus_blitz_win():
         menu_grid.use_and_use_again()
         menu_grid.sel_sphere("power", "none")
     
-    menu_grid.use_and_move()
-    grid_left()
-    grid_left()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("power", "none")
+    yuna_levels = memory.main.get_yuna_slvl()
+    if yuna_levels >= 2:
+        menu_grid.use_and_move()
+        grid_left()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
         
-    '''
-    # Removed for Terra skip
-    menu_grid.use_and_move()
-    grid_left()
-    grid_left()
-    grid_left()
-    grid_left()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("power", "none")
-    if game_vars.nemesis() or game_vars.platinum() or game_vars.story_mode():
-        menu_grid.use_and_use_again()
-        menu_grid.sel_sphere("mana", "none")
-    '''
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
@@ -1768,12 +1763,7 @@ def seymour_natus_blitz_loss():
         menu_grid.sel_sphere("power", "none")
     
     menu_grid.use_and_move()
-    if yuna_levels <= 9:
-        if game_vars.nemesis() or game_vars.platinum():
-            grid_down()
-            menu_grid.move_and_use()
-            menu_grid.sel_sphere("power", "none")
-    else:
+    if yuna_levels >= 10:
         menu_grid.use_and_move()
         grid_right()
         grid_right()
@@ -1786,6 +1776,25 @@ def seymour_natus_blitz_loss():
     menu_grid.use_and_quit()
     memory.main.close_menu()
 
+def seymour_natus_recovery():
+    open_grid(character=1)
+    menu_grid.move_first()
+    if game_vars.get_blitz_win():
+        grid_left()
+        grid_left()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+    else:
+        grid_right()
+        grid_right()
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        if game_vars.nemesis() or game_vars.platinum():
+            menu_grid.use_and_use_again()
+            menu_grid.sel_sphere("power", "none")
+
+    menu_grid.use_and_quit()
+    memory.main.close_menu()
 
 
 def prep_calm_lands():
@@ -1854,17 +1863,6 @@ def after_ronso():
     menu_grid.sel_sphere("Lv2", "none")
     menu_grid.use_and_move()
     menu_grid.coords_movement([7,1013])
-    '''
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    grid_down()
-    '''
     menu_grid.move_and_use()
     menu_grid.sel_sphere("Lv3", "none")
     menu_grid.use_and_move()
@@ -1879,30 +1877,8 @@ def after_ronso():
     
     # Terra add, removed earlier.
     menu_grid.move_shift_left("yuna")
-    #if game_vars.nemesis() or game_vars.platinum():
-    #    menu_grid.use_first()
-    #    menu_grid.sel_sphere("mana", "left")
-    #    menu_grid.use_and_move()
-    #else:
     menu_grid.move_first()
     menu_grid.coords_movement([-30,-1100])
-    # while memory.main.s_grid_cursor_coords()[0] > 140:
-    #     grid_left()  # Move to empty node left of HP, or filled with MP in nem route
-    #if game_vars.nemesis() or game_vars.platinum():
-    #    while memory.main.s_grid_cursor_coords()[1] > -1204:
-    #        grid_up()
-    #    menu_grid.move_and_use()
-    #    menu_grid.sel_sphere("mana", "none")
-    #    menu_grid.use_and_move()
-    
-    # while memory.main.s_grid_cursor_coords() != [-30,-1100]:
-    #     if memory.main.s_grid_cursor_coords()[0] > -30:
-    #         grid_left()
-    #     elif memory.main.s_grid_cursor_coords()[1] < -1100:
-    #         grid_down()
-    #     else:
-    #         grid_up()
-        #memory.main.wait_frames(6)
     menu_grid.move_and_use()
     menu_grid.sel_sphere("power", "none")
     menu_grid.use_and_use_again()

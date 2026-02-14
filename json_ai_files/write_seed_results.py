@@ -69,7 +69,13 @@ def check_ml_heals(seed_num):
             logger.debug("No standard runs completed.")
             modifier = "standard"
             avina_heals = False
+        else:
+            logger.debug("Attempint avina heal path")
+            modifier = "standard"
+            avina_heals = True
         
+
+        '''
         #  Add other cases before catchall Else statement here, as we add them to the program.
         elif not "flip_lowroad" in results[seed_num].keys():
             logger.debug("First attempt, flipping at Lowroad")
@@ -105,8 +111,6 @@ def check_ml_heals(seed_num):
             logger.debug("Seventh attempt, TRIPLE flip!!!")
             modifier = "flip_lowroad:flip_highroad:flip_bikanel"
             avina_heals = False
-
-        else:
             logger.debug("Catchall settings - determining lowest run time modifier")
             lowest_time = results[seed_num]['best_adj']
             for mod in results[seed_num].keys():
@@ -119,31 +123,7 @@ def check_ml_heals(seed_num):
                         logger.debug("test4")
                         modifier=mod
                         #avina_heals = True
+            '''
         
-
-        '''
-        logger.debug("Catchall settings - determining lowest nea_manip_battle_count")
-        lowest_modifier = None
-        lowest_count = float('inf')
-        avina_heals = True  # Default if no valid value found
-
-        for mod in results[seed_num].keys():
-            if mod == "best_adj":
-                continue
-            for heal_method in results[seed_num][mod].keys():
-                if "nea_manip_battle_count" in results[seed_num][mod][heal_method]:
-                    try:
-                        count = int(results[seed_num][mod][heal_method]["nea_manip_battle_count"])
-                    except:
-                        count = 0
-                    if count < lowest_count:
-                        lowest_count = count
-                        lowest_modifier = mod
-
-        if lowest_modifier:
-            modifier = lowest_modifier
-        else:
-            modifier = "standard"
-        '''
     
     return [modifier, avina_heals]

@@ -257,5 +257,10 @@
     },
     "212": {
         "zan_luck": "False"
+    },
+    "226": {
+        "highroad_heals": {
+            "9": "True"
+        }
     }
 }

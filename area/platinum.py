@@ -14,7 +14,7 @@ import pathing
 import save_sphere
 import vars
 import xbox
-import blitz
+import blitzball.blitz_main
 from players import (
     Auron, 
     CurrentPlayer, 
@@ -462,7 +462,7 @@ def blitz_game(first_game:bool=False, tourney:bool=False, jecht_shot:bool=False)
             xbox.menu_up()
         else:
             xbox.menu_b()
-    blitz.blitz_main(False)
+    blitzball.blitz_main.blitz_engage(False)
     logger.warning(memory.main.wakka_od_learned())
 
 def blitz_force_reward(reward_num:int = 99):

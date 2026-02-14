@@ -468,12 +468,12 @@ def escape(dark_aeon:bool = False) -> bool:
 def attempt_wendigo():
     if battle.boss.wendigo():
         logger.info("Wendigo fight over")
-        while not memory.main.battle_wrap_up_active():
-            if not game_vars.story_mode():
-                xbox.tap_confirm()
-        while memory.main.battle_wrap_up_active():
-            xbox.set_confirm()
-        xbox.release_confirm()
+        # while not memory.main.battle_wrap_up_active():
+        #     if not game_vars.story_mode():
+        #         xbox.tap_confirm()
+        # while memory.main.battle_wrap_up_active():
+        #     xbox.set_confirm()
+        # xbox.release_confirm()
         memory.main.click_to_control()
         return True
     else:

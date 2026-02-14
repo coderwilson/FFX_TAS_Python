@@ -13,6 +13,7 @@ import xbox
 from nemesis.arena_prep import split_timer
 from paths import BaajHallway, BaajPuzzle, BaajRamp
 from players import CurrentPlayer, Rikku, Tidus
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +62,8 @@ def entrance_classic(checkpoint: int = 0):
         if memory.main.user_control():
             if checkpoint == 9:
                 FFXC.set_movement(-1, 1)
+                memory.main.wait_frames(6)
+                FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
             # General pathing
@@ -131,6 +134,8 @@ def entrance_crimson(sahagin_b_first: bool, geos_potion: bool, geos_attacks: int
         if memory.main.user_control():
             if checkpoint == 9:
                 FFXC.set_movement(-1, 1)
+                memory.main.wait_frames(6)
+                FFXC.set_movement(0, 1)
                 memory.main.await_event()
                 FFXC.set_neutral()
             # General pathing
@@ -492,10 +497,19 @@ def ab_swimming_2_classic():
 def ab_swimming_2_crimson(ruins_encounter_strat: int):
     # Quick heal-up to make sure we're full HP on Rikku
     memory.main.await_control()
-    FFXC.set_movement(1, -1)
-    FFXC.set_back()
-    memory.main.touch_save_sphere()
-    # TODO: adapt save_sphere.touch_and_go() to handle this save sphere
+
+    tidus_hp = memory.main.get_hp()[0]
+    tidus_max = memory.main.get_max_hp()[0]
+    rikku_hp = memory.main.get_hp()[6]
+    rikku_max = memory.main.get_max_hp()[6]
+
+    write_big_text(f"T: {tidus_hp}/{tidus_max}\nR: {rikku_hp}/{rikku_max}")
+
+    if tidus_hp != tidus_max or rikku_hp != rikku_max:
+        FFXC.set_movement(1, -1)
+        FFXC.set_back()
+        memory.main.touch_save_sphere()
+        # TODO: adapt save_sphere.touch_and_go() to handle this save sphere
 
     memory.main.clear_save_menu_cursor_2()
     # Now to get to it
@@ -515,6 +529,7 @@ def ab_swimming_2_crimson(ruins_encounter_strat: int):
         pos = memory.main.get_coords()
     FFXC.set_neutral()
 
+    write_big_text("")
     screen.await_turn()
     # Final group of Piranhas
     battle.main.ruins_encounter(strat=ruins_encounter_strat)

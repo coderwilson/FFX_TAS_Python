@@ -32,7 +32,7 @@ import area.thunder_plains
 import area.zanarkand
 import battle.boss
 import battle.main
-import blitz
+from blitzball.blitz_main import blitz_engage
 import config
 import load_game
 import logs
@@ -139,7 +139,6 @@ def configuration_setup():
         mode_str = "New game, CSR speedrun\n"
     
     write_big_text(mode_str)
-
 
     if game.state != "none":  # Loading a save file, no RNG manip here
         write_big_text(current_big_text().replace("New game", "Load game"))
@@ -546,7 +545,7 @@ def perform_TAS():
                     force_blitz_win = game_vars.get_force_blitz_win()
                     if game_vars.platinum():
                         force_blitz_win=True
-                    blitz_duration = blitz.blitz_main(force_blitz_win)
+                    blitz_duration = blitz_engage(force_blitz_win)
                     logger.info("----- Blitz End")
                     if not game_vars.csr():
                         xbox.await_save()
@@ -627,7 +626,6 @@ def perform_TAS():
                         load_game.load_save_num(0)
                     else:
                         # Report duration at the end of Mi'ihen section for all runs.
-                        split_timer()
                         end_time = logs.time_stamp()
                         total_time = end_time - game.start_time
                         logger.info(f"Mi'ihen End timer is: {total_time}")
@@ -635,6 +633,7 @@ def perform_TAS():
                         logs.write_stats(total_time)
                         game.state = "MRR"
                         game.step = 1
+                        maybe_create_save(save_num=51)
 
             if game.state == "MRR":
                 if game.step == 1:
@@ -982,18 +981,29 @@ def perform_TAS():
                     logger.debug("Mark 1")
                     if area.ne_armor.to_hidden_cave():
                         logger.debug("Mark 2")
-                        area.ne_armor.drop_hunt()
-                    logger.debug("Mark 3")
-                    area.ne_armor.return_to_gagazet()
-                    manip_time_2 = logs.time_stamp()
-                    try:
-                        manip_time = manip_time_2 - manip_time_1
-                        logger.info(f"NEA Manip duration: {str(manip_time)}")
-                        logs.write_stats("NEA Manip duration:")
-                        logs.write_stats(manip_time)
-                    except Exception as e:
-                        logger.warning(e)
-                    game.step = 3
+                        game.step = 32
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+                    
+                if game.step == 32:
+                    if area.ne_armor.drop_hunt():
+                        logger.debug("Mark 3")
+                        area.ne_armor.return_to_gagazet()
+                        manip_time_2 = logs.time_stamp()
+                        try:
+                            manip_time = manip_time_2 - manip_time_1
+                            logger.info(f"NEA Manip duration: {str(manip_time)}")
+                            logs.write_stats("NEA Manip duration:")
+                            logs.write_stats(manip_time)
+                        except Exception as e:
+                            logger.warning(e)
+                        game.step = 3
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
 
                 if game.step == 3:
                     area.gagazet.to_the_ronso()

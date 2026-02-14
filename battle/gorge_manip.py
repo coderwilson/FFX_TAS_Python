@@ -8,6 +8,7 @@ import battle.main
 import screen
 from players import CurrentPlayer,Bahamut
 from typing import Tuple
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,10 @@ def deep_dive_path(
     
     # This decision tree will capture if we can summon at this point in the actions.
     # This captures if we hit a game-over state (all characters dead)
-    if len(active_party) == 0:
+    party_check = active_party
+    while 255 in party_check:
+        party_check.remove(255)
+    if len(party_check) == 0:
         if len(party_escapes) == 0:
             return past_actions,past_chars,-100
         
@@ -101,6 +105,9 @@ def deep_dive_path(
                 score += 5
             if 6 in mech_drop_chances:
                 score += 5
+        if score >= 10:
+            past_actions.append("SUMMON")
+            past_chars.append(0)  # This doesn't matter so much.
         return past_actions,past_chars,score
     
     current_turn = int(turn_order[0])
@@ -138,37 +145,41 @@ def deep_dive_path(
         logger.debug(f"Targetted chars check 1: {active_party}")
         enemy_targets = rng_track.enemy_target_predictions(chars=len(active_party))
         e_advances = len(targetted_chars)
-        targetted_chars.append(active_party[enemy_targets[e_advances]])
+        try:
+            targetted_chars.append(active_party[enemy_targets[e_advances]])
+        except:
+            pass
         logger.debug(f"Targetted chars check 3: {targetted_chars}")
         new_party = active_party[:]
-        if active_party[enemy_targets[e_advances]] in [2,3]:
+        try:
             char_num = active_party[enemy_targets[e_advances]]
-            if targetted_chars.count(char_num) >= 2:
-                # Auron takes two hits to kill
-                logger.warning(f"A/K death check: {active_party[enemy_targets[e_advances]]}")
-                new_party.remove(active_party[enemy_targets[e_advances]])  # Character assumed dead
+            if char_num in [2,3]:
+                if targetted_chars.count(char_num) >= 2:
+                    # Auron takes two hits to kill
+                    logger.warning(f"A/K death check: {active_party[enemy_targets[e_advances]]}")
+                    new_party.remove(active_party[enemy_targets[e_advances]])  # Character assumed dead
+                    rng10_advances += 3
+                    kill_str += ">kill"
+                    while char_num in future_turns:
+                        future_turns.remove(char_num)
+            elif char_num == 0:
+                if targetted_chars.count(char_num) >= 3:
+                    # Tidus generally takes three hits to kill
+                    logger.warning(f"Tidus death check: {active_party[enemy_targets[e_advances]]}")
+                    new_party.remove(active_party[enemy_targets[e_advances]])  # Character assumed dead
+                    rng10_advances += 3
+                    kill_str += ">kill"
+                    while char_num in future_turns:
+                        future_turns.remove(char_num)
+            else:  # Anyone else
+                logger.warning(f"Other death check: {char_num}")
+                new_party.remove(char_num)  # Character assumed dead
                 rng10_advances += 3
                 kill_str += ">kill"
                 while char_num in future_turns:
                     future_turns.remove(char_num)
-        elif active_party[enemy_targets[e_advances]] == 0:
-            char_num = active_party[enemy_targets[e_advances]]
-            if targetted_chars.count(char_num) >= 3:
-                # Tidus generally takes three hits to kill
-                logger.warning(f"Tidus death check: {active_party[enemy_targets[e_advances]]}")
-                new_party.remove(active_party[enemy_targets[e_advances]])  # Character assumed dead
-                rng10_advances += 3
-                kill_str += ">kill"
-                while char_num in future_turns:
-                    future_turns.remove(char_num)
-        else:  # Anyone else
-            char_num = active_party[enemy_targets[e_advances]]
-            logger.warning(f"Other death check: {char_num}")
-            new_party.remove(char_num)  # Character assumed dead
-            rng10_advances += 3
-            kill_str += ">kill"
-            while char_num in future_turns:
-                future_turns.remove(char_num)
+        except:
+            return past_actions,past_chars,2
         
         
         past_chars.append(current_turn)
@@ -303,20 +314,23 @@ def deep_dive_path(
             new_party.remove(current_turn)
             new_party.append(3)
             new_back_line = back_line[:]
-            new_back_line.remove(3)
-            new_back_line.append(current_turn)
-            future_turns_2 = [3] + future_turns[:]
-            scorecard.append(deep_dive_path(
-                epaaj_kills=epaaj_kills,
-                turn_order=future_turns_2,
-                active_party=new_party,
-                back_line=new_back_line,
-                party_escapes=party_escapes[:],
-                past_actions=new_actions[:],
-                past_chars=new_chars[:],
-                rng10_advances=rng10_advances,
-                targetted_chars=targetted_chars[:]
-            ))
+            try:
+                new_back_line.remove(3)
+                new_back_line.append(current_turn)
+                future_turns_2 = [3] + future_turns[:]
+                scorecard.append(deep_dive_path(
+                    epaaj_kills=epaaj_kills,
+                    turn_order=future_turns_2,
+                    active_party=new_party,
+                    back_line=new_back_line,
+                    party_escapes=party_escapes[:],
+                    past_actions=new_actions[:],
+                    past_chars=new_chars[:],
+                    rng10_advances=rng10_advances,
+                    targetted_chars=targetted_chars[:]
+                ))
+            except:
+                return past_actions,past_chars,-100
         elif action == "STEAL":
             new_chars.append(current_turn)
             new_actions.append("STEAL")
@@ -464,7 +478,14 @@ def eval_paths(epaaj_kills) -> Tuple[list,list,int]:
 
 def gorge_manip_engage(epaaj_kills):
     screen.await_turn()
+
+    # decide path, and report.
     chosen_path,chars,score = eval_paths(epaaj_kills=epaaj_kills)
+    logger.manip(f"Chosen path: {chosen_path}")
+    string = "Found path:\n"
+    for i in range(len(chosen_path)):
+        string += str(chosen_path[i]) + "\n"
+    write_big_text(string)
 
     if score <= -1:
         logger.warning(f"Best path is highly undesirable (likely game over). Fleeing.")
@@ -484,11 +505,13 @@ def gorge_manip_engage(epaaj_kills):
                 backline.remove(backline[i])
             if 1 in backline:
                 battle.main.buddy_swap_char(1)
-            if memory.main.get_current_turn() == 1:
+                battle.main.aeon_summon(4)
+                Bahamut.unique()
+            elif memory.main.get_current_turn() == 1:
                 battle.main.aeon_summon(4)
                 Bahamut.unique()
             else:
-                CurrentPlayer().defend()
+                CurrentPlayer().escape_one()
         elif int(chars[i]) >= 20:
             pass
         elif int(chars[i]) != memory.main.get_current_turn():
@@ -509,8 +532,32 @@ def gorge_manip_engage(epaaj_kills):
             # Default, in case something goes wrong
             CurrentPlayer().defend()
     
-    logger.info("End of predicted battle. Defend until the battle ends.")
+    logger.manip("End of predicted battle. Defend until the battle ends.")
     while memory.main.battle_active():
         if memory.main.turn_ready():
-            CurrentPlayer().defend()
+            epaaj_drop = False
+            epaaj_drop_chances = memory.main.next_chance_rng_10_full()
+            encounter_id = memory.main.get_encounter_id()
+            if memory.main.get_encounter_id() == 312:
+                epaaj_drop = bool(0 in epaaj_drop_chances or 3 in epaaj_drop_chances)
+            else:
+                epaaj_drop = bool(3 in epaaj_drop_chances)
+
+            if epaaj_drop:
+                backline = memory.main.get_battle_formation()
+                for i in range(3):
+                    backline.remove(backline[i])
+                if 1 in backline:
+                    battle.main.buddy_swap_char(1)
+                    battle.main.aeon_summon(4)
+                    Bahamut.unique()
+                elif memory.main.get_current_turn() == 1:
+                    battle.main.aeon_summon(4)
+                    Bahamut.unique()
+                else:
+                    CurrentPlayer().escape_one()
+            elif not 255 in memory.main.get_active_battle_formation():
+                CurrentPlayer().escape_one()
+            else:
+                CurrentPlayer().defend()
     battle.main.wrap_up()

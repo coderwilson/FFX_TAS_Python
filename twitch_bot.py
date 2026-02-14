@@ -75,6 +75,74 @@ def terminate_ff_processes():
         print("No processes with 'marbles' in their names found.")
 
 def focus_obs():
+    # --- 1. Debug: List all open windows to find the correct title ---
+    print("\n--- Diagnostic: Active Window Titles ---")
+    all_windows = gw.getAllTitles()
+    clean_titles = [t for t in all_windows if t.strip()]
+    for title in clean_titles:
+        print(f"Active Window: {title}")
+    print("----------------------------------------\n")
+
+    # --- 2. Focus PowerShell and press Backspace ---
+    print("Searching for PowerShell window...")
+    
+    # We look for common PowerShell window title patterns
+    # (Windows PowerShell, PowerShell Core, or Windows Terminal)
+    pwsh_keywords = ["PowerShell", "pwsh", "Windows Terminal", "Administrator: PowerShell"]
+    pwsh_windows = [
+        win for win in gw.getWindowsWithTitle('') 
+        if any(key.lower() in win.title.lower() for key in pwsh_keywords)
+    ]
+
+    if pwsh_windows:
+        # Sort by visibility or just grab the first match
+        pwsh_win = pwsh_windows[0]
+        print(f"Found PowerShell match: '{pwsh_win.title}'")
+        
+        try:
+            # Using the Minimize/Restore trick here too, as it's more reliable than SetForegroundWindow alone
+            ctypes.windll.user32.ShowWindow(pwsh_win._hWnd, 6)  # SW_MINIMIZE
+            time.sleep(0.1)
+            ctypes.windll.user32.ShowWindow(pwsh_win._hWnd, 9)  # SW_RESTORE
+            ctypes.windll.user32.SetForegroundWindow(pwsh_win._hWnd)
+            
+            time.sleep(0.3) # Wait for focus to settle
+            pyautogui.press('backspace')
+            print("Pressed Backspace in PowerShell.")
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"Failed to focus PowerShell window: {e}")
+    else:
+        print("PowerShell window not found by title search.")
+
+    # --- 3. Focus OBS (Original Logic) ---
+    print("Searching for 'obs64.exe' process...")
+    obs_processes = [p for p in psutil.process_iter(['pid', 'name']) if p.info['name'] and "obs64.exe" in p.info['name'].lower()]
+    
+    if not obs_processes:
+        print("OBS process (obs64.exe) not found.")
+        return False
+
+    obs_windows = [win for win in gw.getWindowsWithTitle('') if "OBS" in win.title]
+
+    if not obs_windows:
+        print("OBS window not found.")
+        return False
+
+    obs_window = obs_windows[0]
+    print(f"Attempting to focus OBS window: '{obs_window.title}'")
+
+    # Minimize and restore to force foreground focus
+    ctypes.windll.user32.ShowWindow(obs_window._hWnd, 6)  # SW_MINIMIZE
+    time.sleep(0.2)
+    ctypes.windll.user32.ShowWindow(obs_window._hWnd, 9)  # SW_RESTORE
+    time.sleep(0.1)
+    ctypes.windll.user32.SetForegroundWindow(obs_window._hWnd)
+
+    print(f"Successfully brought OBS window '{obs_window.title}' to focus.")
+    return True
+
+def focus_obs_old():
     print("Searching for 'obs64.exe' process...")
 
     # Find OBS process
@@ -131,7 +199,7 @@ def decide_seed(ctx):
         print(f"=== Seed random: {CHOSEN_SEED_NUM} ===")
         return
 
-def set_language(story=False, force:str='none'):
+def set_language(force:str='none'):
     global CHOSEN_SEED_NUM
     print(f"Checking ML heals for seed {CHOSEN_SEED_NUM}")
     modifier, avina_heals = check_ml_heals(seed_num=CHOSEN_SEED_NUM)
@@ -143,15 +211,9 @@ def set_language(story=False, force:str='none'):
     elif force.lower() == 'chinese':
         desired_str = "Language=ch"
         search_str = "Language=en"
-    elif story:
-        desired_str = "Language=en"
-        search_str = "Language=ch"
-    elif avina_heals:
+    else:
         desired_str = "Language=ch"
         search_str = "Language=en"
-    else:
-        desired_str = "Language=en"
-        search_str = "Language=ch"
     print(f"Running {desired_str} Mark 1")
     orig_dir = os.getcwd()
     print(os.getcwd())
@@ -273,29 +335,6 @@ class Bot(commands.Bot):
         except Exception as e:
             print(f"[ERROR] Second reconnection attempt failed: {e}")
 
-    # async def _monitor_connection(self):
-    #     """Background task that ensures the bot stays connected."""
-    #     while True:
-    #         await asyncio.sleep(900)  # 15 minutes
-    #         try:
-    #             if not self._ws or not self._ws.open:
-    #                 print("[WARN] Lost connection to Twitch chat. Attempting reconnect...")
-    #                 await self._reconnect_safely()
-    #             else:
-    #                 print("[INFO] Connection healthy.")
-    #         except Exception as e:
-    #             print(f"[ERROR] Connection check failed: {e}")
-
-    # async def _reconnect_safely(self):
-    #     """Try to reconnect without affecting other running tasks."""
-    #     try:
-    #         await self.close()  # close existing connection
-    #         await asyncio.sleep(5)
-    #         await self.connect()  # reconnect to Twitch
-    #         print("[INFO] Reconnected to Twitch chat successfully.")
-    #     except Exception as e:
-    #         print(f"[ERROR] Reconnection attempt failed: {e}")
-    
     async def shutdown_obs(self):
         """Gracefully stop OBS system."""
         try:
@@ -379,6 +418,36 @@ class Bot(commands.Bot):
         await self.shutdown_obs()
     
     def is_valid_user(self, ctx: commands.Context):
+        # 1. Check if the internal python process is running
+        process_active = False
+        if self.process is not None:
+            # Check if the subprocess is still running
+            if self.process.poll() is None:
+                process_active = True
+            else:
+                # Clean up if it finished
+                self.process = None
+
+        # 2. Check if the game (ffx.exe) is running
+        game_active = any(p.info['name'] == "ffx.exe" for p in psutil.process_iter(['name']))
+
+        # Logic: If nothing is running, anyone can use the bot. 
+        # If something IS running, we check for Mod/Allowed status.
+        if not process_active and not game_active:
+            print("System idle (Process/Game not running). Granting access to regular user.")
+            return True
+
+        # 3. Standard permission check for active sessions
+        if ctx.author.is_mod or ctx.author.name.lower() in [u.lower() for u in self.allowed_users]:
+            print("Identified mod or elevated user. Valid User function returning True.")
+            return True
+        else:
+            print(f"Access denied: {ctx.author.name} is not a mod and a session is currently active.")
+            # Note: ctx.send is a coroutine, so it won't work inside a synchronous def unless you use asyncio.run_coroutine_threadsafe
+            # For simplicity, we usually handle the message back in the command function itself.
+            return False
+
+    def is_valid_user_old(self, ctx: commands.Context):
         if ctx.author.is_mod or ctx.author.name in self.allowed_users:
             print("Identified mod or elevated user. Valid User function returning True.")
             return True
@@ -389,14 +458,9 @@ class Bot(commands.Bot):
             )
             return False
         
-
     @commands.command(name="reboot")
     async def reboot(self, ctx: commands.Context):
         """Performs a full system reboot (Windows only)."""
-        # Ensure only allowed users can execute
-        if not self.is_valid_user(ctx):
-            await ctx.send(f"Sorry {ctx.author.name}, you’re not authorized to reboot the system.")
-            return
 
         await self.kill(ctx)
 
@@ -441,6 +505,8 @@ class Bot(commands.Bot):
 
     @commands.command(aliases=("continue"))
     async def resume(self, ctx: commands.Context):
+        if not self.is_valid_user(ctx):
+            return
         global CHOSEN_SEED_NUM
         if CHOSEN_SEED_NUM == 999:
             CHOSEN_SEED_NUM = str(random.choice(range(256)))
@@ -500,6 +566,8 @@ class Bot(commands.Bot):
     # Define the start command
     @commands.command(aliases=("begin", "launch"))
     async def start(self, ctx: commands.Context):
+        if not self.is_valid_user(ctx):
+            return
         global CHOSEN_SEED_NUM
         if CHOSEN_SEED_NUM == 999:
             CHOSEN_SEED_NUM = str(random.choice(range(256)))
@@ -587,6 +655,8 @@ class Bot(commands.Bot):
     # Define the exit command
     @commands.command(aliases=("stop", "quit", "terminate"))
     async def exit(self, ctx: commands.Context):
+        if not self.is_valid_user(ctx):
+            return
         if self.process is not None:
             self.process.terminate()
             self.process.wait()
@@ -727,12 +797,8 @@ class Bot(commands.Bot):
     # Kill timer
     @commands.command(aliases=("timer_stop", "halt_timer"))
     async def stop_timer(self, ctx: commands.Context):
-        '''
-        if ctx.author.name not in self.allowed_users:
-            await ctx.send(
-                f"Sorry {ctx.author.name}, you don't have permissions to execute this."
-            )
-        '''
+        if not self.is_valid_user(ctx):
+            return
         clickHeader()
         print("Save successful.")
         time.sleep(0.5)
@@ -758,35 +824,32 @@ class Bot(commands.Bot):
     # Start All
     @commands.command(aliases=("begin_all", "all"))
     async def start_all(self, ctx: commands.Context):
+        if not self.is_valid_user(ctx):
+            return
         await self.marbles_end(ctx)
         decide_seed(ctx)
-
-        global CHOSEN_SEED_NUM
-        if CHOSEN_SEED_NUM == 67:
-            await ctx.send("Esserr, stop attempting seed 67. Pick something else.")
-        else:
         
-            await ctx.send("Launching all elements!")
-            if "story" in ctx.message.content:
-                set_language(story=True)
-            elif "chinese" in ctx.message.content:
-                set_language(force='chinese')
-            elif "english" in ctx.message.content:
-                set_language(force='english')
-            else:
-                set_language()
-            await self.start_game(ctx)
-            time.sleep(3)
-            await self.start_csr(ctx)
-            time.sleep(1)
-            if "state" in ctx.message.content.lower():
-                #await ctx.send("Timer undesirable when loading a save.")
-                pass
-            else:
-                await self.start_timer(ctx)
-            time.sleep(3)
-            focus_obs()
-            await self.start(ctx)
+        await ctx.send("Launching all elements!")
+        if "story" in ctx.message.content:
+            set_language(force='english')
+        elif "chinese" in ctx.message.content:
+            set_language(force='chinese')
+        elif "english" in ctx.message.content:
+            set_language(force='english')
+        else:
+            set_language()
+        await self.start_game(ctx)
+        time.sleep(3)
+        await self.start_csr(ctx)
+        time.sleep(1)
+        if "state" in ctx.message.content.lower():
+            #await ctx.send("Timer undesirable when loading a save.")
+            pass
+        else:
+            await self.start_timer(ctx)
+        time.sleep(3)
+        focus_obs()
+        await self.start(ctx)
     
     # Kill All
     @commands.command(aliases=("kill_all","halt_all","stop_all"))
@@ -813,8 +876,7 @@ class Bot(commands.Bot):
     async def play(self, ctx: commands.Context):
         # This is so we don't have to catch someone joining a game of marbles.
         pass
-        
-
+    
     # End Marbles
     @commands.command(aliases=("marbles_stop"))
     async def marbles_end(self, ctx: commands.Context):
@@ -840,7 +902,6 @@ class Bot(commands.Bot):
     @commands.command(aliases=("marbles_start"))
     async def marbles(self, ctx: commands.Context):
         #await ctx.send("Sorry, Marbles is currently broken.")
-        
         
         await self.marbles_end(ctx)
         await self.change_obs_scene("Marbles scene")
@@ -876,21 +937,6 @@ class Bot(commands.Bot):
         else:
             print("===  MARBLES ALREADY RUNNING  ===")
         
-    
-    def game_ended_check(self):
-        try:
-            game_running = self.process.poll()
-            if game_running == None:
-                # Game is still running.
-                return False
-            else:
-                # Game has been ended properly.
-                self.process = None
-                return True
-        except:
-            # Game has not been started.
-            return False
-
     # Stuck command
     @commands.command(aliases=("stuck_all"))
     async def stuck(self, ctx: commands.Context):
@@ -900,6 +946,8 @@ class Bot(commands.Bot):
             await self.kill(ctx)
             await self.marbles_end(ctx)
             await ctx.send("Everything should now be unstuck.")
+        else:
+            await ctx.send("Please check with a mod - need elevated permissions to unstuck.")
     
     async def get_current_obs_scene(self) -> str:
         try:
