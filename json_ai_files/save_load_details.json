@@ -277,9 +277,9 @@
         }
     },
     "MRR": {
-        "13": {
-            "Story": {
-                "save_num": "78",
+        "1": {
+            "Speed": {
+                "save_num": "51",
                 "blitz_win_value": "True",
                 "end_game_version_val": "0",
                 "nea_zone": "0",

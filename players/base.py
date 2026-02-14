@@ -691,6 +691,12 @@ class Player:
 
         battle.main.tap_targeting()
 
+    def escape_one(self):
+        battle.main.escape_one()
+
+    def escape(self):
+        self.escape_one()
+
     def knows_flee(self):
         unlocked_specials = get_unlocked_abilities_by_type(self.raw_id())["Special"]
         for key in unlocked_specials:

@@ -3,6 +3,7 @@ import logging
 import battle.boss
 import battle.main
 import memory.main
+from memory.main import p2p_distance, calculate_encounter_count
 import pathing
 import save_sphere
 import screen
@@ -11,6 +12,7 @@ import xbox
 from battle import avina_memory
 from paths import Miihen1, MiihenAgency, MiihenLowroad
 from players import Auron, Kimahri, Tidus, Wakka
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -342,7 +344,21 @@ def arrival_2(self_destruct, battle_count):
 def mid_point():
     checkpoint = 0
     story_mode_phase = 0
-    flip_highroad = "flip_highroad" in game_vars.run_modifier()
+
+    segments = [1245, 975]
+    enc_count, _ = calculate_encounter_count(segments, danger_val=40, initial_ptr=0)
+    str_1 = f"We are expecting {enc_count} encounters in Lowroad."
+    logger.info(str_1)
+    count_noflip = memory.main.ambush_count(battles=enc_count,extra=1)  # Because Choco eater
+    count_flip = memory.main.ambush_count(battles=enc_count,extra=2)  # Because Choco eater
+    str_2 = f"Ambush counts: if {count_noflip} > {count_flip} => flip!"
+    logger.info(str_2)
+    write_big_text(str_1 + "\n" + str_2)
+    
+    flip_highroad = False
+    if count_flip < count_noflip:
+        flip_highroad = True
+    # flip_highroad = "flip_highroad" in game_vars.run_modifier()
     
     while memory.main.get_map() != 115:
         if memory.main.user_control():
@@ -370,6 +386,7 @@ def mid_point():
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
+                write_big_text("")
                 logger.info("Mi'ihen - ready for Chocobo Eater")
                 battle.boss.chocobo_eater()
                 logger.info("Mi'ihen - Chocobo Eater complete")
@@ -397,11 +414,29 @@ def mid_point():
 # Starts just after the save sphere.
 def low_road(self_destruct, battle_count) -> bool:
     #game_vars.set_run_modifier("flip_lowroad")  # This is for testing only, needs to be replaced at start of run.
-    flip_lowroad = "flip_lowroad" in game_vars.run_modifier()
+    
+    flip_lowroad = "flip_lowroad" in game_vars.run_modifier()  # No longer used
     checkpoint = 0
     post_battle_logic(battle_num=battle_count)
-    while memory.main.get_map() != 79:
+
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+    new_position = last_position
+    travel_on = False
+    last_map = memory.main.get_map()
+
+    # while memory.main.get_map() != 79:
+    while checkpoint < 31:  # maybe 32
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    # travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
+
             # Utility stuff
             if checkpoint == 2:
                 save_sphere.touch_and_go()
@@ -426,17 +461,30 @@ def low_road(self_destruct, battle_count) -> bool:
             elif checkpoint < 28 and memory.main.get_map() == 59:
                 checkpoint = 28
             elif checkpoint == 33 and flip_lowroad:
-                reverse_battle_rng()
+                # reverse_battle_rng()  # This will now be determined in a better way.
                 flip_lowroad = False
 
             # General pathing
             elif pathing.set_movement(MiihenLowroad.execute(checkpoint)):
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
                 checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
             elif checkpoint == 25:  # Shelinda dialog
                 xbox.tap_b()
         else:
             FFXC.set_neutral()
+            if travel_on:
+                travel_on = False
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
+            
+            if last_map != memory.main.get_map():
+                logger.warning(f"Map change. Distance for last map: {travel_distance}")
+                travel_distance = 0
+                last_map = memory.main.get_map()
+
             if memory.main.battle_active():
                 battle_count += 1
                 logger.info("Starting battle")
@@ -449,6 +497,9 @@ def low_road(self_destruct, battle_count) -> bool:
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 if checkpoint < 6 or checkpoint > 12:
                     xbox.tap_b()
+    FFXC.set_neutral()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     return True
 
 

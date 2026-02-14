@@ -79,7 +79,7 @@ def approach_save_sphere():
         logger.debug("Disregard, save sphere could not be found.")
         return False
     else:
-        logger.debug("20 second time-out logic.")
+        logger.debug("10 second time-out logic.")
         logger.debug("The run is NOT SOFT LOCKED")
         while not (
             memory.main.diag_progress_flag() == target_details[2]
@@ -88,8 +88,13 @@ def approach_save_sphere():
             # Time-out logic
             end_timer = datetime.datetime.now()
             total_time = end_timer - start_timer
-            if total_time.total_seconds() > 20:
+            if total_time.total_seconds() > 10:
                 logger.debug("Save sphere time out - could not reach save sphere.")
+                if not memory.main.user_control():
+                    xbox.tap_a()
+                    xbox.tap_a()
+                    xbox.tap_a()
+                    xbox.menu_b()
                 return False
 
             # Touch sphere logic

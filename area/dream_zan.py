@@ -201,7 +201,12 @@ def listen_story():
 
 def ammes_battle_classic(results_mod:str=""):
     logger.info("Starting ammes")
-    xbox.click_to_battle()
+    if game_vars.story_mode():
+        while not memory.main.turn_ready():
+            xbox.menu_a()
+            xbox.menu_b()
+    else:
+        xbox.click_to_battle()
     logger.debug("Auron Overdrive turn start")
     memory.main.last_hit_init()
     CurrentPlayer().defend()
@@ -244,7 +249,12 @@ def ammes_battle_classic(results_mod:str=""):
 
 def ammes_battle_crimson(tidus_total_attacks: int, tidus_potion: bool, results_mod:str):
     logger.info("Starting ammes")
-    xbox.click_to_battle()
+    if game_vars.story_mode():
+        memory.main.wait_seconds(42)
+        while not memory.main.turn_ready():
+            memory.main.wait_frames(1)
+    else:
+        xbox.click_to_battle()
     logger.debug(f"Mark 1")
     write_seed_num(seed=memory.main.rng_seed(), variant=results_mod)
     logger.debug("Auron Overdrive turn start")
@@ -282,7 +292,7 @@ def ammes_battle_crimson(tidus_total_attacks: int, tidus_potion: bool, results_m
             xbox.tap_b()
     logger.debug("Clicking to battle.")
     if game_vars.story_mode():
-        memory.main.wait_seconds(42)
+        memory.main.wait_seconds(51)
         FFXC.tap_confirm()
         FFXC.tap_confirm()
     else:

@@ -2,6 +2,7 @@ import logging
 import time
 
 import memory.main
+from memory.main import calculate_encounter_count
 import pathing
 import vars
 import xbox
@@ -9,6 +10,7 @@ from paths import GuadoSkip, GuadoStart, GuadoStoryline
 from players import Auron, Lulu, Rikku, Wakka, Yuna
 import battle.main
 import menu
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -23,10 +25,42 @@ def arrival():
     if game_vars.story_mode() and not game_vars.create_saves():
         memory.main.wait_seconds(69)
     memory.main.click_to_control_3()
+
+    # Predicting thunder plains ambushes
+    segments_1 = [2223]
+    enc_count, second_ptr = calculate_encounter_count(segments_1, danger_val=35, initial_ptr=0)
+    segments_2 = [1455,675]
+    enc_count_2, second_ptr = calculate_encounter_count(segments_2, danger_val=30, initial_ptr=second_ptr)
+    enc_count += enc_count_2
+    str_1 = f"We are expecting {enc_count} encounters in Thunder Plains."
+    logger.info(str_1)
+    count_noflip = memory.main.ambush_count(battles=enc_count,extra=0)
+    count_flip = memory.main.ambush_count(battles=enc_count,extra=1)
+    str_2 = f"Ambush counts: if {count_noflip} > {count_flip} => flip!"
+    logger.info(str_2)
+    write_big_text(str_1 + "\n" + str_2)
+    if count_noflip > count_flip+1:  # At least two more ambushes
+        # Map change
+        while not pathing.set_movement([21,-22]):
+            pass
+        while memory.main.get_map() == 135:
+            pathing.set_movement([35,22])
+
+        # Flip it!
+        while not pathing.set_movement([20,-30]):
+            pass
+        reverse_battle_rng(realign=False)
+        while not pathing.set_movement([2,-45]):
+            pass
+        while memory.main.get_map() != 135:
+            pathing.set_movement([2,-80])
+
+
     while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():
             if checkpoint == 4:
                 # Into the first door
+                write_big_text("")
                 if 1 in memory.main.ambushes():
                     FFXC.set_neutral()
                     battle.main.heal_up(full_menu_close=False)
@@ -337,3 +371,26 @@ def guado_skip():
     FFXC.set_neutral()
     logger.debug("End of Guadosalam section.")
     return guado_skip_status
+
+def reverse_battle_rng(realign=True):
+    FFXC.set_neutral()
+    memory.main.check_near_actors()
+    pathing.approach_actor_by_id(actor_id=20496)
+    FFXC.set_neutral()
+    memory.main.wait_frames(63)
+
+    # Start battle
+    xbox.tap_down()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.click_to_battle()
+
+    # Escape and back out of menu
+    battle.main.flee_all()
+    while not memory.main.user_control():
+        xbox.tap_a()
+
+    if realign:
+        # Back to alginment with the path
+        while not pathing.set_movement([-69,156]):
+            pass

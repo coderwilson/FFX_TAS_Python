@@ -236,7 +236,10 @@ def load_save_num(number):
             else:
                 xbox.tap_up()
 
+        last_map = memory.main.get_map()
         for _ in range(5):
+            xbox.tap_b()
+        while last_map == memory.main.get_map():
             xbox.tap_b()
         FFXC.set_neutral()
         while not memory.main.user_control() and not memory.main.battle_active():

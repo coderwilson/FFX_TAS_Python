@@ -5,6 +5,8 @@ from tqdm.contrib.logging import logging_redirect_tqdm
 
 import battle.main
 import memory.main
+import memory.main
+from memory.main import p2p_distance
 import menu
 import pathing
 import screen
@@ -16,6 +18,8 @@ from paths import ThunderPlainsAgency, ThunderPlainsNorth, ThunderPlainsSouth
 from players import Auron, Tidus, Wakka
 from area.dream_zan import split_timer
 
+from json_ai_files.write_seed import write_big_text
+
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
@@ -26,6 +30,8 @@ def south_pathing():
     if game_vars.story_mode():
         memory.main.wait_seconds(62)
     memory.main.click_to_control_3()
+
+
     next_enc_dist,_ = memory.main.distance_to_encounter()
     #next_enc_dist = 380  # Testing only
     logger.warning(f"Next encounter distance: {next_enc_dist}")
@@ -43,10 +49,29 @@ def south_pathing():
     save_touched = False
     battle_count = 0
 
+    
+    travel_distance = 0
+    while memory.main.get_actor_coords(actor_index=0)[1] == 0:
+        pass
+    last_position = memory.main.get_actor_coords(actor_index=0)
+    new_position = last_position
+    travel_on = False
+    last_map = memory.main.get_map()
+
+
     with logging_redirect_tqdm():
         with tqdm(total=total_dodges) as pbar:
-            while memory.main.get_map() != 256:
+            while not memory.main.get_map() in [256,263]:
                 if memory.main.user_control():
+                    if not travel_on:
+                        travel_on = True
+                        if memory.main.get_actor_coords(actor_index=0) != new_position:
+                            # travel_distance += p2p_distance(last_position,new_position)
+                            last_position = memory.main.get_actor_coords(actor_index=0)
+                            logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+                    new_position = memory.main.get_actor_coords(actor_index=0)
+
                     # Lightning dodging
                     if memory.main.dodge_lightning(game_vars.get_l_strike()):
                         game_vars.set_l_strike(memory.main.l_strike_count())
@@ -101,12 +126,25 @@ def south_pathing():
                     # General pathing
                     elif memory.main.user_control():
                         if pathing.set_movement(ThunderPlainsSouth.execute(checkpoint)):
+                            travel_distance += p2p_distance(last_position,new_position)
+                            last_position = new_position
+                            logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
                             checkpoint += 1
-                            logger.debug(f"Checkpoint {checkpoint}")
                             if checkpoint == 34:
                                 write_big_text(f"Dodging {memory.main.l_strike_count()}/{total_dodges}")
                 else:
                     FFXC.set_neutral()
+                    if travel_on:
+                        travel_on = False
+                        travel_distance += p2p_distance(last_position,new_position)
+                        last_position = new_position
+                        logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
+                    
+                    if last_map != memory.main.get_map():
+                        logger.warning(f"Map change. Distance for last map: {travel_distance}")
+                        travel_distance = 0
+                        last_map = memory.main.get_map()
+
                     if (
                         memory.main.diag_skip_possible()
                         and not memory.main.battle_active()
@@ -123,19 +161,24 @@ def south_pathing():
                         xbox.tap_b()
                     elif memory.main.game_over():
                         return 999
-
+    
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     memory.main.await_control()
-    logger.warning("Outside agency")
-    while not pathing.set_movement([-73, 14]):
-        if memory.main.diag_skip_possible() and not game_vars.story_mode():
-            xbox.menu_b()
-    while not pathing.set_movement([-83, 29]):
-        if memory.main.diag_skip_possible() and not game_vars.story_mode():
-            xbox.menu_b()
-    while not memory.main.get_map() == 263:
-        FFXC.set_movement(-1, 1)
-        if memory.main.diag_skip_possible() and not game_vars.story_mode():
-            xbox.menu_b()
+
+    if memory.main.get_map() == 256:
+        logger.info("Outside agency")
+        while not pathing.set_movement([-73, 14]):
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.menu_b()
+        while not pathing.set_movement([-83, 29]):
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.menu_b()
+        while not memory.main.get_map() == 263:
+            FFXC.set_movement(-1, 1)
+            if memory.main.diag_skip_possible() and not game_vars.story_mode():
+                xbox.menu_b()
+    logger.warning("Inside agency")
     FFXC.set_neutral()
     # menu.auto_sort_equipment()
     return battle_count
@@ -365,10 +408,26 @@ def north_pathing(battle_count: int):
     l_strike_count = memory.main.l_strike_count()
     lunar_slot = memory.main.get_item_slot(56) != 255
     speed_count = check_speed()
+    
+    travel_distance = 0
+    last_position = memory.main.get_actor_coords(actor_index=0)
+    new_position = last_position
+    travel_on = False
+    last_map = memory.main.get_map()
+    last_story = memory.main.get_story_progress()
 
     checkpoint = 0
     while memory.main.get_map() != 110:
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_actor_coords(actor_index=0) != new_position:
+                    # travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_actor_coords(actor_index=0)
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_actor_coords(actor_index=0)
+            
             # Lightning dodging
             if memory.main.dodge_lightning(l_strike_count):
                 logger.debug("Dodge")
@@ -389,12 +448,27 @@ def north_pathing(battle_count: int):
                 
 
             # General pathing
-            elif memory.main.user_control():
-                if pathing.set_movement(ThunderPlainsNorth.execute(checkpoint)):
-                    checkpoint += 1
-                    logger.debug(f"Checkpoint {checkpoint}")
+            elif pathing.set_movement(ThunderPlainsNorth.execute(checkpoint)):
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
+                checkpoint += 1
         else:
             FFXC.set_neutral()
+            if travel_on:
+                travel_on = False
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
+            
+            if last_story != memory.main.get_story_progress():
+                logger.warning(f"Map/Story change. Distance for last map: {travel_distance}")
+                memory.main.await_control()
+                last_story = memory.main.get_story_progress()
+                travel_distance = 0
+                new_position = memory.main.get_actor_coords(actor_index=0)
+                last_position = new_position
+            
             if memory.main.diag_skip_possible() and not memory.main.battle_active() and not game_vars.story_mode():
                 xbox.menu_b()
             if memory.main.battle_active():
@@ -409,6 +483,8 @@ def north_pathing(battle_count: int):
                 return False
 
     FFXC.set_neutral()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     split_timer()
     memory.main.await_control()
     logger.info("Thunder Plains North complete. Moving to the Macalania save sphere.")

@@ -76,9 +76,7 @@ def arrival(rikku_charged):
 
     logger.info("Arriving at Macalania Woods")
     memory.main.click_to_control()
-    if ml_heals and 0 in heal_array:
-        logger.warning("aVIna deciding if we need to heal.")
-        battle.main.heal_up(full_menu_close=False)
+    battle.main.heal_up(full_menu_close=False)
     memory.main.update_formation(Tidus, Rikku, Auron)
     memory.main.close_menu()
 
@@ -368,7 +366,7 @@ def lake():
     if memory.main.get_speed() >= 5:
         memory.main.update_formation(Tidus, Kimahri, Lulu, full_menu_close=False)
     else:
-        memory.main.update_formation(Yuna, Wakka, Rikku, full_menu_close=False)
+        memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
     
     menu.m_lake_grid()
     memory.main.await_control()
@@ -400,7 +398,7 @@ def lake():
                 if memory.main.get_speed() >= 5:
                     memory.main.update_formation(Tidus, Kimahri, Lulu)
                 else:
-                    memory.main.update_formation(Yuna, Wakka, Rikku)
+                    memory.main.update_formation(Tidus, Yuna, Rikku)
                 logger.warning("LOW SPEED SPHERES!!! End")
             elif memory.main.battle_active() and memory.main.get_encounter_id() != 194:
                 battle.main.flee_all()

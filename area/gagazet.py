@@ -4,6 +4,7 @@ import battle.boss
 import battle.main
 import logs
 import memory.main
+from memory.main import p2p_distance
 import menu
 import pathing
 import rng_track
@@ -26,14 +27,6 @@ from paths import (
 )
 from players import Auron, CurrentPlayer, Kimahri, Rikku, Tidus, Wakka, Yuna
 from area.ne_armor import next_green
-from area.chocobos import (
-    all_races, 
-    upgrade_mirror, 
-    to_remiem,
-    remiem_races,
-    leave_temple,
-    upgrade_mirror
-)
 from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
@@ -58,19 +51,8 @@ def check_gems():
 
 def calm_lands(checkpoint = 0, plat_second_pass=False):
     memory.main.await_control()
-
-    # # This just for testing.
-    # paths, best = rng_track.purifico_to_nea(
-    #     stage=2,
-    #     report=False
-    # )
-    # while paths != [2,0,1,0]:
-    #     memory.main.advance_rng_10()
-    #     paths, best = rng_track.purifico_to_nea(
-    #         stage=2,
-    #         report=False
-    #     )
-    #     logger.debug(paths)
+    logger.warning(f"STORY: {memory.main.get_story_progress()}")
+    # memory.main.wait_frames(2000)
 
     # Start by getting away from the save sphere
     if memory.main.get_map() == 329:
@@ -96,30 +78,47 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
         checkpoint = 0
     calm_report()
 
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+    new_position = last_position
+    travel_on = False
+    last_map = memory.main.get_map()
+
     dest_map = 279
     if (game_vars.nemesis() or game_vars.platinum()) and checkpoint <= 2:
         dest_map = 307
     while memory.main.get_map() != dest_map:
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    # travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
+
             # This accounts for the cutscene on entrance to calm lands.
             if checkpoint < 2 and memory.main.get_coords()[0] < 450:
                 checkpoint = 2
 
             if game_vars.nemesis() or game_vars.platinum():
                 if pathing.set_movement(CalmLandsNemesis.execute(checkpoint)):
-                    checkpoint += 1
+                    logger.debug(f"Reached Checkpoint {checkpoint}")
                     if checkpoint == 17:
                         if check_gems() < 2 or memory.main.get_yuna_slvl() < needed_levels:
-                            checkpoint -= 1
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
                         elif defender_x_drop and memory.main.next_chance_rng_10() != 0:
-                            checkpoint -= 1
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
-                    logger.debug(f"Checkpoint {checkpoint}")
+                    else:
+                        checkpoint += 1
             else:
                 if pathing.set_movement(CalmLands.execute(checkpoint)):
+                    travel_distance += p2p_distance(last_position,new_position)
+                    last_position = new_position
+                    logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
                     checkpoint += 1
                     if checkpoint == 17:
                         if check_gems() < 2:
@@ -140,6 +139,17 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                     logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
+            if travel_on:
+                travel_on = False
+                if memory.main.get_story_progress() != 2385:
+                    travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
+            
+            if last_map != memory.main.get_map():
+                logger.warning(f"Map change. Distance for last map: {travel_distance}")
+                travel_distance = 0
+                last_map = memory.main.get_map()
             if memory.main.battle_active():
                 while not memory.main.turn_ready() and not memory.main.game_over():
                     pass
@@ -165,6 +175,8 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.menu_b()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
             
 
 def calm_report():
@@ -262,34 +274,36 @@ def to_the_ronso(checkpoint: int = 2):
                 xbox.tap_confirm()
 
 
+def climb_check_rikku():
+    if memory.main.overdrive_state()[6] == 100 or memory.main.get_item_slot(39) != 255:
+        return False
+    # At some point, we should look ahead and see if there is a good encounter.
+    # For now, keep the logic simple.
+    return True
+
+def climb_check_yuna():
+    if game_vars.story_mode():
+        return True
+    if memory.main.get_yuna_slvl() < 4:
+        return True
+    return False
+
+
 def gagazet_climb(checkpoint: int = 0):
     # Should appear on the map just before the Ronso hymn
     write_big_text("")
-    nea_equipped_start = True  # Do I need this?
-    end_ver = game_vars.end_game_version()
-    logger.debug(f"Grid version: {end_ver}")
-    logs.write_stats("B&Y Return spheres:")
-    if end_ver == 4:
-        logs.write_stats("4")
-    elif end_ver == 3:
-        logs.write_stats("0")
-    else:
-        logs.write_stats("2")
-    memory.main.await_control()
-    delay_grid = True
-    logger.warning(f"Check Yuna Slvl: {memory.main.get_slvl_yuna()}")
-    if memory.main.get_slvl_yuna() >= 4:
-        delay_grid = False
-        menu.after_ronso()
-    elif game_vars.story_mode():
-        nea_equipped_start = False
-    else:
-        nea_equipped_start = False
+    talk_wantz = bool(game_vars.nemesis() or game_vars.story_mode() or game_vars.platinum())
+    braska_sphere = game_vars.platinum()
+    charge_rikku = climb_check_rikku()
 
+    # yuna_needs_levels = bool(memory.main.get_slvl_yuna() <= 3)
+    yuna_needs_levels = climb_check_yuna()
+    nea_equipped_start = not(charge_rikku or yuna_needs_levels)
+
+    memory.main.await_control()
     logger.info("Gagazet path section")
-    talk_wantz = False
-    if game_vars.nemesis() or game_vars.story_mode() or game_vars.platinum():
-        talk_wantz = True
+    if not yuna_needs_levels:
+        menu.after_ronso()
 
     if nea_equipped_start:
         if game_vars.ne_armor() < 10:
@@ -297,18 +311,16 @@ def gagazet_climb(checkpoint: int = 0):
                 char_num=game_vars.ne_armor(), ability_num=32797
             ):
                 menu.equip_armor(character=game_vars.ne_armor(), ability=32797)
+    elif game_vars.ne_armor() < 10 and memory.main.equipped_armor_has_ability(
+        char_num=game_vars.ne_armor(), ability_num=32797
+    ):
+        menu.equip_armor(character=game_vars.ne_armor(), ability=99)
+    if not charge_rikku:
+        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=True)
     else:
-        if memory.main.overdrive_state()[6] == 100 or memory.main.get_item_slot(39) != 255:
-            memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
-        else:
-            memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-        if memory.main.equipped_armor_has_ability(
-            char_num=game_vars.ne_armor(), ability_num=32797
-        ):
-            menu.equip_armor(character=game_vars.ne_armor(), ability=99)
-
-    memory.main.close_menu()
-    braska_sphere = game_vars.platinum()
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
+    
+    # Path to the summit starts here.
     while memory.main.get_map() != 285:
         if memory.main.user_control():
             if checkpoint == 10 and braska_sphere:
@@ -350,53 +362,35 @@ def gagazet_climb(checkpoint: int = 0):
             if memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.battle_active():
-                # Charge Rikku until full, otherwise flee all
-                if delay_grid:
-                    battle.main.calm_impulse()
-                    memory.main.click_to_control()
-                    if memory.main.overdrive_state()[6] == 100:
-                        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
-                    else:
-                        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
-                    if memory.main.get_slvl_yuna() >= 4:
-                        menu.after_ronso()
-                        delay_grid = False
-                        if (
-                            memory.main.overdrive_state_2()[6] == 100
-                            and game_vars.ne_armor() != 255
-                        ):
-                            if not game_vars.story_mode():
-                                menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                    else:
-                        memory.main.close_menu()
-                elif game_vars.story_mode() and memory.main.get_slvl_yuna() < 10:
-                    # In story mode, we need extra levels to avoid soft lock later.
-                    battle.main.calm_impulse()
-                    memory.main.click_to_control()
-                    memory.main.update_formation(Tidus, Rikku, Auron)
-                    if memory.main.get_slvl_yuna() >= 10:
-                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                elif memory.main.overdrive_state()[6] == 100 or memory.main.get_item_slot(39) < 100:
+                # Charge Rikku until full, impulse for Yuna levels, otherwise flee all
+                if charge_rikku:
                     # Silence grenade negates the need for overdrive here.
-                    battle.main.flee_all()
-                    memory.main.click_to_control()
-                    if (
-                        memory.main.overdrive_state_2()[6] == 100
-                         or memory.main.get_item_slot(39) < 100
-                    ) and game_vars.ne_armor() != 255:
-                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
-                else:
                     battle.main.gagazet_path()
                     memory.main.click_to_control()
-                    if memory.main.overdrive_state()[6] == 100:
-                        memory.main.update_formation(Tidus, Kimahri, Auron)
+                    if memory.main.overdrive_state_2()[6] == 100:
+                        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
+                        if not yuna_needs_levels:
+                            menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                        charge_rikku=False
                     else:
                         memory.main.update_formation(Tidus, Rikku, Auron)
-                    if (
-                        memory.main.overdrive_state_2()[6] == 100
-                         or memory.main.get_item_slot(39) < 100
-                    ) and game_vars.ne_armor() != 255:
+                elif yuna_needs_levels:
+                    battle.main.calm_impulse()
+                    memory.main.click_to_control()
+                    yuna_needs_levels = climb_check_yuna()
+                    if not yuna_needs_levels:
+                        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
+                        menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D, full_menu_close=False)
+                        menu.after_ronso()
+                    else:
+                        memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=True)
+                else:
+                    battle.main.flee_all()
+                    memory.main.click_to_control()
+                    memory.main.update_formation(Tidus, Kimahri, Auron, full_menu_close=False)
+                    if not charge_rikku and not yuna_needs_levels and game_vars.ne_armor() != 255:
                         menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+                    memory.main.close_menu()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
     logger.debug("Should now be on the map with Seymour Flux.")

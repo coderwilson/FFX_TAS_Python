@@ -217,6 +217,11 @@ def check_moving_actors():
         if all_coords[i] != get_actor_coords(i):  # Compare stored coords to current coords
             logger.debug(f"Actor movement {i}: {get_actor_id(i)}, {all_coords[i]}")
 
+def get_frame():
+    global base_value
+    key = base_value + 0x0088FDD8
+    return process.read_bytes(key, 4)
+
 def wait_frames(frames: int):
     frames = max(round(frames), 1)
     global base_value
@@ -296,9 +301,11 @@ def battle_active() -> bool:
     global base_value
     key = base_value + 0x00D2A8E0
     value = process.read_bytes(key, 1)
-    if value == 0:
-        return False
-    return True
+    if value == 1:
+        if diag_skip_possible() and not turn_ready():
+            xbox.tap_confirm()
+        return True
+    return False
 
 
 def battle_wrap_up_active():
@@ -491,8 +498,9 @@ def battle_target_id():
 
 
 def battle_line_target():
+    # 0 for friendly line
+    # 1 for enemy line
     return read_val(0x00F3CA42)
-
 
 def enemy_targetted():
     return read_val(0x00F3D1C0)
@@ -575,6 +583,8 @@ def click_to_control_smart(allow_story_mode:bool=False):
                     xbox.tap_b()
                 elif menu_open():
                     xbox.tap_b()
+                if get_story_progress() > 30 and game_over():
+                    return
 
                 if menu_open():
                     pbar.set_description("Post-battle menu open")
@@ -679,6 +689,7 @@ def get_coords():
     return [x, y]
 
 
+'''
 def distance_to_encounter(danger_val:int = 35, rng_advances = 0):
     # Defaults to 35 for Clasko skip & thunder plains.
     grace_period = int(danger_val // 2)
@@ -688,11 +699,73 @@ def distance_to_encounter(danger_val:int = 35, rng_advances = 0):
     for i in range(400):
         ptr = i+1+rng_advances
         check_rng = (rng_array[ptr] & 0x7FFFFFFF) & 255
-        check_value = (i) * 256 // threat_mod
+        check_value = (i * 256) // threat_mod
         if check_rng < check_value:
-            return ((i+grace_period) * 10,i+1)
+            return ((i+grace_period) * 10,i)
     return (999,0)
+'''
 
+def distance_to_encounter(danger_val=35, rng_advances=0):
+    grace_period = danger_val // 2
+    threat_mod = danger_val * 4
+    
+    # Get the array. 
+    # Let's assume index 0 is the seed the game starts with BEFORE walking.
+    rng_array = rng_array_from_index(index=0, array_len=500 + rng_advances)
+    result_array = []
+    
+    for i in range(400):
+        # If the game rolls a new value FOR the check, it uses the NEXT seed.
+        # This matches i=0 checking the first new seed after the current one.
+        ptr = i + 1 + rng_advances 
+        
+        # Pull the value and perform the mask
+        raw_val = rng_array[ptr]
+        check_rng = raw_val & 255
+        
+        check_value = ((i+1) * 256) // threat_mod
+        
+        if check_rng < check_value:
+            return ((i + grace_period+1) * 10, i + 1)
+            
+    return (999, 0)
+
+def calculate_encounter_count(segments, danger_val=35, initial_ptr=0):
+    """
+    Calculates how many encounters occur across multiple map segments.
+    
+    :param segments: List of distances traveled in each zone/segment [556.6, 1514.81]
+    :param danger_val: The zone's danger value
+    :param initial_ptr: The starting RNG index
+    :return: Total encounters triggered and the final RNG pointer
+    """
+    current_ptr = initial_ptr
+    total_encounters = 0
+    grace_dist = (danger_val // 2) * 10
+    
+    for segment_dist in segments:
+        remaining_dist = segment_dist
+        
+        while True:
+            # Calculate distance to NEXT encounter starting from current ptr
+            # Using your existing distance_to_encounter logic
+            enc_dist, ptr_advance = distance_to_encounter(danger_val, current_ptr)
+            
+            if enc_dist <= remaining_dist:
+                # An encounter triggers!
+                total_encounters += 1
+                remaining_dist -= enc_dist
+                current_ptr += ptr_advance
+                # After an encounter, FFX usually resets the grace period logic 
+                # within the same map, which your 'distance_to_encounter' function handles.
+            else:
+                if remaining_dist > grace_dist:
+                    current_ptr += int((remaining_dist - grace_dist) // 10)
+                # No more encounters in this segment. 
+                # We zone out, so the 'remaining_dist' is lost.
+                break
+                
+    return total_encounters, current_ptr
 
 def ammes_fix(actor_index: int = 0):
     global process
@@ -1331,6 +1404,11 @@ def get_item_count_slot(item_slot) -> int:
     global base_value
     return process.read_bytes(base_value + 0x00D30B5C + item_slot, 1)
 
+def get_item_count(item_num) -> int:
+    slot = get_item_slot(item_num)
+    if slot == 255:
+        return 0
+    return get_item_count_slot(slot)
 
 def set_item_count(item_num, quantity) -> int:
     if not game_vars.check_plat_test_mode():
@@ -2323,6 +2401,14 @@ def distance(actor_index: int, alt_index:int = 0):
     except:
         return 0
 
+def p2p_distance(coords1,coords2):
+    # logger.warning(f"coords1: {coords1}")
+    # logger.warning(f"coords2: {coords2}")
+    return sqrt(
+        ((coords1[0] - coords2[0]) ** 2)
+        + ((coords1[1] - coords2[1]) ** 2)
+    )
+
 
 def actor_index(actor_num: int = 41):
     # If non-unique, choose the closest one.
@@ -2805,7 +2891,55 @@ def set_rng_2():
 # ------------------------------
 # Blitzball!
 
+class BlitzActor:
+    def __init__(self, player_num: int):
+        self.num = player_num
+        self.position = [0, 0]
+        self.is_guarded = False  # Derived during state update
+        self.hp = 0
+        self.is_aggro = False
+        self.is_engaged = False
+        self.radius = 0
+        self.actor_array_offset = 2
 
+    def update_coords(self):
+        # Using the +2 offset from your legacy logic internally
+        self.find_actor_offset()
+        self.position = get_actor_coords(self.num + self.actor_array_offset)
+        self.update_char_radius()
+        # if self.num == 0:
+        #     logger.debug(f"Coords updated: {self.position}")
+    
+    def find_actor_offset(self):
+        try:
+            for i in range(10):
+                if get_actor_id(i) == 1:
+                    self.actor_array_offset = i
+                    # logger.debug(f"== Tidus is in position {self.actor_array_offset}")
+        except:
+            pass
+    
+    def update_char_radius(self):
+        try:
+            result = sqrt(
+                (self.position[0] * self.position[0])
+                + (self.position[1] * self.position[1])
+            )
+        except Exception:
+            logger.error("Math error, using default value.")
+            result = 0
+        self.radius = result
+
+
+    def update_stats(self):
+        """Refresh HP and Aggro from memory."""
+        self.hp = blitz_hp(self.num)
+        # Aggro only applies to opponents (6-10)
+        if 6 <= self.num <= 10:
+            self.is_aggro = get_blitz_aggro(self.num)
+        else:
+            self.is_aggro = False
+'''
 class BlitzActor:
     def __init__(self, player_num: int):
         self.num = player_num
@@ -2825,7 +2959,7 @@ class BlitzActor:
 
     def aggro(self):
         return get_blitz_aggro(self.num)
-
+'''
 
 def get_blitz_aggro(player_index: int = 99):
     global base_value
@@ -4709,7 +4843,7 @@ def ambushes(advances: int = 12, extra: int = 0):
     # https://grayfox96.github.io/FFX-Info/rng/encounters
     ret_array = []
     home_check = 99
-    rng_array = rng_array_from_index(index=1, array_len=(advances * 2) + 1 + extra)
+    rng_array = rng_array_from_index(index=1, array_len=(advances * 2) + 2 + extra)
     for i in range(advances):
         rng_val = rng_array[(2 * i) + 2 + extra] & 255
         if rng_val >= 223:
@@ -4731,6 +4865,15 @@ def ambushes(advances: int = 12, extra: int = 0):
     if get_map() == 280:
         ret_array.append(home_check)
     return ret_array
+
+
+def ambush_count(battles:int=0,extra:int=0):
+    ambush_array = ambushes(advances=battles,extra=extra)
+    count = 0
+    for i in range(battles):
+        if (i+1) in ambush_array:
+            count += 1
+    return count
 
 
 def rikku_mix_damage() -> List[int]:

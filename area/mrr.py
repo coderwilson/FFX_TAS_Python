@@ -5,6 +5,7 @@ import battle.boss
 import battle.main
 import logs
 import memory.main
+from memory.main import p2p_distance, calculate_encounter_count
 import menu
 import pathing
 import save_sphere
@@ -13,30 +14,91 @@ import vars
 import xbox
 from paths import MRRBattleSite, MRRBattleSiteAftermath, MRRMain, MRRStart
 from players import Auron, Tidus, Wakka
+from json_ai_files.write_seed import write_big_text
+from area.dream_zan import split_timer
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
 
 FFXC = xbox.controller_handle()
 
-
 def arrival():
-    logger.info("Arrival at MRR")
-    memory.main.click_to_control()
-    memory.main.close_menu()
+    logger.info("Save sphere just before MRR")
+
     ptr = 0
     total_dist = 0
     dist_array = []
     for i in range(10):
         temp_dist, temp_ptr = memory.main.distance_to_encounter(danger_val=35, rng_advances=ptr)
-        dist_array.append(temp_dist)
         total_dist += temp_dist
+        dist_array.append(total_dist)
         ptr += temp_ptr
     logger.manip(f"Encounter distances: {dist_array}")
+
+    segments = [556.6, 1514.81]
+    enc_count, _ = calculate_encounter_count(segments, danger_val=35, initial_ptr=0)
+    str_1 = f"We are expecting {enc_count} encounters in MRR."
+    logger.info(str_1)
+    count_noflip = memory.main.ambush_count(battles=enc_count,extra=0)
+    count_flip = memory.main.ambush_count(battles=enc_count,extra=1)
+    str_2 = f"Ambush counts: if {count_noflip} > {count_flip} => flip!"
+    logger.info(str_2)
+    write_big_text(str_1 + "\n" + str_2)
+
+    if count_flip < count_noflip:
+        reverse_battle_rng(realign=False)
+
+    while memory.main.get_map() != 79:
+        if memory.main.user_control():
+            my_coords = memory.main.get_coords()
+            # logger.debug(f"{memory.main.get_story_progress()} | {my_coords}")
+            if my_coords[0] > -30:
+                pathing.set_movement([-50,184])
+            elif memory.main.get_story_progress() == 777:
+                if memory.main.diag_progress_flag() != 30:
+                    pathing.set_movement([-50,my_coords[1]+40])
+                else:
+                    pathing.set_movement([-50,my_coords[1]-40])
+            else:
+                pathing.set_movement([-50,my_coords[1]+40])
+        else:
+            FFXC.set_neutral()
+            if not game_vars.story_mode():
+                xbox.tap_confirm()
+    split_timer()
+    write_big_text("")
+
+    memory.main.click_to_control()
+    memory.main.close_menu()
+    logger.info("We are NOW at MRR.")
+    memory.main.wait_frames(9)  # IDK this seems to work.
+
+    ptr = 0
+    total_dist = 0
+    dist_array = []
+    for i in range(10):
+        temp_dist, temp_ptr = memory.main.distance_to_encounter(danger_val=35, rng_advances=ptr)
+        total_dist += temp_dist
+        dist_array.append(total_dist)
+        ptr += temp_ptr
+    logger.manip(f"Encounter distances: {dist_array}")
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+    new_position = last_position
+    travel_on = False
 
     checkpoint = 0
     while memory.main.get_map() != 92:
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
+
             if checkpoint == 1 and (game_vars.story_mode() or game_vars.csr()):
                 logger.debug("CSR, skipping forward")
                 checkpoint = 4
@@ -45,15 +107,6 @@ def arrival():
                 checkpoint = 7
             elif checkpoint == 6 and not game_vars.csr():
                 return 1  # Indicates we are attempting Terra skip.
-                '''
-                skip_prep()
-                if attempt_skip():
-                    advance_to_aftermath()
-                    game_vars.mrr_skip_set(1)
-                    return 1
-                else:
-                    return 2
-                '''
             elif checkpoint == 3:
                 FFXC.set_movement(-1, 0)
                 memory.main.wait_frames(30 * 0.7)
@@ -93,28 +146,40 @@ def arrival():
                 memory.main.wait_frames(3)
                 #game_vars.mrr_skip_set(1)
                 return 1
-                checkpoint += 1
             elif pathing.set_movement(MRRStart.execute(checkpoint)):
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
                 checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
+            if travel_on:
+                travel_on = False
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
             if screen.battle_screen():
                 battle.main.flee_all()
                 if memory.main.game_over():
                     return 999
                 memory.main.click_to_control()
+                if memory.main.game_over():
+                    return 999
                 if memory.main.get_hp()[0] < 520:
                     battle.main.heal_up(full_menu_close=False)
                 elif 1 in memory.main.ambushes():
                     battle.main.heal_up(full_menu_close=False)
                 memory.main.update_formation(Tidus, Wakka, Auron)
                 memory.main.close_menu()
+            elif memory.main.game_over():
+                return 999
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
     FFXC.set_neutral()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     return 1
 
 
@@ -403,3 +468,29 @@ def child_dance():
     while memory.main.get_map() == 134:
         if pathing.set_movement(path[position%4]):
             position += 1
+
+
+def reverse_battle_rng(realign=True):
+    FFXC.set_neutral()
+    memory.main.check_near_actors()
+    pathing.approach_actor_by_id(actor_id=20496)
+    FFXC.set_neutral()
+    memory.main.wait_frames(63)
+
+    # Start battle
+    xbox.tap_down()
+    xbox.tap_b()
+    xbox.tap_b()
+    xbox.click_to_battle()
+
+    # Escape and back out of menu
+    battle.main.flee_all()
+    while not memory.main.user_control():
+        xbox.tap_a()
+
+    if realign:
+        # Back to alginment with the path
+        while not pathing.set_movement([-69,156]):
+            pass
+
+    # Return back to the parent process.

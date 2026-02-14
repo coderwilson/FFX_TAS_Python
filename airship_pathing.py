@@ -19,7 +19,7 @@ def air_ship_path(version, checkpoint:int = 0):
     memory.main.click_to_control()
     distiller_purchase = False
     mana_need = 7
-    power_need = 24  # 28 minus four per the guide.
+    power_need = 28
     speed_need = 10
     if game_vars.nemesis() or game_vars.platinum():
         power_need += 6

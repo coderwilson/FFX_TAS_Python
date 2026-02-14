@@ -136,6 +136,8 @@ def to_hidden_cave():
                 #     battle.main.flee_all()
                 prep_battles += 1
                 game_vars.ne_battles_increment()
+                if memory.main.game_over():
+                    return False
                 memory.main.update_formation(Tidus, Rikku, Auron)
                 save_sphere.touch_and_go()
                 nea_possible_check, next_drop = rng_track.final_nea_check()
@@ -225,6 +227,8 @@ def drop_hunt():
                     battle.main.ghost_kill()
                 else:
                     battle.main.flee_all()
+                if memory.main.game_over():
+                    return False
                 memory.main.click_to_control_3()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=False)
@@ -245,6 +249,7 @@ def drop_hunt():
     logs.write_stats(pre_ghost_battles)
     logs.write_stats("NEA char:")
     logs.write_stats(game_vars.ne_armor())
+    return True
 
 
 def return_to_gagazet():

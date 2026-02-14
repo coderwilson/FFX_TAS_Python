@@ -1834,7 +1834,7 @@ def thunder_plains(section, battle_count: int = 0):
                 buddy_swap(Rikku)
                 use_item(use_grenade_slot, "none")
             flee_all()
-    elif (
+    elif memory.main.next_steal_rare() or (
         not game_vars.get_blitz_win() and not petrify_slot and enc_id in [153, 154, 163]
     ):
         logger.debug("Grabbing petrify grenade. Blitz Loss only strat.")
@@ -1937,7 +1937,7 @@ def m_woods():
                     elif Rikku.is_turn():
                         if encounter_id == 175 and need_arctic_wind:
                             logger.debug("Marker 2")
-                            steal()
+                            steal_new()
                         elif encounter_id == 172 and need_fish_scale:
                             logger.debug("Marker 3")
                             steal_down()
@@ -1972,7 +1972,7 @@ def m_woods():
                 logger.debug("Looking ahead, manip for non-crit steal")
                 if not Rikku.active():
                     buddy_swap(Rikku)
-                    _steal()
+                    steal_new()
                 else:
                     flee_all()
             else:
@@ -2146,13 +2146,6 @@ def seymour_guado_blitz_win():
                 elif tidus_turns == 4 and anima_targets[2] == 0:
                     logger.debug("Swap Wakka")
                     buddy_swap(Wakka)
-                #elif animahits + animamiss == swap_timing-1 and anima_targets[3] == 0 and (
-                #    (
-                #        animamiss > 0 and not missbackup
-                #    ) or not next_hit
-                #):
-                #    buddy_swap(Lulu)
-                #    animamiss += 1
                 elif who_goes_first_after_current_turn([0,20,21,22,23]) >= 20 and animahits in [2,3] and not next_hit:
                     logger.debug("Next attack warning")
                     if rng_track.enemy_target_predictions(chars=2)[0] == 0 or rng_track.enemy_target_predictions()[0] == 0:
@@ -2211,6 +2204,9 @@ def seymour_guado_blitz_win():
                     elif rikkuposition >= 3:
                         buddy_swap(Rikku)
                 elif kimahriturns == 0:
+                    # if memory.main.get_item_count(49) >= 2:
+                    #     use_item_new(49)
+                    # else:
                     Kimahri.overdrive(od_name="stone breath", od_array=od_array)
                 elif kimahriturns == 1:
                     CurrentPlayer().defend()
@@ -2359,10 +2355,13 @@ def seymour_guado_blitz_win():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
-    if memory.main.game_over():
-        logger.info(f"Seymour section fail! Resetting! (B)")
-        return False
-    split_timer()
+    if memory.main.get_enemy_current_hp()[1] == 0:
+        split_timer()
+    while not memory.main.battle_wrap_up_active():
+        if memory.main.game_over():
+            logger.info(f"Seymour section fail! Resetting! (B)")
+            return False
+    
     wrap_up()
     logger.info(f"Seymour section complete! (B)")
     return True
@@ -2478,7 +2477,10 @@ def seymour_guado_blitz_loss():
                     else:
                         CurrentPlayer().defend()
                 elif kimahriturns == 0:
-                    Kimahri.overdrive(od_name="stone breath", od_array=od_array)
+                    if memory.main.get_item_count(49) >= 2:
+                        use_item_new(49)
+                    else:
+                        Kimahri.overdrive(od_name="stone breath", od_array=od_array)
                 elif thrown_items < 2:
                     item_slot = get_anima_item_slot()
                     if item_slot != 255:
@@ -2566,6 +2568,7 @@ def seymour_guado_blitz_loss():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
+    memory.main.wait_frames(3)
     if memory.main.game_over():
         logger.info(f"Seymour section fail! Resetting! (C)")
         return False
@@ -2658,37 +2661,40 @@ def fullheal(target: int, direction: str):
 
 # Process written by CrimsonInferno
 def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
-    logger.debug("Wendigo Res/Heal function")
-    party_hp = memory.main.get_battle_hp()
-    if screen.faint_check() == 2:
-        logger.debug("2 Characters are dead")
-        if memory.main.get_throw_items_slot(7) < 255:
-            revive_all()
-        elif memory.main.get_throw_items_slot(6) < 255:
-            revive_target(target=0)
-    # If just Tidus is dead revive him
-    elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
-        logger.debug("Reviving tidus")
-        revive()
-    elif use_power_break:
-        logger.debug("Swapping to Auron to Power Break")
-        buddy_swap(Auron)
-    # If tidus is less than max HP heal him
-    elif party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
-        logger.debug("Tidus need healing")
-        if fullheal(target=0, direction="l") == 0:
-            if screen.faint_check():
-                logger.debug("No healing available so reviving instead")
-                if memory.main.get_throw_items_slot(6) < 255:
-                    revive()
-                elif memory.main.get_throw_items_slot(7) < 255:
-                    revive_all()
-            else:
-                CurrentPlayer().defend()
-    elif screen.faint_check():
-        logger.debug("Reviving non-Tidus")
-        revive()
-    else:
+    try:
+        logger.debug("Wendigo Res/Heal function")
+        party_hp = memory.main.get_battle_hp()
+        if screen.faint_check() == 2:
+            logger.debug("2 Characters are dead")
+            if memory.main.get_throw_items_slot(7) < 255:
+                revive_all()
+            elif memory.main.get_throw_items_slot(6) < 255:
+                revive_target(target=0)
+        # If just Tidus is dead revive him
+        elif party_hp[memory.main.get_battle_char_slot(0)] == 0:
+            logger.debug("Reviving tidus")
+            revive()
+        elif use_power_break:
+            logger.debug("Swapping to Auron to Power Break")
+            buddy_swap(Auron)
+        # If tidus is less than max HP heal him
+        elif party_hp[memory.main.get_battle_char_slot(0)] < tidus_max_hp:
+            logger.debug("Tidus need healing")
+            if fullheal(target=0, direction="l") == 0:
+                if screen.faint_check():
+                    logger.debug("No healing available so reviving instead")
+                    if memory.main.get_throw_items_slot(6) < 255:
+                        revive()
+                    elif memory.main.get_throw_items_slot(7) < 255:
+                        revive_all()
+                else:
+                    CurrentPlayer().defend()
+        elif screen.faint_check():
+            logger.debug("Reviving non-Tidus")
+            revive()
+        else:
+            return False
+    except:
         return False
 
     return True
@@ -3196,23 +3202,47 @@ def home_1():
         not game_vars.story_mode() and 
         (game_vars.platinum() or not game_vars.get_blitz_win())
     )
+    throw_petrify = bool(memory.main.get_item_count(49) >= 1)
+    petrify_turns = 0
     
     od_learns = 2
-    tidus_haste("none")
+    if not throw_petrify:
+        tidus_haste("none")
     while memory.main.battle_active():  # AKA end of battle screen
         if memory.main.turn_ready():
             if screen.faint_check() > 0:
                 revive()
             elif Tidus.is_turn():
-                CurrentPlayer().attack()
+                if throw_petrify:
+                    if petrify_turns == 0:
+                        Tidus.defend()
+                        petrify_turns += 1
+                    elif not Kimahri.active():
+                        buddy_swap(Kimahri)
+                    else:
+                        CurrentPlayer().defend()
+                else:
+                    CurrentPlayer().attack()
             elif Auron.is_turn() and memory.main.get_enemy_current_hp()[0] != 0:
                 CurrentPlayer().attack()
-            elif use_lancet and not Kimahri.active():
+            elif not Kimahri.active() and (
+                use_lancet or throw_petrify
+            ):
                 buddy_swap(Kimahri)  # Tidus for Kimahri
-            elif use_lancet and Kimahri.is_turn():
-                lancet_target(target=23, direction="d", post_steal=True)
-                use_lancet = False
-                od_learns += 1
+            elif Kimahri.is_turn():
+                if use_lancet:
+                    lancet_target(target=23, direction="d", post_steal=True)
+                    use_lancet = False
+                    od_learns += 1
+                elif throw_petrify:
+                    use_item_new(49)
+                    throw_petrify = False
+                elif not Tidus.active():
+                    buddy_swap(Tidus)
+                else:
+                    CurrentPlayer().defend()
+            elif not Tidus.active():
+                buddy_swap(Tidus)
             else:
                 CurrentPlayer().defend()
     logger.debug("Home 1 shows as fight complete.")
@@ -3842,6 +3872,10 @@ def mac_lake_recover():
     rikku_counter = 0
     tidus_counter = 0
     
+    if memory.main.battle_type() == 2:
+        # Any ambush is an immediate flee.
+        flee_all()  # Don't need this for speed spheres
+
     if get_encounter_id() == 177:
         # Eye, Flan, Wolf
         while memory.main.battle_active():
@@ -3955,20 +3989,15 @@ def one_eye(killer:str="any"):
 def gagazet_path():
     while not memory.main.turn_ready():
         pass
-    if get_encounter_id() == 337:
-        while memory.main.battle_active():
-            if memory.main.turn_ready():
-                if Rikku.is_turn():
-                    steal_right()
+    while memory.main.battle_active():
+        if memory.main.turn_ready():
+            if Rikku.is_turn():
+                if get_encounter_id() == 337:
+                    steal_new(target=21)
                 else:
-                    escape_one()
-    else:
-        while memory.main.battle_active():
-            if memory.main.turn_ready():
-                if Rikku.is_turn():
-                    steal()
-                else:
-                    escape_one()
+                    steal_new()
+            else:
+                escape_one()
     if game_vars.god_mode():
         rng_track.force_preempt()
 
@@ -4044,74 +4073,42 @@ def use_item(slot: int, direction="none", target=None, rikku_flee=False):
         memory.main.wait_frames(3)
     while memory.main.interior_battle_menu():
         xbox.tap_b()
-    if target != None:
-        last_target = memory.main.battle_target_id()
-        counter = 1
-        try:
-            logger.debug("Targetting based on character number")
-            if counter % 5 == 0:
-                if direction == "l":
-                    direction = "d"
-                else:
-                    direction = "l"
-            counter += 1
-            if target >= 20 and memory.main.get_enemy_current_hp()[target - 20] != 0:
-                direction = "l"
-                while memory.main.battle_target_id() != target:
-                    if memory.main.battle_target_id() < 20:
-                        xbox.tap_right()
-                        direction = "u"
-                    elif direction == "u":
-                        xbox.tap_up()
-                    else:
-                        xbox.tap_left()
-                    if memory.main.battle_target_id() == last_target:
-                        if direction == "u":
-                            direction = "l"
-                        else:
-                            direction = "u"
-                    last_target = memory.main.battle_target_id()
-            elif target < 20 and target != 0:
-                direction = "l"
-                while memory.main.battle_target_id() != target:
-                    if memory.main.battle_target_id() >= 20:
-                        xbox.tap_right()
-                        direction = "u"
-                    elif direction == "u":
-                        xbox.tap_up()
-                    else:
-                        xbox.tap_left()
-                    if memory.main.battle_target_id() == last_target:
-                        if direction == "u":
-                            direction = "l"
-                        else:
-                            direction = "u"
-                    last_target = memory.main.battle_target_id()
-            elif target == 0:
-                direction = "l"
-                while memory.main.battle_target_id() != 0:
-                    if memory.main.battle_target_id() >= 20:
-                        xbox.tap_right()
-                        direction = "u"
-                    elif direction == "u":
-                        xbox.tap_up()
-                    else:
-                        xbox.tap_left()
-                    if memory.main.battle_target_id() == last_target:
-                        if direction == "u":
-                            direction = "l"
-                        else:
-                            direction = "u"
-                    last_target = memory.main.battle_target_id()
-
+    if target is not None:
+        if target >= 20 and memory.main.get_enemy_current_hp()[target - 20] == 0:
             tap_targeting()
-        except Exception:
-            xbox.tap_b()
-            xbox.tap_b()
-            xbox.tap_b()
-            xbox.tap_b()
-            xbox.tap_b()
-            xbox.tap_b()
+        elif target <= 20 and not target in memory.main.get_active_battle_formation():
+            tap_targeting()
+        elif target <= 20 and memory.main.get_battle_hp()[memory.main.get_battle_char_slot(target)] == 0:
+            tap_targeting()
+        else:
+            last_line = memory.main.battle_line_target()
+            desired_line = 0 if target <= 20 else 1
+            orientation = 0
+            try:
+                while memory.main.battle_target_id() != target:
+                    logger.debug("Targetting based on character number")
+                    if orientation == 0:
+                        if last_line == desired_line:
+                            xbox.tap_right()
+                        else:
+                            xbox.tap_up()
+                    else:
+                        if last_line == desired_line:
+                            xbox.tap_up()
+                        else:
+                            xbox.tap_right()
+                    memory.main.wait_frames(2)
+                    if last_line != battle_line_target():
+                        orientation = (orientation + 1) %2
+                    last_line = memory.main.battle_line_target()
+                tap_targeting()
+            except Exception:
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
+                xbox.tap_b()
     elif direction == "none":
         logger.debug("No direction variation")
         tap_targeting()
@@ -5075,7 +5072,7 @@ def aim():
     tap_targeting()
 
 
-def _steal(direction=None, steal_position=0):
+def _steal(direction=None, steal_position=0,target:int=20):
     if not memory.main.main_battle_menu():
         while not memory.main.main_battle_menu():
             pass
@@ -5104,11 +5101,53 @@ def _steal(direction=None, steal_position=0):
         xbox.tap_right()
     elif direction == "left":
         xbox.tap_left()
+    elif target != 20:
+        direction = 'l'
+        if memory.main.get_enemy_current_hp()[target - 20] != 0:
+            while memory.main.battle_target_id() != target:
+                while memory.main.battle_target_id() != target:
+                    if direction == "l":
+                        if retry > 5:
+                            retry = 0
+                            logger.debug("Wrong battle line targeted.")
+                            xbox.tap_right()
+                            direction = "u"
+                            retry = 0
+                        else:
+                            xbox.tap_left()
+                    elif direction == "r":
+                        if retry > 5:
+                            retry = 0
+                            logger.debug("Wrong character targeted.")
+                            xbox.tap_left()
+                            direction = "d"
+                        else:
+                            xbox.tap_right()
+                    elif direction == "u":
+                        if retry > 5:
+                            retry = 0
+                            logger.debug("Wrong character targeted.")
+                            xbox.tap_down()
+                            direction = "l"
+                        else:
+                            xbox.tap_up()
+                    elif direction == "d":
+                        if retry > 5:
+                            retry = 0
+                            logger.debug("Wrong character targeted.")
+                            xbox.tap_up()
+                            direction = "r"
+                        else:
+                            xbox.tap_down()
+                    retry += 1
+                memory.main.wait_frames(1)
     logger.debug("Firing steal")
     tap_targeting()
 
 
-def steal_new(actor):
+def steal_new(actor:int=None,target=20):
+    if actor is None:
+        actor = CurrentPlayer().raw_id()
     logger.debug("Steal (new)")
     special_menu = memory.unlocks.get_unlocked_abilities_by_type(actor)['Special']
     # logger.warning(special_menu)
@@ -5126,7 +5165,7 @@ def steal_new(actor):
     elif get_encounter_id() in [276, 279, 289]:
         _steal("up", steal_position=steal_position)
     else:
-        _steal(steal_position=steal_position)
+        _steal(steal_position=steal_position, target=target)
 
 def shadow_gem_farm():
     screen.await_turn()
@@ -5198,49 +5237,41 @@ def use_item_new(item:int, target:int|None=None):
     while memory.main.interior_battle_menu():
         xbox.menu_b()
     
-        
-    # Target the appropriate ally.
-    direction = "l"
-    retry = 0
     # Only attack
     if target is not None:
+        xbox.tap_up()  # For testing
+        # memory.main.wait_frames(2)
+        last_line = memory.main.enemy_targetted()
+        desired_line = 0 if target <= 20 else 1
+        orientation = 0
+        logger.warning(f"Tar: {memory.main.battle_target_id()}/{target}")
+        logger.warning(f"Line: {last_line}/{desired_line} ({orientation})")
         while memory.main.battle_target_id() != target:
-            while memory.main.battle_target_id() != target:
-                if direction == "l":
-                    if retry > 5:
-                        retry = 0
-                        logger.debug("Wrong battle line targeted.")
+            try:
+                logger.debug("Targetting based on character number")
+                if orientation == 0:
+                    if last_line == desired_line:
                         xbox.tap_right()
-                        direction = "u"
-                        retry = 0
-                    else:
-                        xbox.tap_left()
-                elif direction == "r":
-                    if retry > 5:
-                        retry = 0
-                        logger.debug("Wrong character targeted.")
-                        xbox.tap_left()
-                        direction = "d"
-                    else:
-                        xbox.tap_right()
-                elif direction == "u":
-                    if retry > 5:
-                        retry = 0
-                        logger.debug("Wrong character targeted.")
-                        xbox.tap_down()
-                        direction = "l"
                     else:
                         xbox.tap_up()
-                elif direction == "d":
-                    if retry > 5:
-                        retry = 0
-                        logger.debug("Wrong character targeted.")
+                else:
+                    if last_line == desired_line:
                         xbox.tap_up()
-                        direction = "r"
                     else:
-                        xbox.tap_down()
-                retry += 1
-            memory.main.wait_frames(1)
+                        xbox.tap_right()
+                # memory.main.wait_frames(2)
+                if (
+                    last_line == memory.main.enemy_targetted() and 
+                    last_line != desired_line
+                ):
+                    logger.warning(f"Orientation swap: {last_line},{memory.main.enemy_targetted()},{desired_line}")
+                    orientation = (orientation + 1) %2
+                    # memory.main.wait_frames(60)
+                last_line = memory.main.enemy_targetted()
+                logger.warning(f"Tar: {memory.main.battle_target_id()}/{target}")
+                logger.warning(f"Line: {last_line}/{desired_line} ({orientation})")
+            except Exception as e:
+                logger.error(f"Error: {e}")
 
     tap_targeting()
     
@@ -6039,6 +6070,10 @@ def escape_one(exclude: int = 99):
 def buddy_swap(character, quick_return:bool=False):
     logger.debug(f"Swapping {character} (in battle)")
     position = character.battle_slot()
+    if position == 255:
+        logger.warning(f"Cannot swap to {character}, that person is not in the back line.")
+        escape_one()
+        return
 
     if position < 3:
         logger.debug(
@@ -6302,7 +6337,7 @@ def bfa_nem():
     FFXC.set_movement(1, 0)
     memory.main.wait_frames(30 * 0.4)
     FFXC.set_movement(1, 1)
-    memory.main.wait_frames(30 * 3)
+    memory.main.await_event()
     FFXC.set_neutral()
     tidus_first_turn = False
 
@@ -6420,7 +6455,7 @@ def rikku_full_od(battle):
             pot_count = 0
         else:
             pot_count = memory.main.get_item_count_slot(pot_slot)
-        hi_pot_slot = memory.main.get_item_slot(0)
+        hi_pot_slot = memory.main.get_item_slot(1)
         if hi_pot_slot == 255:
             hi_pot_count = 0
         else:
@@ -6832,7 +6867,9 @@ def calm_steal():
 def gorge_manip_battle(epaaj_kills:int=2):
     from battle.gorge_manip import gorge_manip_engage
     gorge_manip_engage(epaaj_kills=epaaj_kills)
-
+    if memory.main.game_over():
+        return False
+    return True
 
     
 def gorge_manip_battle_dec_2025(epaaj_kills:int=2):

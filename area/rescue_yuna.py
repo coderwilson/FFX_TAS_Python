@@ -4,6 +4,7 @@ import airship_pathing
 import battle.boss
 import battle.main
 import memory.main
+from memory.main import p2p_distance
 import menu
 import pathing
 from pathing import approach_coords
@@ -508,20 +509,50 @@ def via_purifico():
     #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
     
     memory.main.click_to_control_3()
+    
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+    new_position = last_position
+    travel_on = False
+    last_map = memory.main.get_map()
 
     # New logic
     path = [[-1, 142], [-2, 324], [-2, 503]]
     checkpoint = 0
     create_save = game_vars.create_saves()
     while checkpoint < len(path):
-        if checkpoint == 1 and create_save:
-            save_sphere.touch_and_save(
-                save_num=64, game_state="rescue_yuna", step_count=3
-            )
-            create_save = False
-        if pathing.set_movement(path[checkpoint]):
-            logger.debug(f"Checkpoint {checkpoint}")
-            checkpoint += 1
+        if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    # travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
+
+            if checkpoint == 1 and create_save:
+                save_sphere.touch_and_save(
+                    save_num=64, game_state="rescue_yuna", step_count=3
+                )
+                create_save = False
+            if pathing.set_movement(path[checkpoint]):
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
+                checkpoint += 1
+        else:
+            FFXC.set_neutral()
+            if travel_on:
+                travel_on = False
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
+            
+            if last_map != memory.main.get_map():
+                logger.warning(f"Map change. Distance for last map: {travel_distance}")
+                travel_distance = 0
+                last_map = memory.main.get_map()
     FFXC.set_neutral()
     logger.debug("Ready to step on glyph")
 
@@ -533,6 +564,8 @@ def via_purifico():
 
     # End logic replacement
     memory.main.click_to_control()
+    new_position = memory.main.get_coords()
+    travel_on = False
     finish_grid_late = menu.via_purifico()
     if (
         1 in memory.main.ambushes() or
@@ -545,6 +578,14 @@ def via_purifico():
 
     while memory.main.get_map() != 209:  # Map number for Altana
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    # travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
             #if memory.main.get_slvl_yuna() < 15 and memory.main.get_coords()[1] > 1460:
             #    FFXC.set_movement(0, -1)
             #    memory.main.wait_frames(60)
@@ -564,32 +605,47 @@ def via_purifico():
                 memory.main.wait_frames(60)
             else:
                 FFXC.set_movement(0, 1)
-        elif memory.main.battle_active():
-            logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
-            logger.warning(f"Rescue count check: {game_vars.get_rescue_count()}")
-            # memory.main.wait_frames(300)  # For testing
-            if memory.main.get_encounter_id() < 258:
-                larvae_count += 1
-                game_vars.add_rescue_count()
-            battle.boss.isaaru()
-            if memory.main.game_over():
-                logger.warning("via_purifico function, RETURN FALSE")
-                game_vars.reset_rescue_count()
-                return False
-            elif 1 in memory.main.ambushes() and memory.main.get_encounter_id() == 257:
-                memory.main.click_to_control()
-                battle.main.heal_up(full_menu_close=True)
-            
-            if memory.main.get_encounter_id() < 258:
-                if memory.main.get_slvl_yuna() >= 8 and finish_grid_late:
-                    menu.via_purifico_noTerra_recovery()
-                    finish_grid_late = False
-            logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
-            #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
         else:
             FFXC.set_neutral()
-            if not game_vars.story_mode():
-                xbox.tap_confirm()
+            if travel_on:
+                travel_on = False
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
+            
+            if last_map != memory.main.get_map():
+                logger.warning(f"Map change. Distance for last map: {travel_distance}")
+                travel_distance = 0
+                last_map = memory.main.get_map()
+            
+            if memory.main.battle_active():
+                logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
+                logger.warning(f"Rescue count check: {game_vars.get_rescue_count()}")
+                # memory.main.wait_frames(300)  # For testing
+                if memory.main.get_encounter_id() < 258:
+                    larvae_count += 1
+                    game_vars.add_rescue_count()
+                battle.boss.isaaru()
+                if memory.main.game_over():
+                    logger.warning("via_purifico function, RETURN FALSE")
+                    game_vars.reset_rescue_count()
+                    return False
+                elif 1 in memory.main.ambushes() and memory.main.get_encounter_id() == 257:
+                    memory.main.click_to_control()
+                    battle.main.heal_up(full_menu_close=True)
+                
+                if memory.main.get_encounter_id() < 258:
+                    if memory.main.get_slvl_yuna() >= 8 and finish_grid_late:
+                        menu.via_purifico_noTerra_recovery()
+                        finish_grid_late = False
+                logger.warning(f"{larvae_count}, {memory.main.get_slvl_yuna()}")
+                #logger.manip(memory.main.rng_array_from_index(index=10, array_len=40))
+            else:
+                FFXC.set_neutral()
+                if not game_vars.story_mode():
+                    xbox.tap_confirm()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     split_timer()
     return True
 
@@ -744,13 +800,14 @@ def seymour_natus():
     #     game_vars.set_rescue_count(value=start_count)
 
     delay_grid = True
+    level_need = 9 if game_vars.get_blitz_win() else 10
     memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
-    if memory.main.get_yuna_slvl() >= 9:
+    if memory.main.get_yuna_slvl() >= level_need:
         delay_grid = False
-        if game_vars.get_blitz_win():
-            menu.seymour_natus_blitz_win()
-        else:
-            menu.seymour_natus_blitz_loss()
+    if game_vars.get_blitz_win():
+        menu.seymour_natus_blitz_win()
+    else:
+        menu.seymour_natus_blitz_loss()
     memory.main.close_menu()
     #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
 
@@ -759,7 +816,10 @@ def seymour_natus():
     logger.debug(f"Rescue count: {game_vars.get_rescue_count()}")
     while memory.main.get_story_progress() < 2300:
         if memory.main.user_control():
-            if delay_grid and memory.main.get_coords()[1] < 260:
+            if memory.main.get_coords()[1] < 260 and game_vars.get_rescue_count() < 4:
+                pathing.set_movement([2, memory.main.get_coords()[1] + 50])
+                memory.main.wait_frames(30)
+            elif delay_grid and memory.main.get_coords()[1] < 260:
                 pathing.set_movement([2, memory.main.get_coords()[1] + 50])
                 memory.main.wait_frames(30)
             else:
@@ -779,17 +839,10 @@ def seymour_natus():
 
                 memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=True)
-                if memory.main.get_yuna_slvl() >= 9 and delay_grid:
+                if delay_grid and memory.main.get_yuna_slvl() >= 2:
                     delay_grid = False
-                    if game_vars.get_blitz_win():
-                        menu.seymour_natus_blitz_win()
-                    else:
-                        menu.seymour_natus_blitz_loss()
-                memory.main.close_menu()
+                    menu.seymour_natus_recovery()
                 logger.warning(f"Rescue count check: {game_vars.get_rescue_count()}")
-                # memory.main.wait_frames(300)  # For testing
-                #logger.manip(memory.main.rng_array_from_index(index=10, array_len=30))
-                #rng_track.print_manip_info()
             elif memory.main.battle_wrap_up_active():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():

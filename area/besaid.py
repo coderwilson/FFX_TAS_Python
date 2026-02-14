@@ -506,7 +506,7 @@ def leaving(checkpoint = 17):
                 save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 65 and not gil_guy:
-                pathing.approach_actor_by_index(13)
+                # pathing.approach_actor_by_index(13)
                 gil_guy = True
                 memory.main.click_to_control_3()
             elif checkpoint == 70:

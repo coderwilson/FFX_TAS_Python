@@ -16,6 +16,7 @@ file_rng = "none"
 
 
 def write_stats(message):
+    return
     global stats_file
     global file_stats
 
@@ -26,6 +27,7 @@ def write_stats(message):
 
 
 def next_stats(rng_seed_num):
+    return
     global file_stats
     global game
     global ext
@@ -119,6 +121,7 @@ def write_mem_change(message):
 
 
 def open_rng_track():
+    return
     global file_rng
     global game
     global ext
@@ -154,6 +157,7 @@ def open_rng_track():
 
 
 def write_rng_track(message):
+    return
     global RNGFile
     global file_rng
 

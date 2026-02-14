@@ -3,7 +3,7 @@ import logging
 import battle.main
 from battle import avina_memory
 import memory.main
-from memory.main import wait_frames, actor_index, get_actor_coords, get_coords
+from memory.main import wait_frames, actor_index, get_actor_coords, get_coords, p2p_distance
 import pathing
 from paths import MRRSkip
 import vars
@@ -86,6 +86,11 @@ def loop_back(checkpoint = 0):
         memory.main.await_control()
     remaining_time()
 
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+    new_position = last_position
+    travel_on = False
+
     next_enc_dist,_ = memory.main.distance_to_encounter()
     force_enc = next_enc_dist < 295
     path = [
@@ -99,7 +104,21 @@ def loop_back(checkpoint = 0):
     ]
     while checkpoint < len(path):
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
+
+
             if pathing.set_movement(path[checkpoint]):
+                new_position = memory.main.get_coords()
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
                 checkpoint += 1
         elif memory.main.battle_active():
             FFXC.set_neutral()
@@ -108,6 +127,8 @@ def loop_back(checkpoint = 0):
             if memory.main.game_over():
                 return False
             battle.main.wrap_up()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     logger.debug("Loop back function complete.")
     return force_enc
 
@@ -171,6 +192,10 @@ def attempt_skip():
     part_1_done = False
     part_2_done = False
     attempt = 0
+    
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+
     try:
         logger.info("It's possible to get stuck in this section.")
         logger.info("We will set a time limit to get through this.")
@@ -371,10 +396,13 @@ def attempt_skip():
             '''
 
         FFXC.set_neutral()
+        new_position = memory.main.get_coords()
+        travel_distance += p2p_distance(last_position,new_position)
+        logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
         if memory.main.get_hp()[0] < 520 or 1 in memory.main.ambushes():
             battle.main.heal_up()
         memory.main.update_formation(Tidus, Kimahri, Auron)
-        logger.info("Success!")
+
         return True
     except Exception as e:
         logger.warning(e)
@@ -387,6 +415,12 @@ def advance_to_aftermath():
     battle_num = 0
     heal_array = []
     ml_heals = False
+
+    travel_distance = 0
+    last_position = memory.main.get_coords()
+    new_position = last_position
+    travel_on = False
+
     try:
         records = avina_memory.retrieve_memory()
         logger.debug(records.keys())
@@ -412,11 +446,29 @@ def advance_to_aftermath():
         battle.main.heal_up()
     while memory.main.get_map() != 131:
         if memory.main.user_control():
+            if not travel_on:
+                travel_on = True
+                if memory.main.get_coords() != new_position:
+                    travel_distance += p2p_distance(last_position,new_position)
+                    last_position = memory.main.get_coords()
+                    logger.debug(f"Control regained, Distance travelled: {round(travel_distance,2)}")
+
+            new_position = memory.main.get_coords()
+
+
             if pathing.set_movement(MRRSkip.execute(checkpoint)):
+                new_position = memory.main.get_coords()
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Reached Checkpoint {checkpoint}, Distance travelled: {round(travel_distance,2)}")
                 checkpoint += 1
-                logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
+            if travel_on:
+                travel_on = False
+                travel_distance += p2p_distance(last_position,new_position)
+                last_position = new_position
+                logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
             if memory.main.battle_active():
                 battle_num += 1
                 logger.debug(f"Battle Start: {battle_num}")
@@ -438,4 +490,7 @@ def advance_to_aftermath():
                 memory.main.update_formation(Tidus, Wakka, Auron)
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+    FFXC.set_neutral()
+    travel_distance += p2p_distance(last_position,new_position)
+    logger.debug(f"End of section. Distance travelled: {round(travel_distance,2)}")
     return True

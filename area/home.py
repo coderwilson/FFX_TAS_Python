@@ -142,7 +142,8 @@ def desert():
     
     #rng_track.print_manip_info()
     #logger.manip(f"Drop counts to Evrae: {rng_track.desert_to_evrae_equip_drop_count()}")
-    flip_rng = "flip_bikanel" in game_vars.run_modifier()
+    flip_rng = False  # Analysis says not worth it.
+    # flip_rng = "flip_bikanel" in game_vars.run_modifier()
     # flip_rng = True  # Override for testing.
 
     checkpoint = 2  # This is so we can create a save file properly.

@@ -762,7 +762,10 @@ def check_gems():
 
 
 def print_manip_info(pre_x=False):
-    
+    if game_vars.ne_armor() != 255:
+        write_big_text("")
+        return
+
     if memory.main.get_story_progress() < 2220:
         stage = 0  # Should be Via Purifico
     elif memory.main.get_story_progress() in range(2220,2300):

@@ -1,13 +1,13 @@
 RNG Seed Leaderboard, Real-time minus Blitzball
-   1:  67,  2:58:32 (standard) (50%)
-   2:  39,  3:00:08 (standard) (100%)
-   3: 160,  3:00:09 (flip_bikanel) (37%)
-   4:  91,  3:01:30 (standard) (12%)
-   5: 128,  3:02:08 (standard) (12%)
-   6:  73,  3:02:10 (standard) (12%)
-   7: 196,  3:02:24 (standard) (12%)
-   8: 248,  3:02:25 (standard) (25%)
-   9: 247,  3:02:53 (standard) (12%)
-  10: 155,  3:03:11 (standard) (12%)
-standard variant completion progress: 16.8%
-Suggested seeds: ['175', '121', '106', '10', '233']
+   1: 255,  2:58:33 (standard) (100%)
+   2:  67,  2:58:43 (standard) (100%)
+   3: 160,  2:58:46 (standard) (100%)
+   4:  39,  2:59:19 (standard) (100%)
+   5:  45,  2:59:25 (standard) (100%)
+   6: 182,  3:00:07 (standard) (100%)
+   7: 102,  3:00:09 (standard) (100%)
+   8:  54,  3:00:16 (standard) (100%)
+   9:  40,  3:00:18 (standard) (100%)
+  10: 234,  3:00:27 (standard) (100%)
+standard variant completion progress: 31.64%
+Suggested seeds: ['180', '204', '214', '81', '228']
