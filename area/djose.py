@@ -96,9 +96,11 @@ def path():
                 logger.debug("Starting battle")
                 if not Kimahri.is_overdrive_learned("stone breath"):
                     logger.debug("Still looking for Stone Breath.")
-                battle.main.djose(battle_count=count_battles)
-                logger.debug("Battles complete.")
-                count_battles += 1
+                if battle.main.djose(battle_count=count_battles):
+                    logger.warning("Battle complete.")
+                    count_battles += 1
+                if memory.main.game_over():
+                    return False
             elif memory.main.menu_open():
                 xbox.menu_b()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
@@ -150,6 +152,7 @@ def path():
 
     # logs.write_stats("Djose battles:")
     # logs.write_stats(count_battles)
+    return True
 
 
 def temple():
@@ -280,6 +283,10 @@ def trials(destro:bool=False):
                 memory.main.wait_frames(2)
                 logger.info("Extra pedestal")
                 approach_coords([1,180])  # Pushes pedestol.
+                FFXC.set_neutral()
+                memory.main.await_control()
+                FFXC.set_movement(0,-1)
+                memory.main.await_event()
                 FFXC.set_neutral()
                 memory.main.await_control()
                 while not pathing.set_movement([1,74]):  # Jumps all the way back.

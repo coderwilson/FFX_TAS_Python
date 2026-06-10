@@ -262,5 +262,55 @@
         "highroad_heals": {
             "9": "True"
         }
+    },
+    "253": {
+        "t_plains_heals": {
+            "-1": "True"
+        }
+    },
+    "80": {
+        "t_plains_heals": {
+            "-1": "True"
+        }
+    },
+    "173": {
+        "highroad_heals": {
+            "7": "True"
+        }
+    },
+    "123": {
+        "t_plains_heals": {
+            "-1": "True"
+        }
+    },
+    "6": {
+        "mrr_heals": {
+            "3": "True"
+        }
+    },
+    "170": {
+        "mrr_heals": {
+            "0": "True"
+        }
+    },
+    "249": {
+        "t_plains_heals": {
+            "-1": "True"
+        }
+    },
+    "2": {
+        "highroad_heals": {
+            "3": "True"
+        }
+    },
+    "248": {
+        "t_plains_heals": {
+            "-1": "True"
+        }
+    },
+    "211": {
+        "highroad_heals": {
+            "9": "True"
+        }
     }
 }

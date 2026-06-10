@@ -504,6 +504,7 @@ def find_summoners():
     hall_primer = game_vars.platinum()
     while memory.main.get_map() != 219:
         if memory.main.user_control():
+            # logger.debug(f"Checkpoint test: {checkpoint}")
             coords = memory.main.get_coords()
 
             # events
@@ -548,7 +549,8 @@ def find_summoners():
                 xbox.tap_right()
                 xbox.tap_right()
                 xbox.tap_b()
-                memory.main.click_to_control()
+                while not memory.main.user_control():
+                    xbox.tap_b()
                 if game_vars.platinum():
                     pathing.primer()
                 FFXC.set_movement(1, -1)
@@ -587,7 +589,10 @@ def find_summoners():
                 memory.main.await_event()
                 checkpoint += 1
             elif checkpoint == 45:
+                # Leaving summoner sanctum room
                 memory.main.click_to_event_temple(1)
+                FFXC.set_neutral()
+                memory.main.await_control()
                 checkpoint += 1
             elif pathing.set_movement(BikanelHome.execute(checkpoint)):
                 checkpoint += 1
@@ -631,6 +636,13 @@ def find_summoners():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
+            elif (
+                memory.main.diag_skip_possible() and 
+                memory.main.get_map() == 286 and
+                game_vars.story_mode() and
+                memory.main.diag_progress_flag() == 10
+            ):
+                xbox.tap_confirm()
 
             # Just so the console has something to do
             if (
@@ -647,9 +659,9 @@ def find_summoners():
     while memory.main.get_map() != 303:
         coords = memory.main.get_coords()
         if coords[0] < 100:
-            pathing.set_movement([105,-40])
+            pathing.set_movement([105,-40], ignore_bonk=True)
         else:
-            pathing.set_movement([160,-50])
+            pathing.set_movement([160,-50], ignore_bonk=True)
     # Ramp to airship
     while memory.main.get_map() == 303:
         coords = memory.main.get_coords()

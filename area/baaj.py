@@ -191,7 +191,7 @@ def baaj_puzzle():
                 xbox.tap_b()
 
 
-def klikk_fight_classic():
+def klikk_fight_classic() -> bool:
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
     while not memory.main.turn_ready():
@@ -212,10 +212,15 @@ def klikk_fight_classic():
         screen.await_turn()
     else:
         xbox.click_to_battle()
-    battle.boss.klikk_classic()
+    return battle.boss.klikk_classic()
 
 
-def klikk_fight_crimson(tidus_potion_klikk: bool, tidus_potion_turn: int, rikku_potion_klikk: bool, klikk_steals: int):
+def klikk_fight_crimson(
+        tidus_potion_klikk: bool, 
+        tidus_potion_turn: int,
+        rikku_potion_klikk: bool, 
+        klikk_steals: int
+    ) -> bool:
     # Before Rikku shows up, we're just going to spam the B button. Simple.
     FFXC.set_neutral()
     while not memory.main.turn_ready():

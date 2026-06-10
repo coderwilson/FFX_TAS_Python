@@ -83,6 +83,8 @@ def south_pathing():
                         checkpoint = 20
                     elif checkpoint == 2 and game_vars.platinum():
                         checkpoint = 20
+                    elif checkpoint == 2 and game_vars.story_mode():
+                        checkpoint = 20
                     elif checkpoint == 3 and not save_touched:
                         if next_enc_dist in range(375,415):
                             while not memory.main.battle_active():
@@ -116,6 +118,8 @@ def south_pathing():
                         if memory_dodges == 50 and game_vars.nemesis():
                             checkpoint += 1
                         elif memory_dodges == 200 and game_vars.platinum():
+                            checkpoint += 1
+                        if memory_dodges == 50 and game_vars.story_mode():
                             checkpoint += 1
                         else:
                             FFXC.set_neutral()
@@ -335,7 +339,11 @@ def agency():
                     xbox.tap_b()
                 FFXC.set_neutral()
                 memory.main.click_to_control()
-                if game_vars.nemesis() or game_vars.platinum():
+                if (
+                    game_vars.nemesis() or 
+                    game_vars.platinum() or
+                    game_vars.story_mode()
+                ):
                     # Back in and out to spawn the chest
                     FFXC.set_movement(-1, 1)
                     while memory.main.get_map() != 263:
@@ -350,7 +358,7 @@ def agency():
                 checkpoint += 1
             elif (
                 checkpoint == 9
-                and game_vars.nemesis()
+                and (game_vars.nemesis() or game_vars.story_mode())
                 and str_count < 3
             ):
                 pathing.set_movement([-73, 45])
@@ -461,13 +469,13 @@ def north_pathing(battle_count: int):
                 last_position = new_position
                 logger.debug(f"Lost control. Distance travelled: {round(travel_distance,2)}")
             
-            if last_story != memory.main.get_story_progress():
-                logger.warning(f"Map/Story change. Distance for last map: {travel_distance}")
-                memory.main.await_control()
-                last_story = memory.main.get_story_progress()
-                travel_distance = 0
-                new_position = memory.main.get_actor_coords(actor_index=0)
-                last_position = new_position
+            # if last_story != memory.main.get_story_progress():
+            #     logger.warning(f"Map/Story change. Distance for last map: {travel_distance}")
+            #     memory.main.await_control()
+            #     last_story = memory.main.get_story_progress()
+            #     travel_distance = 0
+            #     new_position = memory.main.get_actor_coords(actor_index=0)
+            #     last_position = new_position
             
             if memory.main.diag_skip_possible() and not memory.main.battle_active() and not game_vars.story_mode():
                 xbox.menu_b()

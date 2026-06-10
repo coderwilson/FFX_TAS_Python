@@ -582,6 +582,26 @@ def use_and_quit():
         pass
     return True
 
+def use_and_wait():
+    memory.main.wait_frames(30 * 0.1)
+    # if not first_position() and not move_use_menu():
+    #     xbox.menu_b()
+    while not first_position:
+        if ready_use_sphere():
+            logger.debug("Using the current item.")
+            xbox.menu_b()
+        elif move_use_menu():
+            xbox.menu_a()
+        # elif first_position():
+        #     logger.debug("Opening the Quit menu")
+        #     xbox.menu_a()
+        # elif quit_grid_ready():
+        #     logger.debug("quitting sphere grid")
+        #     xbox.menu_b()
+        elif ready_select_sphere():
+            xbox.menu_a()
+    return True
+
 
 def sphere_num(s_type) -> int:
     s_type = s_type.lower()
@@ -648,17 +668,15 @@ def sphere_num(s_type) -> int:
     return 255
 
 
-def sel_sphere(s_type, shift, coords=[0,0]):
+def sel_sphere(s_type, shift:str=None, coords=[0,0]):
     s_num = 255
     menu_pos = 0
-    logger.debug(s_type)
     if isinstance(s_type, int):
         s_num = s_type
     else:
         s_num = sphere_num(s_type)
-    logger.debug(s_num)
     menu_pos = memory.main.get_grid_items_slot(s_num)
-    logger.debug(menu_pos)
+    logger.debug(f"Using Sphere: {s_num}, count {memory.main.get_item_count(s_num)}, slot {menu_pos}")
     if menu_pos == 255:
         logger.debug(f"Sphere {s_type} is not in inventory.")
         xbox.menu_a()

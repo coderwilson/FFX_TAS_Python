@@ -12,25 +12,27 @@ from blitzball.blitz_tools import (
     game_clock,
     active_clock,
     cursor_1,
+    select_tackle,
     select_breakthrough,
     select_action,
     select_pass_target,
-    select_shot_type,
+    select_type,
     targeted_player,
-    goers_score_first,
-    halftime_dialog
+    dialog,
+    max_menu_size,
+    update_tracker,
+    tracker_helper,
+    input_ready,
+    reset_input_helpers
 )
 
 def tidus_needs_xp():
     logger.info("We're going to try to get Tidus some XP now.")
     while not blitz_state.tidus_xp_gained:
+        # logger.debug(f"Flag: {memory.main.diag_progress_flag()} | Menu: {memory.main.blitz_menu_num()}")
         if memory.main.get_map() != 62:
             return
-        if goers_score_first():
-            FFXC.set_neutral()
-            xbox.tap_confirm()
-            return
-        if halftime_dialog():
+        if dialog():
             FFXC.set_neutral()
             xbox.tap_confirm()
             return
@@ -160,56 +162,67 @@ def jassu_train():
 
 def attempt_goals(timed:bool=True):
     st = blitz_state
-    st.update(timed=timed)
-    # logger.debug(st.current_stage)
-    if st.current_stage == st.IDLE:
-        FFXC.set_neutral()
-    elif st.current_stage == st.SHOOTING_FOR_GOAL:
-        if active_clock():
-            blitz_pathing.set_movement([-20, 590])
-            xbox.menu_x()
-        else:
-            if (
-                blitz_state.player_array[7].is_engaged and
-                not blitz_state.player_array[8].is_engaged and
-                not blitz_state.player_array[9].is_engaged and
-                not blitz_state.player_array[10].is_engaged
-            ):
-                shoot_ball(break_through=5)
+    while memory.main.get_map() == 62:
+        st.update(timed=timed)
+        update_tracker()
+        if dialog():
+            FFXC.set_neutral()
+            xbox.tap_confirm()
+        elif input_ready() and select_tackle():
+            cursor(target=1)
+            xbox.tap_b()
+            xbox.tap_b()
+            xbox.tap_b()
+        elif st.current_stage == st.IDLE:
+            FFXC.set_neutral()
+        elif st.current_stage == st.SHOOTING_FOR_GOAL:
+            if active_clock():
+                blitz_pathing.set_movement([-20, 590])
+                xbox.menu_x()
             else:
-                shoot_ball(break_through=5)
+                if (
+                    blitz_state.player_array[7].is_engaged and
+                    not blitz_state.player_array[8].is_engaged and
+                    not blitz_state.player_array[9].is_engaged and
+                    not blitz_state.player_array[10].is_engaged
+                ):
+                    shoot_ball()
+                else:
+                    shoot_ball()
 
-    elif st.current_stage == st.RUSH_GOAL:
-        if active_clock():
-            if blitz_state.player_array[0].position[1] < 550:
-                blitz_pathing.set_movement([-90, 580])
+        elif st.current_stage == st.RUSH_GOAL:
+            if active_clock():
+                if blitz_state.player_array[0].position[1] < 550:
+                    blitz_pathing.set_movement([-120, 580])
+                else:
+                    if blitz_pathing.set_movement([-90, 585]):
+                        xbox.tap_x()
+            elif blitz_state.controlling_player_index == 0:
+                shoot_ball()
             else:
-                if blitz_pathing.set_movement([-40, 585]):
-                    xbox.tap_x()
-        elif blitz_state.controlling_player_index == 0:
-            shoot_ball(break_through=5)
-        else:
-            dribble_ball()
-    elif st.current_stage == st.PASSING_TO_TIDUS:
-        if active_clock():
-            xbox.menu_x()
-        elif blitz_state.controlling_player_index == 0:
-            blitz_pathing.set_movement([-50, 580])
-        else:
-            pass_ball()
-    elif st.current_stage == st.BAITING_DEFENDER:
-        if active_clock():
+                dribble_ball()
+        elif st.current_stage == st.PASSING_TO_TIDUS:
+            if active_clock():
+                FFXC.set_movement(-1,-1)
+                xbox.menu_x()
+            elif blitz_state.controlling_player_index == 0:
+                blitz_pathing.set_movement([-50, 580])
+            else:
+                pass_ball()
+        elif st.current_stage == st.BAITING_DEFENDER:
             jassu_bait()
+            # if active_clock():
+            #     jassu_bait()
+            # else:
+            #     dribble_ball()
+        elif st.current_stage == st.JASSU_STAGING:
+            if active_clock():
+                working_forward()
+            else:
+                dribble_ball()
         else:
-            dribble_ball()
-    elif st.current_stage == st.JASSU_STAGING:
-        if active_clock():
-            working_forward()
-        else:
-            dribble_ball()
-    else:
-        # stage == st.DEFENSIVE_HOLD
-        defensive_movements()
+            # stage == st.DEFENSIVE_HOLD
+            defensive_movements()
 
 def get_bait_position(defender_idx, target_radius_offset=40, desired_dist=250):
     st = blitz_state
@@ -252,6 +265,7 @@ def jassu_bait():
     st.update()
     
     # Indices for clarity
+    TARGET = 0
     JASSU = 3
     DEFENDER = 10
     OTHER_AGGRO = 8
@@ -264,75 +278,59 @@ def jassu_bait():
             radius_movement(radius=jassu_radius, direction="back")
             return
             
-        # Condition B: Out of range -> Approach the "Bait Zone"
         # If we are too far, or just maintaining the bait position
         else:
-            # We move to the calculated point: (Defender Radius + 40) at (250 Distance)
             target = get_bait_position(DEFENDER, target_radius_offset=40, desired_dist=250)
             blitz_pathing.set_movement(target)
             return
 
     else:
         # Ball handling when clock is paused/menu interaction
-        if st.player_array[OTHER_AGGRO].is_aggro or st.player_array[DEFENDER].is_aggro:
+        if (
+            st.get_distance(TARGET, DEFENDER) > 160 and
+            st.player_array[TARGET].position[1] > st.player_array[DEFENDER].position[1]
+        ):
             pass_ball(0)
         else:
             dribble_ball()
-
-def jassu_bait_old():
-    st = blitz_state
-    st.update()
-    p10_coords = st.player_array[10].position
-    if active_clock():
-        if st.player_array[8].is_aggro or st.player_array[10].is_aggro:
-            jassu_radius=blitz_state.player_array[3].radius
-            radius_movement(radius=jassu_radius,direction="back")
-            # if st.player_array[3].position[1] > 50:
-            #     blitz_pathing.set_movement([-580,-501])
-            # else:
-            #     blitz_pathing.set_movement([-417,-417])
-            return
-        elif st.get_distance(3, 10) > 440:
-            radius_movement(radius=570, direction="forward")
-            return
-        else:
-            x = p10_coords[0] - 220
-            y = p10_coords[1] - 140
-            blitz_pathing.set_movement([x,y])
-            return
-    else:
-        if st.player_array[8].is_aggro or st.player_array[10].is_aggro:
-            pass_ball(0)
-        else:
-            dribble_ball()
-
 
 def defensive_movements():
     st = blitz_state
     st.update()
+    update_tracker()
     idx = st.controlling_player_index
     if active_clock():
+        # logger.debug(f"Moving defensively (A) {idx}")
         if idx == 1:
+            # logger.debug(f"Moving defensively (1) {idx}")
             if blitz_pathing.set_movement([295, 510]):
                 xbox.tap_x()
         elif idx == 4:
             if not st.player_array[4].is_guarded and not st.player_array[3].is_guarded:
+                # logger.debug(f"Moving defensively (4A) {idx}")
+                blitz_pathing.set_movement([10, -590])
                 xbox.tap_x()
             elif st.player_array[8].is_aggro:
+                # logger.debug(f"Moving defensively (4B) {idx}")
                 blitz_pathing.set_movement([295, -510])
                 if st.get_distance(8, 3) > 360:
                     xbox.menu_x()
                 elif st.get_distance(8, 4) < 240:
                     xbox.menu_x()
             elif st.player_array[9].is_aggro and st.get_distance(9, 4) < 240:
+                # logger.debug(f"Moving defensively (4C) {idx}")
+                blitz_pathing.set_movement([10, -590])
                 xbox.menu_x()
             else:
+                # logger.debug(f"Moving defensively (4D) {idx}")
                 blitz_pathing.set_movement([10, -590])
         elif idx == 2:
             if st.player_array[8].position[1] < st.player_array[2].position[1]:
+                # logger.debug(f"Moving defensively (2A) {idx}")
                 blitz_pathing.set_movement([15, 585])
                 xbox.tap_x()
             else:
+                # logger.debug(f"Moving defensively (2B) {idx}")
                 blitz_pathing.set_movement([15, -585])
             if st.own_score > st.opp_score and memory.main.get_story_progress() < 700:
                 pass
@@ -340,66 +338,76 @@ def defensive_movements():
                 xbox.tap_x()
         elif idx == 3:
             if st.player_array[8].is_aggro:
+                # logger.debug(f"Moving defensively (3A) {idx}")
                 blitz_pathing.set_movement([-295, -510])
                 if st.get_distance(8, 3) < 220:
                     xbox.menu_x()
             elif abs(st.player_array[3].position[0]) > 30:
+                # logger.debug(f"Moving defensively (3B) {idx}")
                 radius_movement(direction="back")
             else:
+                # logger.debug(f"Moving defensively (3C) {idx}")
                 blitz_pathing.set_movement([-10, -592])
         else:
             if st.player_array[0].position[1] > st.player_array[10].position[1] + 90:
+                # logger.debug(f"Moving defensively (9A) {idx}")
                 if blitz_pathing.set_movement([520, -80]):
                     xbox.tap_x()
             else:
+                # logger.debug(f"Moving defensively (9B) {idx}")
                 blitz_pathing.set_movement([-520, -80])
                 if st.player_array[idx].is_engaged:
                     xbox.tap_x()
     else:
-        if idx == 1:
-            if st.player_array[idx].position[1] > 300:
-                shoot_ball(break_through=5)
-            else:
-                pass_ball(target=3, break_through=5)
-        elif idx == 3:
-            if st.player_array[8].is_aggro:
-                if st.player_array[0].position[1] > st.player_array[8].position[1] + 40:
-                    pass_ball(target=0)
-                elif st.get_distance(8, 4) > 360:
-                    pass_ball(target=4)
-                elif not st.player_array[2].is_guarded:
-                    pass_ball(target=2)
+        FFXC.set_neutral()
+        if idx > 5:
+            return
+        if input_ready():
+            logger.debug(f"Time to select an action. {idx}")
+            if idx == 1:
+                if st.player_array[idx].position[1] > 300:
+                    shoot_ball()
                 else:
-                    pass_ball(target=4)
-            else:
-                dribble_ball()
-        elif idx == 4:
-            if not st.player_array[3].is_guarded:
-                pass_ball(target=3)
-            elif st.player_array[8].is_aggro:
-                if st.player_array[1].position[1] > st.player_array[9].position[1]:
+                    pass_ball(target=3, break_through=5)
+            elif idx == 3:
+                if st.player_array[8].is_aggro:
+                    if st.player_array[0].position[1] > st.player_array[8].position[1] + 40:
+                        pass_ball(target=0)
+                    elif st.get_distance(8, 4) > 360:
+                        pass_ball(target=4)
+                    elif not st.player_array[2].is_guarded:
+                        pass_ball(target=2)
+                    else:
+                        pass_ball(target=4)
+                else:
+                    dribble_ball()
+            elif idx == 4:
+                if not st.player_array[3].is_guarded:
+                    pass_ball(target=3)
+                elif st.player_array[8].is_aggro:
+                    if st.player_array[1].position[1] > st.player_array[9].position[1]:
+                        pass_ball(target=1)
+                    else:
+                        pass_ball(target=3)
+                else:
+                    dribble_ball()
+            elif idx == 2:
+                if not st.player_array[3].is_guarded:
+                    pass_ball(target=3)
+                elif st.player_array[0].position[1] > st.player_array[10].position[1] + 120:
+                    pass_ball(target=0)
+                elif st.player_array[1].position[1] > st.player_array[10].position[1] + 120:
                     pass_ball(target=1)
+                elif not st.player_array[4].is_guarded:
+                    pass_ball(target=4)
                 else:
                     pass_ball(target=3)
+            elif st.player_array[3].position[1] > 500:
+                shoot_ball()
+            elif not st.player_array[3].is_guarded:
+                pass_ball(target=3)
             else:
                 dribble_ball()
-        elif idx == 2:
-            if not st.player_array[3].is_guarded:
-                pass_ball(target=3)
-            elif st.player_array[0].position[1] > st.player_array[10].position[1] + 120:
-                pass_ball(target=0)
-            elif st.player_array[1].position[1] > st.player_array[10].position[1] + 120:
-                pass_ball(target=1)
-            elif not st.player_array[4].is_guarded:
-                pass_ball(target=4)
-            else:
-                pass_ball(target=3)
-        elif st.player_array[3].position[1] > 500:
-            shoot_ball()
-        elif not st.player_array[3].is_guarded:
-            pass_ball(target=3)
-        else:
-            dribble_ball()
 
 
 def prep_half():
@@ -436,7 +444,7 @@ def prep_half():
                 xbox.menu_b()
             memory.main.wait_frames(2)
         elif memory.main.diag_progress_flag() == 47:
-            if memory.main.blitz_cursor() != 0:
+            if cursor_1() != 0:
                 xbox.menu_up()
                 memory.main.wait_frames(2)
             else:
@@ -448,7 +456,7 @@ def prep_half():
             xbox.menu_up()
             xbox.menu_b()
         elif memory.main.diag_progress_flag() == 113:
-            if memory.main.blitz_cursor() != 1:
+            if cursor_1() != 1:
                 xbox.menu_up()
                 memory.main.wait_frames(2)
             else:
@@ -499,6 +507,7 @@ def prep_half():
 
 def working_forward():
     blitz_state.update()
+    # logger.debug("Working forward")
     idx = blitz_state.controlling_player_index
     c_player = blitz_state.player_array[idx].position
     def_player = blitz_state.player_array[10].position
@@ -511,50 +520,56 @@ def working_forward():
     elif c_player[0] > -30:
         blitz_pathing.set_movement([c_player[0]-30, c_player[1]])
     else:
-        radius_movement(radius = 585, direction="forward")
+        if active_clock():
+            radius_movement(radius = 585, direction="forward")
 
 
 def radius_movement(radius: int = 590, direction="forward"):
-    blitz_state.update()
-    idx = blitz_state.controlling_player_index
-    player_pos = blitz_state.player_array[idx].position
-    current_radius = blitz_state.player_array[idx].radius
+    # logger.debug(f"Radius movement: {radius}")
+    try:
+        blitz_state.update()
+        idx = blitz_state.controlling_player_index
+        player_pos = blitz_state.player_array[idx].position
+        current_radius = blitz_state.player_array[idx].radius
 
-    # 1. Get current angle
-    current_angle = math.atan2(player_pos[1], player_pos[0])
+        # 1. Get current angle
+        current_angle = math.atan2(player_pos[1], player_pos[0])
 
-    # 2. Determine Angular Direction
-    # In Blitzball, "forward" usually means +Y (Opponent Goal)
-    # and "backward" means -Y (Your Goal).
-    
-    # We calculate the step based on whether we want Y to increase or decrease
-    angular_step = 0.08 
-    
-    # If we are on the Right side (X > 0), increasing the angle moves us UP (+Y)
-    # If we are on the Left side (X < 0), increasing the angle moves us DOWN (-Y)
-    if player_pos[0] >= 0:
-        actual_step = angular_step if direction == "forward" else -angular_step
-    else:
-        actual_step = -angular_step if direction == "forward" else angular_step
+        # 2. Determine Angular Direction
+        # In Blitzball, "forward" usually means +Y (Opponent Goal)
+        # and "backward" means -Y (Your Goal).
+        
+        # We calculate the step based on whether we want Y to increase or decrease
+        angular_step = 0.08 
+        
+        # If we are on the Right side (X > 0), increasing the angle moves us UP (+Y)
+        # If we are on the Left side (X < 0), increasing the angle moves us DOWN (-Y)
+        if player_pos[0] >= 0:
+            actual_step = angular_step if direction == "forward" else -angular_step
+        else:
+            actual_step = -angular_step if direction == "forward" else angular_step
 
-    next_angle = current_angle + actual_step
+        next_angle = current_angle + actual_step
 
-    # 3. Radial Push (Spiral out)
-    expansion_speed = 20
-    next_radius = min(current_radius + expansion_speed, radius) if current_radius < radius else radius
+        # 3. Radial Push (Spiral out)
+        expansion_speed = 20
+        next_radius = min(current_radius + expansion_speed, radius) if current_radius < radius else radius
 
-    # 4. Convert to Cartesian
-    target_x = next_radius * math.cos(next_angle)
-    target_y = next_radius * math.sin(next_angle)
+        # 4. Convert to Cartesian
+        target_x = next_radius * math.cos(next_angle)
+        target_y = next_radius * math.sin(next_angle)
 
-    # 5. The "Explosion" Ratio
-    # Project the vector to the outer edge so the AI "re-aims" aggressively
-    ratio = radius / max(1, next_radius)
-    
-    target_coords = [target_x * ratio, target_y * ratio]
+        # 5. The "Explosion" Ratio
+        # Project the vector to the outer edge so the AI "re-aims" aggressively
+        ratio = radius / max(1, next_radius)
+        
+        target_coords = [target_x * ratio, target_y * ratio]
 
-    blitz_pathing.set_movement(target_coords)
-    return target_coords
+        blitz_pathing.set_movement(target_coords)
+        return target_coords
+    except Exception as e:
+        logger.warning(f"Error during radius movement: {e}")
+        return [-200,-500]
 
 def radius_movement_coder(radius: int = 585, direction="forward"):
     logger.debug(f"Radius movement test")
@@ -603,8 +618,14 @@ def radius_movement_coder(radius: int = 585, direction="forward"):
 
 
 def pass_ball(target=0, break_through=5):
+    tracker_helper("Pass")
+    if not input_ready():
+        tracker_helper(None)
+        return False
     if memory.main.get_map() != 62:
-        return
+        logger.warning(f"Pass ball error - wrong map: {memory.main.get_map()}")
+        tracker_helper(None)
+        return False
     logger.debug(f"Pass Ball command - {target} | Break {break_through}")
     FFXC.set_neutral()
     blitz_state.update()
@@ -612,28 +633,44 @@ def pass_ball(target=0, break_through=5):
     if idx == 4:
         break_through = 0
     logger.debug("Test 3")
-    if select_breakthrough():
-        logger.debug("Selecting breakthrough value")
-        if break_through == 5:
-            cursor(any_non_zero=True)
+    while not active_clock():
+        if memory.main.get_map() != 62:
+            return
+        if select_breakthrough():
+            logger.debug("Selecting breakthrough value (A)")
+            if break_through == 5:
+                cursor(any_non_zero=True)
+            else:
+                xbox.menu_b()
+                xbox.menu_b()
+                xbox.menu_b()
+                memory.main.wait_frames(9)
+                reset_input_helpers()
+                return True
+        elif select_action():
+            cursor(target=0)
+        elif select_pass_target():
+            logger.debug(f"Selecting pass target value, target {target}")
+            cursor(target_player=target)
+            tracker_helper(None)
+            return True
         else:
+            logger.debug("Pass - other")
             xbox.menu_b()
-            memory.main.wait_frames(9)
-    elif select_action():
-        cursor(target=0)
-    elif select_pass_target():
-        logger.debug(f"Selecting pass target value, target {target}")
-        cursor(target_player=target)
-        return True
-    else:
-        logger.debug("Pass - other")
-        xbox.menu_b()
+    tracker_helper(None)
     return False
 
 
 def shoot_ball(break_through=None):
+    tracker_helper("Shoot")
+    if not input_ready():
+        return False
+        tracker_helper(None)
     if memory.main.get_map() != 62:
-        return
+        logger.warning(f"Shoot ball error - wrong map: {memory.main.get_map()}")
+        tracker_helper(None)
+        return False
+    logger.debug(f"Shoot Ball command - Break {break_through}")
     FFXC.set_neutral()
     idx = blitz_state.controlling_player_index
     if break_through is None:
@@ -647,89 +684,74 @@ def shoot_ball(break_through=None):
         else:
             break_through = 5
     
-    if select_shot_type():
-        cursor(target=1)
-        return True
-        # if cursor_1() == 1:
-        #     xbox.menu_b()
-        #     return True
-        # else:
-        #     xbox.menu_down()
-        #     memory.main.wait_frames(3)
-    elif select_breakthrough():
-        if break_through == 5:
-            if cursor_1() == 0:
-                xbox.menu_up()
-                memory.main.wait_frames(1)
+    while not active_clock():
+        if memory.main.get_map() != 62:
+            return
+        if select_type():
+            cursor(target=1)
+            tracker_helper(None)
+            return True
+        elif select_breakthrough():
+            logger.debug("Selecting breakthrough value (B)")
+            if break_through == 5:
+                if cursor_1() == 0:
+                    xbox.menu_up()
+                    memory.main.wait_frames(1)
+                else:
+                    xbox.menu_b()
+                    xbox.menu_b()
             else:
                 xbox.menu_b()
                 xbox.menu_b()
-        else:
-            xbox.menu_b()
-            xbox.menu_b()
-    elif select_action():
-        cursor(target=1)
-        if idx != 0:
-            return True
-            # game_vars.blitz_first_shot_taken()
-
-def shoot_ball_broken(break_through=5):
-    if memory.main.get_map() != 62:
-        return
-    FFXC.set_neutral()
-    blitz_state.update()
-    idx = blitz_state.controlling_player_index
-    if memory.main.get_story_progress() > 700 and idx == 0:
-        break_through = 0
-    elif memory.main.get_story_progress() < 570 and idx == 0:
-        if game_clock() > 167:
-            break_through = 5
-        else:
-            break_through = 0
-    if select_shot_type():
-        logger.warning(f"Selecting shot type!")
-        memory.main.wait_frames(9)
-        xbox.menu_down()
-        memory.main.wait_frames(9)
-        xbox.menu_b()
-        # cursor(target=1)
-    elif select_breakthrough():
-        logger.debug("Selecting breakthrough value")
-        if break_through == 5:
-            cursor(any_non_zero=True)
-        else:
-            xbox.menu_b()
-            memory.main.wait_frames(9)
-    elif select_action():
-        cursor(target=1)
-        xbox.menu_b()
-        memory.main.wait_frames(9)
-        if idx != 0:
+        elif select_action():
             cursor(target=1)
-        else:
-            return True
-        # if controlling_player == 0:
-        #     game_vars.blitz_first_shot_taken()
-    return False
+            if idx != 0:
+                return True
+                # game_vars.blitz_first_shot_taken()
 
 
 def dribble_ball():
+    if not input_ready():
+        return False
     if memory.main.get_map() != 62:
+        logger.warning(f"Dribble error - wrong map: {memory.main.get_map()}")
         return
     logger.debug("Dribble Ball command")
     FFXC.set_neutral()
+    memory.main.wait_frames(2)
     blitz_state.update()
-    idx = blitz_state.controlling_player_index
-    if select_breakthrough():
-        logger.debug("Selecting breakthrough value")
-        cursor(any_non_zero=True)
-    elif select_action():
-        cursor(target=2)
+    logger.debug(f"Variable check: {active_clock()} | {select_breakthrough()}")
+    while not active_clock():
+        if memory.main.get_map() != 62:
+            return
+        if input_ready():
+            cursor(max=True)
+            memory.main.wait_frames(3)
 
-def cursor(target:int=0,any_non_zero:bool=False,target_player=None):
+def cursor(target:int=0,any_non_zero:bool=False,target_player=None,max:bool=False):
+    if not input_ready():
+        return False
+    FFXC.set_neutral()
+    if any_non_zero:
+        max = True
+    if max:
+        target = max_menu_size()-1
+    if target > max_menu_size()-1:
+        logger.debug(f"Cursor Error: {target}/{max_menu_size()-1}")
+        if any_non_zero:
+            target = 1
+        else:
+            target = 0
     start = memory.main.get_frame()
     end = start
-    while cursor_1() != 0:
+    logger.debug("Reset cursor")
+    while cursor_1() != 0 and not max:
+        if memory.main.get_map() != 62:
+            return
+        logger.debug(f"Cursor Base: {cursor_1()} | 0")
+        if not input_ready():
+            return False
+        logger.debug("Reset cursor *")
         if memory.main.get_map() != 62:
             return
         if end < start:
@@ -737,21 +759,21 @@ def cursor(target:int=0,any_non_zero:bool=False,target_player=None):
         if end - start > 45:  # 1.5 seconds more than enough.
             return
         
+        # Now move the cursor
+        xbox.menu_up()
+        
     counter = 0
-    if any_non_zero:
-        while cursor_1() == 0:
-            if memory.main.get_map() != 62:
-                return
-            xbox.menu_up()
-            memory.main.wait_frames(3)
-            counter += 1
-            if counter > 12:
-                break
-    elif target_player is not None:
+    if target_player is not None:
+        logger.debug(f"Target: {target_player}")
         while targeted_player() != target_player:
             if memory.main.get_map() != 62:
                 return
-            if target_player <= 2:
+            logger.debug(f"Target Player: {cursor_1()} | 0")
+            if memory.main.get_map() != 62:
+                return
+            if max:
+                xbox.menu_a()
+            elif target_player <= 2:
                 xbox.menu_down()
             else:
                 xbox.menu_up()
@@ -760,10 +782,16 @@ def cursor(target:int=0,any_non_zero:bool=False,target_player=None):
             if counter > 12:
                 break
     else:
+        logger.debug("Regular cursor method")
         while cursor_1() != target:
             if memory.main.get_map() != 62:
                 return
-            if target <= 1:
+            logger.debug(f"Cursor Target: {cursor_1()} | {target}")
+            if memory.main.get_map() != 62:
+                return
+            if max:
+                xbox.menu_a()
+            elif target <= 1:
                 xbox.menu_down()
             else:
                 xbox.menu_up()
@@ -771,8 +799,11 @@ def cursor(target:int=0,any_non_zero:bool=False,target_player=None):
             counter += 1
             if counter > 12:
                 break
+    logger.debug("Final Cursor Trigger.")
+    if not input_ready():
+        return False
     xbox.menu_b()
-    memory.main.wait_frames(9)
+    memory.main.wait_frames(18)
 
 
 def find_safe_place():

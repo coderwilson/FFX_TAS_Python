@@ -19,6 +19,19 @@ FFXC = xbox.controller_handle()
 
 
 def arrival():
+    
+    if memory.main.get_map() == 243:
+        logger.info("Found in the inn... recovering.")
+        while memory.main.get_map() != 135:
+            if memory.main.get_coords()[0] < -12:
+                pathing.set_movement([-11,-35])
+            elif memory.main.get_coords()[1] > -44:
+                pathing.set_movement([0,-48])
+            else:
+                pathing.set_movement([0,-70])
+
+
+
     logger.info("Starting Guadosalam section")
     checkpoint = 0
     FFXC.set_neutral()
@@ -39,7 +52,11 @@ def arrival():
     str_2 = f"Ambush counts: if {count_noflip} > {count_flip} => flip!"
     logger.info(str_2)
     write_big_text(str_1 + "\n" + str_2)
-    if count_noflip > count_flip+1:  # At least two more ambushes
+    if (
+        count_noflip > count_flip+1
+        and not game_vars.story_mode()
+    ):  # At least two more ambushes
+        logger.info("Engaging flip logic")
         # Map change
         while not pathing.set_movement([21,-22]):
             pass
@@ -54,7 +71,9 @@ def arrival():
             pass
         while memory.main.get_map() != 135:
             pathing.set_movement([2,-80])
-
+    else:
+        logger.info("Skipping flip logic")
+    
 
     while memory.main.get_map() != 141:  # Up to the dining hall scenes
         if memory.main.user_control():
@@ -118,7 +137,7 @@ def arrival():
             elif checkpoint == 20:
                 pathing.approach_party_member(Yuna)
                 checkpoint += 1
-            elif pathing.set_movement(GuadoStart.execute(checkpoint)):
+            elif pathing.set_movement(GuadoStart.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -135,6 +154,7 @@ def arrival():
 
 
 def primer1():
+    logger.info("Going for primer")
     while not pathing.set_movement([-80,-29]):
         pass
     while not pathing.set_movement([-153,60]):
@@ -158,13 +178,17 @@ def primer1():
 
 def after_speech(checkpoint=0):
     memory.main.click_to_control()  # Skips through the long cutscene
+    memory.main.wait_frames(3)
     logger.debug("Starting movement.")
     logger.debug(f"Starting Checkpoint {checkpoint}")
     farplane_lulu = game_vars.story_mode()
     get_primer = game_vars.platinum()
 
     if checkpoint == 0:
-        memory.main.click_to_event_temple(4)
+        while not pathing.set_movement([-3,-91]):
+            pass
+        while memory.main.get_map() == 163:
+            pathing.set_movement([-3,-130])
 
     while checkpoint != 34:
         if memory.main.user_control():

@@ -133,6 +133,7 @@ def load_into_game(gamestate: str, step_counter: str):
             load_save_num(int(save_num_conf))
             logger.debug("Save has been loaded.")
             memory.main.await_control()
+            memory.main.game_over_reset()
             game_vars.set_blitz_win(value=(blitz_win == "True"))
             game_vars.end_game_version_set(value=int(end_ver))
             if nemesis == str(game_vars.nemesis()) or game_vars.platinum():

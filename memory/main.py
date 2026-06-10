@@ -1102,6 +1102,7 @@ def get_encounter_id():
 
 def get_enemy_formation():
     base_id = get_encounter_id()
+    logger.warning("Should use rng_track.current_battle_formation() function instead.")
 
 
 def clear_encounter_id():
@@ -2410,15 +2411,27 @@ def p2p_distance(coords1,coords2):
     )
 
 
+def controlled_actor_index():
+    for i in range(get_actor_array_size()):
+        a = get_actor_coords(i)
+        c = get_coords()
+        if a[0] == c[0] and a[1] == c[1]:
+            return i
+    
+
 def actor_index(actor_num: int = 41):
     # If non-unique, choose the closest one.
-    actor_index = 255
+    return_index = 255
+    c = controlled_actor_index()
     for x in range(get_actor_array_size()):
         actor_mem = get_actor_id(x)
         if actor_num == actor_mem:
-            if actor_index == 255 or distance(actor_index) > distance(x):
-                actor_index = x
-    return actor_index
+            if (
+                return_index == 255 or 
+                distance(actor_index=return_index, alt_index=c) > distance(actor_index=x, alt_index=c)
+            ):
+                return_index = x
+    return return_index
 
 
 def mrr_guy_coords():
@@ -2961,6 +2974,19 @@ class BlitzActor:
         return get_blitz_aggro(self.num)
 '''
 
+def blitz_actor_order(position:int):
+    global base_value
+    key = base_value + 0xD2DE5C + (position * 0x262) # Starts from position 0
+    value = process.read_bytes(key, 2)
+    logger.debug(f"Blitzer position {position}: {value}")
+    return value
+
+def blitz_select_player():
+    global base_value
+    value = process.read_bytes(base_value + 0x14666E8, 2)
+    logger.debug(f"Hovering Blitz actor: {value}")
+    return value
+
 def get_blitz_aggro(player_index: int = 99):
     global base_value
     ptr_key = process.read(base_value + 0x00F2FF14)
@@ -3016,6 +3042,16 @@ def blitzball_patriots_style():
     process.write_bytes(key, 50, 1)
 
 
+def blitz_input_ready():
+    global base_value
+    key = base_value + 0x14676D1
+    status = process.read_bytes(key, 1)
+    if status == 1:
+        # logger.debug(f"Menu ready/waiting: {blitz_menu_num()}")
+        FFXC.set_neutral()
+    return bool(status == 1)
+
+
 def blitz_clock_menu():
     global base_value
     key = base_value + 0x014765FA
@@ -3030,7 +3066,23 @@ def blitz_clock_pause():
     return status
 
 
-def blitz_menu_num():
+def blitz_clock_active():
+    return bool(blitz_clock_pause() == 0)
+
+def blitz_clock_active_broken():
+    if blitz_current_player() - 2 > 5:
+        FFXC.set_neutral()
+        return False
+    global base_value
+    # key = base_value + 0x14676D1
+    key = base_value + 0x14676D7
+    status = process.read_bytes(key, 1)
+    if status != 2:
+        FFXC.set_neutral()
+    return bool(status == 2)
+
+
+def blitz_menu_num_old():
     global base_value
     # 20 = Movement menu (auto, type A, or type B)
     # 29 = Formation menu
@@ -3043,6 +3095,18 @@ def blitz_menu_num():
     if status == 17 or status == 27:
         status = 24
     return status
+
+
+def blitz_menu_num():
+    global base_value
+    key = base_value + 0x014765DA
+    status = process.read_bytes(key, 1)
+    return status
+
+def blitz_menu_size():
+    global base_value
+    key = base_value + 0x14676D5
+    return process.read_bytes(key, 1)
 
 
 def reset_blitz_menu_num():
@@ -4884,8 +4948,39 @@ def rikku_mix_damage() -> List[int]:
     weakness_damage = [int(x * 1.5) for x in initial_damage]
     return weakness_damage
 
-
 def future_attack_will_crit(
+    character: int, char_luck: int, enemy_luck: int, 
+    equipment_bonus: int = 0, attack_index: int = 0, 
+    burn_rolls: int = 0, report: bool = False
+) -> bool:
+    # Logic with Seed at Index 0:
+    # Attack 0 (Immediate Next): Index 1 (Dmg), Index 2 (Crit)
+    # Attack 1: Index 3 (Dmg), Index 4 (Crit)
+    
+    # Calculation: (Index * 2) + 2 skips seed and the first damage roll.
+    ptr = (attack_index * 2) + 2 + burn_rolls
+    
+    if ptr > 190: 
+        return False
+        
+    rng_index = min(20 + character, 27)
+    
+    # We fetch the array (which includes the seed at [0])
+    # ptr+1 ensures the array is long enough to include the index at 'ptr'
+    pool = rng_array_from_index(index=rng_index, array_len=ptr + 1)
+    
+    # FFX Formula: (RNG & 0x7FFFFFFF) % 101
+    # Note: rng_array_from_index already applies & 0x7FFFFFFF, 
+    # but we apply it again here for safety/consistency with the formula.
+    crit_roll = (pool[ptr] & 0x7FFFFFFF) % 101
+    crit_chance = char_luck - enemy_luck + equipment_bonus
+
+    if report:
+        logger.warning(f"Crit check: {crit_roll} < {crit_chance} | RNG Index {rng_index} | Ptr {ptr}")
+
+    return crit_roll < crit_chance
+
+def future_attack_will_crit_orig(
     character: int, char_luck: int, enemy_luck: int, 
     equipment_bonus: int = 0, attack_index: int = 1, 
     burn_rolls: int = 0, report: bool = False
@@ -4898,10 +4993,8 @@ def future_attack_will_crit(
     ptr = (attack_index*2) + burn_rolls
     rng_index = min(20 + character, 27)
     #rng_array = rng_array_from_index(index=rng_index, array_len=200)
-    rng_val = rng_array_from_index(index=rng_index, array_len=ptr+1)[ptr] & 0x7FFFFFFF
+    crit_roll = (rng_array_from_index(index=rng_index, array_len=ptr+1)[ptr] & 0x7FFFFFFF) % 101
 
-    #crit_roll = (rng_array[attack_index * 2] & 0x7FFFFFFF) % 101
-    crit_roll = rng_val % 101
     crit_chance = char_luck - enemy_luck + equipment_bonus
     if report:
         logger.warning(f"Crit check: {crit_roll} < {crit_chance} | RNG index {rng_index}")
@@ -5327,12 +5420,12 @@ def arena_cursor_2():  # up/down on area select screen
     ptr = process.read_bytes(base_value + 0xD2A084, 4)
     return process.read_bytes(ptr + 0x12, 2)
 
-def arena_cursor_3():  # up/down on monster select screen
+def arena_cursor_3() -> int:  # up/down on monster select screen
     global base_value
 
     ptr = process.read_bytes(base_value + 0xD2A084, 4)
     val = process.read_bytes(ptr + 0x12, 2)
-    return (val - 93)/38
+    return int((val - 91)/38)
 
 
 # Escape logic, and used for others
@@ -5395,7 +5488,8 @@ def disable_battle_music():
     address = base_value + 0xF26B09
     original_value = process.read_bytes(address, size=1)
     modified_value = original_value | 0b00000101
-    process.write_bytes(address, modified_value, size=1)
+    if original_value != modified_value:
+        process.write_bytes(address, modified_value, size=1)
 
 def read_bytes_external(key, length, use_base:bool=True):
     global base_value

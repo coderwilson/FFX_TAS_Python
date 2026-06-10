@@ -614,26 +614,31 @@ def start_fight(area_index: int, monster_index: int = 0):
                 xbox.tap_down()
             elif arenaCursor > area_index:
                 xbox.tap_up()
+        memory.main.wait_frames(4)
         arenaCursor = get_arena_cursor()
-        memory.main.wait_frames(2)
     xbox.menu_b()
     memory.main.wait_frames(6)
     # Do we need to find cursors for these as well?
     if monster_index >= 7:
         xbox.menu_right()
         monster_index -= 7
+        memory.main.wait_frames(6)
     while monster_index != memory.main.arena_cursor_3():
         while monster_index != memory.main.arena_cursor_3():
-            xbox.tap_down()
+            logger.debug(f"{monster_index} != {memory.main.arena_cursor_3()}")
+            xbox.menu_down()
             # monster_index -= 1
+            if monster_index <= -1:
+                xbox.menu_left()
+                monster_index += 7
+                memory.main.wait_frames(6)
+
         memory.main.wait_frames(2)
     xbox.tap_b()
     memory.main.wait_frames(6)
     xbox.tap_b()
     while not memory.main.battle_active():
         pass
-
-
 
 def return_to_airship(extra_save=False):
     logger.debug("Attempting Return to Airship")

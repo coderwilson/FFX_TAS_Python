@@ -801,7 +801,10 @@ def seymour_natus():
 
     delay_grid = True
     level_need = 9 if game_vars.get_blitz_win() else 10
-    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+    if game_vars.story_mode():
+        memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+    else:
+        memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
     if memory.main.get_yuna_slvl() >= level_need:
         delay_grid = False
     if game_vars.get_blitz_win():
@@ -828,16 +831,24 @@ def seymour_natus():
             FFXC.set_neutral()
             if screen.battle_screen():
                 logger.info("Battle Start")
-                if memory.main.battle_type() == 2:
+                if memory.main.battle_type() == 2 and not game_vars.story_mode():
                     battle.main.flee_all()
                     battle.main.wrap_up()
                 elif memory.main.get_encounter_id() == 272:  # Seymour Natus
                     battle.boss.seymour_natus()
                     break
+                elif game_vars.story_mode():
+                    logger.info(f"Story mode! Blast 'em!")
+                    # memory.main.wait_frames(150)
+                    battle.main.calm_impulse()
+                    game_vars.add_rescue_count()
                 else:
                     battle.main.highbridge_rescue_battle(delay_grid=delay_grid)
 
-                memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+                if game_vars.story_mode() and game_vars.get_rescue_count() < 4:
+                    memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=False)
+                else:
+                    memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
                 battle.main.heal_up(full_menu_close=True)
                 if delay_grid and memory.main.get_yuna_slvl() >= 2:
                     delay_grid = False

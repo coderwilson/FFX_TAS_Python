@@ -394,6 +394,8 @@ def escape(dark_aeon:bool = False) -> bool:
         menu.after_seymour()
         if game_vars.nemesis():
             memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
+        elif not menu_done:
+            memory.main.update_formation(Tidus, Yuna, Auron, full_menu_close=False)
         else:
             #menu.after_seymour()
             memory.main.update_formation(Tidus, Yuna, Rikku, full_menu_close=False)
@@ -443,7 +445,8 @@ def escape(dark_aeon:bool = False) -> bool:
                         return False
                     battle.main.wrap_up()
                 elif not menu_done:
-                    battle.main.mac_flee_xp()
+                    # battle.main.mac_flee_xp()
+                    battle.main.escape_with_xp()
                     if memory.main.game_over():
                         return False
                     if memory.main.get_tidus_slvl() >= 2:

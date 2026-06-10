@@ -363,7 +363,7 @@ def trials(destro:bool=False):
                     checkpoint = 27
 
             # General pathing
-            elif pathing.set_movement(BesaidTrials.execute(checkpoint)):
+            elif pathing.set_movement(BesaidTrials.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
                 if checkpoint in [70,71,72]:
@@ -489,7 +489,9 @@ def leaving(checkpoint = 17):
                     memory.main.await_control()
                     pathing.approach_coords([5,-47],quick_return=True)
                     FFXC.set_neutral()
-                    memory.main.wait_seconds(21)
+                    memory.main.wait_seconds(23)
+                    xbox.tap_confirm()
+                    xbox.tap_confirm()
                     xbox.tap_confirm()
                     memory.main.await_control()
                 else:
@@ -506,7 +508,7 @@ def leaving(checkpoint = 17):
                 save_sphere.touch_and_go()
                 checkpoint += 1
             elif checkpoint == 65 and not gil_guy:
-                # pathing.approach_actor_by_index(13)
+                pathing.approach_actor_by_index(13)
                 gil_guy = True
                 memory.main.click_to_control_3()
             elif checkpoint == 70:

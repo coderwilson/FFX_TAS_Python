@@ -204,35 +204,29 @@ def woods_menuing():
     open_grid(character=0)
     menu_grid.move_first()
     logger.debug(memory.main.s_grid_cursor_coords())
-    levels = memory.main.get_tidus_slvl()
-    if memory.main.s_grid_cursor_coords() == [-81,-484]:
-        if levels == 1:
-            while memory.main.s_grid_cursor_coords() != [-117,-448]:
-                grid_left()
-        else:
-            while memory.main.s_grid_cursor_coords() != [-165,-564]:
-                grid_left()
-        menu_grid.move_and_use()
-        menu_grid.sel_sphere("ability", "none")
-        if levels > 1:
-            menu_grid.use_and_use_again()
-            menu_grid.sel_sphere("speed", "none")
-            game_vars.complete_full_kilika_menu()
+    if (
+        memory.main.s_grid_cursor_coords() == [-81,-484] and
+        memory.main.get_tidus_slvl() == 1
+    ):
+        logger.info("Variant 1")
+        menu_grid.coords_movement([-117,-448])
+    elif (
+        memory.main.s_grid_cursor_coords() == [-45,-520] and
+        memory.main.get_tidus_slvl() == 2
+    ):
+        logger.info("Variant 2")
+        menu_grid.coords_movement([-117,-448])
     else:
-        if levels == 2:
-            while memory.main.s_grid_cursor_coords() != [-117,-448]:
-                grid_left()
-        else:
-            while memory.main.s_grid_cursor_coords() != [-165,-564]:
-                grid_left()
-        menu_grid.move_and_use()
-        menu_grid.sel_sphere("ability", "none")
-        if levels > 2:
-            menu_grid.use_and_use_again()
-            menu_grid.sel_sphere("speed", "none")
-            game_vars.complete_full_kilika_menu()
-        logger.warning("SPHERE GRID ERROR - CONTACT CODER IMMEDIATELY!!!")
-        quit()
+        logger.info("Variant 3")
+        menu_grid.coords_movement([-165,-564])
+    menu_grid.move_and_use()
+    menu_grid.sel_sphere("ability", "none")
+    if memory.main.s_grid_cursor_coords() == [-165,-564]:
+        menu_grid.use_and_use_again()
+        menu_grid.sel_sphere("speed", "none")
+        game_vars.complete_full_kilika_menu()
+    # logger.warning("SPHERE GRID ERROR - CONTACT CODER IMMEDIATELY!!!")
+    # quit()
     menu_grid.use_and_quit()
 
     # Reorder the party
@@ -1367,7 +1361,7 @@ def equip_armor(*, character, ability=255, slot_count=99, full_menu_close=True):
                     armor_num = index
                     break
         if armor_num == 255:
-            armor_num = len(armor_handles) + 1
+            armor_num = len(armor_handles)
     else:
         armor_num = 0
 
@@ -1746,14 +1740,14 @@ def seymour_natus_blitz_loss():
         menu_grid.sel_sphere("power", "none")
         menu_grid.use_and_move()
         grid_right()
-        grid_down()
+        grid_right()
     else:
         grid_right()
         grid_right()
-    menu_grid.move_and_use()
-    menu_grid.sel_sphere("power", "none")
+        menu_grid.move_and_use()
+        menu_grid.sel_sphere("power", "none")
+        menu_grid.use_and_move()
 
-    menu_grid.use_and_move()
     while memory.main.s_grid_cursor_coords() != [446,-1040]:
         grid_right()
     menu_grid.move_and_use()
@@ -2766,10 +2760,8 @@ def sk_return_2():
 
 
 def open_grid(character):
-    try:
-        FFXC.set_neutral()
-    except Exception:
-        FFXC.set_neutral()
+    logger.debug("Attempting to open sphere grid.")
+    FFXC.set_neutral()
     while not memory.main.s_grid_active():
         if memory.main.user_control() and not memory.main.menu_open():
             xbox.tap_y()
@@ -2801,10 +2793,7 @@ def open_grid(character):
                 FFXC.set_neutral()
             except Exception:
                 FFXC.set_neutral()
-    try:
-        FFXC.set_neutral()
-    except Exception:
-        FFXC.set_neutral()
+    FFXC.set_neutral()
     if character != memory.main.s_grid_char():
         while character != memory.main.s_grid_char():
             # Recovers if we opened the grid on the wrong character.

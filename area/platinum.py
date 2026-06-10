@@ -58,6 +58,7 @@ from nemesis.arena_select import (
     od_check_2,
     distill_spheres
 )
+from menu_grid import use_and_quit
 import random
 from save_sphere import touch_and_go
 from sphere_grid.completion_functions import (
@@ -134,8 +135,6 @@ def jecht_shot():
     memory.main.await_control()
 
     # Arrived at Kilika
-    #while not pathing.set_movement([-291,-257]):
-    #    pass
     while not pathing.set_movement([-348,-251]):
         pass
 
@@ -203,18 +202,6 @@ def blitzball_recruit_tour(extras:bool = True):
     if memory.main.get_map() == 374:
         # air_ship_destination(3)
         navigate_to_airship_destination("Luca")
-    # write_big_text("Recruiting Wedge, Forward 2")
-    # while not pathing.set_movement([-301,-56]):
-    #     pass
-    # while not pathing.set_movement([-207,-59]):
-    #     pass
-
-    # pathing.blitz_recruit(8360) # Wedge, #2 defender.
-    
-    # while not pathing.set_movement([-207,-59]):
-    #     pass
-    # while not pathing.set_movement([-301,-56]):
-    #     pass
     while not pathing.set_movement([-439,-1]):
         pass
     last_map = memory.main.get_map()
@@ -326,143 +313,58 @@ def blitzball_recruit_tour(extras:bool = True):
         pass
     return_to_airship()
 
+def blitzball_save_sphere() -> bool:
+    target_row = 1
 
-def blitz_game(first_game:bool=False, tourney:bool=False, jecht_shot:bool=False):
-    if memory.main.game_over():
-        return False
-    if memory.main.get_map() == 374:
-        while not pathing.set_movement([-266,360]):
-            pass
-    save_sphere.approach_save_sphere()
-    if memory.main.get_map() == 374:
-        while memory.main.save_menu_cursor() != 1 and memory.main.save_menu_cursor_2() != 1:
-            xbox.menu_down()
-    else:
-        while memory.main.save_menu_cursor() != 2 and memory.main.save_menu_cursor_2() != 2:
-            xbox.menu_down()
-    xbox.menu_b()
 
-    if tourney:
-        from memory.main import save_popup_cursor
-        last_value = save_popup_cursor()
-        while save_popup_cursor() != 1:
-            if last_value < 1:
+    if memory.main.get_map() == 374:
+        target_row = 1
+        if memory.main.user_control():
+            while not pathing.set_movement([-266,360]):
+                pass
+    if memory.main.user_control():
+        save_sphere.approach_save_sphere()
+        memory.main.wait_frames(3)
+
+    while memory.main.get_map() != 347:
+        logger.debug(f"Cursor check: {memory.main.save_menu_cursor()} | {target_row}")
+        if memory.main.user_control():
+            return blitzball_save_sphere()
+        elif memory.main.diag_skip_possible():
+            if memory.main.save_menu_cursor() != target_row:
                 xbox.menu_down()
             else:
-                xbox.menu_up()
-            memory.main.wait_frames(2)
-            if last_value == 0 and save_popup_cursor() == 2:
-                xbox.tap_back()
-                xbox.tap_confirm()
-                return False
-    else:
-        xbox.tap_confirm()
-    memory.main.wait_seconds(2)
-
+                xbox.menu_b()
+    return True
     
-    while not memory.main.diag_progress_flag() in [113,40]:
-        if memory.main.diag_progress_flag() == 41:
-            # Select team/formation
-            if first_game:
-                logger.warning("first_game true, setting team.")
-                # xbox.tap_confirm()
-                # memory.main.wait_seconds(1)
-                # xbox.tap_confirm()
-                # memory.main.wait_seconds(1)
-                xbox.tap_confirm()  # Tidus
-                memory.main.wait_seconds(1)
-                xbox.tap_confirm()  # Datto
-                memory.main.wait_seconds(1)
-                xbox.tap_confirm()  # Letty
-                memory.main.wait_seconds(1)
-                xbox.tap_up()
-                xbox.tap_confirm()  # Ropp
-                memory.main.wait_seconds(1)
-                xbox.tap_up()
-                xbox.tap_confirm()  # Zalitz
-                memory.main.wait_seconds(1)
-                xbox.tap_up()
-                xbox.tap_confirm()  # Miyu
-                memory.main.wait_seconds(1)
-                xbox.tap_confirm()
-            else:
-                while memory.main.diag_progress_flag() == 41:
-                    xbox.tap_confirm()
-                    memory.main.wait_seconds(1)
-            memory.main.wait_seconds(1)
-        elif memory.main.diag_progress_flag() in [20]:
-            logger.warning("Skill setting screen, no XP gained.")
-            xbox.tap_back()
-            memory.main.wait_frames(9)
-            xbox.tap_confirm()
-            memory.main.wait_seconds(2)
-        elif memory.main.diag_progress_flag() == 27:
-            logger.warning("Skill setting screen")
-            # Set jecht shot
-            if jecht_shot:
-                xbox.tap_confirm()
-                memory.main.wait_seconds(1)
-                xbox.tap_confirm()
-                memory.main.wait_seconds(1)
-                xbox.tap_confirm()
-                memory.main.wait_seconds(2)
-                xbox.tap_back()
-                memory.main.wait_seconds(2)
-            xbox.tap_back()
-            memory.main.wait_frames(9)
-            xbox.tap_confirm()
-            memory.main.wait_seconds(2)
-            xbox.tap_back()
-            memory.main.wait_frames(9)
-            xbox.tap_confirm()
-        elif memory.main.diag_progress_flag() == 22:
-            logger.warning("Skill setting screen (2)")
-            xbox.tap_back()
-            memory.main.wait_seconds(2)
-            xbox.tap_back()
-            memory.main.wait_frames(9)
-            xbox.tap_confirm()
-            memory.main.wait_seconds(2)
-        elif memory.main.diag_progress_flag() == 33:
-            logger.warning("Skill setting screen (3)")
-            xbox.tap_back()
-            memory.main.wait_seconds(2)
-            xbox.tap_back()
-            memory.main.wait_seconds(2)
-            xbox.tap_back()
-            memory.main.wait_frames(9)
-            xbox.tap_confirm()
-            memory.main.wait_seconds(2)
-        elif memory.main.diag_progress_flag() in [102,103,134,41]:
-            if memory.main.diag_skip_possible():
-                xbox.tap_back()
-                memory.main.wait_seconds(1)
-                xbox.tap_back()
-                memory.main.wait_frames(9)
-                xbox.menu_b()
-        elif memory.main.diag_progress_flag() == 40:
-            logger.info("Attempting to proceed.")
-            if memory.main.blitz_proceed_cursor() != 0:
-                xbox.menu_up()
-            else:
-                xbox.menu_b()
-        else:
-            logger.debug(f"Screen: {memory.main.diag_progress_flag()}")
-            xbox.tap_confirm()
-            memory.main.wait_seconds(2)
-    # if memory.main.diag_progress_flag() == 134:
-    #     logger.warning(memory.main.wakka_od_learned())
-    #     while memory.main.blitz_proceed_cursor() == 1:
-    #         while memory.main.blitz_proceed_cursor() == 1:
-    #             xbox.tap_up()
-    #         memory.main.wait_frames(1)
+
+def blitz_game(
+    first_game:bool=False, 
+    tourney:bool=False, 
+    jecht_shot:bool=False
+):
+    if memory.main.game_over():
+        return False
+
+    if memory.main.get_map() != 347:
+        blitzball_save_sphere()
+
+    while memory.main.diag_progress_flag() != 135:
+        # Waiting for the screen to come up
+        pass
+    
     if memory.main.diag_progress_flag() == 40:
         logger.info("Attempting to proceed.")
         if memory.main.blitz_proceed_cursor() != 0:
             xbox.menu_up()
         else:
             xbox.menu_b()
-    blitzball.blitz_main.blitz_engage(False)
+    blitzball.blitz_main.blitz_engage(
+        False, 
+        first_match=first_game, 
+        tourney=tourney, 
+        jecht_shot=jecht_shot
+    )
     logger.warning(memory.main.wakka_od_learned())
 
 def blitz_force_reward(reward_num:int = 99):
@@ -518,10 +420,10 @@ def blitz_force_reward(reward_num:int = 99):
         else:
             write_big_text("Manipulation done")
 
-
-    xbox.tap_back()
-    memory.main.wait_frames(2)
-    xbox.tap_confirm()
+    if not complete:
+        xbox.tap_back()
+        memory.main.wait_frames(2)
+        xbox.tap_confirm()
 
 def blitz_remake_tourney(reward_num):
     if memory.main.game_over():
@@ -543,12 +445,13 @@ def blitz_remake_tourney(reward_num):
         memory.main.wait_seconds(5)
 
         if memory.main.blitz_tournament_active():
+            logger.info(f"Tourney reward check: {memory.main.blitz_tournament_prizes()[0]} | {reward_num}")
             if memory.main.blitz_tournament_prizes()[0] == reward_num:
                 logger.info("Tournament is now set up.")
                 write_big_text("Tournament Ready")
-                xbox.tap_back()
-                xbox.tap_confirm()
-                memory.main.await_control()
+                # xbox.tap_back()
+                # xbox.tap_confirm()
+                # memory.main.await_control()
                 return True
             else:
                 logger.info("Tournament is incorrect. Resetting.")
@@ -565,7 +468,7 @@ def blitz_remake_tourney(reward_num):
             memory.main.await_control()
 
 
-def blitz_remove_tourney():
+def blitz_remove_tourney(reward_num):
     write_big_text("Manipulating Blitz rewards (remove)")
     while memory.main.blitz_tournament_active():
         if memory.main.get_map() == 374:
@@ -580,7 +483,8 @@ def blitz_remove_tourney():
                 xbox.menu_down()
         xbox.menu_b()
         memory.main.wait_seconds(5)
-
+        if memory.main.blitz_tournament_prizes()[0] == reward_num:
+            return True
         xbox.tap_back()
         xbox.tap_confirm()
         memory.main.await_control()
@@ -600,6 +504,8 @@ def blitz_remove_tourney():
         xbox.menu_b()
         memory.main.wait_seconds(5)
 
+        if memory.main.blitz_tournament_prizes()[0] == reward_num:
+            return True
         xbox.tap_back()
         xbox.tap_confirm()
         memory.main.await_control()
@@ -665,7 +571,7 @@ def status_reels_start():
     return
 
 def aurochs_reels_start():
-    blitz_remove_tourney()
+    blitz_remove_tourney(0x0121)
     blitz_force_reward(0x0121)
 
     write_big_text(f"Learning Auroch Reels\nGame {1} of 3")
@@ -984,6 +890,14 @@ def farming_power_spheres():
     stock_all_locks()
     menu.equip_weapon(character=0, ability=32772,full_menu_close=True)  # Evade & Counter (Caldabolg)
     menu.remove_all_nea()
+    unlock_check = bool(memory.main.get_item_count_slot(memory.main.get_item_slot(57)) > 80)
+    while not unlock_check:
+        write_big_text("Unlocking Juggernaut")
+        arena_npc()
+        arena_menu_select(4)
+        memory.main.await_control()
+        unlock_check = bool(memory.main.get_item_count_slot(memory.main.get_item_slot(57)) > 80)
+
     write_big_text(f"Power farm STR and MP spheres.")
     juggernaut_farm(include_yojimbo=False)
     vidatu_farm()
@@ -2874,6 +2788,67 @@ def nova(checkpoint:int=0):
     return_to_airship()
     return True
 
+def sphere_grid_lottery(actor_list):
+    """
+    Returns the actor_list re-ordered based on a weighted lottery.
+    """
+    grid_instance = get_grid()
+    weighted_actors = []
+    weights = []
+
+    # Calculate remaining nodes for all involved and find the max
+    remaining_nodes_map = {
+        actor: grid_instance.count_all_unlockables(actor) 
+        for actor in actor_list
+    }
+    
+    max_remaining = max(remaining_nodes_map.values()) if remaining_nodes_map else 1
+    if max_remaining == 0: max_remaining = 1
+
+    for actor_id in actor_list:
+        levels = memory.sphere_grid.char_sphere_levels(actor_id)
+        if levels <= 0:
+            continue
+            
+        remaining = remaining_nodes_map[actor_id]
+        
+        # Calculate Weight
+        weight = max(1, int(levels * (remaining / max_remaining) * 100))
+        
+        weighted_actors.append(actor_id)
+        weights.append(weight)
+        
+    if not weighted_actors:
+        return []
+
+    # Calculate total weight to display percentage odds
+    total_weight = sum(weights)
+    
+    # Log the odds for each participant
+    for i in range(len(weighted_actors)):
+        actor_id = weighted_actors[i]
+        weight = weights[i]
+        odds = (weight / total_weight) * 100
+        logger.debug(f"Lottery: Actor {actor_id} has {odds:.1f}% chance of winning (Weight: {weight})")
+
+    # Re-order the list based on weights
+    shuffled_actors = []
+    pool = weighted_actors[:]
+    pool_weights = weights[:]
+
+    while pool:
+        # random.choices returns a list, so we take the [0] element
+        # It handles the weighted selection for us
+        winner = random.choices(pool, weights=pool_weights, k=1)[0]
+        shuffled_actors.append(winner)
+        
+        # Remove the winner from the pool so they aren't picked again
+        idx = pool.index(winner)
+        pool.pop(idx)
+        pool_weights.pop(idx)
+
+    logger.debug(f"Lottery: Final execution order: {shuffled_actors}")
+    return shuffled_actors
 
 def grid_check():
     # After restocking, perform grid on any ready characters.
@@ -2881,16 +2856,13 @@ def grid_check():
     remaining_array = [0] * 7
     for i in range(7):
         remaining_array[i] = count_still_locked(actor_id=i)
-    for x in range(6,-1,-1):
+        
+    lottery_array = [6,5,4,3,2,1,0]
+    actor_array = sphere_grid_lottery(lottery_array)
+    for x in actor_array:
         if remaining_array[x] != 0:
             levels = memory.sphere_grid.char_sphere_levels(x)
             if levels > 10:
-                # if nearest_interesting_node(
-                #     x,
-                #     include_empty=fill_empty,
-                #     locks=locks,
-                #     target_node_id=destination
-                # ) < levels:
                 ret_val = max_level_ups(
                     x, 
                     include_empty=True, 
@@ -2900,14 +2872,19 @@ def grid_check():
                 update_completion_report()
                 logger.info(f"Level ups returned value: {ret_val}")
                 if ret_val == "dest_reached":
+                    use_and_quit()
                     return grid_check()
                 elif ret_val == "low_spheres":
+                    use_and_quit()
                     return ret_val
                 elif ret_val == "low_filler_spheres":
+                    use_and_quit()
                     return ret_val
         
         remaining_array[x] = count_still_locked(actor_id=x)
                 
+    if memory.main.s_grid_active():
+        use_and_quit()
     if ret_val is None:
         ret_val = "normal_return"
     return ret_val
@@ -2938,10 +2915,12 @@ def grid_check_early(force=False):
     if force:
         actor_array = [6]
     elif game.state == "Nem_Farm" and game.step >= 6:
-        actor_array = [0,6,4]
+        lottery_array = [0,6,4]
+        actor_array = sphere_grid_lottery(lottery_array)
         base_locks = 3
     else:
-        actor_array = [5,1,6,4]
+        lottery_array = [5,1,6,4]
+        actor_array = sphere_grid_lottery(lottery_array)
         base_locks = 0
     
     # Perform grid on any ready characters.
@@ -3041,6 +3020,8 @@ def grid_check_early(force=False):
                     logger.info(f"Level ups returned value: {ret_val}")
                     if ret_val == "dest_reached":
                         return grid_check_early()
+    if memory.main.s_grid_active():
+        use_and_quit()
 
 def rikku_provoke():
     grid_instance = get_grid() # Get the grid instance

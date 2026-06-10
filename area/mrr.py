@@ -63,7 +63,10 @@ def arrival():
                 pathing.set_movement([-50,my_coords[1]+40])
         else:
             FFXC.set_neutral()
-            if not game_vars.story_mode():
+            if game_vars.story_mode():
+                if memory.main.diag_progress_flag() == 105:
+                    xbox.tap_confirm()
+            else:
                 xbox.tap_confirm()
     split_timer()
     write_big_text("")

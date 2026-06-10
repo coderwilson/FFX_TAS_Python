@@ -359,8 +359,7 @@ def mid_point():
     if count_flip < count_noflip:
         flip_highroad = True
     # flip_highroad = "flip_highroad" in game_vars.run_modifier()
-    
-    while memory.main.get_map() != 115:
+    while not memory.main.battle_active():
         if memory.main.user_control():
             #logger.debug(checkpoint)
             if memory.main.get_map() == 58:
@@ -385,12 +384,7 @@ def mid_point():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.battle_active():
-                write_big_text("")
-                logger.info("Mi'ihen - ready for Chocobo Eater")
-                battle.boss.chocobo_eater()
-                logger.info("Mi'ihen - Chocobo Eater complete")
-            elif game_vars.story_mode():
+            if game_vars.story_mode():
                 if memory.main.get_story_progress() == 760:
                     logger.debug(f"Story check: {story_mode_phase} | {memory.main.get_story_progress()}")
                     while not memory.main.user_control():
@@ -409,6 +403,21 @@ def mid_point():
 
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
+    
+    memory.main.wait_frames(3)
+    write_big_text("")
+    logger.info("Mi'ihen - ready for Chocobo Eater")
+    battle.boss.chocobo_eater()
+    while True:
+        if memory.main.get_map() == 115:
+            logger.info("Mi'ihen - Chocobo Eater complete")
+            return True
+        if memory.main.get_map() == 23:
+            return False
+        if memory.main.user_control():
+            logger.info("Mi'ihen - Chocobo Eater complete")
+            return True
+        xbox.tap_confirm()
 
 
 # Starts just after the save sphere.

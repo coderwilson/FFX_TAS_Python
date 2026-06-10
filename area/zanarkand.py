@@ -194,16 +194,15 @@ def arrival():
             if checkpoint == 3 and game_vars.get_skip_zan_luck():
                 checkpoint = 5
             elif checkpoint == 4:  # First chest
-                fortune_slot = memory.main.get_item_slot(74)
-                if fortune_slot == 255:
-                    fortune_count = 0
-                    pathing.approach_coords([-110,-433],click_through=True)
-                else:
-                    if memory.main.get_item_count_slot(fortune_slot) > fortune_count:
-                        checkpoint += 1
-                        memory.main.click_to_control_3()
-                    else:
-                        pathing.approach_coords([-110,-433],click_through=True)
+                new_count = memory.main.get_item_count_slot(fortune_slot)
+                while fortune_slot == 255 or new_count == fortune_count:
+                    pathing.set_movement([-110,-433])
+                    xbox.tap_b()
+                    fortune_slot = memory.main.get_item_slot(74)
+                    new_count = memory.main.get_item_count_slot(fortune_slot) if fortune_slot != 255 else 0
+                    logger.debug(f"{fortune_slot} : {new_count} : {fortune_count}")
+                memory.main.click_to_control()
+                checkpoint += 1
             elif pathing.set_movement(ZanarkandOutdoors.execute(checkpoint)):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
@@ -323,7 +322,7 @@ def dome_interior():
             ):  # Final room before trials
                 logger.info("Final room before trials")
                 checkpoint = 21
-            elif pathing.set_movement(ZanarkandDome.execute(checkpoint)):
+            elif pathing.set_movement(ZanarkandDome.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
@@ -398,14 +397,30 @@ def trials():
 def trials_0(checkpoint):
     memory.main.await_control()
 
-    while checkpoint < 9:
+    while checkpoint < 10:
         if memory.main.user_control():
             if checkpoint == 8:
-                pathing.approach_coords([68,25],click_through=True)  # Push the pedestol
-                pathing.approach_coords([78,60],click_through=True)  # Room to room
+                logger.debug("Approaching pedestal")
+                pathing.approach_coords([68,25], click_through=True)  # Push the pedestal
+                logger.debug("Pedestal complete - moving to next room.")
                 
+                # NEW: Define a target with tolerance to ensure we are in the new room
+                # We stay in this loop until x is near 3, ignoring the 0,0 flicker
+                while True:
+                    current_coords = memory.main.get_coords()
+                    x, y = current_coords[0], current_coords[1]
+
+                    # 1. Check if we've reached the destination (approx 3, 68)
+                    if 1 <= x <= 5: 
+                        break
+
+                    # 2. Only issue movement if we aren't at 0,0 and have control
+                    if x != 0 and memory.main.user_control():
+                        pathing.set_movement([80,60])  # Room to room
+                        
+                logger.debug("Next room confirmed.")
                 checkpoint += 1
-            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
     return checkpoint
@@ -421,7 +436,7 @@ def trials_1(checkpoint):
                 memory.main.click_to_event()
                 FFXC.set_neutral()
                 xbox.skip_dialog(0.5)
-                memory.main.click_to_control_3()
+                memory.main.click_to_control()
                 checkpoint += 1
             elif checkpoint == 26:
                 pathing.approach_coords([68,-1],click_through=True)  # Place red sphere
@@ -435,9 +450,13 @@ def trials_1(checkpoint):
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_b()
     return checkpoint
 
 
@@ -459,9 +478,13 @@ def trials_2(checkpoint):
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_confirm()
     return checkpoint
 
 
@@ -483,9 +506,13 @@ def trials_3(checkpoint):
                 memory.main.wait_frames(30 * 0.2)
                 FFXC.set_neutral()
                 checkpoint += 1
-            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_confirm()
     return checkpoint
 
 
@@ -503,14 +530,19 @@ def trials_4(checkpoint):
                 checkpoint += 1
             elif checkpoint == 87:
                 while memory.main.user_control():
-                    pathing.set_movement([141, 1])
+                    pathing.set_movement([141, 1], ignore_bonk=True)
                     xbox.tap_confirm()
                 FFXC.set_neutral()
+                xbox.skip_dialog(0.5)
                 memory.main.click_to_control_3()
                 checkpoint += 1
-            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint)):
+            elif pathing.set_movement(ZanarkandTrials.execute(checkpoint), ignore_bonk=True):
                 checkpoint += 1
                 logger.debug(f"Checkpoint {checkpoint}")
+        else:
+            FFXC.set_neutral()
+            if memory.main.diag_skip_possible():
+                xbox.tap_confirm()
     FFXC.set_neutral()
     return checkpoint
 
@@ -522,7 +554,7 @@ def s_keeper_print_bahamut_crit_chance():
 
 def sanctuary_keeper():
     logger.info("Start section - Engage Sanctuary Keeper")
-    while not pathing.set_movement([110, 20]):
+    while not pathing.set_movement([110, 20], ignore_bonk=True):
         pass
     FFXC.set_movement(-1, 1)
     memory.main.await_event()
@@ -532,7 +564,10 @@ def sanctuary_keeper():
         xbox.click_to_battle()
     battle.main.aeon_summon(4)  # This is the whole fight. Kinda sad.
     s_keeper_print_bahamut_crit_chance()
-    while memory.main.battle_active():
+    while not (
+        memory.main.battle_wrap_up_active() or
+        memory.main.game_over()
+    ):
         if memory.main.turn_ready():
             logger.debug(memory.main.rng_array_from_index(index=43, array_len=4))
             battle.main.attack("none")

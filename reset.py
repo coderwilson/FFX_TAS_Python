@@ -6,6 +6,7 @@ import memory.main
 from memory.main import user_control, turn_ready, battle_wrap_up_active
 import vars
 import xbox
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 game_vars = vars.vars_handle()
@@ -53,23 +54,29 @@ def mid_run_reset(land_run: bool = False, start_time=datetime.datetime.now()):
         memory.main.wait_frames(60)
         reset_to_main_menu()
 
-    # Now to re-start
-    game_vars.set_start_vars()
-    rng_seed = memory.main.rng_seed()
-    if land_run:
-        rng_seed += 0
-        if rng_seed == 256:
-            rng_seed = 0
-    logs.reset_stats_log()
-    logs.next_stats(rng_seed)  # Start next stats file
-    if game_vars.rng_mode() in ["set", "preferred"]:
-        memory.main.set_rng_seed(rng_seed)
-    logger.info(f"This run will be using RNG seed: {rng_seed}")
-    logs.next_stats(rng_seed)
-    logs.write_stats("RNG seed:")
-    logs.write_stats(rng_seed)
-    gamestate = "none"
-    step_counter = 1
+    # Now to re-start (no longer functional as of CSR 1.5.2)
+    # game_vars.set_start_vars()
+    # rng_seed = memory.main.rng_seed()
+    # if land_run:
+    #     rng_seed += 0
+    #     if rng_seed == 256:
+    #         rng_seed = 0
+    # logs.reset_stats_log()
+    # logs.next_stats(rng_seed)  # Start next stats file
+    # if game_vars.rng_mode() in ["set", "preferred"]:
+    #     memory.main.set_rng_seed(rng_seed)
+    # logger.info(f"This run will be using RNG seed: {rng_seed}")
+    # logs.next_stats(rng_seed)
+    # logs.write_stats("RNG seed:")
+    # logs.write_stats(rng_seed)
+    # gamestate = "none"
+    # step_counter = 1
+
+    # notice_str = "Game over resulting in\naVIna learning more about\nseed "
+    # notice_str += str(game_vars.rng_seed_num())
+    # notice_str += "\nPlease re-run this same seed."
+    # write_big_text(notice_str)
+    # quit()
 
     return gamestate, step_counter
 

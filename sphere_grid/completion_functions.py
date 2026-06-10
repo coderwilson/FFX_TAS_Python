@@ -9,6 +9,7 @@ from menu_grid import (
     use_and_use_again,
     move_and_quit,
     use_and_quit,
+    use_and_wait,
     sel_sphere,
     coords_movement
 )
@@ -157,62 +158,59 @@ def stock_return_sphere():
     nemesis.arena_select.arena_menu_select(4)
     memory.main.update_formation(Tidus, Wakka, Rikku)
 
-def nearest_interesting_node(
-        actor_id, 
-        include_empty:bool=True, 
-        locks:int=0,
-        target_node_id: int | None = None, # Highest Priority Target
-        clear_luck:bool=False
-    ):
-    grid_instance = get_grid() # Get the grid instance
-    dist_dict = {}
-    nodes_dict = {}
-    start_node = grid_instance.character_at_node(actor_id)
-    logger.debug(f"ACTOR {actor_id} START NODE CHECK: {start_node}")
+def check_for_activatable_nodes(actor_id, include_luck: bool = False):
+    """
+    Checks the current node and all immediately adjacent nodes 
+    to see if any are eligible for activation.
+    """
+    grid_instance = get_grid()
+    start_node_id = grid_instance.character_at_node(actor_id)
+    char_name = memory.main.name_from_number(actor_id)
     
+    # 1. Check current node first
+    nodes_to_check = [start_node_id] + grid_instance.get_node(start_node_id).adjacent_node_ids
+    
+    for node_id in nodes_to_check:
+        node = grid_instance.get_node(node_id)
+        is_luck_node = (0x16 <= getattr(node, 'current_content_id', 0) <= 0x19)
+        logger.info(f"Node Type: {getattr(node, 'current_content_id', 0)} - Is Luck: {is_luck_node}")
+        if is_luck_node and not include_luck:
+            continue
+        # Check if the node exists and is not already unlocked by this character
+        if node and not node.unlocked_by_characters.get(char_name, False):
+            # If the node is traversable (e.g., not a locked gate that needs a key)
+            if grid_instance._is_node_traversable(node_id):
+                logger.info(f"Priority Activation: Node {node_id} is available for {char_name}. Activating now.")
+                return True
+    return False
+
+def nearest_interesting_node(
+    actor_id, include_empty:bool=True, locks:int=0, 
+    target_node_id: int | None = None, clear_luck:bool=False
+):
+    grid_instance = get_grid()
+    dist_dict, nodes_dict = {}, {}
+    start_node = grid_instance.character_at_node(actor_id)
     char_name = memory.main.name_from_number(actor_id)
     char_levels = memory.sphere_grid.char_sphere_levels(actor_id)
-    logger.debug(f"{char_name} has slvls: {char_levels}, target node {target_node_id}")
     
     path_nodes = None
-    final_target_id = target_node_id # This will hold the node we are ultimately pathing towards
+    final_target_id = target_node_id
 
-    # --- 1. Determine Target and Path Constraint Priority ---
-
-    # Priority 1: Explicit target_node_id provided
-    if final_target_id is not None:
-        logger.debug("Mark 1: Processing explicit target node (Priority 1).")
-        path_nodes_raw = grid_instance.find_shortest_path(start_node, final_target_id)
-        if not path_nodes_raw:
-            logger.warning(f"No valid path found to explicit target node {final_target_id}")
-            return None, None, None
+# 1. Determine Target/Path Priority
+    if final_target_id is None:
+        # LOOKAHEAD: Search for dead-end within depth of 4
+        target_path = grid_instance.find_path_to_nearest_dead_end(start_node, actor_id, MAX_DISTANCE=7, include_luck=clear_luck)
+        if not target_path and locks >= 4:
+            target_path = grid_instance.find_path_to_nearest_lv4_lock(start, actor_id, MAX_DISTANCE=7)
         
-        path_nodes = set(path_nodes_raw)
-
-    # Priority 2: Dead-End Search (Only runs if no explicit target was provided)
-    elif final_target_id is None:
-        dead_end_path = grid_instance.find_path_to_nearest_dead_end(start_node, actor_id)
-        
-        if dead_end_path:
-            logger.debug(f"Dead-end path found (Priority 2): {dead_end_path}")
-            
-            # Set the dead end as the final target
-            final_target_id = dead_end_path[-1] 
-            
-            # Set path_nodes to constrain all subsequent searches to this path
-            path_nodes = set(dead_end_path)
-            
-            # # Add the dead-end to the dicts for selection among other nodes on the path
-            # nodes_dict["dead_end"] = final_target_id
-            # dist_dict["dead_end"] = len(dead_end_path) - 1 # Distance is path length - 1
-
-    # Priority 3: No path constraint (path_nodes remains None)
-    if final_target_id:
-        logger.info(f"Mark 2: Path constraint set by target: {final_target_id} - distance {len(path_nodes)-1}")
-        logger.info(f"Path nodes: {path_nodes}.")
-    else:
-        logger.info(f"No destination set.")
-    # memory.main.wait_frames(90)
+        if target_path:
+            final_target_id = target_path[-1]
+            path_nodes = set(target_path)
+    if final_target_id is not None and path_nodes is None:
+        path_nodes = set(grid_instance.find_shortest_path(start_node, final_target_id) or [])
+    
+    logger.info(f"{actor_id}, Locks: {locks}, Target: {final_target_id}, Luck: {clear_luck}, Enpty: {include_empty}")
 
     # --- 2. Find Nearest Nodes (Constrained by path_nodes) ---
     
@@ -273,15 +271,6 @@ def nearest_interesting_node(
         if best_key is None or (best_dist > char_levels and best_dist < 60):
             logger.debug("Level limit reached.")
             return None, None, None
-            # logger.debug(f"Target path found, but best node ({best_key}) is too far ({best_dist}) or no intermediate nodes found. Try again with general pathing (Priority 3).")
-            # # Recurse to find the general best node (Priority 3). target_node_id=None forces general search.
-            # return nearest_interesting_node(
-            #     actor_id=actor_id, 
-            #     include_empty=include_empty, 
-            #     locks=locks,
-            #     target_node_id = None,
-            #     clear_luck=clear_luck
-            # )
         
         # If the best node is found *along* the constrained path, we need to travel along it.
         if best_dist is not None and best_dist <= char_levels:
@@ -372,44 +361,41 @@ def max_level_ups(
         return "low_spheres"
 
     grid_instance = get_grid() # Get the grid instance
-    # logger.warning("===============")
-    # logger.warning(grid_instance)
-    # logger.warning(f"Nodes: {len(grid_instance._nodes)}")
-    # logger.warning("===============")
     grid_big_text_update()
     start = grid_instance.character_at_node(actor_id)
     char_levels = memory.sphere_grid.char_sphere_levels(actor_id)
     logger.debug(f"==== Starting max level up function for {actor_id}: {char_levels} ====")
     logger.debug(f"Include empty nodes:  {include_empty}")
-    open_grid(actor_id)
+    if not memory.main.s_grid_active() or actor_id != memory.main.s_grid_char():
+        open_grid(actor_id)
     err_type = None
-    target, tar_type, _ = nearest_interesting_node(
-        actor_id=actor_id, 
-        include_empty=include_empty, 
-        locks=locks,
-        target_node_id=dest_index,
-        clear_luck=clear_luck
-    )
-    logger.debug(f"{target} | {grid_instance.get_node(target)}")
-    if tar_type == "shortened_path":
-        move_first()
-        dest = list(grid_instance.get_node(target).position)
-        logger.info(f"Moving to position: {dest}")
-        coords_movement(dest)
-        move_and_quit()
-        memory.main.close_menu()
-        grid_big_text_update(clear=True)
-        return tar_type
-    if target is None:
+    if check_for_activatable_nodes(actor_id):
         use_first()
-    elif target != memory.sphere_grid.cursor_current_node():
+        target = grid_instance.character_at_node(actor_id)
+        tar_type = "current_node"
+    else:
+        target, tar_type, _ = nearest_interesting_node(
+            actor_id=actor_id, 
+            include_empty=include_empty, 
+            locks=locks,
+            target_node_id=dest_index,
+            clear_luck=clear_luck
+        )
+        logger.debug(f"{target} | {grid_instance.get_node(target)}")
+        if tar_type == "shortened_path":
+            move_first()
+            dest = list(grid_instance.get_node(target).position)
+            logger.info(f"Moving to position: {dest}")
+            coords_movement(dest)
+            move_and_quit()
+            memory.main.close_menu()
+            grid_big_text_update(clear=True)
+            return tar_type
         move_first()
         dest = list(grid_instance.get_node(target).position)
         logger.info(f"Moving to position: {dest}")
         coords_movement(dest)
         move_and_use()
-    else:
-        use_first()
 
     while char_levels is not None and char_levels >= 1:
         update_completion_report()
@@ -457,7 +443,6 @@ def max_level_ups(
                     logger.info(f"Moving to position: {dest}")
                     coords_movement(dest)
                     move_and_quit()
-                    memory.main.close_menu()
                     grid_big_text_update(clear=True)
                     update_completion_report()
                     return tar_type
@@ -474,25 +459,19 @@ def max_level_ups(
             except Exception as e:
                 logger.error(f"max_level_ups error: {e}")
                 break
-                # quit()
     
     logger.info("Wrapping up sphere grid for this character.")
-    use_and_quit()
-    memory.main.close_menu()
-    grid_big_text_update(clear=True)
+    use_and_wait()
     if err_type is not None:
         logger.warning(err_type)
         return err_type
     elif dest_index == grid_instance.character_at_node(actor_id):
         logger.warning("Reached destination!!!")
-        # memory.main.wait_frames(150)
         return "dest_reached"
     elif char_levels is None or char_levels == 0:
         logger.warning("Out of levels!!!")
-        # memory.main.wait_frames(150)
         return "levels"
     logger.warning("Unknown return state!")
-    # memory.main.wait_frames(150)
     return "other"
 
     
@@ -501,11 +480,11 @@ def perform_level_up(tar_node, include_empty:bool=True, locks:int=0, clear_luck:
     grid_instance = get_grid() # Get the grid instance
     character_id = memory.main.s_grid_char()
     char_name = memory.main.name_from_number(character_id)
-    str_count = memory.main.get_item_count_slot(memory.main.get_item_slot(87))
-    hp_count = memory.main.get_item_count_slot(memory.main.get_item_slot(85))
-    mp_count = memory.main.get_item_count_slot(memory.main.get_item_slot(86))
-    mdef_count = memory.main.get_item_count_slot(memory.main.get_item_slot(90))
-    lv4_count = memory.main.get_item_count_slot(memory.main.get_item_slot(84))
+    str_count = memory.main.get_item_count(87)
+    hp_count = memory.main.get_item_count(85)
+    mp_count = memory.main.get_item_count(86)
+    mdef_count = memory.main.get_item_count(90)
+    lv4_count = memory.main.get_item_count(84)
     
     current_node = grid_instance.get_node(tar_node)
     unlock_array = []
@@ -514,6 +493,7 @@ def perform_level_up(tar_node, include_empty:bool=True, locks:int=0, clear_luck:
         logger.info(f"Unlocking for {char_name} ({clear_luck})")
         use_sphere_type = current_node.get_unlock_sphere_id()
         logger.debug(f"Current node sphere type: {use_sphere_type}")
+        logger.manip(f"Counts: {str_count}, {hp_count}, {mp_count}, {mdef_count}")
         if use_sphere_type == None:
             if include_empty:
                 if str_count >= 1:
@@ -722,8 +702,8 @@ def perform_level_up(tar_node, include_empty:bool=True, locks:int=0, clear_luck:
     logger.debug(f"Using the following spheres: {unlock_array}")
     if len(unlock_array) == 0:
         xbox.menu_a()
-        use_and_quit()
-        memory.main.close_menu()
+        # use_and_quit()
+        # memory.main.close_menu()
         logger.info(f"Nothing to unlock. Returning.")
         return False
     for i in range(len(unlock_array)):
@@ -801,24 +781,20 @@ def grid_big_text_update(clear:bool=False):
         
     out_text = "Grid Sphere check:\n"
     
-    sphere_index = memory.main.get_item_slot(70)
-    if sphere_index == 255:
-        sphere_count = 0
-    else:
-        sphere_count = memory.main.get_item_count_slot(sphere_index)
+    sphere_count = memory.main.get_item_count(70)
     out_text += f"Power: {sphere_count}\n"
-    sphere_index = memory.main.get_item_slot(71)
-    if sphere_index == 255:
-        sphere_count = 0
-    else:
-        sphere_count = memory.main.get_item_count_slot(sphere_index)
+    sphere_count = memory.main.get_item_count(71)
     out_text += f"Mana: {sphere_count}\n"
-    sphere_index = memory.main.get_item_slot(72)
-    if sphere_index == 255:
-        sphere_count = 0
-    else:
-        sphere_count = memory.main.get_item_count_slot(sphere_index)
-    out_text += f"Speed: {sphere_count}"
+    sphere_count = memory.main.get_item_count(72)
+    out_text += f"Speed: {sphere_count}\n\n"
+    sphere_count = memory.main.get_item_count(87)
+    out_text += f"Strength: {sphere_count}\n"
+    sphere_count = memory.main.get_item_count(85)
+    out_text += f"HP: {sphere_count}\n"
+    sphere_count = memory.main.get_item_count(86)
+    out_text += f"MP: {sphere_count}\n"
+    sphere_count = memory.main.get_item_count(90)
+    out_text += f"Mdef: {sphere_count}"
 
     write_big_text(out_text)
     return
