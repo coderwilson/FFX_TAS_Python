@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 def split_timer():
-    logger.warning("SPLIT! Sending to timer.")
+    logger.info("SPLIT! Sending to timer.")
     pyautogui.keyDown("num1")
     time.sleep(0.3)
     pyautogui.keyUp("num1")
@@ -99,11 +99,11 @@ def new_game_2():
     logger.info("1")
     memory.main.wait_frames(time_buffer)
     logger.info("GO!!! Good fortune!")
-    split_timer()
     logger.info("====================================")
-    #logger.info(f"Set seed: {memory.main.rng_seed()}")
     xbox.menu_b()
     xbox.menu_b()
+    split_timer()
+    logger.info(f"Set seed: {memory.main.rng_seed()}")
 
 
 def listen_story():

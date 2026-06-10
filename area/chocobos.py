@@ -2990,14 +2990,15 @@ def sun_sigil(godhand:int = 1, baaj:int = 1, redo_training=False):
     get_primer = True
     for i in range(len(path)-2,-1,-1):
         if i == 5 and get_primer:
-            while not pathing.set_movement([-1273,454]):
+            while not pathing.set_movement([-1725,245]):
                 pass
-            pathing.approach_coords([-1770,220])
+            pathing.primer()
             FFXC.set_neutral()
             memory.main.click_to_control()
             get_primer = False
-        while not pathing.set_movement(path[i]):
-            pass
+        else:
+            while not pathing.set_movement(path[i]):
+                pass
         logger.debug(f"Checkpoint {i} reached.")
     while not pathing.set_movement([-620,-137]):
         pass

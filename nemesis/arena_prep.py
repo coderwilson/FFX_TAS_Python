@@ -163,7 +163,7 @@ def battle_farm_defer(yuna_attack=True, fayth_cave=True) -> bool:
                         CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif memory.main.get_encounter_id() == 281:
                         CurrentPlayer().attack(target_id=22, direction_hint="r")
-                    elif memory.main.get_encounter_id() == 283:
+                    elif memory.main.get_encounter_id() in [283,317]:
                         CurrentPlayer().attack(target_id=21, direction_hint="u")
                     elif memory.main.get_encounter_id() == 284:
                         CurrentPlayer().attack(target_id=23, direction_hint="d")
@@ -189,6 +189,18 @@ def battle_farm_defer(yuna_attack=True, fayth_cave=True) -> bool:
                             CurrentPlayer().attack()
                     else:
                         battle.main.escape_one()
+                elif (
+                    game.state == "Nem_Farm" and
+                    game.step <= 4 and
+                    memory.main.get_lulu_slvl() < 9 and 
+                    rng_track.next_action_escape(character=5)
+                ):
+                    # This makes sure Lulu gets enough levels before Bribe.
+                    if not Lulu.active():
+                        battle.main.buddy_swap(Lulu)
+                    else:
+                        battle.main.escape_one()
+
                 elif Rikku.is_turn():
                     if memory.main.battle_type() == 2:
                         battle.main.escape_one()
@@ -232,7 +244,10 @@ def battle_farm_defer(yuna_attack=True, fayth_cave=True) -> bool:
         return True
 
 @battle.utils.speedup_decorator
-def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -> bool:
+def battle_farm_all(ap_cp_limit: int = 255,
+                    yuna_attack:bool=True,
+                    fayth_cave:bool=True,
+                    lulu_xp:bool=False) -> bool:
     # grid_instance = get_grid() # Get the grid instance
     # lulu_levels = not grid_instance.get_node(527).unlocked_by_characters['Lulu']
     battles = memory.main.wakka_total_battles()
@@ -261,12 +276,17 @@ def battle_farm_all(ap_cp_limit: int = 255, yuna_attack=True, fayth_cave=True) -
                         CurrentPlayer().attack(target_id=22, direction_hint="l")
                     elif memory.main.get_encounter_id() == 281:
                         CurrentPlayer().attack(target_id=22, direction_hint="r")
-                    elif memory.main.get_encounter_id() == 283:
+                    elif memory.main.get_encounter_id() in [283,317]:
                         CurrentPlayer().attack(target_id=21, direction_hint="u")
                     elif memory.main.get_encounter_id() == 284:
                         CurrentPlayer().attack(target_id=23, direction_hint="d")
                     else:
                         CurrentPlayer().attack()
+                elif lulu_xp and not Lulu.active():
+                    battle.main.buddy_swap(Lulu)
+                elif lulu_xp and Lulu.is_turn():
+                    Lulu.cast_black_magic_spell_by_name(spell_name="Fire")
+                    lulu_xp = False
                 elif Yuna.is_turn():
                     if yuna_attack:
                         if memory.main.get_encounter_id() in [154, 156, 164]:
@@ -1911,9 +1931,11 @@ def miihen_farm(cap_num: int = 1):
     checkpoint = 0
     last_cp = checkpoint
     while memory.main.get_map() not in [194, 374]:
+        ne_armor = memory.main.equipped_armor_has_ability(char_num=game_vars.ne_armor())
+
         # Checkpoint notify
         if last_cp != checkpoint:
-            logger.debug(f"Checkpoint {checkpoint}")
+            logger.debug(f"Checkpoint {checkpoint} | NE armor: {ne_armor}")
             last_cp = checkpoint
         if memory.main.user_control():
             if checkpoint == 92:
@@ -1961,10 +1983,17 @@ def miihen_farm(cap_num: int = 1):
             elif checkpoint in [31, 80] and pref_area == 1:  # Farm in area 1
                 checkpoint = 29
             elif checkpoint == 42 and pref_area == 2:  # Farm in area 2
+                logger.warning(ne_armor)
+                if ne_armor:
+                    menu.remove_all_nea()
                 checkpoint = 40
             elif checkpoint in [53, 60, 66] and pref_area == 3:  # Farm in area 3
+                if ne_armor:
+                    menu.remove_all_nea()
                 checkpoint -= 2
             elif checkpoint == 63 and pref_area == 4:  # Farm in area 4
+                if ne_armor:
+                    menu.remove_all_nea()
                 checkpoint -= 2
             elif checkpoint == 33 and pref_area >= 3:  # Skip from zone 1 to zone >= 3
                 checkpoint = 46
@@ -3094,6 +3123,7 @@ def stolen_fayth_cave(cap_num: int = 10, just_yojimbo:bool=False):
 
     checkpoint = 0
     while memory.main.get_map() not in [194, 374]:
+        ne_armor = memory.main.equipped_armor_has_ability(char_num=game_vars.ne_armor())
         if memory.main.user_control():
             if checkpoint == 0 and memory.main.get_map() == 56:
                 checkpoint = 21
@@ -3160,6 +3190,17 @@ def stolen_fayth_cave(cap_num: int = 10, just_yojimbo:bool=False):
         else:
             FFXC.set_neutral()
             if memory.main.battle_active():
+                lulu_xp = bool((
+                    game.state == "Nem_Farm" and
+                    game.step <= 3 and
+                    (
+                        game_vars.end_game_version() == 4 and
+                        memory.main.get_lulu_slvl() < 9
+                    ) or (
+                        memory.main.get_lulu_slvl() < 4
+                    )) and
+                    memory.main.get_encounter_id() in [319,323,327]
+                )
                 if memory.main.get_encounter_id() in [321, 329]:
                     # Do not engage the jar boys.
                     battle.main.flee_all()
@@ -3175,13 +3216,20 @@ def stolen_fayth_cave(cap_num: int = 10, just_yojimbo:bool=False):
                     while memory.main.battle_active():
                         if memory.main.turn_ready():
                             CurrentPlayer().attack()
-                    battle.main.wrap_up()
                 else:
-                    if not battle_farm_all(fayth_cave=True):
+                    if not battle_farm_all(fayth_cave=True, lulu_xp=lulu_xp):
                         logger.warning("Game Over occurred. Resetting this area.")
                         checkpoint = 0
                         game_vars.set_nem_checkpoint_ap(fayth_grid_start)
-
+                while not memory.main.user_control():
+                    if memory.main.battle_wrap_up_active():
+                        xbox.menu_b()
+                    elif memory.main.game_over():
+                        while memory.main.get_map() != 23:
+                            xbox.tap_b()
+                        new_game(gamestate="Nem_Farm")
+                        load_game.load_save_num(0)
+                        checkpoint = 1
                 hp_check = memory.main.get_hp()
                 if hp_check[0] < 795:
                     battle.main.heal_up(3)

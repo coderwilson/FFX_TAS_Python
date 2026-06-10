@@ -48,6 +48,26 @@ def check_gems():
     logger.debug(f"Total gems: {gems}")
     return gems
 
+def has_max_in_both(arr):
+    # If the array is empty or has only one element, 
+    # it can't have values in both even and odd positions.
+    if len(arr) < 2:
+        return False
+
+    # Find the maximum value in the entire array
+    overall_max = max(arr)
+
+    # Slice the array into even and odd indices
+    # even_indices: 0, 2, 4...
+    # odd_indices:  1, 3, 5...
+    evens = arr[0::2]
+    odds = arr[1::2]
+
+    # Check if the overall maximum exists in both slices
+    result = (overall_max in evens) and (overall_max in odds)
+    # logger.warning(f"Both check: {result}")
+    # memory.main.wait_frames(300)
+    return result
 
 def calm_lands(checkpoint = 0, plat_second_pass=False):
     memory.main.await_control()
@@ -72,6 +92,7 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
     
     # Determine variables for the path forward.
     _, defender_x_drop, _, _, paths = rng_track.nea_track()
+    skip_manip = has_max_in_both(paths)
     
     # Enter the cutscene where Yuna muses about ending her journey.
     if not (memory.main.get_coords()[1] >= -1620 and memory.main.user_control()):
@@ -131,7 +152,10 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                             write_big_text(f"Yuna under-level: {memory.main.get_yuna_slvl()}/{needed_levels}")
                             FFXC.set_movement(-1, -1)
                             memory.main.wait_frames(60)
-                        elif defender_x_drop and memory.main.next_chance_rng_10() != 0:
+                        elif (
+                            not skip_manip and 
+                            defender_x_drop == bool(memory.main.next_chance_rng_10() != 0)
+                        ):
                             checkpoint -= 1
                             write_big_text(f"Misaligned drop: {defender_x_drop} - {memory.main.next_chance_rng_10()}\n{paths}")
                             FFXC.set_movement(-1, -1)
@@ -155,20 +179,37 @@ def calm_lands(checkpoint = 0, plat_second_pass=False):
                     pass
                 enc_id = memory.main.get_encounter_id()
                 if check_gems() < 2 and enc_id in [273,275,281,283]:
+                    logger.info(f"Gems battle")
+                    # memory.main.wait_frames(150)
                     battle.main.calm_lands_gems()
+                elif game_vars.story_mode():
+                    logger.info(f"Story mode! Blast 'em!")
+                    # memory.main.wait_frames(150)
+                    battle.main.calm_impulse()
                 elif game_vars.mrr_skip_val() and memory.main.get_yuna_slvl() < needed_levels:
                     # We expect to be under levelled on Battle Site logic.
+                    logger.info(f"Under-Levelled battle (A)")
+                    # memory.main.wait_frames(150)
                     battle.main.calm_impulse()
                 elif memory.main.get_yuna_slvl() < needed_levels:
                     # This is to catch if we are under level for some other reason. Needs improvement.
+                    logger.info(f"Under-Levelled battle (B)")
+                    # memory.main.wait_frames(150)
                     battle.main.calm_impulse()
+                elif skip_manip:
+                    logger.info(f"Manip not necessary")
+                    # memory.main.wait_frames(150)
+                    battle.main.flee_all()
                 else:
+                    logger.info(f"Manip Battls")
+                    # memory.main.wait_frames(150)
                     battle.main.calm_lands_manip()
                 memory.main.click_to_control_3()
                 calm_report()
                 memory.main.update_formation(Tidus, Rikku, Auron, full_menu_close=True)
                 battle.main.heal_up(full_menu_close=True)
                 _, defender_x_drop, _, _, paths = rng_track.nea_track()
+                skip_manip = has_max_in_both(paths)
                 logger.warning(f"Checkpoint test: {checkpoint}")
                 
             elif memory.main.menu_open():

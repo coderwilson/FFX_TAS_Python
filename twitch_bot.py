@@ -1,6 +1,8 @@
 from twitchio.ext import commands
 import subprocess
 import random
+from json_ai_files.update_leaderboard import TrackerManager
+from datetime import datetime
 import sys
 import os
 import asyncio
@@ -83,6 +85,24 @@ def focus_obs():
         print(f"Active Window: {title}")
     print("----------------------------------------\n")
 
+    # --- NEW: Minimize Visual Studio Code ---
+    print("Searching for Visual Studio Code to minimize...")
+    vscode_windows = [
+        win for win in gw.getWindowsWithTitle('') 
+        if "visual studio code" in win.title.lower()
+    ]
+    
+    for vscode_win in vscode_windows:
+        try:
+            # SW_MINIMIZE = 6
+            ctypes.windll.user32.ShowWindow(vscode_win._hWnd, 6)
+            print(f"Minimized: '{vscode_win.title}'")
+        except Exception as e:
+            print(f"Failed to minimize VS Code: {e}")
+    
+    if vscode_windows:
+        time.sleep(0.3) # Brief pause for the minimize animation
+
     # --- 2. Focus PowerShell and press Backspace ---
     print("Searching for PowerShell window...")
     
@@ -140,64 +160,69 @@ def focus_obs():
     ctypes.windll.user32.SetForegroundWindow(obs_window._hWnd)
 
     print(f"Successfully brought OBS window '{obs_window.title}' to focus.")
-    return True
-
-def focus_obs_old():
-    print("Searching for 'obs64.exe' process...")
-
-    # Find OBS process
-    obs_processes = [p for p in psutil.process_iter(['pid', 'name']) if p.info['name'] and "obs64.exe" in p.info['name'].lower()]
     
-    if not obs_processes:
-        print("OBS process (obs64.exe) not found.")
-        return False
 
-    print(f"Found {len(obs_processes)} OBS-related process(es).")
+    # --- 4. Focus LiveSplit (Final active window) ---
+    print("Searching for LiveSplit window...")
+    
+    # Common variations for LiveSplit window titles
+    livesplit_keywords = ["LiveSplit", "LiveSplit.exe"]
+    ls_windows = [
+        win for win in gw.getWindowsWithTitle('') 
+        if any(key.lower() in win.title.lower() for key in livesplit_keywords)
+    ]
 
-    # Get OBS window(s)
-    obs_windows = [win for win in gw.getWindowsWithTitle('') if "OBS" in win.title]
-
-    if not obs_windows:
-        print("OBS window not found.")
-        return False
-
-    obs_window = obs_windows[0]
-
-    print(f"Attempting to focus OBS window: '{obs_window.title}'")
-
-    # Minimize and restore to force foreground focus
-    ctypes.windll.user32.ShowWindow(obs_window._hWnd, 6)  # SW_MINIMIZE
-    time.sleep(0.2)  # Short delay to allow Windows to process the change
-    ctypes.windll.user32.ShowWindow(obs_window._hWnd, 9)  # SW_RESTORE
-    time.sleep(0.1)
-    ctypes.windll.user32.SetForegroundWindow(obs_window._hWnd)
-
-    print(f"Successfully brought OBS window '{obs_window.title}' to focus.")
+    if ls_windows:
+        # Pick the first match (usually the main timer window)
+        ls_win = ls_windows[0]
+        print(f"Found LiveSplit match: '{ls_win.title}'")
+        
+        try:
+            # Minimize and Restore to force focus over other windows
+            ctypes.windll.user32.ShowWindow(ls_win._hWnd, 6)  # SW_MINIMIZE
+            time.sleep(0.1)
+            ctypes.windll.user32.ShowWindow(ls_win._hWnd, 9)  # SW_RESTORE
+            ctypes.windll.user32.SetForegroundWindow(ls_win._hWnd)
+            
+            print(f"LiveSplit '{ls_win.title}' is now the active window.")
+        except Exception as e:
+            print(f"Failed to focus LiveSplit: {e}")
+    else:
+        print("LiveSplit window not found.")
     return True
 
 def decide_seed(ctx):
     global CHOSEN_SEED_NUM
-    args = ctx.message.content.split()
-    print("")
-    print("=== Deciding Seed ===")
-    records = oblitz_history()
-    CHOSEN_SEED_NUM = str(random.choice(range(256)))
-    reroll = 0
+    args = ctx.message.content.lower().split()
+    
+    print("\n=== Deciding Seed ===")
+    
+    # 1. Priority: Manual Seed Override
     for i in range(len(args)):
         try:
-            if args[i].lower() == "seed":
+            if args[i] == "seed":
                 CHOSEN_SEED_NUM = str(args[i + 1])
-                print(f"=== Seed passed: {CHOSEN_SEED_NUM} ===")
+                print(f"=== Manual Seed Passed: {CHOSEN_SEED_NUM} ===")
                 return
-        except Exception:
+        except (IndexError, ValueError):
             pass
-    if CHOSEN_SEED_NUM == 999:
-        # Choose a random seed we haven't tried. (1000 attempts to break loop)
-        while CHOSEN_SEED_NUM in records.keys() and reroll < 1000:
-            CHOSEN_SEED_NUM = str(random.choice(range(256)))
-            reroll += 1
-        print(f"=== Seed random: {CHOSEN_SEED_NUM} ===")
-        return
+
+    # 2. Check for specialty runs that don't use the "Missing Seed" logic
+    run_types = ["classic", "story", "nem", "plat", "godrng"]
+    is_specialty = any(x in args for x in run_types)
+
+    # 3. If it's a regular run (or we want to force a missing seed)
+    if not is_specialty:
+        tm = TrackerManager()
+        missing = tm.find_missing_seeds()
+        if missing:
+            CHOSEN_SEED_NUM = random.choice(missing)
+            print(f"=== Missing Seed Selected: {CHOSEN_SEED_NUM} ===")
+            return
+
+    # 4. Fallback: Standard Random
+    CHOSEN_SEED_NUM = str(random.choice(range(256)))
+    print(f"=== Fallback Random Seed: {CHOSEN_SEED_NUM} ===")
 
 def set_language(force:str='none'):
     global CHOSEN_SEED_NUM
@@ -305,6 +330,8 @@ class Bot(commands.Bot):
         self.game = None
         self.timer = None
         self.marbles = None
+        
+        self.obs_pwd = config.get("obs_key", "YOUR_OBS_KEY")
         
         # Start connection monitor
         self.connection_check_task = None
@@ -568,58 +595,45 @@ class Bot(commands.Bot):
     async def start(self, ctx: commands.Context):
         if not self.is_valid_user(ctx):
             return
+        
         global CHOSEN_SEED_NUM
+        # Only pick a random seed if start_all hasn't already assigned a missing one
         if CHOSEN_SEED_NUM == 999:
             CHOSEN_SEED_NUM = str(random.choice(range(256)))
+            
         arg_array = []
-        print(ctx.message.content)
-        time.sleep(2)
         args = ctx.message.content.split()
 
         for i in range(len(args)):
             try:
-                if args[i].lower() in ["state","stage"]:
-                    arg_array.append("-state")
-                    arg_array.append(args[i + 1])
-                if args[i].lower() == "step":
-                    arg_array.append("-step")
-                    arg_array.append(args[i + 1])
-                if args[i].lower() == "blitz":
-                    arg_array.append("-train_blitz")
-                    arg_array.append("True")
-                if args[i].lower() == "godrng":
-                    arg_array.append("-godrng")
-                    arg_array.append("True")
-                if args[i].lower() == "classic":
-                    arg_array.append("-classic")
-                    arg_array.append("True")
-                elif args[i].lower() == "story":
-                    arg_array.append("-story")
-                    arg_array.append("True")
-                elif args[i].lower() == "nem":
-                    arg_array.append("-nemesis")
-                    arg_array.append("True")
-                elif args[i].lower() == "plat":
-                    arg_array.append("-platinum")
-                    arg_array.append("True")
+                low_arg = args[i].lower()
+                if low_arg in ["state", "stage"]:
+                    arg_array.extend(["-state", args[i + 1]])
+                if low_arg == "step":
+                    arg_array.extend(["-step", args[i + 1]])
+                if low_arg == "blitz":
+                    arg_array.extend(["-train_blitz", "True"])
+                if low_arg == "godrng":
+                    arg_array.extend(["-godrng", "True"])
+                if low_arg == "classic":
+                    arg_array.extend(["-classic", "True"])
+                elif low_arg == "story":
+                    arg_array.extend(["-story", "True"])
+                elif low_arg == "nem":
+                    arg_array.extend(["-nemesis", "True"])
+                elif low_arg == "plat":
+                    arg_array.extend(["-platinum", "True"])
             except Exception:
-                #await ctx.send(
-                #    f"There was an error with your command: {ctx.message.content}"
-                #)
                 pass
-        arg_array.append("-seed")
-        arg_array.append(CHOSEN_SEED_NUM)
-        print(arg_array)
-        time.sleep(2)
-        CHOSEN_SEED_NUM = 999  # Resets for next attempt.
+
+        arg_array.extend(["-seed", str(CHOSEN_SEED_NUM)])
+        
+        CHOSEN_SEED_NUM = 999  # Reset
 
         if self.process is None and self.marbles is None:
-            print(["python", SCRIPT_PATH] + arg_array)
             self.process = subprocess.Popen(["python", SCRIPT_PATH] + arg_array)
-            #await ctx.send("FFX TAS started.")
-            print("aVIna FFX TAS started.")
+            print(f"aVIna FFX TAS started with args: {arg_array}")
         else:
-            #await ctx.send("FFX TAS is already running.")
             print("aVIna FFX TAS is already running.")
         return self.process
 
@@ -820,33 +834,65 @@ class Bot(commands.Bot):
             "Primary commands: !kill, !stuck, !all, !skip_split, !undo_split | " + \
             "Instructions for starting a run are on screen after running !stuck command."
         )
+        
+    @commands.command(aliases=("full_schedule"))
+    async def schedule(self, ctx: commands.Context):
+        response = "For the basic '!all' command, the bot will decide the type of run. "
+        response += "Special runs occur between 4am and 2pm PST on the following days. "
+        response += "Tuesday: Classic. Thursday: Nemesis. "
+        response += "Friday: Story mode. Saturday: Platinum. "
+        response += "If you'd like to force a regular run, type '!all speed' instead."
+        await ctx.send(response)
     
     # Start All
     @commands.command(aliases=("begin_all", "all"))
     async def start_all(self, ctx: commands.Context):
         if not self.is_valid_user(ctx):
             return
+        
         await self.marbles_end(ctx)
+        language_set = False
+
+        # 1. Apply Daily Schedule to the message content if no type specified
+        content = ctx.message.content.lower()
+        blocking_keywords = ["classic", "story", "nem", "plat", "stage", "state", "step", "speed"]
+        if not any(x in content for x in blocking_keywords):
+            now = datetime.now()
+            day = now.weekday()
+            hour = now.hour
+            is_specialty_window = bool(4 <= hour < 14)
+            if is_specialty_window:
+                if day == 1: ctx.message.content += " classic"
+                elif day == 3: ctx.message.content += " nem"
+                elif day == 4: 
+                    ctx.message.content += " story"
+                    language_set = True
+                    set_language(force='english')
+                elif day == 5: ctx.message.content += " plat"
+        
+        # 2. Decide the seed (uses our updated logic above)
         decide_seed(ctx)
         
+        # 3. Execution Chain
         await ctx.send("Launching all elements!")
-        if "story" in ctx.message.content:
-            set_language(force='english')
-        elif "chinese" in ctx.message.content:
-            set_language(force='chinese')
-        elif "english" in ctx.message.content:
-            set_language(force='english')
-        else:
-            set_language()
+        
+        # Language selection
+        if not language_set:
+            if "story" in content or "english" in content:
+                set_language(force='english')
+            elif "chinese" in content:
+                set_language(force='chinese')
+            else:
+                set_language()
+
         await self.start_game(ctx)
         time.sleep(3)
         await self.start_csr(ctx)
         time.sleep(1)
-        if "state" in ctx.message.content.lower():
-            #await ctx.send("Timer undesirable when loading a save.")
-            pass
-        else:
+
+        if "state" not in content:
             await self.start_timer(ctx)
+
         time.sleep(3)
         focus_obs()
         await self.start(ctx)
@@ -951,7 +997,7 @@ class Bot(commands.Bot):
     
     async def get_current_obs_scene(self) -> str:
         try:
-            ws = obsws("localhost", 4455, "G7v9Xp2rLwB4qZ8M")
+            ws = obsws("localhost", 4455, self.obs_pwd)
             ws.connect()
 
             response = ws.call(requests.GetCurrentProgramScene())
@@ -973,7 +1019,7 @@ class Bot(commands.Bot):
         else:
             await self.change_obs_scene("FFX Idle")
     
-    async def change_obs_scene(self, scene_name: str, host="localhost", port=4455, password="G7v9Xp2rLwB4qZ8M", timeout=5):
+    async def change_obs_scene(self, scene_name: str, host="localhost", port=4455, timeout=5):
         """
         Change OBS program scene, verify success, and return True/False.
         Runs blocking obswebsocket calls in a thread so the event loop is not blocked.
@@ -982,7 +1028,7 @@ class Bot(commands.Bot):
 
         def _blocking_change():
             try:
-                ws = obsws(host, port, password)
+                ws = obsws(host, port, self.obs_pwd)
                 ws.connect()
             except Exception as e:
                 return {"ok": False, "error": f"Could not connect to OBS WebSocket: {e}"}

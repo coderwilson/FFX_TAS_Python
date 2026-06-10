@@ -128,7 +128,7 @@ def configuration_setup():
         mode_str = "Running in story mode!!!\n"
         game_vars.activate_story_mode()
     elif args.classic == "True":
-        mode_str = "New game, Classic speedrun\b"
+        mode_str = "New game, Classic speedrun\n"
     elif args.platinum == "True":
         mode_str = "New game, Platinum%\n"
         game_vars.platinum_set(True)
@@ -300,6 +300,7 @@ def perform_TAS():
                         results_mod, use_heals = check_ml_heals(seed_num=game_vars.rng_seed_num())
                         logger.warning(f"Response check: {results_mod}, {use_heals}")
 
+                        use_heals = False
                         if use_heals:
                             game_vars.set_ml_heals(True)
                             logger.warning("Setting to use aVIna heal method!")
@@ -337,39 +338,43 @@ def perform_TAS():
                         maybe_show_image(filename="images/laugh.jpg")
 
                         area.dream_zan.new_game_2()
-                        game.start_time = logs.time_stamp()
-                        logs.write_stats("Start time:")
-                        logs.write_stats(str(game.start_time))
-                        # reset reference timestamp so that log output is synced to run time
-                        log_init.reset_logging_time_reference()
-                        logger.info("Timer starts now.")
-                        area.dream_zan.listen_story()
-
-                        # Find rng seed from memory
-                        rng_seed = manip_planning.rng.get_seed()
-                        if rng_seed != "Err_seed_not_found":
-                            game_vars.set_confirmed_seed(rng_seed)
-                        else:
-                            logging.error(f"Unable to derive seed")
-                        seed_found = True
-
-                        # Calculate manips for Sinscales and Ammes
-                        tidus_sinspawn_attacks, tidus_potion, tidus_spiral_cut_turn = manip_planning.ammes.plan_ammes()
-                        logger.debug(f"Tidus Sinspawn Attacks: {tidus_sinspawn_attacks}")
-                        logger.debug(f"Tidus Potion: {tidus_potion}")
-                        logger.debug(f"Spiral Cut Turn: {tidus_spiral_cut_turn}")
-
-                        # game.state, game.step = reset.mid_run_reset()
-                        # Start of the game, up through the start of Sinspawn Ammes fight
-                        if truerng:
-                            area.dream_zan.ammes_battle_classic(results_mod=results_mod)
-                        else:
-                            area.dream_zan.ammes_battle_crimson(
-                                tidus_total_attacks=tidus_sinspawn_attacks, 
-                                tidus_potion=tidus_potion,
-                                results_mod=results_mod
-                            )
                         game.step = 2
+                        try:
+                            game.start_time = logs.time_stamp()
+                            logs.write_stats("Start time:")
+                            logs.write_stats(str(game.start_time))
+                            # reset reference timestamp so that log output is synced to run time
+                            log_init.reset_logging_time_reference()
+                            logger.info("Timer starts now.")
+                            area.dream_zan.listen_story()
+
+                            # Find rng seed from memory
+                            rng_seed = manip_planning.rng.get_seed()
+                            if rng_seed != "Err_seed_not_found":
+                                game_vars.set_confirmed_seed(rng_seed)
+                            else:
+                                logging.error(f"Unable to derive seed")
+                            seed_found = True
+
+                            # Calculate manips for Sinscales and Ammes
+                            tidus_sinspawn_attacks, tidus_potion, tidus_spiral_cut_turn = manip_planning.ammes.plan_ammes()
+                            logger.debug(f"Tidus Sinspawn Attacks: {tidus_sinspawn_attacks}")
+                            logger.debug(f"Tidus Potion: {tidus_potion}")
+                            logger.debug(f"Spiral Cut Turn: {tidus_spiral_cut_turn}")
+
+                            # game.state, game.step = reset.mid_run_reset()
+                            # Start of the game, up through the start of Sinspawn Ammes fight
+                            if truerng:
+                                area.dream_zan.ammes_battle_classic(results_mod=results_mod)
+                            else:
+                                area.dream_zan.ammes_battle_crimson(
+                                    tidus_total_attacks=tidus_sinspawn_attacks, 
+                                    tidus_potion=tidus_potion,
+                                    results_mod=results_mod
+                                )
+                        except Exception as e:
+                            logger.warning(f"New game error: {e}")
+                            quit()
 
                     if game.step == 2:
                         if truerng:
@@ -426,13 +431,10 @@ def perform_TAS():
                             klikk_steals=klikk_steals
                         )
                         logger.info(f"Return check: {ret_val}")
-                        # memory.main.wait_frames(900)
-                        if ret_val == "success":
+                        if ret_val:
                             game.step = 4
                             maybe_create_save(save_num=21)
                         else:
-                            logger.warning(f"Return check: {ret_val}")
-                            # memory.main.wait_frames(30)
                             reset.reset_to_main_menu()
                             area.dream_zan.new_game(gamestate="reload_autosave")
                             load_game.load_save_num(0)
@@ -543,8 +545,8 @@ def perform_TAS():
                     blitz_threshold = 410
                     logger.info("----- Blitz Start")
                     force_blitz_win = game_vars.get_force_blitz_win()
-                    if game_vars.platinum():
-                        force_blitz_win=True
+                    # if game_vars.platinum():
+                    #     force_blitz_win=True
                     blitz_duration = blitz_engage(force_blitz_win)
                     logger.info("----- Blitz End")
                     if not game_vars.csr():
@@ -591,6 +593,12 @@ def perform_TAS():
                         game.step = 5
 
                 if game.step == 5:
+                    if game_vars.platinum() and not game_vars.get_blitz_win():
+                        alert_text = "Plat route failed. We must\nwin the scripted Blitzball game\nlegitimately."
+                        write_big_text(alert_text)
+                        logger.warning(alert_text)
+                        sys.exit(1)
+
                     area.luca.after_blitz()
                     game.step = 1
                     game.state = "Miihen"
@@ -614,12 +622,19 @@ def perform_TAS():
                         game.state, game.step = reset.mid_run_reset()
                     else:
                         split_timer()
-                        area.miihen.mid_point()
-                        logger.info("End of Mi'ihen mid point section.")
                         game.step = 3
-                        maybe_create_save(save_num=27)
 
                 if game.step == 3:
+                    if area.miihen.mid_point():
+                        logger.info("End of Mi'ihen mid point section.")
+                        game.step = 4
+                        maybe_create_save(save_num=27)
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+
+                if game.step == 4:
                     if not area.miihen.low_road(return_array[0], return_array[1]):
                         reset.reset_to_main_menu()
                         area.dream_zan.new_game(gamestate="reload_autosave")
@@ -713,8 +728,12 @@ def perform_TAS():
 
             if game.state == "Djose":
                 if game.step == 1:
-                    area.djose.path()
-                    game.step = 2
+                    if area.djose.path():
+                        game.step = 2
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
 
                 if game.step == 2:
                     area.djose.temple()
@@ -736,9 +755,17 @@ def perform_TAS():
                     split_timer()
                     area.moonflow.south_bank()
                     game.step = 2
-                    maybe_create_save(save_num=31)
 
                 if game.step == 2:
+                    if area.moonflow.extractor_fight():
+                        maybe_create_save(save_num=31)
+                        game.step = 3
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
+
+                if game.step == 3:
                     area.moonflow.north_bank()
                     game.step = 1
                     game.state = "Guadosalam"
@@ -816,10 +843,14 @@ def perform_TAS():
                     game.step = 3
 
                 if game.step == 3:
-                    area.mac_woods.lake()
-                    area.mac_temple.approach()
-                    game.step = 4
-                    maybe_create_save(save_num=36)
+                    if area.mac_woods.lake():
+                        area.mac_temple.approach()
+                        game.step = 4
+                        maybe_create_save(save_num=36)
+                    else:
+                        reset.reset_to_main_menu()
+                        area.dream_zan.new_game(gamestate="reload_autosave")
+                        load_game.load_save_num(0)
 
                 if game.step == 4:
                     if memory.main.get_map() != 80:
@@ -893,6 +924,9 @@ def perform_TAS():
             if game.state == "rescue_yuna":
                 if game.step == 1:
                     area.rescue_yuna.pre_evrae()
+                    game.step = 11
+                
+                if game.step == 11:
                     if battle.boss.evrae():
                         split_timer()
                         area.rescue_yuna.guards()
@@ -1448,29 +1482,31 @@ def perform_TAS():
                     # Use this to load directly into Platinum logic
                     # game.state = "Platinum"
                     # area.platinum.showcase_2(jump_in_from_save=True)
-                    game.state = "Nem_Arena"
-                    # game.state = "Nem_Farm"
-                    game.step = 6
+                    # game.state = "Nem_Arena"
+                    game.state = "Nem_Farm"
+                    game.step = 8
 
-                    game_vars.plat_triple_ap_check()[1] = 1
-                    game_vars.plat_triple_ap_check()[2] = 1
-                    game_vars.plat_triple_ap_check()[3] = 1
+                    # game_vars.plat_triple_ap_check()[1] = 1
+                    # game_vars.plat_triple_ap_check()[2] = 1
+                    # game_vars.plat_triple_ap_check()[3] = 1
                     # game_vars.plat_triple_ap_check()[4] = 1
                     # game_vars.plat_triple_ap_check()[5] = 1
-                    game_vars.plat_triple_ap_check()[6] = 1
+                    # game_vars.plat_triple_ap_check()[6] = 1
 
-                    game_vars.yojimbo_set_index(12)  # Ready for Nemesis.
+                    # game_vars.yojimbo_set_index(12)  # Ready for Nemesis.
 
-                    game_vars.set_nem_checkpoint_ap(27)
+                    # game_vars.set_nem_checkpoint_ap(27)
                     # nemesis.arena_select.add_airship_unlocked_location("Penance")  # Only on Plat 7
-                    nemesis.arena_select.add_airship_unlocked_location("Baaj")
-                    nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
+                    # nemesis.arena_select.add_airship_unlocked_location("Baaj")
+                    # nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
                     nemesis.arena_select.add_airship_unlocked_location("Omega")  # Nem_Farm 1
                     logger.warning(f"Loading into state {game.state} step {game.step}")
                     
                 if game.step == 100:
-                    game.state = "Platinum"
-                    game.step = 6
+                    # game.state = "Platinum"
+                    # game.step = 6
+                    game.state = "Nem_Farm"
+                    game.step = 12
                     game_vars.plat_triple_ap_check()[1] = 1
                     game_vars.plat_triple_ap_check()[2] = 1
                     game_vars.plat_triple_ap_check()[3] = 1
@@ -1478,8 +1514,8 @@ def perform_TAS():
                     game_vars.plat_triple_ap_check()[5] = 1
                     game_vars.plat_triple_ap_check()[6] = 1
                     game_vars.set_nem_checkpoint_ap(27)
-                    nemesis.arena_select.add_airship_unlocked_location("Baaj")
-                    nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
+                    #nemesis.arena_select.add_airship_unlocked_location("Baaj")
+                    #nemesis.arena_select.add_airship_unlocked_location("Mushroom Rock")
                     nemesis.arena_select.add_airship_unlocked_location("Omega")  # Nem_Farm 1
                     memory.main.check_nea_armor()
                     logger.warning(f"Loading into state {game.state} step {game.step}")

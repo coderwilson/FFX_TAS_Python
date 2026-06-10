@@ -281,8 +281,20 @@ def inside_sin(checkpoint = 0):
                 FFXC.set_neutral()
                 memory.main.click_to_control()
                 memory.main.update_formation(Tidus, Yuna, Auron)
+                start_coords = memory.main.get_coords()
+                counter = 0
                 while not memory.main.battle_active():
-                    pathing.set_movement([0,10])
+                    if memory.main.user_control():
+                        if start_coords == memory.main.get_coords():
+                            pathing.set_movement([0,10])
+                        else:
+                            pathing.set_movement([0,10], ignore_bonk=True)
+                    elif memory.main.diag_skip_possible():
+                        logger.debug("Dialog")
+                        xbox.tap_confirm()
+                    else:
+                        logger.debug(f"Nothing to do. {counter}")
+                        counter += 1
                 FFXC.set_neutral()
                 if not battle.boss.omnis():
                     logger.error("Seymour battle failed.")

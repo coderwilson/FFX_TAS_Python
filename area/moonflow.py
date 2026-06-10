@@ -184,7 +184,8 @@ def south_bank(checkpoint: int = 0):
             if memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_b()
 
-    battle.boss.extractor()
+def extractor_fight():
+    return battle.boss.extractor()
 
 
 def north_bank():

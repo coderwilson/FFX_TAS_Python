@@ -40,7 +40,7 @@ class BlitzGameState:
         self.overtime = False
 
         # Debug mode - none, stage, flags
-        self.debug_mode = "flags"
+        self.debug_mode = "stage"
 
     def update(self, timed:bool=False):
         """The 'Pulse' of the AI. Run this once at the start of every loop."""
@@ -162,9 +162,9 @@ class BlitzGameState:
         
         idx = self.controlling_player_index
         
-        tidus_behind_def = self.player_array[0].position[1] > self.player_array[10].position[1]
-        tidus_buffer = self.get_distance(0, 10)
-        pass_ready = tidus_behind_def and tidus_buffer > 370
+        tidus_behind_def = bool(self.player_array[0].position[1] > self.player_array[10].position[1] + 30)
+        tidus_buffer = bool(self.get_distance(0, 10) > 170)
+        pass_ready = tidus_behind_def and tidus_buffer
         graav_distance = self.get_distance(idx, 8)
         goal_distance = self.get_distance(idx, 11)
 
@@ -181,6 +181,8 @@ class BlitzGameState:
                 else:
                     return self.BAITING_DEFENDER
             elif idx == 0:
+                if self.game_clock > 260:
+                    return self.SHOOTING_FOR_GOAL
                 return self.RUSH_GOAL
             return self.DEFENSIVE_HOLD
 
@@ -222,7 +224,7 @@ class BlitzGameState:
     def _get_jassu_timing(self) -> int:
         shot_distance = self.get_distance(0, 12)
         shot_mod = (
-            int(shot_distance / 100) + 9
+            int(shot_distance / 100) + 8
         )  # Distance/time plus animation time. Extra distance for swimming to the goal
         pass_distance = self.get_distance(0, 3)
         pass_mod = int(pass_distance / 100) + 9  # Distance/time plus animation time
@@ -237,7 +239,7 @@ class BlitzGameState:
 
     def _get_tidus_timing(self) -> int:
         shot_distance = self.get_distance(0, 12)
-        shot_mod = int(shot_distance / 100) + 9
+        shot_mod = int(shot_distance / 100) + 8
         if 540 <= memory.main.get_story_progress() < 570:
             base_timing = int(180 - shot_mod)
         else:

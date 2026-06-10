@@ -928,6 +928,12 @@ def path_to_battle(zone: str, checkpoint: int = 0, direction: str = "f"):
 def battle_start(zone: str):
     path_info = path_get_info(zone=zone)
     zone_num = get_zone_int(zone=zone)
+    
+    logger.info("Ready for battle, removing NEA.")
+    menu.remove_all_nea()
+    # if not memory.main.equipped_armor_has_ability(char_num=game_vars.ne_armor()):
+    #     menu.equip_armor(character=game_vars.ne_armor(), ability=0x801D)
+    
     if zone_num == 13:
         memory.main.update_formation(Tidus, Wakka, Rikku)
     if zone == "omega_ruins_(upper)":
@@ -1210,10 +1216,13 @@ def battle_start(zone: str):
         results = battle_farm_defer()
     else:
         results = battle_farm_all()
+    if memory.main.game_over():
+        return False
     if results:
         battle.main.wrap_up()
     else:
         menu.remove_all_nea()
+    return True
 
 
 def path_to_yojimbo():
@@ -1294,9 +1303,9 @@ def path_to_save(zone: str) -> bool:
                 checkpoint = 44
                 direction = "b"
             elif get_map() == 203 and checkpoint > 42:
-                checkpoint = 41
+                checkpoint = 42
                 direction = 'f'
-            elif checkpoint < 41:
+            elif checkpoint < 40:
                 direction = 'f'
 
             if pathing.set_movement(SinFarm.execute(checkpoint)) is True:

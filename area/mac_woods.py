@@ -13,6 +13,7 @@ import xbox
 from battle import avina_memory
 from paths import MacalaniaLake, MacalaniaWoods
 from players import Auron, Kimahri, Lulu, Rikku, Tidus, Wakka, Yuna
+from json_ai_files.write_seed import write_big_text
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +51,7 @@ def calculate_possible_weaknesses() -> List[int]:
 
 def arrival(rikku_charged):
     # ML logic, this qualifies us as AI, right? Right?? Awwww :(
+    write_big_text(f"Map: {memory.main.get_map()}")
     battle_count = 0
     heal_array = []
     ml_heals = False
@@ -75,6 +77,7 @@ def arrival(rikku_charged):
         logger.info("I have no memory of this seed. (C)")
 
     logger.info("Arriving at Macalania Woods")
+    write_big_text(f"Map: {memory.main.get_map()}")
     memory.main.click_to_control()
     battle.main.heal_up(full_menu_close=False)
     memory.main.update_formation(Tidus, Rikku, Auron)
@@ -95,8 +98,8 @@ def arrival(rikku_charged):
                     else:
                         last_gil = memory.main.get_gil_value()
                 else:
-                    pathing.set_movement([-141,225])
-                    xbox.tap_b()
+                    memory.main.check_near_actors_print(max_dist=60, super_coords=True)
+                    pathing.approach_actor_by_id(actor_id=20482)
             elif checkpoint == 59:
                 logger.debug(f"Rikku Charge: {rikku_charged} | Kimahri: {kimahri_charged}")
                 if not rikku_charged or not kimahri_charged:
@@ -114,8 +117,10 @@ def arrival(rikku_charged):
             # Map changes
             elif checkpoint < 18 and memory.main.get_map() == 241:
                 checkpoint = 18
+                write_big_text(f"Map: {memory.main.get_map()}")
             elif checkpoint < 40 and memory.main.get_map() == 242:
                 checkpoint = 40
+                write_big_text(f"Map: {memory.main.get_map()}")
 
             # General pathing
             elif pathing.set_movement(MacalaniaWoods.execute(checkpoint)):
@@ -159,6 +164,7 @@ def arrival(rikku_charged):
                 memory.main.close_menu()
                 if checkpoint == 61:
                     checkpoint = 60
+                write_big_text(f"Map: {memory.main.get_map()}")
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
                 xbox.tap_confirm()
             elif checkpoint in [14,36]:  # First chest, then butterfly guy
@@ -375,6 +381,8 @@ def lake():
     logger.debug(memory.main.affection_array())
 
     checkpoint = 0
+    battle_count = 0
+    max_battles = 5
     get_primer = game_vars.platinum()
     while memory.main.get_encounter_id() != 194:
         if memory.main.user_control():
@@ -384,7 +392,8 @@ def lake():
             if (
                 checkpoint >= 3 and 
                 memory.main.get_speed() < 5 and
-                memory.main.get_item_slot(35) != 255
+                memory.main.get_item_slot(35) != 255 and
+                battle_count < max_battles
             ):
                 checkpoint = 1
             if pathing.set_movement(MacalaniaLake.execute(checkpoint)):
@@ -392,16 +401,21 @@ def lake():
                 logger.debug(f"Checkpoint {checkpoint}")
         else:
             FFXC.set_neutral()
-            if memory.main.battle_active() and memory.main.get_speed() < 5:
-                logger.warning("LOW SPEED SPHERES!!! Start")
-                battle.main.mac_lake_recover()
-                if memory.main.get_speed() >= 5:
-                    memory.main.update_formation(Tidus, Kimahri, Lulu)
-                else:
-                    memory.main.update_formation(Tidus, Yuna, Rikku)
-                logger.warning("LOW SPEED SPHERES!!! End")
-            elif memory.main.battle_active() and memory.main.get_encounter_id() != 194:
-                battle.main.flee_all()
+            if memory.main.battle_active():
+                if memory.main.get_speed() < 5:
+                    logger.warning("LOW SPEED SPHERES!!! Start")
+                    battle.main.mac_lake_recover()
+                    if memory.main.get_speed() >= 5:
+                        memory.main.update_formation(Tidus, Kimahri, Lulu)
+                    else:
+                        memory.main.update_formation(Tidus, Yuna, Rikku)
+                    logger.warning("LOW SPEED SPHERES!!! End")
+                    battle_count += 1
+                elif memory.main.get_encounter_id() != 194:
+                    battle.main.flee_all()
+                memory.main.wait_frames(3)
+                if memory.main.game_over():
+                    return False
             elif memory.main.menu_open():
                 xbox.tap_confirm()
             elif memory.main.diag_skip_possible() and not game_vars.story_mode():
@@ -412,6 +426,9 @@ def lake():
     else:
         xbox.click_to_battle()
     battle.boss.crawler()
+    if memory.main.game_over():
+        return False
+    return True
 
 
 def after_crawler():

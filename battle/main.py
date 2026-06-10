@@ -30,7 +30,8 @@ from players import (
     Valefor,
     Wakka,
     Yuna,
-    Yojimbo
+    Yojimbo,
+    Shiva
 )
 from players.rikku import omnis_items
 from area.dream_zan import split_timer
@@ -57,6 +58,7 @@ def _navigate_to_position(position, battle_cursor=memory.main.battle_cursor_2):
                 xbox.tap_left()
             memory.main.wait_frames(1)
         while battle_cursor() != position:
+            # logger.debug(f"Cursor checks: {memory.main.battle_cursor_2} | {memory.main.battle_cursor_3}")
             logger.debug(f"Battle_cursor: {battle_cursor()}")
             if battle_cursor() > position:
                 xbox.tap_up()
@@ -1618,32 +1620,33 @@ def djose(battle_count=0):
         logger.info("I have no memory of this seed. (C)")
     encounter_id = get_encounter_id()
     logger.info(f"Fight start: Djose road {encounter_id}")
-    while memory.main.battle_active():  # AKA end of battle screen
+    while not (
+        memory.main.game_over() or
+        memory.main.battle_wrap_up_active() or
+        memory.main.user_control()
+    ):  # AKA end of battle screen
         if memory.main.turn_ready():
             if Kimahri.is_overdrive_learned("stone breath"):  # Stone Breath already learned
-                logger.debug("Djose: Stone breath already learned.")
+                logger.info("Djose: Stone breath already learned.")
                 flee_all()
+                logger.info("Return Lancet Swap function (3)")
             else:  # Stone breath not yet learned
                 if encounter_id in [128,134,136]:
                     logger.info("Djose: Learning Stone Breath.")
                     lancet_swap()
+                    logger.info("Return Lancet Swap function (1)")
                 elif encounter_id == 127:
                     logger.info("Djose: Learning Stone Breath")
                     # One basilisk with two wasps
                     lancet_swap(target_id=21)
-                    break
+                    logger.info("Return Lancet Swap function (2)")
                 else:
                     logger.info("Djose: Cannot learn Stone Breath here.")
                     flee_all()
-        elif memory.main.game_over():
-            logger.warning("Djose battle, game over identified!!! (A)")
-            seed_str = str(memory.main.rng_seed())
-            avina_memory.add_battle_to_memory(
-                seed=seed_str, area="djose_heals", battle_num=battle_count - 1
-            )
-            return False
+                    logger.info("Return Lancet Swap function (4)")
+    memory.main.wait_frames(3)
     if memory.main.game_over():
-        logger.warning("Djose battle, game over identified!!!(B)")
+        logger.warning("Djose battle, game over identified!!!")
         seed_str = str(memory.main.rng_seed())
         avina_memory.add_battle_to_memory(
             seed=seed_str, area="djose_heals", battle_num=battle_count - 1
@@ -2568,12 +2571,14 @@ def seymour_guado_blitz_loss():
         elif memory.main.diag_skip_possible():
             xbox.tap_b()
             logger.debug("Diag skip")
-    memory.main.wait_frames(3)
-    if memory.main.game_over():
-        logger.info(f"Seymour section fail! Resetting! (C)")
-        return False
-    split_timer()
-    wrap_up()
+            
+    if memory.main.get_enemy_current_hp()[1] == 0:
+        split_timer()
+    while not memory.main.battle_wrap_up_active():
+        if memory.main.game_over():
+            logger.info(f"Seymour section fail! Resetting! (B)")
+            return False
+    # wrap_up()
     logger.info(f"Seymour section complete. (C)")
     return True
 
@@ -2591,47 +2596,50 @@ def escape_with_xp():
     # Guide says to only use silence grenade. Unsure if we even want petrify.
     if memory.main.get_item_slot(39) < 200:
         item_to_use = 39  # Silence grenade
-    elif memory.main.get_item_slot(49) < 200:
-        item_to_use = 49  # Petrify grenade
     
-    if item_to_use == 255:
-        flee_all()
-        wrap_up()
-    else:
-        while not memory.main.turn_ready():
-            pass
-        while memory.main.battle_active():
-            if memory.main.turn_ready():
-                if Tidus.is_turn():
-                    #if not rikku_item:
-                    #    Tidus.swap_battle_armor(ability=[0x8028])
-                    #    screen.await_turn()
-                    #    buddy_swap(Rikku)
-                    #else:
-                    CurrentPlayer().attack()
-                elif Rikku.is_turn():
-                    if not rikku_item:
-                        use_item(memory.main.get_use_items_slot(item_to_use))
-                        rikku_item = True
-                    else:
-                        CurrentPlayer().defend()
-                elif Yuna.is_turn():
-                    Yuna.defend()
+    while not (
+        memory.main.battle_wrap_up_active() or
+        memory.main.game_over()
+    ):
+        if memory.main.turn_ready():
+            if Tidus.is_turn():
+                if not rikku_item and item_to_use == 39:
+                    Tidus.swap_battle_armor(ability=[0x8028])
+                    screen.await_turn()
+                    buddy_swap(Rikku)
                 else:
-                    Tidus_slot = memory.main.get_battle_char_slot(0)
-                    Rikku_slot = memory.main.get_battle_char_slot(6)
-                    Yuna_slot = memory.main.get_battle_char_slot(3)
-                    if Rikku_slot == 255:
-                        flee_all()
-                    elif Tidus_slot != 255 and not Tidus.active():
-                        buddy_swap(Tidus)
-                    elif Rikku_slot != 255 and not Rikku.active():
-                        buddy_swap(Rikku)
-                    elif Yuna_slot != 255 and not Yuna.active():
-                        buddy_swap(Yuna)
-                    else:
-                        CurrentPlayer().defend()
-        wrap_up()
+                    CurrentPlayer().attack()
+            elif Rikku.is_turn():
+                if not rikku_item and item_to_use == 39:
+                    use_item(memory.main.get_use_items_slot(item_to_use))
+                    rikku_item = True
+                else:
+                    CurrentPlayer().defend()
+            elif Yuna.is_turn():
+                if not rikku_item and item_to_use == 255:
+                    aeon_summon(3)
+                else:
+                    CurrentPlayer().defend()
+            elif Shiva.is_turn():
+                Shiva.attack()
+            else:
+                Tidus_slot = memory.main.get_battle_char_slot(0)
+                Rikku_slot = memory.main.get_battle_char_slot(6)
+                Yuna_slot = memory.main.get_battle_char_slot(3)
+                # if Rikku_slot == 255:
+                #     flee_all()
+                if Tidus_slot != 255 and not Tidus.active():
+                    buddy_swap(Tidus)
+                elif Rikku_slot != 255 and not Rikku.active():
+                    buddy_swap(Rikku)
+                elif Yuna_slot != 255 and not Yuna.active():
+                    buddy_swap(Yuna)
+                else:
+                    CurrentPlayer().defend()
+    if memory.main.game_over():
+        return False
+    wrap_up()
+    return True
 
 
 def fullheal(target: int, direction: str):
@@ -2704,7 +2712,7 @@ def wendigo_res_heal(turn_char: int, use_power_break: int, tidus_max_hp: int):
 def zu():
     screen.await_turn()
     CurrentPlayer().attack()
-    while memory.main.battle_active():
+    while not (memory.main.battle_wrap_up_active() or memory.main.game_over()):
         if memory.main.turn_ready():
             if memory.main.party_size() <= 2:
                 if memory.unlocks.has_ability_unlocked(
@@ -2722,6 +2730,7 @@ def zu():
                 CurrentPlayer().defend()
         elif memory.main.diag_skip_possible():
             xbox.tap_b()  # Skip Dialog
+    memory.main.wait_frames(3)
     if memory.main.game_over():
         return False
     memory.main.click_to_control()
@@ -3721,6 +3730,7 @@ def highbridge_rescue_battle(delay_grid):
         if memory.main.battle_type() == 2:
             # Ambushed
             flee_all()
+            game_vars.add_rescue_count()
         else:
             calm_impulse()  # Repurposed, does what we want already.
         wrap_up()
@@ -4026,7 +4036,51 @@ def gagazet_cave(direction):
         attack(direction)
     flee_all()
 
-def use_item(slot: int, direction="none", target=None, rikku_flee=False):
+def use_item(slot: int=None, id:int=None, direction:str=None, target=None):
+    slot_local = slot if slot is not None else memory.main.get_use_items_slot(id)
+    if slot_local == 255 or slot_local is None:
+        logger.warning(f"Slot failed: {slot}, {slot_local}, {memory.main.get_use_items_slot(id)}")
+        memory.main.wait_frames(300)
+        CurrentPlayer().flee()
+        return False
+    logger.debug(f"Slot identified: {slot}, {slot_local}, {memory.main.get_use_items_slot(id)}")
+    
+    chosen_target = target
+    if target is not None:
+        is_dead = False
+        
+        # Check enemy status
+        if target >= 20:
+            if memory.main.get_enemy_current_hp()[target - 20] == 0:
+                is_dead = True
+        # Check ally status
+        else:
+            if target not in memory.main.get_active_battle_formation():
+                is_dead = True
+            elif memory.main.get_battle_hp()[memory.main.get_battle_char_slot(target)] == 0:
+                is_dead = True
+        
+        # If the target is invalid/dead, reset to None so the code defaults to default targeting
+        if is_dead:
+            chosen_target = None
+            # Optional: log this transition
+            logger.debug(f"Target {target} invalid or dead, defaulting to standard targeting.")
+
+    if chosen_target is None:
+        CurrentPlayer().use_special_by_name(
+            command_name="Use",
+            item_slot=slot_local,
+            direction=direction
+        )
+    else:
+        CurrentPlayer().use_special_by_name(
+            command_name="Use",
+            item_slot=slot_local,
+            target_id=chosen_target,
+            direction=direction
+        )
+
+def use_item_old(slot: int, direction="none", target=None, rikku_flee=False):
     logger.debug("Using items via the Use command")
     logger.debug(f"Item slot: {slot}")
     logger.debug(f"Direction: {direction}")
@@ -4057,6 +4111,7 @@ def use_item(slot: int, direction="none", target=None, rikku_flee=False):
     while memory.main.main_battle_menu():
         xbox.tap_b()
     logger.debug("Mark 9")
+    memory.main.wait_frames(3)
     if rikku_flee:
         logger.debug("Mark 2, selecting 'Use' command in position 2")
         _navigate_to_position(2)
@@ -4067,7 +4122,7 @@ def use_item(slot: int, direction="none", target=None, rikku_flee=False):
         memory.main.wait_frames(3)
     while memory.main.other_battle_menu():
         xbox.menu_b()
-    logger.debug("Mark 3, navigating to item slot")
+    logger.debug(f"Mark 3, navigating to item slot: {slot}")
     _navigate_to_position(slot, memory.main.battle_cursor_3)
     if game_vars.use_pause():
         memory.main.wait_frames(3)
@@ -5073,6 +5128,9 @@ def aim():
 
 
 def _steal(direction=None, steal_position=0,target:int=20):
+    break_timer = 0
+    if target < 20:
+        target += 20
     if not memory.main.main_battle_menu():
         while not memory.main.main_battle_menu():
             pass
@@ -5093,6 +5151,7 @@ def _steal(direction=None, steal_position=0,target:int=20):
     while memory.main.other_battle_menu():
         xbox.tap_b()  # Use the Steal
     logger.debug(f"Other battle menu: {memory.main.other_battle_menu()}")
+    retry = 0
     if direction == "down":
         xbox.tap_down()
     elif direction == "up":
@@ -5106,6 +5165,12 @@ def _steal(direction=None, steal_position=0,target:int=20):
         if memory.main.get_enemy_current_hp()[target - 20] != 0:
             while memory.main.battle_target_id() != target:
                 while memory.main.battle_target_id() != target:
+                    break_timer += 1
+                    if break_timer > 15:
+                        xbox.tap_b()
+                        xbox.tap_b()
+                        xbox.tap_b()
+                        return
                     if direction == "l":
                         if retry > 5:
                             retry = 0
@@ -5177,7 +5242,7 @@ def shadow_gem_farm():
                 steal_count += 1
             else:
                 flee_all()
-    wrap_up()
+    # wrap_up()  # Handled in flee_all function.
 
 def use_item_new(item:int, target:int|None=None):
     actor = CurrentPlayer().raw_id()
@@ -5761,7 +5826,12 @@ def lancet_swap(direction:str="none", target_id=20):
     direction = direction.lower()
     lancet_complete = False
     while not lancet_complete:
-        if memory.main.game_over():
+        if (
+            memory.main.game_over() or
+            memory.main.user_control() or
+            memory.main.battle_wrap_up_active()
+        ):
+            logger.warning("lancet_swap early return!")
             return False
         if not Kimahri.active():
             buddy_swap(Kimahri)
@@ -5780,9 +5850,6 @@ def lancet_swap(direction:str="none", target_id=20):
         else:
             CurrentPlayer().defend()
 
-    screen.await_turn()
-    flee_all()
-    wrap_up()
     return True
 
 
@@ -5952,7 +6019,7 @@ def flee_all(exclude: int = 99, wrap_up_battle=True):
     FFXC.set_neutral()
     logger.debug("Attempting escape (all party members and end screen)")
     if memory.main.battle_active():
-        while memory.main.battle_active():
+        while not memory.main.battle_wrap_up_active():
             if memory.main.user_control():
                 return True
             if memory.main.turn_ready():
@@ -6728,6 +6795,7 @@ def calm_lands_manip():
     chosen_steals = 0
     chosen_deaths = 0
     if defender_x_drop:
+        logger.debug(f"Drop needed. Looking for path to {rng10_align} in array {rng10_array}")
         if not rng10_align in rng10_array:
             for j in range(3):
                 for i in range(4):
@@ -6736,7 +6804,13 @@ def calm_lands_manip():
                             chosen_steals = j
                             chosen_deaths = i
                             found = True
+                            logger.debug(f"Drop found with {chosen_steals} steals and {chosen_deaths} deaths")
+        if not found:
+            chosen_steals = 1
+            chosen_deaths = 2
+            logger.debug(f"No path found, defaulting to {chosen_steals} steals and {chosen_deaths} deaths")
     else:
+        logger.debug("Attempting no-drop.")
         if rng10_align in rng10_array:
             for j in range(3):
                 for i in range(4):
@@ -6745,6 +6819,11 @@ def calm_lands_manip():
                             chosen_steals = j
                             chosen_deaths = i
                             found = True
+                            logger.debug(f"No-Drop found with {chosen_steals} steals and {chosen_deaths} deaths")
+        if not found:
+            chosen_steals = 1
+            chosen_deaths = 2
+            logger.debug(f"No-Drop - No path found, defaulting to {chosen_steals} steals and {chosen_deaths} deaths")
 
     while memory.main.battle_active():
         if memory.main.turn_ready():
@@ -7278,7 +7357,9 @@ def ghost_advance_rng_10_silence(use_silence:bool = False,aeon_kill:bool = True)
         if memory.main.turn_ready():
             logger.manip(f"Steals needed: {memory.main.next_chance_rng_10()}")
             if not silence_used:
-                if not Kimahri.active():
+                if screen.faint_check():
+                    revive()
+                elif not Kimahri.active():
                     buddy_swap(Kimahri)
                     use_item(slot=silence_slot)  # Throw silence grenade
                     silence_used = True
@@ -7297,7 +7378,9 @@ def ghost_advance_rng_10_silence(use_silence:bool = False,aeon_kill:bool = True)
                 else:
                     CurrentPlayer().defend()
             else:
-                if Kimahri.is_turn():
+                if screen.faint_check():
+                    revive()
+                elif Kimahri.is_turn():
                     steal()
                 elif not Kimahri.active():
                     buddy_swap(Kimahri)

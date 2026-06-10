@@ -21,7 +21,9 @@ while map == get_map():
     if current_time != last_time:
         coords = get_actor_coords(actor_index=0)
         coords = get_coords() + [0]
-        if memory.main.s_grid_active():
+        if map == 62:
+            print(memory.main.get_camera())
+        elif memory.main.s_grid_active():
             print(f"Grid Cursor coords: {memory.main.s_grid_cursor_coords()}")
         else:
             print(f"Coords: [{round(coords[0], 2)}, {round(coords[1],2)}, {round(coords[2],2)}] | " + \

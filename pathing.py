@@ -12,12 +12,83 @@ logger = logging.getLogger(__name__)
 FFXC = xbox.controller_handle()
 from json_ai_files.write_seed import write_big_text
 
+class BonkTracker:
+    def __init__(self):
+        self.last_pos = (0, 0)
+        self.last_frame = 0
+        self.threshold = 0.001  # Distance moved to consider "not stuck"
+        self.map_center = (0, 0)
+        self.zero_pos = (99999, 99999)
 
-def set_movement(target) -> bool:
+    def check_stuck(self, current_pos):
+        if game_vars.story_mode():
+            return False
+        if not game_vars.csr():
+            return False
+        # Only evaluate every 5 seconds
+        waiting_frames = 45
+        current_frame = memory.main.get_frame()
+        if not (
+            memory.main.user_control() and
+            not memory.main.battle_active() and
+            not memory.main.menu_open()
+        ):
+            self.last_pos = self.zero_pos
+            self.last_frame = current_frame
+            return False
+        elif current_pos == self.zero_pos or current_pos == self.map_center:
+            self.last_pos = self.zero_pos
+            self.last_frame = current_frame
+            return False
+        
+        if current_frame < self.last_frame + waiting_frames:
+            # Only reset if just over 1 second.
+            # This prevents us from resetting the map on longer non-pathing sections
+            # or immediately on load.
+            return False
+        if current_frame > self.last_frame + waiting_frames + 5:
+            self.last_pos = self.zero_pos
+            self.last_frame = current_frame
+            return False
+
+        # Calculate Euclidean distance moved
+        dist = ((current_pos[0] - self.last_pos[0])**2 + 
+                (current_pos[1] - self.last_pos[1])**2)**0.5
+        
+        # logger.debug(f"Checking for stuck: {dist} < {self.threshold}")
+        
+        is_stuck = dist < self.threshold
+        
+        # Update state for the next check
+        self.last_pos = current_pos
+        self.last_frame = current_frame
+        if is_stuck:
+            logger.warning("STUCK IDENTIFIED, PERFORMING RESET!!!")
+        
+        return is_stuck
+    
+    def update_last(self):
+        self.last_frame = memory.main.get_frame()
+        self.last_pos = (0, 0)
+
+
+# Initialize the global tracker
+tracker = BonkTracker()
+
+def set_movement(target, ignore_bonk = False) -> bool:
+    player = memory.main.get_coords()
+    if tracker.check_stuck(player):
+        if not ignore_bonk:
+            # Treadmill recovery logic
+            memory.main.force_map_load()
+            memory.main.await_control()
+            tracker.update_last()
+            return
+
+
     if memory.main.menu_open():
         FFXC.set_neutral()
         xbox.tap_a()
-    player = memory.main.get_coords()
     (forward, right) = memory.main.get_movement_vectors()
 
     # Calculate forward and right directions relative to camera space
@@ -129,11 +200,11 @@ def _approach_actor(actor_index: int = 999, talk: bool = True, use_raw_coords:bo
             erratic_target = [target_coords[0] + dx * 5, target_coords[1] + dy * 5]
             erratic_start = time.time()
             while time.time() - erratic_start < 0.5:
-                set_movement(erratic_target)
+                set_movement(erratic_target, ignore_bonk=True)
             FFXC.set_neutral()
             return _approach_actor(actor_index=actor_index, talk=talk)
 
-        set_movement(target_coords)
+        set_movement(target_coords, ignore_bonk=True)
         if talk and distance(actor_index) < 15:
             xbox.tap_b()
         if use_raw_coords:
@@ -164,39 +235,57 @@ def approach_coords(
     use_raw_coords:bool=False
 ):
     logger.debug("approach_coords start")
+    start_time = time.perf_counter() # Initialize timeout anchor
+    timeout_threshold = 8.0
+    
     speed_val = memory.main.get_game_speed()
     if speed_val != 0:
         memory.main.set_game_speed(0)
+
     if diag != 999:
         logger.debug(f"Moving/tapping until dialog value achieved: {diag}")
         while memory.main.diag_progress_flag() != diag:
+            # Check Timeout
+            if time.perf_counter() - start_time > timeout_threshold:
+                logger.error(f"approach_coords TIMEOUT: Failed to reach diag {diag}")
+                break # Exit the while loop to clean up game speed/state
+                
             if memory.main.user_control():
                 set_movement(target_coords)
                 if distance_coords(target_coords, use_raw_coords=use_raw_coords) < 20:
                     xbox.tap_b()
             elif memory.main.diag_skip_possible():
                 xbox.tap_b()
-                
     else:
         logger.debug(f"Moving/tapping until control lost.")
         while memory.main.user_control():
+            # Check Timeout
+            if time.perf_counter() - start_time > timeout_threshold:
+                logger.error("approach_coords TIMEOUT: Movement took too long.")
+                break
+                
             set_movement(target_coords)
             if distance_coords(target_coords, use_raw_coords=use_raw_coords) < 20:
                 xbox.tap_b()
-    logger.debug("Position reached.")
+
+    logger.debug("Cleaning up movement state.")
     FFXC.set_neutral()
+
     if quick_return:
         logger.debug("Quick return identified. Returning to parent process.")
         return
+
     if speed_val != 0:
         memory.main.set_game_speed(speed_val)
+
     if click_through:
         logger.debug("Tapping until control regained.")
         FFXC.set_neutral()
+        # Note: You might want a secondary timeout inside click_to_control_3
         memory.main.click_to_control_3()
+
     logger.debug("approach_coords end")
-
-
+    
 def blitz_replace(cursor_target):
     while memory.main.blitz_recrut_swap_cursor() != cursor_target:
         while memory.main.blitz_recrut_swap_cursor() != cursor_target:
@@ -249,6 +338,7 @@ def blitz_recruit(actor_id, use_raw_coords:bool=False):
     xbox.tap_confirm()
     memory.main.wait_frames(30)
     xbox.tap_left()
+    xbox.tap_up()
     xbox.tap_up()
     xbox.tap_confirm()
     memory.main.wait_seconds(2)

@@ -266,6 +266,7 @@ class Player:
         enc_id = memory.main.get_encounter_id()
         enemies = current_battle_formation()
         logger.debug(f"Battle: {enc_id} | Enemies: {enemies}")
+        luck_value = 15
         if len(enemies) != 0:
             try:
                 if target_id is None:
@@ -275,10 +276,7 @@ class Player:
                     luck_value = luck_check(enemies[target_id-20])
                 logger.manip(f"Enemy Luck stat confirmed: {luck_value}")
             except:
-                luck_value = 15
                 logger.manip(f"Enemy Luck stat assumed: {luck_value}")
-        else:
-            luck_value = 15
         
         # This logic is only for cheese runs! See var 'god_mode'.
         if game_vars.god_mode():
@@ -715,11 +713,11 @@ class Player:
         return True
 
 
-    # spell_id should become an enum at some point
     def use_special_by_name(
         self,
         command_name: str,
         target_id: int = 99,
+        item_slot: int = 255,  # Only for the Use command
         direction: str = "right"
     ):
         if target_id is None:
@@ -747,6 +745,15 @@ class Player:
             self._navigate_to_position(spell_pos)
         while memory.main.other_battle_menu():
             xbox.menu_b()
+        
+        # Use command only
+        if command_name.lower() == "use":
+            self._navigate_to_position(item_slot, memory.main.battle_cursor_3)
+            if game_vars.use_pause():
+                memory.main.wait_frames(3)
+            while memory.main.interior_battle_menu():
+                xbox.tap_b()
+        
         if target_id != 99:
             self._target_specific_id(target_id, direction)
         elif direction:
@@ -774,7 +781,8 @@ class Player:
                 xbox.tap_down()
             else:
                 logger.error(f"UNSURE DIRECTION: {direction}")
-                raise ValueError("Unsure direction")
+                logger.error("Continuing with no direction selected.")
+                # raise ValueError(f"Unsure direction: {direction}")
         self._tap_targeting()
 
     def skill(self):
@@ -843,28 +851,34 @@ class Player:
 
     def _navigate_to_position(
         self, position, battle_cursor=memory.main.battle_cursor_2
-    ):
+    ) -> bool:
+        if position is None:
+            return False
+        if int(position) == 255:
+            return False
+        pos = int(position)
         while battle_cursor() == 255:
             pass
-        if battle_cursor() != position:
+        if battle_cursor() != pos:
             logger.debug(
-                f"Wrong position targeted {battle_cursor() % 2}, {position % 2}"
+                f"Wrong position targeted {battle_cursor() % 2}, {pos % 2}"
             )
-            while battle_cursor() % 2 != position % 2:
-                while battle_cursor() % 2 != position % 2:
-                    if battle_cursor() < position:
+            while battle_cursor() % 2 != pos % 2:
+                while battle_cursor() % 2 != pos % 2:
+                    if battle_cursor() < pos:
                         xbox.tap_right()
                     else:
                         xbox.tap_left()
                 memory.main.wait_frames(1)
-            while battle_cursor() != position:
-                while battle_cursor() != position:
+            while battle_cursor() != pos:
+                while battle_cursor() != pos:
                     logger.debug(f"Battle_cursor: {battle_cursor()}")
-                    if battle_cursor() > position:
+                    if battle_cursor() > pos:
                         xbox.tap_up()
                     else:
                         xbox.tap_down()
                 memory.main.wait_frames(1)
+        return True
 
     def _tap_targeting(self):
         logger.debug(
@@ -905,14 +919,30 @@ class Player:
             else:
                 xbox.tap_up()
 
-    def next_crits(self, enemy_luck: int = 15,length: int = 10) -> List[int]:
+    def next_crits(self, enemy_luck: int = 15, length: int = 10) -> List[int]:
+        results = []
+        # Using 0 as the starting offset for the "immediate next" attack
+        for i in range(length):
+            if memory.main.future_attack_will_crit(
+                character=self.raw_id(),
+                char_luck=self.luck(),
+                enemy_luck=enemy_luck,
+                attack_index=i, 
+                report=False
+            ):
+                results.append(i)
+        
+        logger.manip(f"Upcoming crits (Attack Offset): {results}")
+        return results
+
+    def next_crits_orig(self, enemy_luck: int = 15,length: int = 10) -> List[int]:
         # Note that this says the number of increments, so the previous roll
         # will be a hit, and this one will be the crit.
         results = []
         for i in range(length):
-            if i == 0:
-                pass
-            elif memory.main.future_attack_will_crit(
+            # if i == 0:
+            #     pass
+            if memory.main.future_attack_will_crit(
                 character=self.raw_id(),
                 char_luck=self.luck(),
                 enemy_luck=enemy_luck,
@@ -924,24 +954,8 @@ class Player:
             #else:
             #    logger.manip(f"Attack {i} will not crit, actor {self.raw_id()}")
         
-        '''
-        rng_array = memory.main.rng_array_from_index(
-            index=self.char_rng, array_len=((length*2)+4)
-        )
-        #cur_rng = memory.main.rng_from_index(self.char_rng)
-        #cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
-        #cur_rng = memory.main.roll_next_rng(cur_rng, self.char_rng)
-        index = 1
+        # logger.warning(f"Luck: {self.luck()} vs {enemy_luck}")
 
-        # Note that the RNG to be rolled is every second RNG value, after damage rolls.
-        # That's why we check only those even values starting at value 2 (index*2).
-        while index*2 < len(rng_array):
-            crit_roll = (rng_array[index*2] & 0x7FFFFFFF) % 101
-            crit_chance = self.luck() - enemy_luck
-            if crit_roll < crit_chance:
-                results.append(index)
-            index += 1
-        '''
         logger.manip(f"Upcoming crits: {results}")
         return results
 
